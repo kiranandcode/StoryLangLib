@@ -1,0 +1,1 @@
+3. SQL syntax is insufficiently precise to derive a wrapper --- Some properties of queries that are required to produce a Caqti query can't easily be statically inferred from just the SQL syntax. Consider the following query as an example:

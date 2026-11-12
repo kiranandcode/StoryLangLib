@@ -1,0 +1,1 @@
+Unfortunately, I am afraid to say, not all is as it seems in the land of functional game development, and when you start using this methodology to develop any kind of non-trivial games, you can quickly find yourself running into edge-cases, and one particularly nefarious example of such issues is handling animations.

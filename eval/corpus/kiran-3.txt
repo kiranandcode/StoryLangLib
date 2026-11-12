@@ -1,0 +1,1 @@
+At its core, this issue arises primarily from the SMT solver itself, as the success of a verification run may have inadvertently been dependent of some irrelevant feature of the program affecting the proof search, and while this seems minor, it can severely hamper usability and practicality of these tools:
