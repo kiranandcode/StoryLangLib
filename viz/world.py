@@ -149,3 +149,42 @@ def office_text():
 if __name__ == "__main__":
     for f in (modules(), timeline(), gossip(), office_text()):
         print(f)
+
+
+def gossip2():
+    steps = ["Mara takes the letter\n(office)", "Mara → Kiran:\n\"I never read it\"", "Mara picks it up\n(roof, Kiran sees)",
+             "Mara → Marcus:\n\"I never read it\""]
+    rows = {
+        "Kiran\ngullible · trusts Mara (2)": [
+            ("—", "", "#f6f8fa", MUTED),
+            ("+ ¬read(Mara)\n  told: 3 +1 trust +1 gullible\n  = 5 → radical", "view: ¬read(Mara)", "#fff8c5", "#9a6700"),
+            ("+ holds(Mara)  seen 5, newer\n  ¬read(Mara) kept, outranked\n  caught Mara: trust 2 → 1",
+             "view: read(Mara) (by lore)", "#dafbe1", "#1a7f37"),
+            ("", "view: read(Mara)", "#dafbe1", "#1a7f37")],
+        "Marcus\nskeptical · trust in Mara 0": [
+            ("+ holds(Mara)  seen 5  radical", "view: read(Mara) (by lore)", "#dafbe1", "#1a7f37"),
+            ("", "view: read(Mara)", "#dafbe1", "#1a7f37"),
+            ("", "view: read(Mara)", "#dafbe1", "#1a7f37"),
+            ("+ ¬read(Mara)\n  told: 3 −1 distrust −1 skeptic\n  = 1 → NOTE only", "view: read(Mara)", "#ffebe9", "#cf222e")],
+    }
+    fig, ax = plt.subplots(figsize=(16, 5.2))
+    cw, ch = 3.6, 1.6
+    for j, s in enumerate(steps):
+        ax.text(j * cw + cw / 2, 2 * ch + 0.5, f"{j + 1}. {s}", ha="center", va="center", fontsize=9.5, family=SANS, color=INK)
+    for i, (who, cells) in enumerate(rows.items()):
+        y = (1 - i) * ch
+        ax.text(-0.15, y + ch / 2, who, ha="right", va="center", fontsize=10.5, family=SANS, color=INK)
+        for j, (base, view, fill, edge) in enumerate(cells):
+            ax.add_patch(FancyBboxPatch((j * cw + 0.08, y + 0.08), cw - 0.16, ch - 0.16,
+                                        boxstyle="round,pad=0,rounding_size=0.08", facecolor=fill, edgecolor=edge, lw=1.1))
+            ax.text(j * cw + 0.25, y + ch - 0.32, base, ha="left", va="top", fontsize=7.8, family=MONO, color=INK)
+            ax.text(j * cw + 0.25, y + 0.3, view, ha="left", va="bottom", fontsize=8.6, family=MONO, color=edge, fontweight="bold")
+    ax.set_xlim(-3.0, len(steps) * cw + 0.1); ax.set_ylim(-0.2, 2 * ch + 1.0); ax.axis("off")
+    ax.set_title("Evidence, trust and persona decide how a claim is taken; nothing is deleted, the view is the consistent top of the ranking",
+                 loc="left", fontsize=11.5, family=SANS, fontweight="bold", color=INK, x=-0.15)
+    fig.text(0.02, 0.0, "strength = prior(evidence) + trust ±1 + gullible/skeptical ±1;  ≥ accept → radical, accept−1 → conservative, below → note.  "
+             "theorems: kiran_caught_the_lie · nothing_forgotten · kiran_trusts_mara_less · marcus_only_notes · realise_too_early",
+             fontsize=8, family=MONO, color=MUTED)
+    fig.savefig(OUT / "13-evidence.png", dpi=160, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    return OUT / "13-evidence.png"
