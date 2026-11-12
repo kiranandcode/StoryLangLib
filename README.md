@@ -59,6 +59,11 @@ out of character (shy people hold back); to justify it, first establish:
 attraction draws them on or the confident make the first move
 ```
 
+From text to theorem: `examples/office.txt` was annotated by Opus, accepted by
+`langlib check`, read by the space and relationship lexicons into the office
+story (flashback "an hour earlier", a "meanwhile"), timed by the solver, and
+proved valid (`LangLib/World/Examples/OfficeText.lean`).
+
 ## Building
 
 The project is a plain Lake package:
@@ -152,11 +157,6 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | graphviz       |          | `viz` figures                               |
 | matplotlib     |          | `viz` figures                               |
 | JEV_API_KEY    |          | optional, `eval/jev_coref.py`               |
-
-From text to theorem: `examples/office.txt` was annotated by Opus, accepted by
-`langlib check`, read by the space and relationship lexicons into the office
-story (flashback "an hour earlier", a "meanwhile"), timed by the solver, and
-proved valid (`LangLib/World/Examples/OfficeText.lean`).
 
 ## Status
 
