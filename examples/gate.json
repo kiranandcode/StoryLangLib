@@ -1,0 +1,43 @@
+{"entities":[
+  {"id":"kiran","name":"Kiran","kind":"person","pron":"she"},
+  {"id":"mara","name":"Mara","kind":"person","pron":"she"},
+  {"id":"guard","name":"the guard","kind":"person","pron":"he"},
+  {"id":"cellar","name":"the cellar","kind":"place","pron":"it"},
+  {"id":"gate","name":"the gate","kind":"place","pron":"it"},
+  {"id":"key","name":"the key","kind":"object","pron":"it"}],
+ "topics":[{"id":"escape","label":"the escape at the gate","entities":["kiran","mara","guard","key"]}],
+ "sentences":[
+  {"c":"S","r":"root","topic":"escape","k":[
+    {"c":"NP","r":"nsubj","ref":"mara","k":[{"w":"Mara","p":"PROPN","r":"head"}]},
+    {"c":"COORD","r":"head","k":[
+      {"c":"VP","r":"head","k":[
+        {"w":"slipped","p":"VERB","r":"head","l":"slip"},
+        {"c":"PP","r":"obl","k":[{"w":"into","p":"ADP","r":"case"},
+          {"c":"NP","r":"head","ref":"cellar","k":[{"w":"the","p":"DET","r":"det"},{"w":"cellar","p":"NOUN","r":"head"}]}]}]},
+      {"w":"and","p":"CCONJ","r":"cc"},
+      {"c":"VP","r":"conj","k":[
+        {"w":"hid","p":"VERB","r":"head","l":"hide"},
+        {"c":"NP","r":"obj","ref":"key","k":[{"w":"the","p":"DET","r":"det"},{"w":"key","p":"NOUN","r":"head"}]}]}]},
+    {"w":".","p":"PUNCT","r":"punct"}]},
+  {"c":"S","r":"root","topic":"escape","k":[
+    {"w":"Then","p":"ADV","r":"advmod"},
+    {"w":"she","p":"PRON","r":"nsubj","ref":"mara"},
+    {"c":"VP","r":"head","k":[
+      {"w":"went","p":"VERB","r":"head","l":"go"},
+      {"w":"back","p":"ADV","r":"advmod"},
+      {"c":"PP","r":"obl","k":[{"w":"to","p":"ADP","r":"case"},
+        {"c":"NP","r":"head","ref":"gate","k":[{"w":"the","p":"DET","r":"det"},{"w":"gate","p":"NOUN","r":"head"}]}]}]},
+    {"w":".","p":"PUNCT","r":"punct"}]},
+  {"c":"S","r":"root","topic":"escape","k":[
+    {"c":"NP","r":"nsubj","ref":"guard","k":[{"w":"The","p":"DET","r":"det"},{"w":"guard","p":"NOUN","r":"head"}]},
+    {"c":"VP","r":"head","k":[
+      {"w":"grabbed","p":"VERB","r":"head","l":"grab"},
+      {"w":"her","p":"PRON","r":"obj","ref":"mara"}]},
+    {"w":".","p":"PUNCT","r":"punct"}]},
+  {"c":"S","r":"root","topic":"escape","k":[
+    {"c":"NP","r":"nsubj","ref":"kiran","k":[{"w":"Kiran","p":"PROPN","r":"head"}]},
+    {"c":"VP","r":"head","k":[
+      {"w":"shouted","p":"VERB","r":"head","l":"shout"},
+      {"c":"PP","r":"obl","k":[{"w":"at","p":"ADP","r":"case"},
+        {"c":"NP","r":"head","ref":"guard","k":[{"w":"the","p":"DET","r":"det"},{"w":"guard","p":"NOUN","r":"head"}]}]}]},
+    {"w":".","p":"PUNCT","r":"punct"}]}]}

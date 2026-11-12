@@ -8,3 +8,5 @@ import LangLib.Check
 import LangLib.Story.DL
 import LangLib.Story.Scene
 import LangLib.Story.GateScene
+import LangLib.Story.Bridge
+import LangLib.Story.GateText

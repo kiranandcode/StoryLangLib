@@ -1,5 +1,5 @@
 import LangLib
-open LangLib Lean
+open LangLib LangLib.Scene Lean
 
 def usage : String := "usage:
   langlib tokenize <text-file>              print tokens, one per line
@@ -29,5 +29,17 @@ def main : List String → IO UInt32
   | ["render", df] => do IO.println (← readDoc df).toText; pure 0
   | ["pretty", df] => do
     for s in (← readDoc df).sentences do IO.println s.tree.pretty
+    pure 0
+  | ["gate-events", df] => do
+    -- clauses and the gate-scene events they assert (for the bridge diagram)
+    let d ← readDoc df
+    let toks := d.render
+    let out := (d.clauses).map fun c =>
+      Json.mkObj [("verb", c.verb), ("at", c.at_), ("word", toks.getD c.at_ ""),
+        ("subj", c.subj.getD ""), ("obj", c.obj.getD ""),
+        ("obls", Json.arr (c.obls.map fun (p, e) => Json.arr #[p, e]).toArray),
+        ("event", match c.event LangLib.Scene.Gate.resolver with
+          | some e => reprStr e | none => "")]
+    IO.println (Json.arr out.toArray).pretty
     pure 0
   | _ => do IO.eprintln usage; pure 64
