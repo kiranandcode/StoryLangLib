@@ -20,6 +20,7 @@ open LangLib.DL
 inductive Trait
   | timid | shy | brash | confident | cautious | romantic | loyal | proud
   | dominant | submissive | honest | secretive
+  | gullible | skeptical | paranoid | stubborn | openMinded
   deriving DecidableEq, Repr
 
 inductive Value

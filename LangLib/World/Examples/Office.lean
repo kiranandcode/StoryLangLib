@@ -81,7 +81,7 @@ def start : W where
   loc | kiran => roof | _ => office
   holder _ := some marcus
   objLoc _ := office
-  beliefs | kiran => [] | _ => [⟨.atom (fact (.holds marcus letter)), .seen⟩]
+  beliefs | kiran => [] | _ => [{ b := .atom (fact (.holds marcus letter)), src := .seen, rank := 5, stamp := 0, up := .radical }]
   bond
     | kiran, marcus, .attraction => 1 | kiran, marcus, .trust => 1
     | marcus, kiran, .attraction => 2 | marcus, kiran, .trust => 2

@@ -139,7 +139,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Domain  | Composable story semantics: `Domain`, `Valid`, stories told out of order    |
 | LangLib/World/Persona | Traits, ranked values, and in-character checks via defeasible logic         |
 | LangLib/World/Space   | Places, objects, possession, what each event lets witnesses see             |
-| LangLib/World/Mind    | Beliefs with provenance, lore (Horn rules), nested views, consistency, revision and rejection of hearsay, witnessing, telling, lying |
+| LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), lore, factive `realise` |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
 | LangLib/World/Lexicon | Verb lexicons per module; adverbials ("meanwhile", "an hour earlier") to time constraints |

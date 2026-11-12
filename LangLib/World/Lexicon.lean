@@ -97,12 +97,22 @@ def socialLex (R : Resolver C P O) : Lexicon (SocialEv C) := ⟨[
 clause, which `factOf` reads as a literal. -/
 def mindLex {Φ : Type} (R : Resolver C P O) (factOf : Clause → Option (Φ × Bool)) :
     Lexicon (MindEv C Φ) := ⟨[
-  (["tell", "say", "admit", "explain"], fun c cs => do
+  (["tell", "say", "admit", "explain", "claim", "swear", "insist", "confess"], fun c cs => do
     return .tell (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
   (["whisper"], fun c cs => do
     return .whisper (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
-  (["lie", "swear", "claim"], fun c cs => do
-    return .lie (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf))]⟩
+  (["lie"], fun c cs => do
+    return .lie (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
+  -- evidentials: how the subject came to believe the complement
+  (["see", "watch", "spot"], fun c cs => do
+    return .notice (← c.subj >>= R.char) (← (c.complement cs).bind factOf) .seen),
+  (["hear", "feel", "smell"], fun c cs => do
+    return .notice (← c.subj >>= R.char) (← (c.complement cs).bind factOf) .rumour),
+  (["guess", "suppose", "assume", "suspect"], fun c cs => do
+    return .notice (← c.subj >>= R.char) (← (c.complement cs).bind factOf) .assumed),
+  -- factive: the narrator commits to the complement, and the subject must be able to know it
+  (["realise", "realize", "know", "discover", "understand"], fun c cs => do
+    return .realise (← c.subj >>= R.char) (← (c.complement cs).bind factOf))]⟩
 
 def spellOf : String → Option Spell
   | "light" => some .light | "ward" => some .ward | "heal" => some .heal

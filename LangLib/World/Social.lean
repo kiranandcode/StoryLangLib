@@ -1,5 +1,6 @@
 import LangLib.World.Space
 import LangLib.World.Persona
+import LangLib.World.Mind
 
 /-!
 # Relationships and consent
@@ -138,5 +139,36 @@ instance {Φ : Type} [Inject (SocialFact C) Φ] : Observable W (SocialEv C) Φ P
 /-- Who did what with whom is not recorded in the state, so truth here means
 "happened" only as far as witnesses believed it; treat it as true. -/
 instance : Truth W (SocialFact C) := ⟨fun _ _ => true⟩
+
+/-! ## Credence from bonds and persona
+
+How much `c` believes what `d` says: trust raises it, distrust and tension
+lower it; gullible and open-minded characters take testimony more readily,
+skeptical and paranoid ones less (paranoid ones only distrust those they do not
+already trust). Being caught out costs the speaker a point of trust. -/
+
+def has (w : W) (c : C) (t : Trait) : Bool := (HasPersona.persona w c).traits.contains t
+
+def bondCredence (w : W) (c : C) (e : Evid C) : Int :=
+  let fromBond : Int := match e.speaker with
+    | some d =>
+      (if bond w c d .trust ≥ 2 then 1 else 0) - (if bond w c d .trust == 0 then 1 else 0) -
+      (if bond w c d .tension ≥ 2 then 1 else 0)
+    | none => 0
+  let fromPersona : Int :=
+    if !e.testimony then 0 else
+    (if has w c .gullible then 1 else 0) + (if has w c .openMinded then 1 else 0) -
+    (if has w c .skeptical then 1 else 0) -
+    (match e.speaker with
+     | some d => if has w c .paranoid && bond w c d .trust < 2 then 2 else 0
+     | none => if has w c .paranoid then 2 else 0)
+  fromBond + fromPersona
+
+/-- Credence for a world with bonds and personas. -/
+def socialCredence : Credence W C where
+  adj := bondCredence
+  acceptAt w c := if has w c .gullible then 2 else if has w c .skeptical then 4 else 3
+  stubborn w c := has w c .stubborn
+  onBetrayal w c d := bump w c d .trust (-1)
 
 end LangLib.World
