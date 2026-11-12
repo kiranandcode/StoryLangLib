@@ -101,6 +101,8 @@ structure Story (E : Type) where
   told : List E
   /-- what the text says about when -/
   constraints : List Constraint := []
+  /-- what the text says about how long -/
+  metric : List Metric := []
 
 /-- A story with an endpoint assignment for its events. -/
 structure Timed (E : Type) extends Story E where
@@ -127,10 +129,14 @@ def Timed.chrono (s : Timed E) : List E := s.timeline.byEffect.filterMap (s.told
 chronological order. -/
 def Timed.Valid (w : W) (s : Timed E) : Prop :=
   s.timeline.length = s.told.length ∧ s.timeline.Satisfies s.constraints ∧
-  World.Valid w s.chrono
+  s.metric.all (·.sat s.timeline) = true ∧ World.Valid w s.chrono
 
 instance (w : W) (s : Timed E) : Decidable (s.Valid w) := by
   unfold Timed.Valid; infer_instance
+
+/-- A timeline found by the solver (untrusted; `Timed.Valid` re-checks it). -/
+def Story.solved (s : Story E) : Option (Timed E) :=
+  (solve s.told.length s.constraints s.metric).map fun t => { s with timeline := t }
 
 /-- The state at story time `τ`: every event that ended by `τ` has taken effect. -/
 def Timed.stateAt (w : W) (s : Timed E) (τ : Nat) : W :=
@@ -139,10 +145,14 @@ def Timed.stateAt (w : W) (s : Timed E) (τ : Nat) : W :=
     | some iv, some e => if iv.e ≤ τ then some e else none
     | _, _ => none)
 
-/-- `p` holds at every time point inside event `i`'s interval. -/
+/-- `p` holds at every time point inside event `i`'s interval. The state only
+changes when an event ends, so it suffices to check the interval's start and
+every event end inside it. -/
 def Timed.during (w : W) (s : Timed E) (i : Nat) (p : W → Bool) : Bool :=
   match s.timeline[i]? with
-  | some iv => (List.range' iv.s (iv.e - iv.s)).all fun τ => p (s.stateAt w τ)
+  | some iv =>
+    (iv.s :: (s.timeline.map (·.e)).filter (fun τ => iv.s < τ && τ < iv.e)).all
+      fun τ => p (s.stateAt w τ)
   | none => false
 
 end LangLib.World

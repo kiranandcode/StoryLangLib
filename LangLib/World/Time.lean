@@ -134,5 +134,86 @@ instance (t : Timeline) (cs : List Constraint) : Decidable (t.Satisfies cs) := b
 def Consistent (n : Nat) (cs : List Constraint) : Prop :=
   ∃ t : Timeline, t.length = n ∧ t.Satisfies cs
 
+/-! ## Durations
+
+Metric constraints, in whatever unit the story uses (minutes, say):
+"the talk lasted twenty to forty minutes" is `dur i 20 40`; "an hour later"
+is `gap i j 55 65` (from the end of `i` to the start of `j`). -/
+
+inductive Metric
+  /-- event `i` lasts between `lo` and `hi` -/
+  | dur (i lo hi : Nat)
+  /-- event `j` starts between `lo` and `hi` after event `i` ends -/
+  | gap (i j lo hi : Nat)
+  deriving DecidableEq, Repr
+
+def Metric.sat (t : Timeline) : Metric → Bool
+  | .dur i lo hi => match t.get? i with
+    | some a => lo ≤ a.e - a.s && a.e - a.s ≤ hi
+    | none => false
+  | .gap i j lo hi => match t.get? i, t.get? j with
+    | some a, some b => a.e ≤ b.s && lo ≤ b.s - a.e && b.s - a.e ≤ hi
+    | _, _ => false
+
+/-! ## Finding a timeline
+
+An untrusted solver: each Allen relation and metric constraint is a conjunction
+of difference constraints `x_b - x_a ≥ w` on endpoints (a simple temporal
+problem); disjunctions are searched depth first, and each choice is checked for
+feasibility by Bellman–Ford (longest paths from 0). Whatever it returns is
+re-checked by `Timeline.Satisfies` and `Metric.sat`, so it needs no proof. -/
+
+/-- `(a, b, w)`: endpoint `b` is at least `w` after endpoint `a`
+(endpoint `2i` is the start of event `i`, `2i+1` its end). -/
+abbrev Diff := Nat × Nat × Int
+
+private def S (i : Nat) : Nat := 2 * i
+private def E (i : Nat) : Nat := 2 * i + 1
+
+private def eq2 (a b : Nat) : List Diff := [(a, b, 0), (b, a, 0)]
+
+/-- Difference constraints for `r i j`. -/
+def Allen.diffs (i j : Nat) : Allen → List Diff
+  | .before => [(E i, S j, 1)]
+  | .meets => eq2 (E i) (S j)
+  | .overlaps => [(S i, S j, 1), (S j, E i, 1), (E i, E j, 1)]
+  | .starts => eq2 (S i) (S j) ++ [(E i, E j, 1)]
+  | .during => [(S j, S i, 1), (E i, E j, 1)]
+  | .finishes => [(S j, S i, 1)] ++ eq2 (E i) (E j)
+  | .equal => eq2 (S i) (S j) ++ eq2 (E i) (E j)
+  | .finishedBy => [(S i, S j, 1)] ++ eq2 (E i) (E j)
+  | .contains => [(S i, S j, 1), (E j, E i, 1)]
+  | .startedBy => eq2 (S i) (S j) ++ [(E j, E i, 1)]
+  | .overlappedBy => [(S j, S i, 1), (S i, E j, 1), (E j, E i, 1)]
+  | .metBy => eq2 (E j) (S i)
+  | .after => [(E j, S i, 1)]
+
+def Metric.diffs : Metric → List Diff
+  | .dur i lo hi => [(S i, E i, lo), (E i, S i, -(hi : Int))]
+  | .gap i j lo hi => [(E i, S j, lo), (S j, E i, -(hi : Int))]
+
+private def relax (ds : List Diff) (x : List Int) : List Int :=
+  ds.foldl (fun x (a, b, w) =>
+    let cand := x.getD a 0 + w
+    if cand > x.getD b 0 then x.set b cand else x) x
+
+/-- Least non-negative solution, or `none` if the constraints are infeasible. -/
+def solveDiffs (points : Nat) (ds : List Diff) : Option (List Int) :=
+  let rec go : Nat → List Int → Option (List Int)
+    | 0, x => if relax ds x == x then some x else none
+    | n + 1, x => let x' := relax ds x; if x' == x then some x else go n x'
+  go (points + 1) (List.replicate points 0)
+
+/-- A timeline for `n` events meeting `cs` and `ms`, if the search finds one. -/
+def solve (n : Nat) (cs : List Constraint) (ms : List Metric := []) : Option Timeline :=
+  let base := (List.range n).map (fun i => (S i, E i, (1 : Int))) ++ ms.flatMap Metric.diffs
+  let rec search : List Constraint → List Diff → Option (List Int)
+    | [], ds => solveDiffs (2 * n) ds
+    | c :: rest, ds => c.rels.findSome? fun r =>
+        let ds' := ds ++ r.diffs c.i c.j
+        (solveDiffs (2 * n) ds').bind fun _ => search rest ds'
+  (search cs base).map fun x =>
+    (List.range n).map fun i => ⟨(x.getD (S i) 0).toNat, (x.getD (E i) 0).toNat⟩
+
 
 end LangLib.World
