@@ -33,14 +33,14 @@ def lay(t):
     """Return the (x, y) of t's anchor; leaves get the next token slot."""
     global x
     if "w" in t:
-        w = max(len(t["w"]), len(t["p"])) + 1.6
+        w = max(len(t["w"]) * 1.1, len(t["p"]) * 0.7) + 1.2
         cx = x + w / 2
         x += w
         toks.append((cx, t["w"], t["p"], t.get("ref")))
         return (cx, TOK_Y + 1.1)
     kid_xy = [lay(k) for k in t["k"]]
     cx = sum(p[0] for p in kid_xy) / len(kid_xy)
-    cy = TOK_Y + 1.1 + 1.25 * level(t)
+    cy = TOK_Y + 1.1 + 0.9 * level(t)
     label = t["c"] + (f"→{t['ref']}" if t.get("ref") else "")
     nodes.append((cx, cy, label, ENT.get(t.get("ref"), MUTED), kid_xy))
     return (cx, cy)
@@ -48,8 +48,8 @@ def lay(t):
 roots = []
 for s in doc["sentences"]:
     roots.append(lay(s))
-    x += 3.5
-W = max(x + 2, 236)
+    x += 2.5
+W = max(x + 2, 200)
 tree_top = max(n[1] for n in nodes) + 0.8
 
 # token index -> x, and the anchor of the NP that carries each ref
@@ -64,11 +64,11 @@ def find_refs(t, start):
     return i
 
 # ── bands (y grows upward; we stack downward from the tree) ───────────────────
-TREE_BASE = 30.0      # tree band sits at the top
+TREE_BASE = 22.0      # tree band sits at the top
 def T(y): return TREE_BASE + y
-EV_Y = TREE_BASE - 4.0
-ST_Y = EV_Y - 4.5
-DER_TOP = ST_Y - 4.0
+EV_Y = TREE_BASE - 3.0
+ST_Y = EV_Y - 3.2
+DER_TOP = ST_Y - 2.6
 
 fig_h = TREE_BASE + tree_top + 2
 fig = plt.figure(figsize=(W * CW / 72, fig_h * LH / 72))
@@ -99,19 +99,19 @@ for (cx, w, p, ref) in toks:
     ax.text(cx, T(TOK_Y + 0.45), w, ha="center", va="center", family=SANS, fontsize=FS,
             color=ENT.get(ref, INK), fontweight="bold")
     ax.text(cx, T(TOK_Y - 0.25), p, ha="center", va="center", family=MONO, fontsize=FS * 0.6, color=MUTED)
-band_label(T(tree_top) - 0.2, "1  text, as a checked langlib document (constituency tree; →id marks a reference)")
+band_label(T(tree_top) + 0.3, "1  text + tree (→id: reference)")
 
 # events, under their verbs
-band_label(EV_Y + 1.3, "2  events read off the clauses (Bridge.lean: verb + nsubj / obj / obl refs)")
+band_label(EV_Y + 1.3, "2  events (Bridge)")
 ev_xy = {}
-for c in clauses:
+for ti, c in enumerate(clauses, 1):
     vx = tok_x[c["at"]]
     ev = c["event"].replace("LangLib.Scene.Event.", "").replace("LangLib.Scene.Gate.", "")
     for k in ("Ch.", "Pl.", "Ob.", "(", ")"): ev = ev.replace(k, "")
     name, *args = ev.split()
     pretty = f"{name}({', '.join(args)})"
     colour = GOAL_C if name == "shout" else (TEXT_C if name in ("grab", "move") and "gate" in args or name == "grab" else MUTED)
-    ev_xy[pretty] = box(vx, EV_Y, pretty, colour)
+    ev_xy[pretty] = box(vx, EV_Y, f"t{ti}  {pretty}", colour)
     dashed((vx, T(TOK_Y - 0.6)), (vx, EV_Y + 0.6), colour)
     # argument words: subject / object / obl referents, nearest token with that ref in the sentence
     for ent in [c["subj"], c["obj"]] + [e for _, e in c["obls"]]:
@@ -122,22 +122,24 @@ for c in clauses:
                 dashed((toks[i][0], T(TOK_Y - 0.6)), (vx + (toks[i][0] - vx) * 0.25, EV_Y + 0.6), ENT[ent], lw=0.8, alpha=0.6)
 
 # fixed columns for the lower bands: premise x positions
-XN, XT, XA, XG, XL, XU = 72, 100, 124, 150, 178, 210
+XN, XT, XA, XG, XL, XU = 54, 78, 98, 120, 144, 170
 mg, gr, sh = ev_xy["move(mara, gate)"], ev_xy["grab(guard, mara)"], ev_xy["shout(kiran, guard)"]
 
 # scene facts and character sheet
-band_label(ST_Y + 1.3, "3  scene state after the events (State.step), and Kiran's character sheet")
-start = box(38, ST_Y, "start: everyone at the gate", MUTED)
-st_near = box(XN, ST_Y, "loc Kiran = loc Mara = gate", TEXT_C)
-st_thr = box(XT + 4, ST_Y, "threats ∋ (guard, Mara)", TEXT_C)
+band_label(ST_Y + 1.3, "3  scene state")
+start = box(20, ST_Y, "t0: everyone at the gate", MUTED)
+cel = box(tok_x[clauses[0]["at"]] + 18, ST_Y + 1.5, "after t1: Mara in cellar", MUTED, fs=FS * 0.8)
+dashed((tok_x[clauses[0]["at"]], EV_Y - 0.6), (cel[0] - 6, ST_Y + 2.05), MUTED)
+st_near = box(XN, ST_Y, "after t3: Kiran, Mara at gate", TEXT_C)
+st_thr = box(XT + 2, ST_Y, "after t4: threats ∋ (guard, Mara)", TEXT_C)
 st_gag = box(XG, ST_Y, "Kiran not gagged", TEXT_C)
-sheet = box(196, ST_Y, "Kiran: timid · loyalty ≻ safety ≻ pride · ally Mara", SHEET_C)
+sheet = box(172, ST_Y, "Kiran: timid · loyalty ≻ safety ≻ pride · ally Mara", SHEET_C)
 dashed((mg[0], EV_Y - 0.6), (st_near[0], ST_Y + 0.6), TEXT_C)
-dashed((start[0] + 9.5, ST_Y), (st_near[0] - 9.5, ST_Y), MUTED)
+dashed((start[0] + 9.5, ST_Y), (st_near[0] - 12, ST_Y), MUTED)
 dashed((gr[0], EV_Y - 0.6), (st_thr[0], ST_Y + 0.6), TEXT_C)
 
 # derivation (premises on top, conclusion at the bottom)
-band_label(DER_TOP + 1.2, "4  the defeasible derivation over shoutTheory (premises on top)")
+band_label(DER_TOP + 1.2, "4  derivation")
 y0 = DER_TOP - 0.4           # leaves of the attack branch
 y1 = y0 - 1.6                # A/B premises, attack sub-conclusions
 y2 = y1 - 1.6                # premises of the final rule
@@ -164,7 +166,7 @@ C = (XL + XU) / 2; t(C, y2, "every attack fails")
 rule(XN - 8, XU + 11, y2 - 0.8, "Def.rule protect")
 goal = ((XN + XU) / 2, y3)
 t(goal[0], goal[1], "+∂ shouts(k,g)", GOAL_C, fs=FS * 1.15)
-t(goal[0], y3 - 1.1, "⇒ InCharacter s (shout kiran guard)      theorem fromText_valid : Valid start fromText",
+t(goal[0], y3 - 1.1, "⇒ InCharacter (start.at fromText 4) (shout kiran guard)     fromText_valid · mara_was_in_cellar · kiran_never_knows_key",
   MUTED, fs=FS * 0.75)
 
 # state → premises
@@ -175,10 +177,10 @@ dashed((sheet[0] - 18, ST_Y - 0.6), (XA, y1 + 0.5), SHEET_C)
 dashed((sheet[0] - 6, ST_Y - 0.6), (XL, y0 + 0.5), SHEET_C)
 # the shout event is the question the derivation answers: route down the right margin
 xr = W - 3
-ax.plot([sh[0] + 7, xr, xr], [EV_Y, EV_Y, y3], ls="--", color=GOAL_C, lw=1.3)
+ax.plot([sh[0] + 10, xr, xr], [EV_Y, EV_Y, y3], ls="--", color=GOAL_C, lw=1.3)
 ax.annotate("", xy=(goal[0] + 8, y3), xytext=(xr, y3),
             arrowprops=dict(arrowstyle="-|>", ls="--", color=GOAL_C, lw=1.3, shrinkA=0, shrinkB=2))
-ax.text(xr - 1, EV_Y + 0.7, "is this shout in character?", family=SANS, fontsize=FS * 0.8,
+ax.text(xr - 1, EV_Y + 0.7, "t5: is this shout in character?", family=SANS, fontsize=FS * 0.8,
         color=GOAL_C, style="italic", ha="right")
 
 ax.set_ylim(y3 - 2.2, fig_h)

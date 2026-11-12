@@ -99,6 +99,27 @@ def State.step (s : State C P O) : Event C P O → State C P O
   | .gag _ v => { s with gagged := fun x => if x == v then true else s.gagged x }
   | .drink c => { s with drunk := fun x => if x == c then true else s.drunk x }
 
+/-! ## Time
+
+Time is the position in the story: `s.run (es.take n)` is the state after the
+first `n` events. "Was" quantifies over those prefixes. -/
+
+def State.run (s : State C P O) : List (Event C P O) → State C P O
+  | [] => s
+  | e :: es => (s.step e).run es
+
+/-- The state at time `n` of story `es` (after its first `n` events). -/
+def State.at (s : State C P O) (es : List (Event C P O)) (n : Nat) : State C P O :=
+  s.run (es.take n)
+
+/-- `p` held at some time during `es`. -/
+def Was (s : State C P O) (es : List (Event C P O)) (p : State C P O → Prop) : Prop :=
+  ∃ n, n ≤ es.length ∧ p (s.at es n)
+
+/-- `p` held at every time during `es`. -/
+def Throughout (s : State C P O) (es : List (Event C P O)) (p : State C P O → Prop) : Prop :=
+  ∀ n, n ≤ es.length → p (s.at es n)
+
 /-! ## Character: a defeasible theory per action -/
 
 inductive Atom (C : Type) where
