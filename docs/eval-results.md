@@ -39,6 +39,25 @@ feedback; Sonnet and Opus numbers are from the first run (`eval/runs-v1/`).
   disagreements are hard cases (dialect `'em`, a "him" with two candidates)
   where the model is often right.
 
+## Flat format (2026-11-12, raw condition)
+
+Same corpus and loop, but the tree is sent as two flat lists (`nodes`,
+`words`), each item naming its parent with `in`; nesting depth is 3.
+
+| model | first-round token match | pass r1 | pass ≤r2 | pass ≤r3 | secs/call |
+|---|---|---|---|---|---|
+| haiku | 15% (nested 45%) | 15% (35%) | 35% (45%) | 50% (55%) | 102 (86) |
+| sonnet | 100% (85%) | 95% (80%) | 100% (100%) | 100% (100%) | 206 (116) |
+| fable | 100% (95%) | 95% (90%) | 100% (95%) | 100% (100%) | 67 (61) |
+
+- Flat removes the bracket failures: Fable passes every passage by round 2,
+  including the depth-40 Stoker paragraph that nested never passed with tokens.
+- Sonnet gets more accurate but slower (the ids cost output tokens).
+- Haiku gets worse: it drops or alters more tokens (6.9 edits per first
+  answer vs 3.2) and invents UD subtype roles (`aux:pass`, `nmod:poss`).
+- Recommendation: flat for strong models; accept UD subtypes by mapping them
+  to their base relation.
+
 ## Next
 
 - Flat encoding (token table plus head and phrase ids) to remove the
