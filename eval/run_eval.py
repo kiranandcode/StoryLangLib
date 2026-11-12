@@ -57,9 +57,29 @@ def tokens(text_path: pathlib.Path) -> list[str]:
     return out.splitlines()
 
 
-def feedback(rep: dict) -> str:
+def unclosed(s: str) -> str:
+    """The closers needed to balance `s`, ignoring brackets inside strings."""
+    stack, instr, esc = [], False, False
+    for ch in s:
+        if instr:
+            if esc: esc = False
+            elif ch == "\\": esc = True
+            elif ch == '"': instr = False
+        elif ch == '"': instr = True
+        elif ch in "[{": stack.append(ch)
+        elif ch in "]}" and stack: stack.pop()
+    return "".join("}" if c == "{" else "]" for c in reversed(stack))
+
+
+def feedback(rep: dict, doc: str = "") -> str:
     if "parseError" in rep:
-        return f"Your JSON was rejected: {rep['parseError']}"
+        msg = f"Your JSON was rejected: {rep['parseError']}"
+        missing = unclosed(doc)
+        if missing:
+            msg += (f"\nYour brackets do not balance: the document ends with {len(missing)} "
+                    f"unclosed brackets and would need `{missing}` appended. Count the closers "
+                    "at the end of each sentence tree and of the document carefully.")
+        return msg
     lines = []
     if not rep["tokensMatch"]:
         lines.append(f"The leaves do not match the passage: the passage has {rep['srcTokens']} "
@@ -98,7 +118,7 @@ def run_one(model: str, cond: str, pid: str, rounds: int) -> dict:
         if rep.get("ok"):
             break
         prompt = (base + "\n## Your previous answer\n\n" + doc +
-                  "\n\n## Checker report\n\n" + feedback(rep) +
+                  "\n\n## Checker report\n\n" + feedback(rep, doc) +
                   "\n\nOutput the corrected JSON document in full.")
     return {"model": model, "cond": cond, "passage": pid, "rounds": hist,
             "passed": hist[-1]["ok"], "passed_round": len(hist) if hist[-1]["ok"] else None}
