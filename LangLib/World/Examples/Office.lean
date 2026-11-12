@@ -35,7 +35,7 @@ structure W where
   loc : Ch → Pl
   holder : Ob → Option Ch
   objLoc : Ob → Pl
-  beliefs : Ch → List (Belief Ch Fact)
+  beliefs : Ch → List (Held Ch Fact)
   bond : Ch → Ch → Dim → Nat
   consent : List (Ch × Ch × Act)
 
@@ -81,7 +81,7 @@ def start : W where
   loc | kiran => roof | _ => office
   holder _ := some marcus
   objLoc _ := office
-  beliefs | kiran => [] | _ => [.atom (fact (.holds marcus letter))]
+  beliefs | kiran => [] | _ => [⟨.atom (fact (.holds marcus letter)), .seen⟩]
   bond
     | kiran, marcus, .attraction => 1 | kiran, marcus, .trust => 1
     | marcus, kiran, .attraction => 2 | marcus, kiran, .trust => 2

@@ -52,7 +52,14 @@ class Perceive (W E : Type) where
 
 instance (priority := low) {W E : Type} : Perceive W E := ⟨fun _ _ w => w⟩
 
-variable {W E : Type} [Domain W E] [Perceive W E]
+/-- A property every state of a story must keep (e.g. every mind consistent).
+Without an instance it is always true. -/
+class Invariant (W : Type) where
+  holds : W → Bool
+
+instance (priority := low) {W : Type} : Invariant W := ⟨fun _ => true⟩
+
+variable {W E : Type} [Domain W E] [Perceive W E] [Invariant W]
 
 def next (w : W) (e : E) : W := Perceive.perceive w e (Domain.step w e)
 
@@ -62,17 +69,18 @@ def run (w : W) : List E → W
 
 inductive Valid : W → List E → Prop
   | nil {w} : Valid w []
-  | cons {w e es} : Domain.ok w e = true → Valid (next w e) es → Valid w (e :: es)
+  | cons {w e es} : Domain.ok w e = true → Invariant.holds (next w e) = true →
+      Valid (next w e) es → Valid w (e :: es)
 
 def validB : W → List E → Bool
   | _, [] => true
-  | w, e :: es => Domain.ok w e && validB (next w e) es
+  | w, e :: es => Domain.ok w e && Invariant.holds (next w e) && validB (next w e) es
 
 theorem validB_iff : ∀ (w : W) (es : List E), validB w es = true ↔ Valid w es
   | _, [] => by simp [validB]; exact .nil
   | w, e :: es => by
     simp only [validB, Bool.and_eq_true, validB_iff _ es]
-    exact ⟨fun ⟨h₁, h₂⟩ => .cons h₁ h₂, fun | .cons h₁ h₂ => ⟨h₁, h₂⟩⟩
+    exact ⟨fun ⟨⟨h₁, h₂⟩, h₃⟩ => .cons h₁ h₂ h₃, fun | .cons h₁ h₂ h₃ => ⟨⟨h₁, h₂⟩, h₃⟩⟩
 
 instance (w : W) (es : List E) : Decidable (Valid w es) :=
   decidable_of_iff _ (validB_iff w es)
@@ -80,8 +88,10 @@ instance (w : W) (es : List E) : Decidable (Valid w es) :=
 /-- The first event that is not allowed, with its position and reason. -/
 def firstFailure : W → List E → Nat → Option (Nat × String)
   | _, [], _ => none
-  | w, e :: es, i => if Domain.ok w e then firstFailure (next w e) es (i + 1)
-                    else some (i, Domain.why w e)
+  | w, e :: es, i =>
+    if !Domain.ok w e then some (i, Domain.why w e)
+    else if !Invariant.holds (next w e) then some (i, "it would leave the story inconsistent")
+    else firstFailure (next w e) es (i + 1)
 
 /-! ## Time over a plain sequence -/
 

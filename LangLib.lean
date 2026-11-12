@@ -19,3 +19,4 @@ import LangLib.World.Social
 import LangLib.World.Magic
 import LangLib.World.Examples.Office
 import LangLib.World.Examples.Mage
+import LangLib.World.Examples.Gossip

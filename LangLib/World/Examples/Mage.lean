@@ -20,7 +20,7 @@ abbrev Fact := SpaceFact Ch Pl Unit ⊕ MagicFact Ch
 
 structure W where
   loc : Ch → Pl
-  beliefs : Ch → List (Belief Ch Fact)
+  beliefs : Ch → List (Held Ch Fact)
   mana : Ch → Nat
 
 def upd {α β : Type} [DecidableEq α] (f : α → β) (a : α) (b : β) : α → β :=
