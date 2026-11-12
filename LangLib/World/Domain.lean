@@ -80,6 +80,9 @@ inductive Valid : W → List E → Prop
   | cons {w e es} : Domain.ok w e = true → Invariant.holds (next w e) = true →
       Valid (next w e) es → Valid w (e :: es)
 
+/-- `w ⊨ es`: the events `es` make a valid story from state `w`. -/
+notation:50 w " ⊨ " es => Valid w es
+
 def validB : W → List E → Bool
   | _, [] => true
   | w, e :: es => Domain.ok w e && Invariant.holds (next w e) && validB (next w e) es

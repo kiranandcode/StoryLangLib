@@ -93,10 +93,31 @@ inductive Unbeaten (T : Theory α L) : Rule α L → Rule α L → Prop
   | notSup {t s} : T.sup t s = false → Unbeaten T t s
 end
 
+/-! ## Notation
+
+Read `T ⊢ …` as "in theory `T`, …".
+
+| notation          | relation          | reading                                   |
+|-------------------|-------------------|-------------------------------------------|
+| `T ⊢+Δ q`         | `Strict T q`      | `q` follows by strict rules               |
+| `T ⊢+∂ q`         | `Def T q`         | `q` is defeasibly provable                |
+| `T ⊢−∂ q`         | `NotDef T q`      | `q` is demonstrably not defeasibly provable |
+| `T ⊢ s ⇏ q`       | `Rebutted T q s`  | the attack of rule `s` on `q` fails       |
+| `T ⊢ r ✗`         | `Discarded T r`   | some premise of rule `r` is refuted       |
+| `T ⊢ t ⊁ s`       | `Unbeaten T t s`  | rule `t` does not override rule `s`       |
+-/
+
+@[inherit_doc] notation:50 T " ⊢+Δ " q => Strict T q
+@[inherit_doc] notation:50 T " ⊢+∂ " q => Def T q
+@[inherit_doc] notation:50 T " ⊢−∂ " q => NotDef T q
+@[inherit_doc] notation:50 T " ⊢ " s " ⇏ " q => Rebutted T q s
+@[inherit_doc] notation:50 T " ⊢ " r " ✗" => Discarded T r
+@[inherit_doc] notation:50 T " ⊢ " t " ⊁ " s => Unbeaten T t s
+
 /-! ## Coherence -/
 
 /-- No literal is both defeasibly provable and refuted. -/
-theorem coherent (T : Theory α L) : ∀ {q}, Def T q → ¬ NotDef T q := by
+theorem coherent (T : Theory α L) : ∀ {q}, (T ⊢+∂ q) → ¬ (T ⊢−∂ q) := by
   intro q hd
   exact @Def.rec α L T
     (fun q _ => ¬ NotDef T q)
