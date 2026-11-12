@@ -131,6 +131,9 @@ inductive Plausible : W → List E → Prop
   | cons {w e es} : Domain.ok3 w e ≠ .no → Invariant.holds (next w e) = true →
       Plausible (next w e) es → Plausible w (e :: es)
 
+/-- `w ⊨? es`: plausible under assumptions (nothing ruled out). -/
+notation:50 w " ⊨? " es => Plausible w es
+
 def plausibleB : W → List E → Bool
   | _, [] => true
   | w, e :: es => Domain.ok3 w e != .no && Invariant.holds (next w e) && plausibleB (next w e) es
