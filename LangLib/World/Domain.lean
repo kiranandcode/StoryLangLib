@@ -24,15 +24,32 @@ can serve many modules.
 
 namespace LangLib.World
 
+/-- Three truth values: what a text leaves unsaid is `unknown`, not false. -/
+inductive Tri | yes | no | unknown
+  deriving DecidableEq, Repr
+
+namespace Tri
+def ofBool : Bool → Tri | true => .yes | false => .no
+/-- Kleene conjunction: `no` wins, then `unknown`. -/
+def and : Tri → Tri → Tri
+  | .no, _ | _, .no => .no
+  | .yes, t | t, .yes => t
+  | _, _ => .unknown
+end Tri
+
 class Domain (W : Type) (E : Type) where
   ok : W → E → Bool
   step : W → E → W
   why : W → E → String := fun _ _ => "not allowed"
+  /-- Three-valued `ok`: `unknown` when the event's preconditions depend on
+  facts nobody has established; `step` then assumes what the event needs. -/
+  ok3 : W → E → Tri := fun w e => Tri.ofBool (ok w e)
 
 instance {W E₁ E₂ : Type} [Domain W E₁] [Domain W E₂] : Domain W (E₁ ⊕ E₂) where
   ok w | .inl e => Domain.ok w e | .inr e => Domain.ok w e
   step w | .inl e => Domain.step w e | .inr e => Domain.step w e
   why w | .inl e => Domain.why w e | .inr e => Domain.why w e
+  ok3 w | .inl e => Domain.ok3 w e | .inr e => Domain.ok3 w e
 
 /-- `E` is one of the summands of `S`. -/
 class Inject (E S : Type) where
@@ -103,6 +120,36 @@ def firstFailure : W → List E → Nat → Option (Nat × String)
     if !Domain.ok w e then some (i, Domain.why w e)
     else if !Invariant.holds (next w e) then some (i, "it would leave the story inconsistent")
     else firstFailure (next w e) es (i + 1)
+
+/-! ## Plausible under assumptions
+
+`Plausible w es` asks only that no event is ruled out: preconditions that are
+unknown are assumed, and `assumptions` lists them (with why each was needed). -/
+
+inductive Plausible : W → List E → Prop
+  | nil {w} : Plausible w []
+  | cons {w e es} : Domain.ok3 w e ≠ .no → Invariant.holds (next w e) = true →
+      Plausible (next w e) es → Plausible w (e :: es)
+
+def plausibleB : W → List E → Bool
+  | _, [] => true
+  | w, e :: es => Domain.ok3 w e != .no && Invariant.holds (next w e) && plausibleB (next w e) es
+
+theorem plausibleB_iff : ∀ (w : W) (es : List E), plausibleB w es = true ↔ Plausible w es
+  | _, [] => by simp [plausibleB]; exact .nil
+  | w, e :: es => by
+    simp only [plausibleB, Bool.and_eq_true, bne_iff_ne, ne_eq, plausibleB_iff _ es]
+    exact ⟨fun ⟨⟨h₁, h₂⟩, h₃⟩ => .cons h₁ h₂ h₃, fun | .cons h₁ h₂ h₃ => ⟨⟨h₁, h₂⟩, h₃⟩⟩
+
+instance (w : W) (es : List E) : Decidable (Plausible w es) :=
+  decidable_of_iff _ (plausibleB_iff w es)
+
+/-- The events that went through only by assuming something, and what. -/
+def assumptions : W → List E → Nat → List (Nat × String)
+  | _, [], _ => []
+  | w, e :: es, i =>
+    (if Domain.ok3 w e == .unknown then [(i, Domain.why w e)] else []) ++
+    assumptions (next w e) es (i + 1)
 
 /-! ## Time over a plain sequence -/
 

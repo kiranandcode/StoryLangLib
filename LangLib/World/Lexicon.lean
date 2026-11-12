@@ -2,6 +2,7 @@ import LangLib.Story.Bridge
 import LangLib.World.Mind
 import LangLib.World.Social
 import LangLib.World.Magic
+import LangLib.World.Dialogue
 
 /-!
 # Verb lexicons: from checked text to a told story
@@ -113,6 +114,25 @@ def mindLex {Φ : Type} (R : Resolver C P O) (factOf : Clause → Option (Φ × 
   -- factive: the narrator commits to the complement, and the subject must be able to know it
   (["realise", "realize", "know", "discover", "understand"], fun c cs => do
     return .realise (← c.subj >>= R.char) (← (c.complement cs).bind factOf))]⟩
+
+/-- Questions, answers, hints, sarcasm, promises and requests. The content comes
+from the complement clause; for `ask` only the fact matters (whether ...). -/
+def dialogueLex {Φ : Type} (R : Resolver C P O) (factOf : Clause → Option (Φ × Bool)) :
+    Lexicon (DialogueEv C Φ) := ⟨[
+  (["ask", "wonder", "inquire"], fun c cs => do
+    let k ← c.complement cs
+    if k.verb == "kiss" || (actOf k.verb).isSome then none else
+    return .ask (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← factOf k).1),
+  (["answer", "reply", "respond"], fun c cs => do
+    return .answer (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
+  (["hint", "imply", "suggest"], fun c cs => do
+    return .hint (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
+  (["tease", "joke", "mock"], fun c cs => do
+    return .sarcasm (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to", "with"]) >>= R.char)) (← (c.complement cs).bind factOf)),
+  (["promise", "vow", "pledge"], fun c cs => do
+    return .promise (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf)),
+  (["request", "beg", "urge"], fun c cs => do
+    return .request (← c.subj >>= R.char) (← ((c.obj <|> c.oblTo ["to"]) >>= R.char)) (← (c.complement cs).bind factOf))]⟩
 
 def spellOf : String → Option Spell
   | "light" => some .light | "ward" => some .ward | "heal" => some .heal

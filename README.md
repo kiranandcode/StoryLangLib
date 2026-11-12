@@ -118,7 +118,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 |       |-- Time.lean, Domain.lean, Persona.lean
 |       |-- Space.lean, Mind.lean, Social.lean, Magic.lean
 |       |-- Lexicon.lean
-|       `-- Examples        Office, OfficeText, Gossip, Mage
+|       `-- Examples        Office, OfficeText, Gossip, Mage, Date
 |-- Main.lean
 |-- examples
 |-- eval
@@ -136,13 +136,15 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/Story/Bridge  | Clauses (verb, subject, object, obliques) read off a checked document       |
 | LangLib/Story/Scene*  | The first, single-file scene model (the gate scene), kept as a worked case  |
 | LangLib/World/Time    | Allen interval relations, durations, an untrusted solver, timelines as consistency certificates |
-| LangLib/World/Domain  | Composable story semantics: `Domain`, `Valid`, stories told out of order    |
+| LangLib/World/Domain  | Composable story semantics: `Domain`, `Valid`, three-valued `ok3` and `Plausible` under listed assumptions, stories told out of order |
 | LangLib/World/Persona | Traits, ranked values, and in-character checks via defeasible logic         |
 | LangLib/World/Space   | Places, objects, possession, what each event lets witnesses see             |
 | LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), lore, factive `realise` |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
-| LangLib/World/Lexicon | Verb lexicons per module; adverbials ("meanwhile", "an hour earlier") to time constraints |
+| LangLib/World/Dialogue | Questions under discussion, answers, hints (implicature), sarcasm read by rapport, promises (kept/broken), requests |
+| LangLib/World/Goals   | Goals, plans, `Purpose` of each action; `motives` explains every action or flags it unmotivated; `planWorks` |
+| LangLib/World/Lexicon | Verb lexicons per module (incl. evidential and dialogue verbs); adverbials ("meanwhile", "an hour earlier") to time constraints |
 | eval                  | Corpus, model runner, analysis, Jev reference check                         |
 | viz                   | Scripts for the figures in `viz/out`                                        |
 | docs                  | Literature reviews (linguistic encoding, story logic) and results           |

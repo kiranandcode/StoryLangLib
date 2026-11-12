@@ -133,7 +133,7 @@ end Evid
 
 variable {W C P Φ : Type} [DecidableEq C] [DecidableEq P] [DecidableEq Φ]
   [HasLoc W C P] [HasMinds W C Φ] [Supersedes Φ] [Truth W Φ] [Lore Φ] [Credence W C Φ]
-  [Fluent Φ] [Clock W]
+  [Fluent Φ] [Clock W] [PartialLoc W C]
 
 open HasLoc HasMinds
 
@@ -324,24 +324,32 @@ def witness [Cast C] (w : W) (p : P) (φs : List Φ) : W :=
     (φs.flatMap fun φ => .atom φ :: (present.filter (· != x)).map fun y => .bel y (.atom φ)).foldl
       (fun w b => learn w x b .seen) w) w
 
+def mindOk3 (w : W) : MindEv C Φ → Tri
+  | .tell c d l | .whisper c d l => (together3 w c d).and (Tri.ofBool ((view w c).contains l))
+  | .lie c d l => (together3 w c d).and (Tri.ofBool (!(view w c).contains l))
+  | .notice _ l e => Tri.ofBool (!e.perceptual || truthLit w l)
+  | .realise c l => Tri.ofBool (truthLit w l && (closure (view w c)).contains l)
+
 instance [Cast C] : Domain W (MindEv C Φ) where
-  ok w
-    | .tell c d l | .whisper c d l => loc w c == loc w d && (view w c).contains l
-    | .lie c d l => loc w c == loc w d && !(view w c).contains l
-    | .notice _ l e => !e.perceptual || truthLit w l
-    | .realise c l => truthLit w l && (closure (view w c)).contains l
+  ok3 := mindOk3
+  ok w e := mindOk3 w e == .yes
   step w
     | .tell c d l =>
+      let w := meet w c d
       let hearers := Cast.all.filter fun x => x != c && loc w x == loc w c
       let w := hearers.foldl (fun w x => learn w x (ofLit l) (.told c)) w
       learn w c (.bel d (ofLit l)) .self
-    | .whisper c d l | .lie c d l => learn (learn w d (ofLit l) (.told c)) c (.bel d (ofLit l)) .self
+    | .whisper c d l | .lie c d l =>
+      let w := meet w c d
+      learn (learn w d (ofLit l) (.told c)) c (.bel d (ofLit l)) .self
     | .notice c l e => learn w c (ofLit l) e
     | .realise c l => learn w c (ofLit l) .inferred
   why w
     | .tell c d _ | .whisper c d _ =>
-      if loc w c != loc w d then "they are not together" else "the speaker does not think that"
-    | .lie c d _ => if loc w c != loc w d then "they are not together"
+      if together3 w c d == .unknown then "assumes they were together"
+      else if loc w c != loc w d then "they are not together" else "the speaker does not think that"
+    | .lie c d _ => if together3 w c d == .unknown then "assumes they were together"
+                    else if loc w c != loc w d then "they are not together"
                     else "the speaker thinks it is true, so it is not a lie"
     | .notice _ _ _ => "a perception must be of something true"
     | .realise _ l => if !truthLit w l then "the text says they know it, but it is false"

@@ -22,3 +22,6 @@ import LangLib.World.Examples.Mage
 import LangLib.World.Examples.Gossip
 import LangLib.World.Lexicon
 import LangLib.World.Examples.OfficeText
+import LangLib.World.Dialogue
+import LangLib.World.Goals
+import LangLib.World.Examples.Date

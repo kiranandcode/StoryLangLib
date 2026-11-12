@@ -79,26 +79,95 @@ inductive SpaceFact (C P O : Type) where
   | holds (c : C) (o : O)
   deriving DecidableEq, Repr
 
-variable {W C P O : Type} [DecidableEq C] [DecidableEq P] [DecidableEq O] [HasSpace W C P O]
+/-! ## What is known
 
-open HasLoc HasSpace
+A text rarely says where everyone starts. `PartialLoc` marks whose location is
+established; `PartialObj` does the same for objects (where it is and who holds
+it). By default everything is known. An event that needs an unknown fact is
+`unknown` (not ruled out), and its `step` *assumes* what it needs, making the
+fact known: "Mara took the letter" places Mara where the letter was. -/
+
+class PartialLoc (W C : Type) where
+  locKnown : W → C → Bool
+  /-- `assumeAt w a b`: put `a` where `b` is, and mark it known -/
+  assumeAt : W → C → C → W
+  markLoc : W → C → W
+
+instance (priority := low) {W C : Type} : PartialLoc W C := ⟨fun _ _ => true, fun w _ _ => w, fun w _ => w⟩
+
+class PartialObj (W O : Type) where
+  objKnown : W → O → Bool
+  markObj : W → O → W
+
+instance (priority := low) {W O : Type} : PartialObj W O := ⟨fun _ _ => true, fun w _ => w⟩
+
+section
+variable {W C P : Type} [DecidableEq C] [DecidableEq P] [HasLoc W C P] [PartialLoc W C]
+open HasLoc PartialLoc
+
+/-- Are `a` and `b` in the same place: yes, no, or unknown. -/
+def together3 (w : W) (a b : C) : Tri :=
+  if locKnown w a && locKnown w b then Tri.ofBool (loc w a == loc w b) else .unknown
+
+/-- Assume `a` and `b` are together, where needed. -/
+def meet (w : W) (a b : C) : W :=
+  if locKnown w a && locKnown w b then w
+  else if locKnown w b then assumeAt w a b
+  else assumeAt w b a
+end
+
+variable {W C P O : Type} [DecidableEq C] [DecidableEq P] [DecidableEq O] [HasSpace W C P O]
+  [PartialLoc W C] [PartialObj W O]
+
+open HasLoc HasSpace PartialLoc PartialObj
+
+/-- Place `c` at `o` (when `c`'s location is unknown) or `o` at `c` (when the
+object's is), whichever is unknown, so that `c` can take `o`. -/
+private def meetObj (w : W) (c : C) (o : O) : W :=
+  let w := if objKnown w o then w else markObj (setHolder (setObjLoc w o (loc w c)) o none) o
+  if locKnown w c then w else markLoc (setLoc w c (objLoc w o)) c
 
 instance : Domain W (SpaceEv C P O) where
-  ok w
-    | .move _ _ => true
-    | .take c o => holder w o == none && objLoc w o == loc w c
-    | .drop c o => holder w o == some c
-    | .give c d o => holder w o == some c && loc w c == loc w d
+  ok3 w
+    | .move _ _ => .yes
+    | .take c o =>
+      if !objKnown w o then .unknown
+      else if holder w o != none then .no
+      else if locKnown w c then Tri.ofBool (objLoc w o == loc w c) else .unknown
+    | .drop c o => if objKnown w o then Tri.ofBool (holder w o == some c) else .unknown
+    | .give c d o =>
+      (if objKnown w o then Tri.ofBool (holder w o == some c) else .unknown).and (together3 w c d)
+  ok w e := (match e with
+    | .move _ _ => Tri.yes
+    | .take c o =>
+      if !objKnown w o then .unknown
+      else if holder w o != none then .no
+      else if locKnown w c then Tri.ofBool (objLoc w o == loc w c) else .unknown
+    | .drop c o => if objKnown w o then Tri.ofBool (holder w o == some c) else .unknown
+    | .give c d o =>
+      (if objKnown w o then Tri.ofBool (holder w o == some c) else .unknown).and (together3 w c d)) == .yes
   step w
-    | .move c p => setLoc w c p
-    | .take c o => setHolder w o (some c)
-    | .drop c o => setObjLoc (setHolder w o none) o (loc w c)
-    | .give _ d o => setHolder w o (some d)
+    | .move c p => markLoc (setLoc w c p) c
+    | .take c o => let w := meetObj w c o; setHolder w o (some c)
+    | .drop c o =>
+      let w := if objKnown w o then w else markObj (setHolder w o (some c)) o
+      setObjLoc (setHolder w o none) o (loc w c)
+    | .give c d o =>
+      let w := if objKnown w o then w else markObj (setHolder w o (some c)) o
+      setHolder (meet w d c) o (some d)
   why w
     | .move _ _ => ""
-    | .take _ o => if holder w o != none then "someone already holds it" else "it is not where they are"
-    | .drop _ _ => "they do not hold it"
-    | .give c _ o => if holder w o != some c then "they do not hold it" else "they are not together"
+    | .take c o =>
+      if !objKnown w o then "assumes the object was there and unheld"
+      else if holder w o != none then "someone already holds it"
+      else if !locKnown w c then "assumes they were where it was"
+      else "it is not where they are"
+    | .drop _ o => if !objKnown w o then "assumes they held it" else "they do not hold it"
+    | .give c d o =>
+      if !objKnown w o then "assumes they held it"
+      else if holder w o != some c then "they do not hold it"
+      else if together3 w c d == .unknown then "assumes they were together"
+      else "they are not together"
 
 instance : Truth W (SpaceFact C P O) where
   truth w

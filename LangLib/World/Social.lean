@@ -62,7 +62,7 @@ inductive SAtom (C : Type) where
   deriving DecidableEq, Repr
 
 variable {W C P : Type} [DecidableEq C] [DecidableEq P]
-  [HasLoc W C P] [HasBonds W C] [HasPersona W C]
+  [HasLoc W C P] [HasBonds W C] [HasPersona W C] [PartialLoc W C]
 
 open HasLoc HasBonds
 
@@ -105,23 +105,32 @@ private def explainChar {α : Type} [DecidableEq α] (T : Theory α Label) (q : 
   s!"out of character ({", ".intercalate (blockers T q)}); to justify it, first establish: " ++
     " or ".intercalate (repairs T q)
 
+def socialOk3 (w : W) : SocialEv C → Tri
+  | .flirt a b => (together3 w a b).and (Tri.ofBool (inCharacter (flirtTheory w a b) ⟨.flirts a b, true⟩))
+  | .confide a b | .argue a b | .ask a b _ => together3 w a b
+  | .agree b a x => (together3 w a b).and (Tri.ofBool (inCharacter (agreeTheory w b a x) ⟨.agrees b a x, true⟩))
+  | .withdraw _ _ _ => .yes
+  | .act a b x => (together3 w a b).and (Tri.ofBool (consented w b a x && consented w a b x))
+
+private def socialParties : SocialEv C → C × C
+  | .flirt a b | .confide a b | .argue a b | .ask a b _ | .agree a b _ | .withdraw a b _ | .act a b _ => (a, b)
+
 instance : Domain W (SocialEv C) where
-  ok w
-    | .flirt a b => loc w a == loc w b && inCharacter (flirtTheory w a b) ⟨.flirts a b, true⟩
-    | .confide a b | .argue a b | .ask a b _ => loc w a == loc w b
-    | .agree b a x => loc w a == loc w b && inCharacter (agreeTheory w b a x) ⟨.agrees b a x, true⟩
-    | .withdraw _ _ _ => true
-    | .act a b x => loc w a == loc w b && consented w b a x && consented w a b x
-  step w
+  ok3 := socialOk3
+  ok w e := socialOk3 w e == .yes
+  step w0 e :=
+    let w := meet w0 (socialParties e).1 (socialParties e).2
+    match e with
     | .flirt a b => bump w b a .attraction 1
     | .confide a b => bump (bump w b a .trust 1) a b .affection 1
     | .argue a b => bump (bump (bump (bump w a b .tension 1) b a .tension 1) a b .trust (-1)) b a .trust (-1)
     | .ask _ _ _ => w
     | .agree b a x => setConsent w ((b, a, x) :: consent w)
-    | .withdraw b a x => setConsent w ((consent w).filter (· != (b, a, x)))
+    | .withdraw b a x => setConsent w0 ((consent w0).filter (· != (b, a, x)))
     | .act a b _ => bump (bump w a b .affection 1) b a .affection 1
   why w
-    | .flirt a b => if loc w a != loc w b then "they are not together"
+    | .flirt a b => if together3 w a b == .unknown then "assumes they were together"
+                    else if loc w a != loc w b then "they are not together"
                     else explainChar (flirtTheory w a b) ⟨.flirts a b, true⟩
     | .agree b a x => if loc w a != loc w b then "they are not together"
                       else explainChar (agreeTheory w b a x) ⟨.agrees b a x, true⟩
