@@ -110,6 +110,8 @@ Read `T ⊢ …` as "in theory `T`, …".
 @[inherit_doc] notation:50 T " ⊢+Δ " q => Strict T q
 @[inherit_doc] notation:50 T " ⊢+∂ " q => Def T q
 @[inherit_doc] notation:50 T " ⊢−∂ " q => NotDef T q
+/-- `T ⊬+Δ q`: `q` does not follow by strict rules. -/
+notation:50 T " ⊬+Δ " q => ¬ Strict T q
 @[inherit_doc] notation:50 T " ⊢ " s " ⇏ " q => Rebutted T q s
 @[inherit_doc] notation:50 T " ⊢ " r " ✗" => Discarded T r
 @[inherit_doc] notation:50 T " ⊢ " t " ⊁ " s => Unbeaten T t s

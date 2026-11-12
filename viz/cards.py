@@ -108,13 +108,14 @@ def key():
 
 def dl():
     return card("c1-defeasible.png", "Defeasible logic (LangLib/Story/DL.lean)", [
+        ("note", "T = ⟨F, R, >⟩: facts, rules (body ⇒ head), and which rule overrides which. See the primer card."),
         ("rel", "T ⊢+Δ q", "q follows from the facts by strict rules alone", "inductive Strict"),
-        ("rule", "fact", P("q ∈ F", concl="T ⊢+Δ q"), ["| fact : q ∈ T.facts →", "    T ⊢+Δ q"]),
-        ("rule", "strict", P("r ∈ R strict", "head r = q", "∀a ∈ body r. T ⊢+Δ a", concl="T ⊢+Δ q"),
+        ("rule", "fact", P("q ∈ F   (F = T.facts)", concl="T ⊢+Δ q"), ["| fact : q ∈ T.facts →", "    T ⊢+Δ q"]),
+        ("rule", "strict", P("r ∈ R (= T.rules), strict", "head r = q (its conclusion)", "∀a ∈ body r. T ⊢+Δ a", concl="T ⊢+Δ q"),
          ["| rule r : r ∈ T.rules → r.kind = .strict →", "    r.head = q → (∀ a ∈ r.body, T ⊢+Δ a) →", "    T ⊢+Δ q"]),
         ("rel", "T ⊢+∂ q", "q is defeasibly provable: some rule supports it and every attack on it fails", "inductive Def"),
         ("rule", "Def.strict", P("T ⊢+Δ q", concl="T ⊢+∂ q"), ["| strict : (T ⊢+Δ q) → T ⊢+∂ q"]),
-        ("rule", "Def.rule", P("r ∈ R, head r = q, r not a defeater", "∀a ∈ body r. T ⊢+∂ a", "¬ T ⊢+Δ ~q",
+        ("rule", "Def.rule", P("r ∈ R, head r = q, r not a defeater", "∀a ∈ body r. T ⊢+∂ a", "T ⊬+Δ ~q",
                                "∀s with head ~q. T ⊢ s ⇏ q", concl="T ⊢+∂ q"),
          ["| rule r : r ∈ T.rules → r.kind ≠ .defeater →", "    r.head = q → (∀ a ∈ r.body, T ⊢+∂ a) →",
           "    (¬ T ⊢+Δ q.neg) →", "    (∀ s ∈ T.rules, s.head = q.neg → T ⊢ s ⇏ q) →", "    T ⊢+∂ q"]),
@@ -126,11 +127,11 @@ def dl():
         ("rel", "T ⊢ r ✗", "rule r is out of play: one of its premises is refuted", "inductive Discarded"),
         ("rule", "mk", P("a ∈ body r", "T ⊢−∂ a", concl="T ⊢ r ✗"), ["| mk a : a ∈ r.body → (T ⊢−∂ a) →", "    T ⊢ r ✗"]),
         ("rel", "T ⊢−∂ q", "q is demonstrably not provable: three ways it can fail", "inductive NotDef"),
-        ("rule", "unsupported", P("¬ T ⊢+Δ q", "∀r for q. T ⊢ r ✗", concl="T ⊢−∂ q"),
+        ("rule", "unsupported", P("T ⊬+Δ q", "∀r for q. T ⊢ r ✗", concl="T ⊢−∂ q"),
          ["| unsupported : (¬ T ⊢+Δ q) →", "    (∀ r ∈ T.rules, r.kind ≠ .defeater →", "      r.head = q → T ⊢ r ✗) → T ⊢−∂ q"]),
-        ("rule", "contradicted", P("¬ T ⊢+Δ q", "T ⊢+Δ ~q", concl="T ⊢−∂ q"),
+        ("rule", "contradicted", P("T ⊬+Δ q", "T ⊢+Δ ~q", concl="T ⊢−∂ q"),
          ["| contradicted : (¬ T ⊢+Δ q) →", "    (T ⊢+Δ q.neg) → T ⊢−∂ q"]),
-        ("rule", "defeated", P("¬ T ⊢+Δ q", "s for ~q applies", "∀t for q. T ⊢ t ⊁ s", concl="T ⊢−∂ q"),
+        ("rule", "defeated", P("T ⊬+Δ q", "s for ~q applies", "∀t for q. T ⊢ t ⊁ s", concl="T ⊢−∂ q"),
          ["| defeated s : (¬ T ⊢+Δ q) → s ∈ T.rules →", "    s.head = q.neg → (∀ a ∈ s.body, T ⊢+∂ a) →",
           "    (∀ t ∈ T.rules, … → T ⊢ t ⊁ s) → T ⊢−∂ q"]),
         ("thm", "coherent", P("T ⊢+∂ q", "T ⊢−∂ q", concl="⊥"),
@@ -207,3 +208,76 @@ def minds():
 if __name__ == "__main__":
     for f in (key(), dl(), stories(), minds()):
         print(f)
+
+
+def doc(fname, title, blocks, W=112):
+    """blocks: (kind, text): 'h' heading, 'p' prose, 'm' monospace line, 'gap'."""
+    H = 2.5 + sum({"h": 1.9, "p": 1.15, "m": 1.1, "gap": 0.6}[k] for k, _ in blocks)
+    fig, ax = proofs.figure(W, H)
+    ax.text(0.6, H - 1.1, title, family=SANS, fontsize=FS * 1.5, fontweight="bold", color=INK, va="center")
+    y = H - 2.4
+    for k, t in blocks:
+        if k == "h":
+            y -= 1.0
+            ax.text(0.6, y, t, family=SANS, fontsize=FS * 1.15, fontweight="bold", color=RULE_C, va="center")
+            y -= 0.9
+        elif k == "p":
+            ax.text(1.2, y, t, family=SANS, fontsize=FS * 0.98, color=INK, va="center"); y -= 1.15
+        elif k == "m":
+            ax.text(2.0, y, t, family=MONO, fontsize=FS * 0.95, color=INK, va="center"); y -= 1.1
+        else:
+            y -= 0.6
+    out = OUT / fname
+    fig.savefig(out, dpi=150, facecolor="white")
+    plt.close(fig)
+    return out
+
+
+def primer():
+    return doc("c1a-primer.png", "Before the rules: what T, F, R, head, strict, defeater and 'defeasibly' mean", [
+        ("h", "A theory T is a small database:  T = ⟨ F, R, > ⟩   (Lean: T.facts, T.rules, T.sup)"),
+        ("p", "F   facts: things simply given.   e.g. timid(Kiran), ally(Kiran, Mara), threatens(guard, Mara)"),
+        ("p", "R   rules: each rule r has premises  body r  and a conclusion  head r."),
+        ("p", ">   which rule overrides which. In stories it comes from the character's values: loyalty ≻ safety makes"),
+        ("p", "     a loyalty rule override a safety rule. Strict rules override everything."),
+        ("h", "Three kinds of rule (r.kind)"),
+        ("m", "strict       body → head    like logical implication; never overridden"),
+        ("m", "                            gagged(k) → ¬shouts(k, g)"),
+        ("m", "defeasible   body ⇒ head    'normally': holds unless something overrides it"),
+        ("m", "                            timid(k) ⇒ ¬shouts(k, g)          [safety]"),
+        ("m", "                            threatens(g,m), ally(k,m), near(k,m) ⇒ shouts(k, g)   [loyalty]"),
+        ("m", "defeater     body ⇝ head    can only BLOCK the opposite conclusion; never proves head by itself"),
+        ("m", "                            drunk(k) ⇝ shouts(k, g)   (a drunk timid person might shout)"),
+        ("h", "Three judgements, each a derivation (a proof tree built from the rules on the next card)"),
+        ("m", "T ⊢+Δ q    q follows from F by strict rules only: certain, can never be withdrawn"),
+        ("m", "T ⊢+∂ q    q is defeasibly provable: a derivation that may use 'normally' rules, in which every"),
+        ("m", "           rule arguing for ~q is beaten or out of play"),
+        ("m", "T ⊢−∂ q    there is provably no such derivation"),
+        ("m", "T ⊬+Δ q    short for ¬(T ⊢+Δ q);   ~q is the opposite literal (q negated)"),
+        ("p", "'Defeasibly' = 'by default, until defeated': adding facts can withdraw a conclusion (non-monotonic)."),
+        ("p", "Timid Kiran at the market: T ⊢+∂ ¬shouts.  Add threatens(guard, Mara):  T′ ⊢+∂ shouts.  Add only drunk(k):  neither."),
+    ])
+
+
+def example():
+    k = "shouts(k,g)"
+    return card("c1b-example.png", "Worked example: why  T ⊢+∂ shouts(k,g)  at the gate (k = Kiran, m = Mara, g = guard)", [
+        ("rel", "T = ⟨F, R, >⟩", "F = {timid(k), ally(k,m), near(k,m), threatens(g,m)}    > : protect > timidQuiet (loyalty ≻ safety)",
+         "Scene.shoutTheory"),
+        ("note", "R = { timidQuiet: timid(k) ⇒ ¬shouts [safety],  protect: threatens(g,m), ally(k,m), near(k,m) ⇒ shouts [loyalty],  gagged: gagged(k) → ¬shouts,  drink: drunk(k) ⇝ shouts }"),
+        ("rule", "facts", P("threatens(g,m) ∈ F", concl="T ⊢+Δ threatens(g,m)"),
+         ["Strict.fact", "(same for ally(k,m), near(k,m), timid(k))"]),
+        ("rule", "lift", P("T ⊢+Δ threatens(g,m)", concl="T ⊢+∂ threatens(g,m)"), ["Def.strict"]),
+        ("rule", "no gag", P("gagged(k) ∉ F", "no rule concludes gagged(k)", "T ⊬+Δ gagged(k)", concl="T ⊢−∂ gagged(k)"),
+         ["NotDef.unsupported"]),
+        ("rule", "gag rule out", P("gagged(k) ∈ body gagged", "T ⊢−∂ gagged(k)", concl="T ⊢ gagged ✗"), ["Discarded.mk"]),
+        ("rule", "attack 1 fails", P("T ⊢ gagged ✗", concl=f"T ⊢ gagged ⇏ {k}"), ["Rebutted.discarded"]),
+        ("rule", "attack 2 fails", P("protect applies (its body is +∂)", "protect > timidQuiet", concl=f"T ⊢ timidQuiet ⇏ {k}"),
+         ["Rebutted.beaten  (t := protect)"]),
+        ("rule", "conclusion", P("protect ∈ R, head = shouts", "body all +∂", f"T ⊬+Δ ¬{k}", "both attacks fail", concl=f"T ⊢+∂ {k}"),
+         ["Def.rule  (r := protect)"]),
+        ("thm", "so", P(f"T ⊢+∂ {k}", concl=f"¬ T ⊢−∂ {k}"), ["coherent: it is not also refuted"]),
+        ("note", "At the market there is no threats(merchant, m): protect is out of play (✗), timidQuiet applies and nothing overrides it,"),
+        ("rule", "market", P("timidQuiet applies", "protect: T ⊢ protect ⊁ timidQuiet (it is ✗)", f"T ⊬+Δ {k}", concl=f"T ⊢−∂ {k}"),
+         ["NotDef.defeated  (s := timidQuiet)", "→ the shout is out of character"]),
+    ])
