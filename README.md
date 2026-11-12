@@ -112,7 +112,8 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 |   `-- World
 |       |-- Time.lean, Domain.lean, Persona.lean
 |       |-- Space.lean, Mind.lean, Social.lean, Magic.lean
-|       `-- Examples
+|       |-- Lexicon.lean
+|       `-- Examples        Office, OfficeText, Gossip, Mage
 |-- Main.lean
 |-- examples
 |-- eval
@@ -129,13 +130,14 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/Story/DL.lean | Defeasible logic as inductive relations, coherence, checked certificates    |
 | LangLib/Story/Bridge  | Clauses (verb, subject, object, obliques) read off a checked document       |
 | LangLib/Story/Scene*  | The first, single-file scene model (the gate scene), kept as a worked case  |
-| LangLib/World/Time    | Allen interval relations, durations, timelines as consistency certificates  |
+| LangLib/World/Time    | Allen interval relations, durations, an untrusted solver, timelines as consistency certificates |
 | LangLib/World/Domain  | Composable story semantics: `Domain`, `Valid`, stories told out of order    |
 | LangLib/World/Persona | Traits, ranked values, and in-character checks via defeasible logic         |
 | LangLib/World/Space   | Places, objects, possession, what each event lets witnesses see             |
-| LangLib/World/Mind    | Nested beliefs, witnessing, telling, whispering, lying, false beliefs       |
+| LangLib/World/Mind    | Beliefs with provenance, lore (Horn rules), nested views, consistency, revision and rejection of hearsay, witnessing, telling, lying |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
+| LangLib/World/Lexicon | Verb lexicons per module; adverbials ("meanwhile", "an hour earlier") to time constraints |
 | eval                  | Corpus, model runner, analysis, Jev reference check                         |
 | viz                   | Scripts for the figures in `viz/out`                                        |
 | docs                  | Literature reviews (linguistic encoding, story logic) and results           |
@@ -151,8 +153,13 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | matplotlib     |          | `viz` figures                               |
 | JEV_API_KEY    |          | optional, `eval/jev_coref.py`               |
 
+From text to theorem: `examples/office.txt` was annotated by Opus, accepted by
+`langlib check`, read by the space and relationship lexicons into the office
+story (flashback "an hour earlier", a "meanwhile"), timed by the solver, and
+proved valid (`LangLib/World/Examples/OfficeText.lean`).
+
 ## Status
 
-Work in progress. Belief reasoning (inference over what characters believe,
-rejecting contradictory beliefs) and a verb lexicon for the modular world are
-being added; durations and the timeline solver landed most recently.
+Work in progress. Open next: lexicon coverage beyond the example verbs,
+character rules for more actions, and a loop that sends checker failures back
+to the writing model.

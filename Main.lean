@@ -42,4 +42,10 @@ def main : List String → IO UInt32
           | some e => reprStr e | none => "")]
     IO.println (Json.arr out.toArray).pretty
     pure 0
+  | ["clauses", df] => do
+    let d ← readDoc df
+    let toks := d.render
+    for c in d.clauses do
+      IO.println s!"{toks.getD c.at_ ""}/{c.verb} subj={c.subj} obj={c.obj} objNoun={c.objNoun} obls={c.obls} oblNouns={c.oblNouns} comp={c.comp.map (toks.getD · "")} embedded={c.embedded} advs={c.advs}"
+    pure 0
   | _ => do IO.eprintln usage; pure 64
