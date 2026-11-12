@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 HERE = pathlib.Path(__file__).parent
 LANGLIB = HERE.parent / ".lake/build/bin/langlib"
-PROMPT = (HERE / "prompt.md").read_text()
+PROMPTS = {"nested": (HERE / "prompt.md").read_text(), "flat": (HERE / "prompt-flat.md").read_text()}
 SYSTEM = "You are an annotation engine. You output a single JSON document and nothing else."
 
 
@@ -93,12 +93,12 @@ def feedback(rep: dict, doc: str = "") -> str:
     return "\n".join(lines)
 
 
-def run_one(model: str, cond: str, pid: str, rounds: int) -> dict:
+def run_one(model: str, cond: str, pid: str, rounds: int, fmt: str = "nested") -> dict:
     text_path = HERE / "corpus" / f"{pid}.txt"
     text = text_path.read_text()
-    out_dir = HERE / "runs" / model / cond
+    out_dir = HERE / "runs" / model / (cond if fmt == "nested" else f"{cond}-{fmt}")
     out_dir.mkdir(parents=True, exist_ok=True)
-    base = PROMPT + f"\n## Passage\n\n{text}"
+    base = PROMPTS[fmt] + f"\n## Passage\n\n{text}"
     if cond == "tokens":
         base += "\n## Tokens (the leaves must be exactly these, in order)\n\n" + \
             " ".join(f"{i}:{t}" for i, t in enumerate(tokens(text_path))) + "\n"
@@ -120,7 +120,7 @@ def run_one(model: str, cond: str, pid: str, rounds: int) -> dict:
         prompt = (base + "\n## Your previous answer\n\n" + doc +
                   "\n\n## Checker report\n\n" + feedback(rep, doc) +
                   "\n\nOutput the corrected JSON document in full.")
-    return {"model": model, "cond": cond, "passage": pid, "rounds": hist,
+    return {"model": model, "cond": cond if fmt == "nested" else f"{cond}-{fmt}", "passage": pid, "rounds": hist,
             "passed": hist[-1]["ok"], "passed_round": len(hist) if hist[-1]["ok"] else None}
 
 
@@ -131,6 +131,7 @@ def main():
     ap.add_argument("--rounds", type=int, default=3)
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--only", default="")
+    ap.add_argument("--format", default="nested", choices=["nested", "flat"])
     a = ap.parse_args()
     pids = sorted(p.stem for p in (HERE / "corpus").glob("*.txt"))
     if a.only:
@@ -139,7 +140,7 @@ def main():
     res_path = HERE / "runs" / "results.jsonl"
     res_path.parent.mkdir(exist_ok=True)
     with ThreadPoolExecutor(a.jobs) as ex, res_path.open("a") as f:
-        for res in ex.map(lambda j: run_one(*j, a.rounds), jobs):
+        for res in ex.map(lambda j: run_one(*j, a.rounds, a.format), jobs):
             f.write(json.dumps(res) + "\n"); f.flush()
 
 

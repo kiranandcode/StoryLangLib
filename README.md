@@ -19,7 +19,9 @@ resolves and agrees.
 | topics | topics group entities; sentences link to a topic | `LangLib/Basic.lean` |
 | render | `Tree.render : Tree → List String` (leaves in order) | `LangLib/Render.lean` |
 | check | token diff (edit alignment), bad leaves, reference issues | `LangLib/Check.lean`, `LangLib/Diff.lean` |
-| story | defeasible logic with value-based superiority: plausible / implausible / unexplained / impossible, with repair suggestions | `LangLib/Story/` |
+| defeasible logic | `Strict`/`Def`/`NotDef` as mutually inductive relations; `coherent` (nothing is both provable and refuted); certificates checked by `decide` (`Cert.sound`) | `LangLib/Story/DL.lean` |
+| scenes | state (places, objects, knowledge by observation, threats), events with hard preconditions, `Valid` story relation, character plausibility from personas (traits + ranked values); `validB_sound`; author-facing `explain` | `LangLib/Story/Scene.lean` |
+| example | the gate scene: a valid story, a knowledge-leak plot hole, an out-of-character shout, a drunk shout, a gagged shout, each proved | `LangLib/Story/GateScene.lean` |
 
 ## CLI
 

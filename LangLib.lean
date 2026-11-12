@@ -5,5 +5,6 @@ import LangLib.Json
 import LangLib.Diff
 import LangLib.Refs
 import LangLib.Check
-import LangLib.Story.Defeasible
-import LangLib.Story.Example
+import LangLib.Story.DL
+import LangLib.Story.Scene
+import LangLib.Story.GateScene
