@@ -52,6 +52,14 @@ class Perceive (W E : Type) where
 
 instance (priority := low) {W E : Type} : Perceive W E := ⟨fun _ _ w => w⟩
 
+/-- Story time, advanced by one after every event. Without an instance it
+stands still at 0. -/
+class Clock (W : Type) where
+  now : W → Nat
+  tick : W → W
+
+instance (priority := low) {W : Type} : Clock W := ⟨fun _ => 0, id⟩
+
 /-- A property every state of a story must keep (e.g. every mind consistent).
 Without an instance it is always true. -/
 class Invariant (W : Type) where
@@ -59,9 +67,9 @@ class Invariant (W : Type) where
 
 instance (priority := low) {W : Type} : Invariant W := ⟨fun _ => true⟩
 
-variable {W E : Type} [Domain W E] [Perceive W E] [Invariant W]
+variable {W E : Type} [Domain W E] [Perceive W E] [Invariant W] [Clock W]
 
-def next (w : W) (e : E) : W := Perceive.perceive w e (Domain.step w e)
+def next (w : W) (e : E) : W := Clock.tick (Perceive.perceive w e (Domain.step w e))
 
 def run (w : W) : List E → W
   | [] => w

@@ -66,16 +66,26 @@ structure Held (C Φ : Type) where
   up : Upgrade
   /-- the character has caught the source of this report out -/
   caught : Bool := false
+  /-- story time when it was learned -/
+  heard : Nat := 0
+  /-- story time the information is about -/
+  about : Nat := 0
+  /-- why it got its strength: the prior and each adjustment, named -/
+  reasons : List (String × Int) := []
   deriving DecidableEq, Repr
 
 class HasMinds (W : Type) (C Φ : outParam Type) where
   beliefs : W → C → List (Held C Φ)
   setBeliefs : W → C → List (Held C Φ) → W
 
+/-- A literal: a fact (`true`) or its denial (`false`). -/
+abbrev BLit (Φ : Type) := Φ × Bool
+
 /-- How a character weighs information; supplied by the story. -/
-class Credence (W C : Type) where
-  /-- adjustment to the prior strength of evidence `e` for hearer `c` -/
-  adj : W → C → Evid C → Int
+class Credence (W C Φ : Type) where
+  /-- named adjustments to the prior strength of evidence `e` for hearer `c`,
+  given what it is about (so trust can depend on the topic) -/
+  reasons : W → C → Evid C → BLit Φ → List (String × Int)
   /-- strength at which `c` accepts information outright -/
   acceptAt : W → C → Int
   /-- `c` takes accepted information conservatively -/
@@ -83,11 +93,8 @@ class Credence (W C : Type) where
   /-- `c` has caught `d` out -/
   onBetrayal : W → C → C → W
 
-instance (priority := low) {W C : Type} : Credence W C :=
-  ⟨fun _ _ _ => 0, fun _ _ => 3, fun _ _ => false, fun w _ _ => w⟩
-
-/-- A literal: a fact (`true`) or its denial (`false`). -/
-abbrev BLit (Φ : Type) := Φ × Bool
+instance (priority := low) {W C Φ : Type} : Credence W C Φ :=
+  ⟨fun _ _ _ _ => [], fun _ _ => 3, fun _ _ => false, fun w _ _ => w⟩
 
 structure LoreRule (Φ : Type) where
   body : List (BLit Φ)
@@ -125,7 +132,8 @@ def testimony : Evid C → Bool
 end Evid
 
 variable {W C P Φ : Type} [DecidableEq C] [DecidableEq P] [DecidableEq Φ]
-  [HasLoc W C P] [HasMinds W C Φ] [Supersedes Φ] [Truth W Φ] [Lore Φ] [Credence W C]
+  [HasLoc W C P] [HasMinds W C Φ] [Supersedes Φ] [Truth W Φ] [Lore Φ] [Credence W C Φ]
+  [Fluent Φ] [Clock W]
 
 open HasLoc HasMinds
 
@@ -180,6 +188,9 @@ theorem admit_consistent (ls : List (BLit Φ))
     consistent (closure (admit ls)) = true :=
   admit_consistent_from ls [] h
 
+private def isFluent (h : Held C Φ) : Bool :=
+  match litOf h.b with | some l => Fluent.fluent l.1 | none => false
+
 /-- Higher rank first; on a tie, a newer radical item goes first and a newer
 conservative one goes last. -/
 def before (x y : Held C Φ) : Bool :=
@@ -188,10 +199,36 @@ def before (x y : Held C Φ) : Bool :=
 
 def ordered (hs : List (Held C Φ)) : List (Held C Φ) := sortBy before hs
 
-/-- What `c` believes now: the closure of the admitted part of their base. -/
+/-- A changeable fact is stale once newer adopted information about the same
+thing contradicts it: the world may have moved on, whatever the old evidence. -/
+def stale (hs : List (Held C Φ)) (h : Held C Φ) : Bool :=
+  isFluent h && hs.any fun h' => isFluent h' && h'.up != .note && h'.about > h.about &&
+    match litOf h.b, litOf h'.b with
+    | some l, some l' => clash l l'
+    | _, _ => false
+
+private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
+  (ordered (hs.filter fun h => !stale hs h)).filterMap fun h =>
+    if h.up == .note then none else litOf h.b
+
+/-- What `c` now believes held at time `t`: their information about times up to `t`. -/
+def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
+  closure (admit (lits ((beliefs w c).filter (·.about ≤ t))))
+
+/-- What `c` believes now. Changeable facts are judged by the most recent
+information; permanent facts *concluded* (by the lore) about any earlier time
+are kept, so "she held the letter then" still yields "she has read it". -/
 def view (w : W) (c : C) : List (BLit Φ) :=
-  closure (admit ((ordered (beliefs w c)).filterMap fun h =>
-    if h.up == .note then none else litOf h.b))
+  let base := lits (beliefs w c)
+  let times := ((beliefs w c).map (·.about)).eraseDups
+  let settled := times.flatMap fun t =>
+    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l
+  closure (admit (settled ++ base))
+
+/-- What `c` believed at story time `s`, as they remember it: the view their
+base had then. -/
+def viewAsOf (w : W) (c : C) (s : Nat) : List (BLit Φ) :=
+  closure (admit (lits ((beliefs w c).filter (·.heard ≤ s))))
 
 /-- What `c` thinks `d` believes. -/
 def viewOf (w : W) (c d : C) : List (BLit Φ) :=
@@ -202,6 +239,11 @@ def viewOf (w : W) (c d : C) : List (BLit Φ) :=
 theorem view_consistent (w : W) (c : C)
     (h : consistent (closure ([] : List (BLit Φ))) = true) :
     consistent (view w c) = true := admit_consistent _ h
+
+/-- `c` now believes `φ` held at time `t`. -/
+def thinksWas (w : W) (c : C) (φ : Φ) (t : Nat) : Bool := (viewAt w c t).contains (φ, true)
+/-- At time `s`, `c` believed `l` (and can remember that they did). -/
+def believedAt (w : W) (c : C) (s : Nat) (l : BLit Φ) : Bool := (viewAsOf w c s).contains l
 
 def thinks (w : W) (c : C) (φ : Φ) : Bool := (view w c).contains (φ, true)
 def thinksNot (w : W) (c : C) (φ : Φ) : Bool := (view w c).contains (φ, false)
@@ -219,32 +261,50 @@ def mindsConsistent [Cast C] (w : W) : Bool := Cast.all.all (mindConsistent w)
 
 /-! ## Learning -/
 
-def strength (w : W) (c : C) (e : Evid C) : Int := e.prior + Credence.adj w c e
+/-- The prior for the evidence, then each named adjustment. -/
+def reasonsFor (w : W) (c : C) (e : Evid C) (l : BLit Φ) : List (String × Int) :=
+  (s!"prior for {reprEvid e}", e.prior) :: Credence.reasons w c e l
+where reprEvid : Evid C → String
+  | .self => "own knowledge" | .seen => "seeing" | .sensed => "sensing" | .inferred => "inference"
+  | .assumed => "assumption" | .told _ => "being told" | .relayed _ => "second-hand report"
+  | .rumour => "rumour"
+
+def strength (w : W) (c : C) (e : Evid C) (l : BLit Φ) : Int :=
+  ((reasonsFor w c e l).map (·.2)).sum
 
 /-- The hearer's attitude to information of strength `s`. -/
-def attitude (w : W) (c : C) (e : Evid C) : Upgrade :=
-  let s := strength w c e
+def attitude (w : W) (c : C) (e : Evid C) (l : BLit Φ) : Upgrade :=
+  let s := strength w c e l
   if e == .self then .hard
-  else if s ≥ Credence.acceptAt w c then
-    (if Credence.stubborn w c then .conservative else .radical)
-  else if s ≥ Credence.acceptAt w c - 1 then .conservative
+  else if s ≥ Credence.acceptAt (Φ := Φ) w c then
+    (if Credence.stubborn (Φ := Φ) w c then .conservative else .radical)
+  else if s ≥ Credence.acceptAt (Φ := Φ) w c - 1 then .conservative
   else .note
 
 private def stampOf (hs : List (Held C Φ)) : Nat := hs.foldl (fun m h => max m h.stamp) 0 + 1
 
-private def insert (hs : List (Held C Φ)) (b : Belief C Φ) (e : Evid C) (u : Upgrade)
-    (rank : Nat) : List (Held C Φ) :=
-  hs ++ [{ b, src := e, rank, stamp := stampOf hs, up := u }]
+private def insert (w : W) (hs : List (Held C Φ)) (b : Belief C Φ) (e : Evid C) (u : Upgrade)
+    (rank : Nat) (rs : List (String × Int)) : List (Held C Φ) :=
+  hs ++ [{ b, src := e, rank, stamp := stampOf hs, up := u,
+           heard := Clock.now w, about := Clock.now w, reasons := rs }]
+
+private def content : Belief C Φ → Option (BLit Φ)
+  | .bel _ b => content b
+  | b => litOf b
 
 /-- `c` comes to have `b` by evidence `e`. Testimony also records that the
 speaker said it. A perception that clashes with an uncaught report from `d`
 catches `d` out. -/
 def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
-  let u := attitude w c e
-  let rank := if u == .hard then 10 else (strength w c e).toNat
-  let hs := insert (beliefs w c) b e u rank
+  match content b with
+  | none => w
+  | some l =>
+  let u := attitude w c e l
+  let rs := reasonsFor w c e l
+  let rank := if u == .hard then 10 else (strength w c e l).toNat
+  let hs := insert w (beliefs w c) b e u rank rs
   let hs := match e.speaker with
-    | some d => insert hs (.bel d b) e .radical rank
+    | some d => insert w hs (.bel d b) e .radical rank rs
     | none => hs
   let w := setBeliefs w c hs
   if !e.perceptual then w else
@@ -255,7 +315,7 @@ def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
     | _, _ => none
   let w := setBeliefs w c ((beliefs w c).map fun h =>
     if liars.any (·.1 == h) then { h with caught := true } else h)
-  liars.foldl (fun w (_, d) => Credence.onBetrayal w c d) w
+  liars.foldl (fun w (_, d) => Credence.onBetrayal (Φ := Φ) w c d) w
 
 /-- Everyone at `p` sees `φs`, and sees the others see them. -/
 def witness [Cast C] (w : W) (p : P) (φs : List Φ) : W :=
@@ -286,6 +346,31 @@ instance [Cast C] : Domain W (MindEv C Φ) where
     | .notice _ _ _ => "a perception must be of something true"
     | .realise _ l => if !truthLit w l then "the text says they know it, but it is false"
                       else "they have no way to know that"
+
+/-! ## Explanations -/
+
+section
+variable [Repr Φ] [Repr C]
+
+private def litStr (l : BLit Φ) : String := (if l.2 then "" else "not ") ++ reprStr l.1
+
+/-- Why `c` holds what they hold about `l`: for each piece of evidence, its
+reasons and strength, the attitude it got, and whether it is believed now. -/
+def explain (w : W) (c : C) (l : BLit Φ) : List String :=
+  let v := view w c
+  (beliefs w c).filterMap fun h => do
+    let l' ← litOf h.b
+    if l'.1 != l.1 then none else
+    let rs := ", ".intercalate (h.reasons.map fun (r, n) => s!"{r} {if n ≥ 0 then "+" else ""}{n}")
+    let s := (h.reasons.map (·.2)).sum
+    let status :=
+      if h.up == .note then "only noted"
+      else if v.contains l' then "believed now"
+      else match v.find? (clash l') with
+        | some x => s!"outranked by {litStr x}"
+        | none => "not believed"
+    return s!"{litStr l'} ({rs} = {s}; {reprStr h.up}): {status}"
+end
 
 /-- Witnessing: after each event, those present see what it showed. -/
 instance {E : Type} [Cast C] [Observable W E Φ P] : Perceive W E where

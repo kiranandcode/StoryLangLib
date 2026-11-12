@@ -56,6 +56,16 @@ instance {Φ₁ Φ₂ : Type} [Supersedes Φ₁] [Supersedes Φ₂] : Supersedes
     | .inr a, .inr b => Supersedes.supersedes a b
     | _, _ => false
 
+/-- Facts that can stop being true (where someone is, who holds what), as
+opposed to permanent ones (someone has read the letter). -/
+class Fluent (Φ : Type) where
+  fluent : Φ → Bool
+
+instance (priority := low) {Φ : Type} : Fluent Φ := ⟨fun _ => false⟩
+
+instance {Φ₁ Φ₂ : Type} [Fluent Φ₁] [Fluent Φ₂] : Fluent (Φ₁ ⊕ Φ₂) where
+  fluent | .inl φ => Fluent.fluent φ | .inr φ => Fluent.fluent φ
+
 inductive SpaceEv (C P O : Type) where
   | move (c : C) (p : P)
   | take (c : C) (o : O)
@@ -104,6 +114,9 @@ instance : Supersedes (SpaceFact C P O) where
     | .holds _ o, .holds _ o' => o == o'
     | .holds _ o, .objAt o' _ => o == o'
     | _, _ => false
+
+/-- Where people and things are can change. -/
+instance : Fluent (SpaceFact C P O) := ⟨fun _ => true⟩
 
 instance {Φ : Type} [Inject (SpaceFact C P O) Φ] : Observable W (SpaceEv C P O) Φ P where
   seen w

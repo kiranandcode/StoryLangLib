@@ -140,6 +140,8 @@ instance {Φ : Type} [Inject (SocialFact C) Φ] : Observable W (SocialEv C) Φ P
 "happened" only as far as witnesses believed it; treat it as true. -/
 instance : Truth W (SocialFact C) := ⟨fun _ _ => true⟩
 
+def has (w : W) (c : C) (t : Trait) : Bool := (HasPersona.persona w c).traits.contains t
+
 /-! ## Credence from bonds and persona
 
 How much `c` believes what `d` says: trust raises it, distrust and tension
@@ -147,26 +149,37 @@ lower it; gullible and open-minded characters take testimony more readily,
 skeptical and paranoid ones less (paranoid ones only distrust those they do not
 already trust). Being caught out costs the speaker a point of trust. -/
 
-def has (w : W) (c : C) (t : Trait) : Bool := (HasPersona.persona w c).traits.contains t
 
-def bondCredence (w : W) (c : C) (e : Evid C) : Int :=
-  let fromBond : Int := match e.speaker with
+/-- Trust that depends on what a claim is about ("I trust her about people,
+not about money"); supplied by a story, none by default. -/
+class TopicTrust (W C Φ : Type) where
+  topical : W → C → C → BLit Φ → Option (String × Int)
+
+instance (priority := low) {W C Φ : Type} : TopicTrust W C Φ := ⟨fun _ _ _ _ => none⟩
+
+/-- Named adjustments: trust and tension with the speaker, topic, and persona. -/
+def bondReasons {Φ : Type} [TopicTrust W C Φ] (w : W) (c : C) (e : Evid C) (l : BLit Φ) :
+    List (String × Int) :=
+  let fromBond : List (String × Int) := match e.speaker with
     | some d =>
-      (if bond w c d .trust ≥ 2 then 1 else 0) - (if bond w c d .trust == 0 then 1 else 0) -
-      (if bond w c d .tension ≥ 2 then 1 else 0)
-    | none => 0
-  let fromPersona : Int :=
-    if !e.testimony then 0 else
-    (if has w c .gullible then 1 else 0) + (if has w c .openMinded then 1 else 0) -
-    (if has w c .skeptical then 1 else 0) -
+      (if bond w c d .trust ≥ 2 then [("trusts the speaker", 1)] else []) ++
+      (if bond w c d .trust == 0 then [("does not trust the speaker", -1)] else []) ++
+      (if bond w c d .tension ≥ 2 then [("tension with the speaker", -1)] else []) ++
+      (TopicTrust.topical w c d l).toList
+    | none => []
+  let fromPersona : List (String × Int) :=
+    if !e.testimony then [] else
+    (if has w c .gullible then [("gullible", 1)] else []) ++
+    (if has w c .openMinded then [("open-minded", 1)] else []) ++
+    (if has w c .skeptical then [("skeptical", -1)] else []) ++
     (match e.speaker with
-     | some d => if has w c .paranoid && bond w c d .trust < 2 then 2 else 0
-     | none => if has w c .paranoid then 2 else 0)
-  fromBond + fromPersona
+     | some d => if has w c .paranoid && bond w c d .trust < 2 then [("paranoid", -2)] else []
+     | none => if has w c .paranoid then [("paranoid", -2)] else [])
+  fromBond ++ fromPersona
 
 /-- Credence for a world with bonds and personas. -/
-def socialCredence : Credence W C where
-  adj := bondCredence
+def socialCredence {Φ : Type} [TopicTrust W C Φ] : Credence W C Φ where
+  reasons := bondReasons
   acceptAt w c := if has w c .gullible then 2 else if has w c .skeptical then 4 else 3
   stubborn w c := has w c .stubborn
   onBetrayal w c d := bump w c d .trust (-1)

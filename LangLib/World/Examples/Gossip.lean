@@ -47,6 +47,9 @@ structure W where
   objLoc : Ob → Pl
   beliefs : Ch → List (Held Ch Fact)
   bond : Ch → Ch → Dim → Nat
+  clock : Nat := 0
+  /-- Kiran does not trust Mara about secrets -/
+  wary : Bool := false
 
 def upd {α β : Type} [DecidableEq α] (f : α → β) (a : α) (b : β) : α → β :=
   fun x => if x = a then b else f x
@@ -77,7 +80,14 @@ def persona : Ch → Persona
 instance : HasPersona W Ch := ⟨fun _ => persona⟩
 instance : Cast Ch := ⟨[kiran, marcus, mara]⟩
 instance : Truth W Secret := ⟨fun _ s => match s with | .read c => c == mara⟩
-instance : Credence W Ch := socialCredence
+instance : Clock W := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
+
+instance : TopicTrust W Ch Fact where
+  topical w c d l := match c, d, l.1 with
+    | kiran, mara, .inr _ => if w.wary then some ("not to be trusted about secrets", -5) else none
+    | _, _, _ => none
+
+instance : Credence W Ch Fact := socialCredence
 
 abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact
 instance : DecidableEq E := @instDecidableEqSum _ _ inferInstance inferInstance
@@ -88,7 +98,7 @@ def mi (e : MindEv Ch Fact) : E := ev e
 def start : W :=
   { loc | kiran => roof | _ => office, holder := fun _ => none, objLoc := fun _ => office,
     beliefs := fun _ => [],
-    bond | kiran, mara, .trust => 2 | _, _, _ => 0 }
+    bond | kiran, mara, .trust => 2 | marcus, kiran, .trust => 2 | _, _, _ => 0 }
 
 def act1 : List E := [sp (.take mara letter), sp (.move mara roof)]
 def act2 : List E := [mi (.lie mara kiran (read mara, false))]
@@ -134,5 +144,54 @@ theorem realise_after_seeing :
 /-- info: some (3, "they have no way to know that") -/
 #guard_msgs in
 #eval firstFailure start (act1 ++ act2 ++ [mi (.realise kiran (read mara, true))]) 0
+
+/-! ## Why: explanations -/
+
+/--
+info: ["not Sum.inr (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara)) (prior for being told +3, trusts the speaker +1, gullible +1 = 5; LangLib.World.Upgrade.radical): outranked by Sum.inr (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara))"]
+-/
+#guard_msgs in
+#eval explain (run start (act1 ++ act2 ++ act3)) kiran (read mara, false)
+
+/-! ## Trust by topic -/
+
+/-- Kiran trusts Mara, but not about secrets: the same lie is only noted. -/
+def wary : W := { start with wary := true }
+
+theorem wary_kiran_only_notes :
+    let w := run wary (act1 ++ act2)
+    thinksNot w kiran (read mara) = false ∧
+    believes w kiran (.bel mara (.neg (read mara))) = true := by decide +kernel
+
+/-! ## Past and present
+
+Marcus goes back down. Mara leaves the letter on the roof, where Kiran sees it.
+Kiran goes down and tells Marcus. Marcus saw Mara holding the letter (time 0);
+Kiran's newer word (he trusts her) is about now. He comes to think the letter is
+on the roof now, still thinks Mara held it then, and still thinks she read it. -/
+
+def lies : Fact := ev (SpaceFact.objAt letter roof : SpaceFact Ch Pl Ob)
+def act5 : List E := [sp (.move marcus office), sp (.drop mara letter), sp (.move kiran office),
+                      mi (.tell kiran marcus (lies, true))]
+def later : List E := story ++ act5
+
+theorem later_valid : Valid start later := by decide +kernel
+
+theorem marcus_now_and_then :
+    let w := run start later
+    thinks w marcus lies = true ∧            -- now: on the roof (Kiran said so)
+    thinks w marcus (holds mara) = false ∧   -- no longer in Mara's hand
+    thinksWas w marcus (holds mara) 0 = true ∧ -- but at time 0 it was
+    thinks w marcus (read mara) = true := by  -- and reading it is permanent
+  decide +kernel
+
+/-! ## Beliefs over time: "I believed that then" -/
+
+/-- At time 3 (after the lie) Kiran believed Mara had not read it; now she
+believes she had, and can recall that she once believed otherwise. -/
+theorem kiran_remembers_believing :
+    let w := run start later
+    believedAt w kiran 3 (read mara, false) = true ∧ thinks w kiran (read mara) = true := by
+  decide +kernel
 
 end LangLib.World.Gossip
