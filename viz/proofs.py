@@ -204,3 +204,31 @@ def bridge():
 if __name__ == "__main__":
     for f in (rules_figure(), derivation(), bridge()):
         print(f)
+
+
+def derivation_compact():
+    """The same derivation with premises grouped and fact steps collapsed."""
+    global FS, CW, LH
+    FS, CW, LH = 15, 0.602 * 15, 2.1 * 15
+    tree = N("+∂ shouts(k,g)", "Def.rule protect", [
+        N("protect applies", "∀ body: +∂ by fact", [
+            N("threatens(g,m)", colour=TEXT_C, bar=False),
+            N("ally(k,m)", colour=SHEET_C, bar=False),
+            N("near(k,m)", colour=TEXT_C, bar=False)]),
+        N("¬ +Δ ¬shouts(k,g)", "closure", [N("not gagged", colour=TEXT_C, bar=False)]),
+        N("every attack fails", "∀ attackers", [
+            N("timid-quiet beaten", "sup", [N("loyalty ≻ safety", colour=SHEET_C, bar=False)]),
+            N("gagged-silent discarded", "−∂", [N("gagged(k) unprovable", bar=False)])]),
+    ], colour=GOAL_C)
+    W, H = width(tree) + 4, height(tree) + 3.6
+    fig, ax = figure(W, H)
+    draw(ax, tree, 2, 2.2)
+    ax.text(2, 1.0, "k Kiran · m Mara · g guard.  green: from the text · purple: character sheet · blue: the action",
+            family=MONO, fontsize=FS * 0.7, color=MUTED)
+    fig.savefig(OUT / "6b-derivation-compact.png", dpi=170, facecolor="white")
+    plt.close(fig)
+    return OUT / "6b-derivation-compact.png"
+
+
+if __name__ == "__main__":
+    print(derivation_compact())
