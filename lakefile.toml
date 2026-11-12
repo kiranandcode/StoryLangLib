@@ -1,0 +1,10 @@
+name = "langlib"
+version = "0.1.0"
+defaultTargets = ["LangLib", "langlib"]
+
+[[lean_lib]]
+name = "LangLib"
+
+[[lean_exe]]
+name = "langlib"
+root = "Main"

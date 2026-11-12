@@ -1,0 +1,28 @@
+{"entities":[{"id":"kiran","name":"Kiran","pron":"she"},{"id":"marcus","name":"Marcus","pron":"he"}],
+ "topics":[{"id":"arrival","label":"Kiran arrives","entities":["kiran","marcus"]}],
+ "sentences":[
+  {"c":"S","r":"root","topic":"arrival","k":[
+    {"c":"SBAR","r":"advcl","k":[
+      {"w":"When","p":"SCONJ","r":"mark"},
+      {"c":"S","r":"head","k":[
+        {"c":"NP","r":"nsubj","ref":"kiran","k":[{"w":"she","p":"PRON","r":"head"}]},
+        {"c":"VP","r":"head","k":[{"w":"finally","p":"ADV","r":"advmod"},{"w":"walked","p":"VERB","r":"head","l":"walk"},{"w":"in","p":"ADV","r":"advmod"}]}]}]},
+    {"w":",","p":"PUNCT","r":"punct"},
+    {"c":"NP","r":"nsubj","ref":"kiran","k":[{"w":"Kiran","p":"PROPN","r":"head"}]},
+    {"c":"VP","r":"head","k":[
+      {"w":"didn't","p":"AUX","r":"aux","l":"do","f":{"Polarity":"Neg"}},
+      {"w":"look","p":"VERB","r":"head"},
+      {"c":"PP","r":"obl","k":[{"w":"at","p":"ADP","r":"case"},{"w":"him","p":"PRON","r":"head","ref":"marcus"}]}]},
+    {"w":".","p":"PUNCT","r":"punct"}]},
+  {"c":"S","r":"root","topic":"arrival","k":[
+    {"c":"QUOTE","r":"ccomp","spk":"marcus","k":[
+      {"w":"\"","p":"PUNCT","r":"punct"},
+      {"c":"VP","r":"head","k":[{"w":"Sit","p":"VERB","r":"head"},{"w":"down","p":"ADP","r":"compound"}]},
+      {"w":",","p":"PUNCT","r":"punct"},
+      {"w":"\"","p":"PUNCT","r":"punct"}]},
+    {"w":"Marcus","p":"PROPN","r":"nsubj","ref":"marcus"},
+    {"w":"said","p":"VERB","r":"head"},
+    {"w":",","p":"PUNCT","r":"punct"},
+    {"w":"and","p":"CCONJ","r":"cc"},
+    {"c":"S","r":"conj","k":[{"w":"she","p":"PRON","r":"nsubj","ref":"kiran"},{"w":"did","p":"VERB","r":"head"}]},
+    {"w":".","p":"PUNCT","r":"punct"}]}]}
