@@ -37,15 +37,15 @@ def modules():
 
 def timeline():
     # (told index, text, module colour, interval)
-    ev = [(0, "Marcus confides in Kiran", SOCIAL, (2, 4)),
-          (1, "Marcus flirts", SOCIAL, (4, 5)),
+    ev = [(0, "Theo confides in Kiran", SOCIAL, (2, 4)),
+          (1, "Theo flirts", SOCIAL, (4, 5)),
           (2, "Kiran flirts back", SOCIAL, (5, 6)),
           (3, "meanwhile: Mara takes the letter (office)", SPACE, (3, 6)),
-          (4, "Marcus asks to kiss her", SOCIAL, (6, 7)),
+          (4, "Theo asks to kiss her", SOCIAL, (6, 7)),
           (5, "Kiran agrees", SOCIAL, (7, 8)),
-          (6, "Marcus agrees", SOCIAL, (7, 8)),
-          (7, "Kiran kisses Marcus", SOCIAL, (8, 9)),
-          (8, "flashback: Marcus left the letter", SPACE, (0, 1)),
+          (6, "Theo agrees", SOCIAL, (7, 8)),
+          (7, "Kiran kisses Theo", SOCIAL, (8, 9)),
+          (8, "flashback: Theo left the letter", SPACE, (0, 1)),
           (9, "… and came up to the roof", SPACE, (1, 2))]
     fig, ax = plt.subplots(figsize=(13, 6.4))
     for i, text, c, (s, e) in ev:
@@ -69,7 +69,7 @@ def timeline():
     ax.set_title("The office story: rows in the order the text tells it, bars in story time",
                  loc="left", fontsize=12.5, color=INK, family=SANS, fontweight="bold", x=-0.42)
     beliefs = ("at t = 9 (all proved by decide):\n"
-               "Marcus believes the letter is in the office   FALSE (false belief)\n"
+               "Theo believes the letter is in the office   FALSE (false belief)\n"
                "Mara knows she holds the letter\n"
                "Kiran saw the kiss; Mara never did\n"
                "Kiran stays on the roof throughout event 3")
@@ -83,13 +83,13 @@ def timeline():
 
 def gossip():
     steps = ["Mara takes the\nletter (office)", "Mara goes\nto the roof", "Mara to Kiran:\n\"I never read it\" (lie)",
-             "Mara puts the\nletter down (roof)", "Mara picks it\nup (roof)", "Marcus goes\nto the roof",
-             "Mara to Marcus:\n\"I never read it\" (lie)"]
+             "Mara puts the\nletter down (roof)", "Mara picks it\nup (roof)", "Theo goes\nto the roof",
+             "Mara to Theo:\n\"I never read it\" (lie)"]
     G, R, A, N = ("#dafbe1", "#1a7f37"), ("#ffebe9", "#cf222e"), ("#fff8c5", "#9a6700"), ("#f6f8fa", MUTED)
     rows = {
         "Kiran": [("—", N), ("—", N), ("¬read(Mara)\ntold by Mara", A), ("¬read(Mara)\ntold", A),
                   ("read(Mara)\nseen ⇒ lore;\nhearsay dropped", G), ("read(Mara)", G), ("read(Mara)\nknows Mara lied", G)],
-        "Marcus": [("read(Mara)\nseen holds ⇒ lore", G), ("read(Mara)", G), ("read(Mara)", G), ("read(Mara)", G),
+        "Theo": [("read(Mara)\nseen holds ⇒ lore", G), ("read(Mara)", G), ("read(Mara)", G), ("read(Mara)", G),
                    ("read(Mara)", G), ("read(Mara)", G), ("read(Mara)\nlie REJECTED:\nnotes Mara claims ¬", R)],
     }
     fig, ax = plt.subplots(figsize=(15, 4.6))
@@ -106,7 +106,7 @@ def gossip():
     ax.set_xlim(-1.4, len(steps) * cw + 0.1); ax.set_ylim(-0.3, 2 * ch + 1.1); ax.axis("off")
     ax.set_title("Who thinks Mara read the letter? (lore: whoever holds it has read it; seeing beats hearsay)",
                  loc="left", fontsize=12, family=SANS, fontweight="bold", color=INK)
-    fig.text(0.07, 0.02, "theorems: marcus_infers · kiran_believed_the_lie · kiran_caught_the_lie · marcus_rejects_the_lie · "
+    fig.text(0.07, 0.02, "theorems: theo_infers · kiran_believed_the_lie · kiran_caught_the_lie · theo_rejects_the_lie · "
              "contradiction_rejected;  Invariant: every mind stays consistent, checked by Valid",
              fontsize=8.5, family=MONO, color=MUTED)
     fig.savefig(OUT / "11-gossip-beliefs.png", dpi=160, bbox_inches="tight", facecolor="white")
@@ -115,15 +115,15 @@ def gossip():
 
 
 def office_text():
-    ev = [(0, "Marcus confided in Kiran.", SOCIAL, (51, 52)),
+    ev = [(0, "Theo confided in Kiran.", SOCIAL, (51, 52)),
           (1, "He flirted with her,", SOCIAL, (53, 54)),
           (2, "and she flirted with him.", SOCIAL, (55, 58)),
           (3, "Meanwhile, Mara took the letter.", SPACE, (56, 57)),
-          (4, "Marcus asked Kiran for a kiss.", SOCIAL, (59, 60)),
+          (4, "Theo asked Kiran for a kiss.", SOCIAL, (59, 60)),
           (5, "Kiran agreed to kiss him,", SOCIAL, (61, 62)),
-          (6, "and Marcus agreed to kiss her.", SOCIAL, (63, 64)),
-          (7, "Kiran kissed Marcus.", SOCIAL, (65, 66)),
-          (8, "An hour earlier, Marcus had left the letter in the office", SPACE, (0, 1)),
+          (6, "and Theo agreed to kiss her.", SOCIAL, (63, 64)),
+          (7, "Kiran kissed Theo.", SOCIAL, (65, 66)),
+          (8, "An hour earlier, Theo had left the letter in the office", SPACE, (0, 1)),
           (9, "and gone up to the roof.", SPACE, (2, 3))]
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(15, 5.2), gridspec_kw={"width_ratios": [1, 2.6], "wspace": 0.04}, sharey=True)
     for ax, lo, hi in ((a1, -0.5, 4.5), (a2, 49.5, 67)):
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
 def gossip2():
     steps = ["Mara takes the letter\n(office)", "Mara → Kiran:\n\"I never read it\"", "Mara picks it up\n(roof, Kiran sees)",
-             "Mara → Marcus:\n\"I never read it\""]
+             "Mara → Theo:\n\"I never read it\""]
     rows = {
         "Kiran\ngullible · trusts Mara (2)": [
             ("—", "", "#f6f8fa", MUTED),
@@ -161,7 +161,7 @@ def gossip2():
             ("+ holds(Mara)  seen 5, newer\n  ¬read(Mara) kept, outranked\n  caught Mara: trust 2 → 1",
              "view: read(Mara) (by lore)", "#dafbe1", "#1a7f37"),
             ("", "view: read(Mara)", "#dafbe1", "#1a7f37")],
-        "Marcus\nskeptical · trust in Mara 0": [
+        "Theo\nskeptical · trust in Mara 0": [
             ("+ holds(Mara)  seen 5  radical", "view: read(Mara) (by lore)", "#dafbe1", "#1a7f37"),
             ("", "view: read(Mara)", "#dafbe1", "#1a7f37"),
             ("", "view: read(Mara)", "#dafbe1", "#1a7f37"),
@@ -183,7 +183,7 @@ def gossip2():
     ax.set_title("Evidence, trust and persona decide how a claim is taken; nothing is deleted, the view is the consistent top of the ranking",
                  loc="left", fontsize=11.5, family=SANS, fontweight="bold", color=INK, x=-0.15)
     fig.text(0.02, 0.0, "strength = prior(evidence) + trust ±1 + gullible/skeptical ±1;  ≥ accept → radical, accept−1 → conservative, below → note.  "
-             "theorems: kiran_caught_the_lie · nothing_forgotten · kiran_trusts_mara_less · marcus_only_notes · realise_too_early",
+             "theorems: kiran_caught_the_lie · nothing_forgotten · kiran_trusts_mara_less · theo_only_notes · realise_too_early",
              fontsize=8, family=MONO, color=MUTED)
     fig.savefig(OUT / "13-evidence.png", dpi=160, bbox_inches="tight", facecolor="white")
     plt.close(fig)

@@ -30,7 +30,7 @@ $ langlib check examples/cata.txt bad.json
  ["token 2 \"finally\" is missing (near: When she finally walked in ,)",
   "token 10 \"him\" was written as \"her\" (near: Kiran didn't look at him . \" Sit)"],
  "refIssues":
- ["pronoun \"her\" (token 9) refers to \"marcus\", whose pronouns are he"],
+ ["pronoun \"her\" (token 9) refers to \"theo\", whose pronouns are he"],
 ```
 
 Story worlds are assembled from modules, and stories about them are theorems:
@@ -39,15 +39,15 @@ Story worlds are assembled from modules, and stories about them are theorems:
 abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact ⊕ SocialEv Ch
 
 def told : List E :=
-  [ so (.confide marcus kiran), so (.flirt marcus kiran), so (.flirt kiran marcus),
+  [ so (.confide theo kiran), so (.flirt theo kiran), so (.flirt kiran theo),
     sp (.take mara letter),                                 -- meanwhile, in the office
-    so (.ask marcus kiran .kiss), so (.agree kiran marcus .kiss),
-    so (.agree marcus kiran .kiss), so (.act kiran marcus .kiss),
-    sp (.drop marcus letter), sp (.move marcus roof) ]      -- flashback
+    so (.ask theo kiran .kiss), so (.agree kiran theo .kiss),
+    so (.agree theo kiran .kiss), so (.act kiran theo .kiss),
+    sp (.drop theo letter), sp (.move theo roof) ]      -- flashback
 
 theorem story_valid : story.Valid start := by decide +kernel
-theorem marcus_false_belief :
-    falseBelief ends marcus (fact (.objAt letter office)) = true := by decide +kernel
+theorem theo_false_belief :
+    falseBelief ends theo (fact (.objAt letter office)) = true := by decide +kernel
 theorem kiss_needs_consent : ¬ Valid start noConsent := by decide +kernel
 ```
 

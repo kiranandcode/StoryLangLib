@@ -1,5 +1,5 @@
-{"entities":[{"id":"kiran","name":"Kiran","pron":"she"},{"id":"marcus","name":"Marcus","pron":"he"}],
- "topics":[{"id":"arrival","label":"Kiran arrives","entities":["kiran","marcus"]}],
+{"entities":[{"id":"kiran","name":"Kiran","pron":"she"},{"id":"theo","name":"Theo","pron":"he"}],
+ "topics":[{"id":"arrival","label":"Kiran arrives","entities":["kiran","theo"]}],
  "sentences":[
   {"c":"S","r":"root","topic":"arrival","k":[
     {"c":"SBAR","r":"advcl","k":[
@@ -12,15 +12,15 @@
     {"c":"VP","r":"head","k":[
       {"w":"didn't","p":"AUX","r":"aux","l":"do","f":{"Polarity":"Neg"}},
       {"w":"look","p":"VERB","r":"head"},
-      {"c":"PP","r":"obl","k":[{"w":"at","p":"ADP","r":"case"},{"w":"him","p":"PRON","r":"head","ref":"marcus"}]}]},
+      {"c":"PP","r":"obl","k":[{"w":"at","p":"ADP","r":"case"},{"w":"him","p":"PRON","r":"head","ref":"theo"}]}]},
     {"w":".","p":"PUNCT","r":"punct"}]},
   {"c":"S","r":"root","topic":"arrival","k":[
-    {"c":"QUOTE","r":"ccomp","spk":"marcus","k":[
+    {"c":"QUOTE","r":"ccomp","spk":"theo","k":[
       {"w":"\"","p":"PUNCT","r":"punct"},
       {"c":"VP","r":"head","k":[{"w":"Sit","p":"VERB","r":"head"},{"w":"down","p":"ADP","r":"compound"}]},
       {"w":",","p":"PUNCT","r":"punct"},
       {"w":"\"","p":"PUNCT","r":"punct"}]},
-    {"w":"Marcus","p":"PROPN","r":"nsubj","ref":"marcus"},
+    {"w":"Theo","p":"PROPN","r":"nsubj","ref":"theo"},
     {"w":"said","p":"VERB","r":"head"},
     {"w":",","p":"PUNCT","r":"punct"},
     {"w":"and","p":"CCONJ","r":"cc"},

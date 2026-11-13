@@ -5,22 +5,22 @@ import LangLib.World.Social
 /-!
 # Example: who read the letter (evidence, trust, ranked beliefs)
 
-The lore: whoever holds the letter has read it. Marcus watches Mara pick the
+The lore: whoever holds the letter has read it. Theo watches Mara pick the
 letter up in the office; Kiran is on the roof. Mara goes up and swears to Kiran
 she never read it. Kiran, gullible and fond of Mara, believes her, until she
-sees Mara with the letter. Then Marcus, skeptical and wary of Mara, comes up
+sees Mara with the letter. Then Theo, skeptical and wary of Mara, comes up
 and hears the same lie.
 
 How each takes the lie depends on who they are and whom they trust
 (`socialCredence`): to Kiran it is strong testimony from a trusted friend
-(radical upgrade); to Marcus it is barely worth noting.
+(radical upgrade); to Theo it is barely worth noting.
 
 Proved below:
-* Marcus infers Mara read the letter (`marcus_infers`);
+* Theo infers Mara read the letter (`theo_infers`);
 * Kiran believes the lie, then sees the letter and stops, without forgetting
   it was said (`kiran_believed_the_lie`, `kiran_caught_the_lie`,
   `nothing_forgotten`), and her trust in Mara drops (`kiran_trusts_mara_less`);
-* Marcus only notes that Mara said it (`marcus_only_notes`);
+* Theo only notes that Mara said it (`theo_only_notes`);
 * "Kiran realised Mara had read it" is a knowledge leak before she saw the
   letter and fine after (`realise_too_early`, `realise_after_seeing`);
 * views are consistent by construction (`Mind.view_consistent`).
@@ -29,7 +29,7 @@ Proved below:
 namespace LangLib.World.Gossip
 open LangLib.World
 
-inductive Ch | kiran | marcus | mara deriving DecidableEq, Repr
+inductive Ch | kiran | theo | mara deriving DecidableEq, Repr
 inductive Pl | office | roof deriving DecidableEq, Repr
 inductive Ob | letter deriving DecidableEq, Repr
 inductive Secret | read (c : Ch) deriving DecidableEq, Repr
@@ -40,7 +40,7 @@ abbrev Fact := SpaceFact Ch Pl Ob ⊕ Secret
 def holds (c : Ch) : Fact := ev (SpaceFact.holds c letter : SpaceFact Ch Pl Ob)
 def read (c : Ch) : Fact := ev (Secret.read c)
 
-instance : Lore Fact := ⟨[kiran, marcus, mara].map fun c => ⟨[(holds c, true)], (read c, true)⟩⟩
+instance : Lore Fact := ⟨[kiran, theo, mara].map fun c => ⟨[(holds c, true)], (read c, true)⟩⟩
 
 structure W where
   loc : Ch → Pl
@@ -75,11 +75,11 @@ instance : HasBonds W Ch where
 
 def persona : Ch → Persona
   | kiran => { traits := [.gullible], values := [.loyalty, .safety] }
-  | marcus => { traits := [.skeptical], values := [.honesty, .safety] }
+  | theo => { traits := [.skeptical], values := [.honesty, .safety] }
   | mara => { traits := [.secretive], values := [.curiosity] }
 
 instance : HasPersona W Ch := ⟨fun _ => persona⟩
-instance : Cast Ch := ⟨[kiran, marcus, mara]⟩
+instance : Cast Ch := ⟨[kiran, theo, mara]⟩
 instance : Truth W Secret := ⟨fun _ s => match s with | .read c => c == mara⟩
 instance : Clock W := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 
@@ -99,17 +99,17 @@ def mi (e : MindEv Ch Fact) : E := ev e
 def start : W :=
   { loc | kiran => roof | _ => office, holder := fun _ => none, objLoc := fun _ => office,
     beliefs := fun _ => [],
-    bond | kiran, mara, .trust => 2 | marcus, kiran, .trust => 2 | _, _, _ => 0 }
+    bond | kiran, mara, .trust => 2 | theo, kiran, .trust => 2 | _, _, _ => 0 }
 
 def act1 : List E := [sp (.take mara letter), sp (.move mara roof)]
 def act2 : List E := [mi (.lie mara kiran (read mara, false))]
 def act3 : List E := [sp (.drop mara letter), sp (.take mara letter)]
-def act4 : List E := [sp (.move marcus roof), mi (.lie mara marcus (read mara, false))]
+def act4 : List E := [sp (.move theo roof), mi (.lie mara theo (read mara, false))]
 def story : List E := act1 ++ act2 ++ act3 ++ act4
 
 theorem story_valid : Valid start story := by decide +kernel
 
-theorem marcus_infers : thinks (run start act1) marcus (read mara) = true := by decide +kernel
+theorem theo_infers : thinks (run start act1) theo (read mara) = true := by decide +kernel
 
 theorem kiran_believed_the_lie :
     thinksNot (run start (act1 ++ act2)) kiran (read mara) = true := by decide +kernel
@@ -128,11 +128,11 @@ theorem kiran_trusts_mara_less :
     HasBonds.bond (run start (act1 ++ act2 ++ act3)) kiran mara .trust = 1 := by decide +kernel
 
 /-- To a skeptic who does not trust Mara, her word is only noted. -/
-theorem marcus_only_notes :
+theorem theo_only_notes :
     let w := run start story
-    thinks w marcus (read mara) = true ∧
-    (HasMinds.beliefs w marcus).any (fun h => h.b == .neg (read mara) && h.up != .note) = false ∧
-    believes w marcus (.bel mara (.neg (read mara))) = true := by decide +kernel
+    thinks w theo (read mara) = true ∧
+    (HasMinds.beliefs w theo).any (fun h => h.b == .neg (read mara) && h.up != .note) = false ∧
+    believes w theo (.bel mara (.neg (read mara))) = true := by decide +kernel
 
 /-- Kiran cannot realise Mara read the letter while she believes the lie. -/
 theorem realise_too_early :
@@ -166,24 +166,24 @@ theorem wary_kiran_only_notes :
 
 /-! ## Past and present
 
-Marcus goes back down. Mara leaves the letter on the roof, where Kiran sees it.
-Kiran goes down and tells Marcus. Marcus saw Mara holding the letter (time 0);
+Theo goes back down. Mara leaves the letter on the roof, where Kiran sees it.
+Kiran goes down and tells Theo. Theo saw Mara holding the letter (time 0);
 Kiran's newer word (he trusts her) is about now. He comes to think the letter is
 on the roof now, still thinks Mara held it then, and still thinks she read it. -/
 
 def lies : Fact := ev (SpaceFact.objAt letter roof : SpaceFact Ch Pl Ob)
-def act5 : List E := [sp (.move marcus office), sp (.drop mara letter), sp (.move kiran office),
-                      mi (.tell kiran marcus (lies, true))]
+def act5 : List E := [sp (.move theo office), sp (.drop mara letter), sp (.move kiran office),
+                      mi (.tell kiran theo (lies, true))]
 def later : List E := story ++ act5
 
 theorem later_valid : Valid start later := by decide +kernel
 
-theorem marcus_now_and_then :
+theorem theo_now_and_then :
     let w := run start later
-    thinks w marcus lies = true ∧            -- now: on the roof (Kiran said so)
-    thinks w marcus (holds mara) = false ∧   -- no longer in Mara's hand
-    thinksWas w marcus (holds mara) 0 = true ∧ -- but at time 0 it was
-    thinks w marcus (read mara) = true := by  -- and reading it is permanent
+    thinks w theo lies = true ∧            -- now: on the roof (Kiran said so)
+    thinks w theo (holds mara) = false ∧   -- no longer in Mara's hand
+    thinksWas w theo (holds mara) 0 = true ∧ -- but at time 0 it was
+    thinks w theo (read mara) = true := by  -- and reading it is permanent
   decide +kernel
 
 /-! ## Beliefs over time: "I believed that then" -/

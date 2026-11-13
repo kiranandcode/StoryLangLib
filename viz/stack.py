@@ -172,7 +172,7 @@ def system():
                 f'color="{colour}" style="rounded"><tr><td align="left"><b><font color="{colour}">{html.escape(title)}</font></b></td></tr>{rows}</table>>];')
     L = ['digraph S { rankdir=LR; bgcolor="white"; nodesep=0.35; ranksep=0.5; fontname="DejaVu Sans";',
          'edge [color="#8c959f", arrowsize=0.7, fontname="DejaVu Sans", fontsize=9, fontcolor="#6e7781"];',
-         box("txt", "prose", ["Marcus confided in Kiran.", "Meanwhile, Mara took the letter.", "An hour earlier, …"], "#57606a"),
+         box("txt", "prose", ["Theo confided in Kiran.", "Meanwhile, Mara took the letter.", "An hour earlier, …"], "#57606a"),
          box("llm", "LLM (Opus / Sonnet / Fable)", ["prompt.md → JSON document", "retries with checker report"], "#57606a"),
          box("chk", "1 · langlib check", ["tokenize text = d.render", "refs resolve, pronouns agree", "→ faithful Doc"], "#1a7f37"),
          box("cl", "6 · Doc.clauses", ["verb, subj, obj, obls,", "complements, adverbials"], "#9a6700"),
@@ -182,7 +182,7 @@ def system():
          box("val", "4 · Timed.Valid w s", ["timeline ⊨ constraints, metric", "Valid w chrono", "  ok · Inv · next"], "#57606a"),
          box("mod", "5 · modules", ["Space · Minds · Relationships", "Persona · Magic · …", "ok / step / why / Perceive"], "#bf3989"),
          box("dl", "2 · defeasible logic", ["inCharacter T q = true", "  ⇒ NotDef T ¬q (Cert.sound)"], "#8250df"),
-         box("thm", "theorems", ["fromText_valid : fromText.Valid start", "marcus_false_belief", "kiss_needs_consent"], "#1a7f37"),
+         box("thm", "theorems", ["fromText_valid : fromText.Valid start", "theo_false_belief", "kiss_needs_consent"], "#1a7f37"),
          box("fb", "feedback to the writer", ["why: \"out of character …", "  first establish …\"", "token diffs, ref issues"], "#cf222e"),
          'txt -> llm -> chk; chk -> cl [label="Doc"]; cl -> lex; lex -> sol [label="Story"]; sol -> tim; tim -> val;',
          'mod -> val [label="Domain W E"]; dl -> mod [label="persona rules"]; val -> thm [label="decide +kernel"];',

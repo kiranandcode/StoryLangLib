@@ -5,10 +5,10 @@ import LangLib.World.Social
 /-!
 # Example: late at the office (space + minds + relationships, told out of order)
 
-Kiran is shy but drawn to Marcus; Marcus is confident. Earlier in the evening
-Marcus left a letter on his desk; now he and Kiran are on the roof. While they
+Kiran is shy but drawn to Theo; Theo is confident. Earlier in the evening
+Theo left a letter on his desk; now he and Kiran are on the roof. While they
 talk, Mara (in the office) takes the letter. The text opens on the roof, cuts
-to Mara "meanwhile", and only at the end flashes back to Marcus leaving the
+to Mara "meanwhile", and only at the end flashes back to Theo leaving the
 letter.
 
 Proved below:
@@ -16,16 +16,16 @@ Proved below:
   the text says about when (`story_valid`);
 * the text's order is not the chronological one (`told_out_of_order`);
 * without Kiran's agreement the kiss is not allowed (`kiss_needs_consent`);
-* Kiran flirting before Marcus does is out of character (`kiran_wont_flirt_first`);
-* Marcus ends up believing the letter is still in the office, which is false
-  (`marcus_false_belief`); Mara knows she has it; Mara never learns of the kiss;
+* Kiran flirting before Theo does is out of character (`kiran_wont_flirt_first`);
+* Theo ends up believing the letter is still in the office, which is false
+  (`theo_false_belief`); Mara knows she has it; Mara never learns of the kiss;
 * contradictory "when" claims have no timeline at all (`flashback_contradiction`).
 -/
 
 namespace LangLib.World.Office
 open LangLib.World
 
-inductive Ch | kiran | marcus | mara deriving DecidableEq, Repr
+inductive Ch | kiran | theo | mara deriving DecidableEq, Repr
 inductive Pl | office | roof deriving DecidableEq, Repr
 inductive Ob | letter deriving DecidableEq, Repr
 open Ch Pl Ob
@@ -63,11 +63,11 @@ instance : HasBonds W Ch where
 
 def persona : Ch → Persona
   | kiran => { traits := [.shy, .romantic], values := [.desire, .safety, .pride] }
-  | marcus => { traits := [.confident], values := [.desire, .pride, .safety] }
+  | theo => { traits := [.confident], values := [.desire, .pride, .safety] }
   | mara => { traits := [.secretive], values := [.curiosity, .loyalty] }
 
 instance : HasPersona W Ch := ⟨fun _ => persona⟩
-instance : Cast Ch := ⟨[kiran, marcus, mara]⟩
+instance : Cast Ch := ⟨[kiran, theo, mara]⟩
 
 abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact ⊕ SocialEv Ch
 
@@ -79,27 +79,27 @@ def fact (f : SpaceFact Ch Pl Ob) : Fact := ev f
 
 def start : W where
   loc | kiran => roof | _ => office
-  holder _ := some marcus
+  holder _ := some theo
   objLoc _ := office
-  beliefs | kiran => [] | _ => [{ b := .atom (fact (.holds marcus letter)), src := .seen, rank := 5, stamp := 0, up := .radical }]
+  beliefs | kiran => [] | _ => [{ b := .atom (fact (.holds theo letter)), src := .seen, rank := 5, stamp := 0, up := .radical }]
   bond
-    | kiran, marcus, .attraction => 1 | kiran, marcus, .trust => 1
-    | marcus, kiran, .attraction => 2 | marcus, kiran, .trust => 2
+    | kiran, theo, .attraction => 1 | kiran, theo, .trust => 1
+    | theo, kiran, .attraction => 2 | theo, kiran, .trust => 2
     | _, _, _ => 0
   consent := []
 
 /-- Events in the order the text tells them. -/
 def told : List E :=
-  [ so (.confide marcus kiran),        -- 0  on the roof, Marcus opens up
-    so (.flirt marcus kiran),          -- 1
-    so (.flirt kiran marcus),          -- 2
+  [ so (.confide theo kiran),        -- 0  on the roof, Theo opens up
+    so (.flirt theo kiran),          -- 1
+    so (.flirt kiran theo),          -- 2
     sp (.take mara letter),            -- 3  meanwhile, in the office
-    so (.ask marcus kiran .kiss),      -- 4
-    so (.agree kiran marcus .kiss),    -- 5
-    so (.agree marcus kiran .kiss),    -- 6
-    so (.act kiran marcus .kiss),      -- 7
-    sp (.drop marcus letter),          -- 8  flashback: earlier, he had left the letter
-    sp (.move marcus roof) ]           -- 9  and come up to the roof
+    so (.ask theo kiran .kiss),      -- 4
+    so (.agree kiran theo .kiss),    -- 5
+    so (.agree theo kiran .kiss),    -- 6
+    so (.act kiran theo .kiss),      -- 7
+    sp (.drop theo letter),          -- 8  flashback: earlier, he had left the letter
+    sp (.move theo roof) ]           -- 9  and come up to the roof
 
 def sameTime : List Allen :=
   [.overlaps, .overlappedBy, .during, .contains, .starts, .startedBy, .finishes, .finishedBy, .equal]
@@ -122,19 +122,19 @@ theorem told_out_of_order : story.chrono ≠ story.told := by decide +kernel
 
 def ends : W := Timed.stateAt start story 9
 
-/-- Marcus never saw Mara take the letter. -/
-theorem marcus_false_belief :
-    falseBelief ends marcus (fact (.objAt letter office)) = true := by decide +kernel
+/-- Theo never saw Mara take the letter. -/
+theorem theo_false_belief :
+    falseBelief ends theo (fact (.objAt letter office)) = true := by decide +kernel
 
 theorem mara_knows : knows ends mara (fact (.holds mara letter)) = true := by decide +kernel
 
 /-- The kiss happened on the roof; Mara was in the office. -/
 theorem mara_never_saw_kiss :
-    believes ends mara (.atom (ev (SocialFact.did kiran marcus .kiss) : Fact)) = false := by
+    believes ends mara (.atom (ev (SocialFact.did kiran theo .kiss) : Fact)) = false := by
   decide +kernel
 
 theorem kiran_saw_kiss :
-    believes ends kiran (.atom (ev (SocialFact.did kiran marcus .kiss) : Fact)) = true := by
+    believes ends kiran (.atom (ev (SocialFact.did kiran theo .kiss) : Fact)) = true := by
   decide +kernel
 
 /-- While Mara takes the letter, Kiran is on the roof the whole time. -/
@@ -142,15 +142,15 @@ theorem kiran_on_roof_meanwhile :
     Timed.during start story 3 (fun w => HasLoc.loc w kiran == roof) = true := by decide +kernel
 
 /-- The same events, without Kiran's agreement. -/
-def noConsent : List E := story.chrono.filter (· != so (.agree kiran marcus .kiss))
+def noConsent : List E := story.chrono.filter (· != so (.agree kiran theo .kiss))
 
 theorem kiss_needs_consent : ¬ Valid start noConsent := by decide +kernel
 
-/-- Right after Marcus confides, before he flirts, Kiran is not yet drawn
+/-- Right after Theo confides, before he flirts, Kiran is not yet drawn
 enough to overcome her shyness. -/
 theorem kiran_wont_flirt_first :
-    ¬ Valid start [sp (.drop marcus letter), sp (.move marcus roof), so (.confide marcus kiran),
-                   so (.flirt kiran marcus)] := by decide +kernel
+    ¬ Valid start [sp (.drop theo letter), sp (.move theo roof), so (.confide theo kiran),
+                   so (.flirt kiran theo)] := by decide +kernel
 
 /-- Claiming the flashback is both before and after the scene is inconsistent. -/
 theorem flashback_contradiction :
@@ -176,7 +176,7 @@ info: [(7,
   "out of character (shy people hold back); to justify it, first establish: attraction draws them on or the confident make the first move")]
 -/
 #guard_msgs in
-#eval [(7, Domain.why (run start [sp (.drop marcus letter), sp (.move marcus roof),
-    so (.confide marcus kiran)]) (so (.flirt kiran marcus)))]
+#eval [(7, Domain.why (run start [sp (.drop theo letter), sp (.move theo roof),
+    so (.confide theo kiran)]) (so (.flirt kiran theo)))]
 
 end LangLib.World.Office

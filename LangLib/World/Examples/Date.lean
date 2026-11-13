@@ -3,14 +3,14 @@ import LangLib.World.Story
 /-!
 # Example: a date (unknowns, dialogue, goals and plans)
 
-Kiran is at the bar. The text never says where Marcus starts: he simply asks
+Kiran is at the bar. The text never says where Theo starts: he simply asks
 her whether she is seeing anyone. She says she is single and hints that she
 likes him; he answers with sarcasm ("ugh, I can't stand you"), which she reads
 correctly because she trusts him. He promises to walk her home; she wants to go
 home; both plan the walk and carry it out.
 
 Proved below:
-* the story is not *valid* outright, because it never establishes that Marcus
+* the story is not *valid* outright, because it never establishes that Theo
   is at the bar, but it is *plausible*, under exactly one assumption
   (`only_one_assumption`);
 * the answer, the hint and the sarcasm land as intended (`what_they_learned`);
@@ -18,13 +18,13 @@ Proved below:
 * the question is closed, the promise kept (`promise_kept`);
 * every action is motivated by a plan or a goal (`all_motivated`); a stray
   extra move is not (`stray_move`);
-* Marcus's plan would work from where he made it (`marcus_plan_works`).
+* Theo's plan would work from where he made it (`theo_plan_works`).
 -/
 
 namespace LangLib.World.Date
 open LangLib.World
 
-inductive Ch | kiran | marcus deriving DecidableEq, Repr
+inductive Ch | kiran | theo deriving DecidableEq, Repr
 inductive Pl | bar | street | home deriving DecidableEq, Repr
 inductive Info | single (c : Ch) | likes (c d : Ch) deriving DecidableEq, Repr
 open Ch Pl
@@ -82,7 +82,7 @@ instance : HasGoals W Ch Fact A where
   setGoals w c g := { w with goals := upd w.goals c g }
   plans := W.plans
   setPlans w c p := { w with plans := upd w.plans c p }
-instance : Cast Ch := ⟨[kiran, marcus]⟩
+instance : Cast Ch := ⟨[kiran, theo]⟩
 instance : Clock W := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 instance : Truth W Info := ⟨fun _ i => match i with
   | .single c => c == kiran | .likes _ _ => true⟩
@@ -104,23 +104,23 @@ def own (f : Fact) : Held Ch Fact := { b := .atom f, src := .self, rank := 10, s
 
 def start : W :=
   { loc := fun _ => bar, known := [kiran],
-    beliefs | kiran => [own (single kiran), own (likes kiran marcus)] | marcus => [own (likes marcus kiran)],
-    bond | kiran, marcus, .trust => 2 | marcus, kiran, .trust => 2 | _, _, _ => 0 }
+    beliefs | kiran => [own (single kiran), own (likes kiran theo)] | theo => [own (likes theo kiran)],
+    bond | kiran, theo, .trust => 2 | theo, kiran, .trust => 2 | _, _, _ => 0 }
 
 def kiranPlan : Plan A Fact := { goal := (at_ kiran home, true), steps := [sp (.move kiran street), sp (.move kiran home)] }
-def marcusPlan : Plan A Fact := { goal := (at_ marcus home, true), steps := [sp (.move marcus street), sp (.move marcus home)] }
+def theoPlan : Plan A Fact := { goal := (at_ theo home, true), steps := [sp (.move theo street), sp (.move theo home)] }
 
 def story : List E :=
-  [ act (dl (.ask marcus kiran (single kiran))),
-    act (dl (.answer kiran marcus (single kiran, true))),
-    act (dl (.hint kiran marcus (likes kiran marcus, true))),
-    act (dl (.sarcasm marcus kiran (likes marcus kiran, true))),
-    act (dl (.promise marcus kiran (at_ marcus home, true))),
+  [ act (dl (.ask theo kiran (single kiran))),
+    act (dl (.answer kiran theo (single kiran, true))),
+    act (dl (.hint kiran theo (likes kiran theo, true))),
+    act (dl (.sarcasm theo kiran (likes theo kiran, true))),
+    act (dl (.promise theo kiran (at_ theo home, true))),
     goal (.adopt kiran (at_ kiran home, true)),
     goal (.intend kiran kiranPlan),
-    goal (.intend marcus marcusPlan),
-    act (sp (.move kiran street)), act (sp (.move marcus street)),
-    act (sp (.move kiran home)), act (sp (.move marcus home)) ]
+    goal (.intend theo theoPlan),
+    act (sp (.move kiran street)), act (sp (.move theo street)),
+    act (sp (.move kiran home)), act (sp (.move theo home)) ]
 
 theorem not_valid_outright : ¬ Valid start story := by decide +kernel
 theorem plausible : Plausible start story := by decide +kernel
@@ -131,15 +131,15 @@ theorem only_one_assumption :
 def ends : W := run start story
 
 theorem what_they_learned :
-    thinks ends marcus (single kiran) = true ∧          -- the answer
-    thinks ends marcus (likes kiran marcus) = true ∧    -- the hint
-    thinks ends kiran (likes marcus kiran) = true := by  -- the sarcasm, read right
+    thinks ends theo (single kiran) = true ∧          -- the answer
+    thinks ends theo (likes kiran theo) = true ∧    -- the hint
+    thinks ends kiran (likes theo kiran) = true := by  -- the sarcasm, read right
   decide +kernel
 
 /-- Someone without rapport takes "I can't stand you" at face value. -/
 theorem stranger_misreads :
     let w := run { start with bond := fun _ _ _ => 0 } story
-    thinksNot w kiran (likes marcus kiran) = true := by decide +kernel
+    thinksNot w kiran (likes theo kiran) = true := by decide +kernel
 
 theorem promise_kept : HasDialogue.questions ends = [] ∧ (broken ends).isEmpty = true ∧
     (kept ends).length = 1 := by decide +kernel
@@ -148,13 +148,13 @@ theorem all_motivated : unmotivated (S := E) (E := A) start story = [] := by dec
 
 /-- An extra trip back to the bar serves no goal and no plan. -/
 theorem stray_move :
-    unmotivated (S := E) (E := A) start (story ++ [act (sp (.move marcus bar))]) = [12] := by
+    unmotivated (S := E) (E := A) start (story ++ [act (sp (.move theo bar))]) = [12] := by
   decide +kernel
 
-theorem marcus_plan_works :
-    planWorks (S := E) (run start (story.take 8)) marcusPlan = true := by decide +kernel
+theorem theo_plan_works :
+    planWorks (S := E) (run start (story.take 8)) theoPlan = true := by decide +kernel
 
-/-- Witnessing is on: Kiran, already home, saw Marcus arrive. -/
-theorem kiran_saw_him_arrive : thinks ends kiran (at_ marcus home) = true := by decide +kernel
+/-- Witnessing is on: Kiran, already home, saw Theo arrive. -/
+theorem kiran_saw_him_arrive : thinks ends kiran (at_ theo home) = true := by decide +kernel
 
 end LangLib.World.Date

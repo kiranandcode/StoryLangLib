@@ -17,7 +17,7 @@ namespace LangLib.World.Office
 open LangLib LangLib.Scene Ch Pl Ob
 
 def resolver : Resolver Ch Pl Ob where
-  char | "kiran" => some .kiran | "marcus" => some .marcus | "mara" => some .mara | _ => none
+  char | "kiran" => some .kiran | "theo" => some .theo | "mara" => some .mara | _ => none
   place | "office" => some .office | "roof" => some .roof | _ => none
   obj | "letter" => some .letter | _ => none
 
@@ -49,14 +49,14 @@ def fromText : Timed E :=
 
 theorem fromText_valid : fromText.Valid start := by decide +kernel
 
-/-- "An hour earlier": Marcus left the letter between 50 and 70 minutes before
+/-- "An hour earlier": Theo left the letter between 50 and 70 minutes before
 the scene opens. -/
 theorem an_hour_earlier : ∃ a b, fromText.timeline[8]? = some a ∧ fromText.timeline[0]? = some b ∧
     50 ≤ b.s - a.e ∧ b.s - a.e ≤ 70 := ⟨_, _, rfl, rfl, by decide, by decide⟩
 
-/-- Marcus still ends up wrong about the letter. -/
+/-- Theo still ends up wrong about the letter. -/
 theorem fromText_false_belief :
-    falseBelief (Timed.stateAt start fromText 66) marcus (fact (.objAt letter office)) = true := by
+    falseBelief (Timed.stateAt start fromText 66) theo (fact (.objAt letter office)) = true := by
   decide +kernel
 
 end LangLib.World.Office
