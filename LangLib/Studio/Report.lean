@@ -440,6 +440,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
       | .error e => Json.mkObj [("claim", c), ("holds", false), ("error", e)]
     let real := match p.plan with
       | some plan =>
+        if p.items.all (·.src == "plan") then Json.null else
         let got := p.items.map fun (it : Item) => it.ev
         Json.mkObj [("planned", Json.arr ((plan.map n.evS).map Json.str).toArray),
           ("missing", Json.arr (((countDiff plan got).map n.evS).map Json.str).toArray),

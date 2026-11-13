@@ -135,6 +135,9 @@ def eventsMatch (s : Spec) (str : String) (evs : List Ev) : Bool :=
     (es.mapM s.names.ev).toOption == some evs
   | .error _ => false
 
+/-- One-line `repr` (structure instances must not wrap below their first field). -/
+private def rs {α : Type} [Repr α] (a : α) : String := (repr a).pretty 1000000
+
 private def lean (s : String) : String :=
   -- `reprStr` output is Lean syntax; drop the namespaces we open
   ((s.replace "LangLib.Studio." "").replace "LangLib.World." "")
@@ -152,19 +155,19 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     "`decide +kernel`. Regenerate after editing the story; the `#guard` lines fail if\n" ++
     "the story files no longer match the definitions below.\n-/\n\n" ++
     s!"namespace {ns}\nopen LangLib.World LangLib.Studio\n\n"
-  out := out ++ s!"def spec : Spec := {lean (reprStr s)}\n\n"
+  out := out ++ s!"def spec : Spec := {lean (rs s)}\n\n"
   out := out ++ "#guard specMatches (include_str \"story.json\") spec\n\n"
   let paraEvs := l.paras.map fun p => p.items.map (·.ev)
   for (p, evs) in l.paras.zip paraEvs do
-    out := out ++ s!"/-- paragraph {p.name} -/\ndef p{p.name} : List Ev := {lean (reprStr evs)}\n"
+    out := out ++ s!"/-- paragraph {p.name} -/\ndef p{p.name} : List Ev := {lean (rs evs)}\n"
     let src := if p.items.any (·.src != "plan") then s!"paragraphs/{p.name}.events.json" else s!"paragraphs/{p.name}.plan.json"
     out := out ++ s!"#guard eventsMatch spec (include_str \"{src}\") p{p.name}\n\n"
   let allNames := " ++ ".intercalate (l.paras.map (s!"p{·.name}"))
-  out := out ++ s!"def owner : List Nat := {reprStr owner}\n\n"
+  out := out ++ s!"def owner : List Nat := {rs owner}\n\n"
   out := out ++ "/-- The story with its solved timeline (minutes); `Timed.Valid` re-checks it. -/\n"
   out := out ++ s!"def story : Timed (E spec) :=\n  \{ told := ({if l.paras.isEmpty then "[]" else allNames}).map (Ev.toE spec),\n" ++
-    s!"    constraints := {lean (reprStr story.constraints)},\n    metric := {lean (reprStr story.metric)},\n" ++
-    s!"    timeline := {lean (reprStr timed.timeline)} }\n\n"
+    s!"    constraints := {lean (rs story.constraints)},\n    metric := {lean (rs story.metric)},\n" ++
+    s!"    timeline := {lean (rs timed.timeline)} }\n\n"
   let chrono := timed.chrono
   let whole := if validB s.start chrono then "Valid" else if plausibleB s.start chrono then "Plausible" else "¬Plausible"
   out := out ++ match whole with
@@ -179,7 +182,7 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
       out := out ++ s!"theorem p{nm}_valid : Valid spec.start {up} := by decide +kernel\n"
     else if plausibleB s.start es then
       out := out ++ s!"theorem p{nm}_plausible : Plausible spec.start {up} := by decide +kernel\n"
-      out := out ++ s!"theorem p{nm}_assumes : assumedAt spec.start {up} 0 = {reprStr (assumedAt s.start es 0)} := by decide +kernel\n"
+      out := out ++ s!"theorem p{nm}_assumes : assumedAt spec.start {up} 0 = {rs (assumedAt s.start es 0)} := by decide +kernel\n"
     else
       out := out ++ s!"theorem p{nm}_fails : ¬ Plausible spec.start {up} := by decide +kernel\n"
     let w := run s.start es
@@ -187,20 +190,20 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
       match n.claim c with
       | .ok cl =>
         let b := cl.eval w
-        out := out ++ s!"/-- {c} -/\ntheorem p{nm}_claim{j} : ({lean (reprStr cl)}).eval (run spec.start {up}) = {b} := by decide +kernel\n"
+        out := out ++ s!"/-- {c} -/\ntheorem p{nm}_claim{j} : ({lean (rs cl)}).eval (run spec.start {up}) = {b} := by decide +kernel\n"
       | .error _ => pure ()
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
-        out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (reprStr plan)} := by decide +kernel\n"
+        out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)} := by decide +kernel\n"
     out := out ++ "\n"
   if let some B := l.beats then
     let ids := B.vocab.map (·.id)
     let coarse : List Nat := l.beatStory.filterMap ids.idxOf?
     let fine := l.paras.flatMap fun p => p.plan.getD (p.items.map (·.ev))
-    out := out ++ s!"def beats : Beats := {lean (reprStr B)}\n\n"
-    out := out ++ s!"def beatStory : List (BeatEv beats) := {reprStr coarse}.map (⟨·⟩)\n\n"
-    out := out ++ s!"def plans : List Ev := {lean (reprStr fine)}\n\n"
+    out := out ++ s!"def beats : Beats := {lean (rs B)}\n\n"
+    out := out ++ s!"def beatStory : List (BeatEv beats) := {rs coarse}.map (⟨·⟩)\n\n"
+    out := out ++ s!"def plans : List Ev := {lean (rs fine)}\n\n"
     let bv := decide (Valid B.start (coarse.map (⟨·⟩ : Nat → BeatEv B)))
     out := out ++ s!"theorem beats_{if bv then "valid" else "invalid"} : {if bv then "" else "¬ "}Valid beats.start beatStory := by decide +kernel\n"
     let rf := decide (Refines B.abs fine (coarse.map (⟨·⟩ : Nat → BeatEv B)))
