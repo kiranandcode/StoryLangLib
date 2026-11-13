@@ -276,8 +276,12 @@ def extract(run: Run, st: Story, k: int, model: str, claims: bool = True, plan_h
 - "at": the index of the token (verb or key word) that asserts the event.
 - "phase": "main", or "meanwhile" when the text cuts to something happening at the same time, or
   "flashback" (with "gap": minutes) for something that happened earlier.
-- A character deciding to go somewhere or wanting something that explains a later action: `adopt`.
-  Going somewhere: `move`, with an `adopt` for the destination when the text gives the reason.
+- Motives: every move, take, drop, give and act needs a reason among the events (an earlier
+  `adopt`/`intend`, or one in this paragraph). When the prose gives or implies one ("came back for a
+  cable", "saw your window lit", "went to make tea", "wanted to see"), encode it as `adopt C L` just
+  before the action, where L is what the action brings about (`at(C,P)` for a move, `holds(C,O)` for a
+  take, `did(C,D,ACT)` for an act), or `intend C PLAN` when it starts one of the named plans. If the
+  prose gives no reason at all, do not invent one.
 - Speech: `tell` for sincere statements of a fact in the list; `sarcasm` when someone says the opposite
   of what they mean; `hint` for implication; `ask`/`answer` for a question about a fact; `askAct`,
   `agree` for asking for and giving consent to an intimate act.

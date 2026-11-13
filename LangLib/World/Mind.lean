@@ -220,9 +220,15 @@ information; permanent facts *concluded* (by the lore) about any earlier time
 are kept, so "she held the letter then" still yields "she has read it". -/
 def view (w : W) (c : C) : List (BLit Φ) :=
   let base := lits (beliefs w c)
+  let now := closure (admit base)
   let times := ((beliefs w c).map (·.about)).eraseDups
-  let settled := times.flatMap fun t =>
-    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l
+  -- a conclusion stays settled only if some lore rule gave it from premises that
+  -- are still believed or merely went out of date (fluents); one drawn from a
+  -- premise the character has since given up goes with it
+  let survives (l : BLit Φ) : Bool := (Lore.rules (Φ := Φ)).any fun r =>
+    r.head == l && r.body.all fun b => Fluent.fluent b.1 || now.contains b
+  let settled := (times.flatMap fun t =>
+    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && survives l).eraseDups
   closure (admit (settled ++ base))
 
 /-- What `c` believed at story time `s`, as they remember it: the view their
