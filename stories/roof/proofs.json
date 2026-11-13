@@ -1,77 +1,61 @@
 {
  "status": "failed",
- "secs": 2.0,
+ "secs": 68.2,
  "theorems": {
   "story_valid": {
-   "line": 92,
+   "line": 35,
    "statement": "story_valid : story.Valid spec.start",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (Timed.Valid spec.start story) (instDecidableValid_1 spec.start story)\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx"
+   "ok": true
   },
   "p01_valid": {
-   "line": 94,
+   "line": 37,
    "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (spec.start \u22a8 story.upTo owner 0) (instDecidableValid spec.start (story.upTo owner 0))\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx"
+   "ok": true
   },
   "p01_claim0": {
-   "line": 96,
-   "statement": "p01_claim0 : (Claim.bond 0 1 (Dim.attraction) (Cmp.ge) 2).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.bond 0 1 Dim.attraction Cmp.ge 2) = true)\n    (instDecidableEqBool (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.bond 0 1 Dim.attraction Cmp.ge 2))\n      true)\nto `true` or `false`.\n\nReduction got stuck at\n  Nat.ble 1\n    (HasBonds.bond\n      (meet (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n        (LangLib.World.socialParties\u271d ("
+   "line": 39,
+   "statement": "p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
   },
   "p01_claim1": {
-   "line": 98,
-   "statement": "p01_claim1 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.holdsTrue (Fact.at_ 1 0, true)) = true)\n    (instDecidableEqBool (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.holdsTrue (Fact.at_ 1 0, true))) true)\nto `true` or `false`.\n\nReduction got stuck at\n  ((meet (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n              (LangLib.World.socialParties\u271d (SocialEv.flirt { i := 1 } { i := 0 }))"
+   "line": 41,
+   "statement": "p01_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
+  },
+  "p01_claim2": {
+   "line": 43,
+   "statement": "p01_claim2 : (Claim.thinks 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
+  },
+  "p01_claim3": {
+   "line": 45,
+   "statement": "p01_claim3 : (Claim.bond 0 1 (Dim.attraction) (Cmp.gt) 0).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
   },
   "p02_valid": {
-   "line": 100,
+   "line": 47,
    "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (spec.start \u22a8 story.upTo owner 1) (instDecidableValid spec.start (story.upTo owner 1))\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx"
-  },
-  "p02_claim0": {
-   "line": 102,
-   "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 1)) = true",
-   "ok": false,
-   "error": "unexpected identifier; expected '}'"
+   "ok": true
   },
   "beats_valid": {
-   "line": 175,
+   "line": 55,
    "statement": "beats_valid : Valid beats.start beatStory",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (beats.start \u22a8 beatStory) (instDecidableValid beats.start beatStory)\nto `true` or `false`.\n\nReduction got stuck at\n  (beats.beat ((fun x => { i := x }) 0).i).pre.all beats.start.holds.contains"
+   "ok": true
   },
   "plans_do_not_refine_beats": {
-   "line": 176,
+   "line": 56,
    "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
-   "ok": false,
-   "error": "Tactic `decide` failed to reduce\n  @decide (\u00acRefines beats.abs plans beatStory) instDecidableNot\nto `true` or `false`.\n\nReduction got stuck at\n  match List.filterMap beats.abs plans with\n  | [] =>\n    match beatStory with\n    | [] => isTrue \u22ef\n    | head :: tail => isFalse \u22ef\n  | a :: as =>\n    match beatStory with\n    | [] => isFalse \u22ef\n    | b :: bs =>\n      match decEq a b with\n      | { decide := true, reflects_decide := hab } =>\n        match as.hasDecEq bs with\n        | { decide := true, ref"
+   "ok": true
   }
  },
  "errors": [
-  "unexpected identifier; expected '}'",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors",
-  "Tactic `decide` failed to reduce\n  @decide (Timed.Valid spec.start story) (instDecidableValid_1 spec.start story)\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx",
-  "Tactic `decide` failed to reduce\n  @decide (spec.start \u22a8 story.upTo owner 0) (instDecidableValid spec.start (story.upTo owner 0))\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx",
-  "Tactic `decide` failed to reduce\n  @decide (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.bond 0 1 Dim.attraction Cmp.ge 2) = true)\n    (instDecidableEqBool (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.bond 0 1 Dim.attraction Cmp.ge 2))\n      true)\nto `true` or `false`.\n\nReduction got stuck at\n  Nat.ble 1\n    (HasBonds.bond\n      (meet (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n        (LangLib.World.socialParties\u271d (",
-  "Tactic `decide` failed to reduce\n  @decide (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.holdsTrue (Fact.at_ 1 0, true)) = true)\n    (instDecidableEqBool (Claim.eval (run spec.start (story.upTo owner 0)) (Claim.holdsTrue (Fact.at_ 1 0, true))) true)\nto `true` or `false`.\n\nReduction got stuck at\n  ((meet (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n              (LangLib.World.socialParties\u271d (SocialEv.flirt { i := 1 } { i := 0 }))",
-  "Tactic `decide` failed to reduce\n  @decide (spec.start \u22a8 story.upTo owner 1) (instDecidableValid spec.start (story.upTo owner 1))\nto `true` or `false`.\n\nReduction got stuck at\n  (socialOk3 (next (next spec.start (Ev.toE spec (Ev.adopt 1 (Fact.at_ 1 0, true)))) (Ev.toE spec (Ev.move 1 0)))\n          (SocialEv.flirt { i := 1 } { i := 0 })).ctorIdx.beq\n    Tri.yes.ctorIdx",
-  "Tactic `decide` failed to reduce\n  @decide (Claim.eval (run spec.start (story.upTo owner 1)) (Claim.thinks 1 (Fact.atom 4, true)) = true)\n    (instDecidableEqBool (Claim.eval (run spec.start (story.upTo owner 1)) (Claim.thinks 1 (Fact.atom 4, true))) true)\nto `true` or `false`.\n\nReduction got stuck at\n  List.elem (lit (Fact.atom 4, true)) (view (run spec.start (story.upTo owner 1)) { i := 1 })",
-  "unexpected identifier; expected '}'",
-  "Tactic `decide` failed to reduce\n  @decide (beats.start \u22a8 beatStory) (instDecidableValid beats.start beatStory)\nto `true` or `false`.\n\nReduction got stuck at\n  (beats.beat ((fun x => { i := x }) 0).i).pre.all beats.start.holds.contains",
-  "Tactic `decide` failed to reduce\n  @decide (\u00acRefines beats.abs plans beatStory) instDecidableNot\nto `true` or `false`.\n\nReduction got stuck at\n  match List.filterMap beats.abs plans with\n  | [] =>\n    match beatStory with\n    | [] => isTrue \u22ef\n    | head :: tail => isFalse \u22ef\n  | a :: as =>\n    match beatStory with\n    | [] => isFalse \u22ef\n    | b :: bs =>\n      match decEq a b with\n      | { decide := true, reflects_decide := hab } =>\n        match as.hasDecEq bs with\n        | { decide := true, ref"
+  "no such file or directory (error code: 2)\n  file: stories/roof/paragraphs/02.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
  ],
  "guards": [
-  "unexpected identifier; expected '}'",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors",
-  "cannot evaluate code because 'Stories.Roof.spec' uses 'sorry' and/or contains errors"
+  "no such file or directory (error code: 2)\n  file: stories/roof/paragraphs/02.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
  ],
  "file": "stories/roof/Proofs.lean",
- "at": 1794540848.574903
+ "at": 1794541896.486903
 }

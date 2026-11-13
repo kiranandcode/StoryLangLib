@@ -1,0 +1,36 @@
+{"para": "", "stage": "write all", "model": "opus", "secs": 66.0, "note": "", "t": 66.0}
+{"stage": "split", "ok": true, "note": "12 paragraphs", "t": 66.0}
+{"para": "01", "stage": "annotate r1", "model": "opus", "secs": 70.1, "note": "", "t": 136.2}
+{"para": "01", "stage": "check r1", "ok": true, "note": "", "t": 136.3}
+{"para": "01", "stage": "extract", "model": "opus", "secs": 18.1, "note": "", "t": 154.7}
+{"para": "01", "stage": "claims", "model": "opus", "secs": 17.5, "note": "", "t": 172.2}
+{"para": "01", "stage": "check", "ok": true, "note": "", "t": 173.1}
+{"para": "02", "stage": "annotate r1", "model": "opus", "secs": 86.1, "note": "", "t": 259.5}
+{"para": "02", "stage": "check r1", "ok": true, "note": "", "t": 261.8}
+{"para": "02", "stage": "extract", "model": "opus", "secs": 33.6, "note": "", "t": 298.1}
+{"para": "02", "stage": "claims", "model": "opus", "secs": 29.4, "note": "", "t": 327.5}
+{"para": "02", "stage": "check", "ok": false, "note": "the paragraph implies 'thinksThinks kiran theo kiranLikesTheo', but the events do not support it", "t": 328.6}
+{"para": "03", "stage": "annotate r1", "model": "opus", "secs": 98.4, "note": "", "t": 427.3}
+{"para": "03", "stage": "check r1", "ok": false, "note": "offset 9658: unexpected end of input", "t": 428.1}
+{"para": "03", "stage": "annotate r2", "model": "opus", "secs": 77.3, "note": "", "t": 505.4}
+{"para": "03", "stage": "check r2", "ok": false, "note": "offset 4536: expected end of input", "t": 505.9}
+{"para": "03", "stage": "annotate r3", "model": "opus", "secs": 89.8, "note": "", "t": 595.8}
+{"para": "03", "stage": "check r3", "ok": true, "note": "", "t": 598.2}
+{"para": "03", "stage": "extract", "model": "opus", "secs": 43.6, "note": "", "t": 643.3}
+{"para": "03", "stage": "claims", "model": "opus", "secs": 45.4, "note": "", "t": 688.8}
+{"para": "03", "stage": "check", "ok": false, "note": "'Theo takes the note' cannot happen: someone already holds it | 'Theo takes the note' has no reason in the story so far (nobody wants it; give the character a reason on the page or cut it) | the paragraph implies 'goal theo at(kiran,roof)', but the events do not support it", "t": 692.9}
+{"para": "04", "stage": "annotate r1", "model": "opus", "secs": 104.5, "note": "", "t": 798.2}
+{"para": "04", "stage": "check r1", "ok": true, "note": "", "t": 801.5}
+{"para": "04", "stage": "extract", "model": "opus", "secs": 50.5, "note": "", "t": 853.6}
+{"para": "04", "stage": "claims", "model": "opus", "secs": 48.8, "note": "", "t": 902.4}
+{"para": "04", "stage": "check", "ok": true, "note": "", "t": 905.2}
+{"para": "05", "stage": "annotate r1", "model": "opus", "secs": 120.7, "note": "", "t": 1026.8}
+{"para": "05", "stage": "check r1", "ok": true, "note": "", "t": 1035.4}
+{"para": "05", "stage": "extract", "model": "opus", "secs": 203.9, "note": "", "t": 1249.9}
+{"para": "05", "stage": "claims", "model": "opus", "secs": 90.5, "note": "", "t": 1340.7}
+{"para": "05", "stage": "check", "ok": true, "note": "", "t": 1348.9}
+{"para": "06", "stage": "annotate r1", "model": "opus", "secs": 181.5, "note": "", "t": 1532.8}
+{"para": "06", "stage": "check r1", "ok": true, "note": "", "t": 1537.1}
+{"para": "06", "stage": "extract", "model": "opus", "secs": 30.1, "note": "", "t": 1568.1}
+{"para": "06", "stage": "claims", "model": "opus", "secs": 32.7, "note": "", "t": 1600.9}
+{"para": "06", "stage": "check", "ok": true, "note": "", "t": 1601.5}

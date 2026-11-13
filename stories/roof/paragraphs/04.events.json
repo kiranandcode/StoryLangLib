@@ -1,0 +1,34 @@
+{
+ "events": [
+  {
+   "e": "adopt mara at(mara,lab)",
+   "at": 12,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move mara lab",
+   "at": 28,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice mara noteForMara inferred",
+   "at": 97,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt mara at(mara,roof)",
+   "at": 179,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "falseBelief mara noteForMara",
+  "at mara lab",
+  "goal mara at(mara,roof)",
+  "unaware kiran noteForKiran"
+ ]
+}

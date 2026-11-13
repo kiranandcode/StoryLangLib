@@ -161,7 +161,9 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
   for (p, evs) in l.paras.zip paraEvs do
     out := out ++ s!"/-- paragraph {p.name} -/\ndef p{p.name} : List Ev := {lean (rs evs)}\n"
     let src := if p.items.any (·.src != "plan") then s!"paragraphs/{p.name}.events.json" else s!"paragraphs/{p.name}.plan.json"
-    out := out ++ s!"#guard eventsMatch spec (include_str \"{src}\") p{p.name}\n\n"
+    if !p.items.isEmpty || p.plan.isSome then
+      out := out ++ s!"#guard eventsMatch spec (include_str \"{src}\") p{p.name}\n"
+    out := out ++ "\n"
   let allNames := " ++ ".intercalate (l.paras.map (s!"p{·.name}"))
   out := out ++ s!"def owner : List Nat := {rs owner}\n\n"
   out := out ++ "/-- The story with its solved timeline (minutes); `Timed.Valid` re-checks it. -/\n"

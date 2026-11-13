@@ -1,0 +1,13 @@
+{
+ "events": [
+  "sarcasm kiran theo kiranLikesTheo",
+  "notice theo kiranLikesTheo inferred",
+  "flirt theo kiran"
+ ],
+ "claims": [
+  "thinks theo kiranLikesTheo",
+  "at theo lab",
+  "at kiran lab"
+ ],
+ "beat": "spark"
+}

@@ -1,0 +1,46 @@
+{
+ "events": [
+  {
+   "e": "move kiran lab",
+   "at": 1,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell mara kiran theoLikesMara",
+   "at": 41,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell mara kiran noteForMara",
+   "at": 54,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran noteForMara told:mara",
+   "at": 63,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran theoLikesMara inferred",
+   "at": 92,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request kiran mara at(mara,roof)",
+   "at": 149,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "falseBelief mara noteForMara",
+  "falseBelief kiran noteForMara",
+  "falseBelief kiran theoLikesMara",
+  "at kiran lab"
+ ]
+}

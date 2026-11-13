@@ -1,0 +1,19 @@
+{
+ "events": [
+  "ask kiran theo noteForKiran",
+  "answer theo kiran noteForKiran",
+  "notice kiran noteForKiran told:theo",
+  "confide theo kiran",
+  "tell theo kiran theoLikesKiran",
+  "notice kiran theoLikesKiran told:theo",
+  "hint kiran theo kiranLikesTheo",
+  "notice theo kiranLikesTheo inferred",
+  "adopt theo did(theo,kiran,kiss)"
+ ],
+ "claims": [
+  "knows kiran theoLikesKiran",
+  "thinks theo kiranLikesTheo",
+  "at kiran roof"
+ ],
+ "beat": "negotiate"
+}

@@ -1,0 +1,64 @@
+{
+ "events": [
+  {
+   "e": "adopt mara at(mara,lab)",
+   "at": 11,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move mara lab",
+   "at": 30,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice mara objAt(note,lab) seen",
+   "at": 40,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice mara maraReadNote seen",
+   "at": 73,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice mara noteForMara inferred",
+   "at": 79,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice mara theoLikesMara inferred",
+   "at": 84,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt mara holds(mara,note)",
+   "at": 122,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "take mara note",
+   "at": 122,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt mara at(mara,roof)",
+   "at": 136,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "true maraReadNote",
+  "falseBelief mara noteForMara",
+  "holds mara note",
+  "bond mara theo attraction > 0"
+ ]
+}

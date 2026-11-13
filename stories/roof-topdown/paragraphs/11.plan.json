@@ -1,0 +1,14 @@
+{
+ "events": [
+  "adopt kiran did(kiran,theo,kiss)",
+  "askAct theo kiran kiss",
+  "agree kiran theo kiss",
+  "agree theo kiran kiss"
+ ],
+ "claims": [
+  "consented kiran theo kiss",
+  "consented theo kiran kiss",
+  "goal kiran did(kiran,theo,kiss)"
+ ],
+ "beat": "negotiate"
+}

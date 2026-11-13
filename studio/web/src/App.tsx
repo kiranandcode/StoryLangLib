@@ -35,6 +35,13 @@ export function App() {
   const fromProse = useRef(false)
 
   useEffect(() => { document.documentElement.dataset.theme = theme }, [theme])
+  useEffect(() => {
+    const q = new URLSearchParams(location.search)
+    if (q.get('story')) setStory(q.get('story')!)
+    if (q.get('theme')) setTheme(q.get('theme') as 'light' | 'dark')
+    if (q.get('mode')) setMode(q.get('mode') as 'chill' | 'overview')
+    if (q.get('tab')) setTab(q.get('tab') as Tab)
+  }, [])
 
   const load = useCallback((name: string) => {
     if (!name) return
@@ -51,6 +58,7 @@ export function App() {
 
   // live: the server pushes an event whenever the story's files change
   useEffect(() => {
+    if (new URLSearchParams(location.search).has('static')) return  // screenshots: no live stream
     const es = new EventSource('/api/events')
     es.onopen = () => setLive(true)
     es.onerror = () => setLive(false)

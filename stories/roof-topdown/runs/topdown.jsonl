@@ -1,0 +1,38 @@
+{"stage": "beats", "ok": true, "note": "None", "t": 1.0}
+{"para": "01", "stage": "plan a0", "model": "opus", "secs": 37.7, "note": "", "t": 38.7}
+{"para": "01", "stage": "check plan", "ok": true, "note": "", "t": 40.7}
+{"para": "02", "stage": "plan a0", "model": "opus", "secs": 42.5, "note": "", "t": 83.3}
+{"para": "02", "stage": "check plan", "ok": true, "note": "", "t": 86.9}
+{"para": "03", "stage": "plan a0", "model": "opus", "secs": 42.3, "note": "", "t": 129.2}
+{"para": "03", "stage": "check plan", "ok": false, "note": "'Theo takes the note' cannot happen: someone already holds it | 'Theo takes the note' has no reason in the story so far (nobody wants it; give the character a reason on the page or cut it)", "t": 131.5}
+{"para": "03", "stage": "plan a1", "model": "opus", "secs": 46.1, "note": "", "t": 177.7}
+{"para": "03", "stage": "check plan", "ok": true, "note": "", "t": 181.4}
+{"para": "04", "stage": "plan a0", "model": "opus", "secs": 54.4, "note": "", "t": 235.9}
+{"para": "04", "stage": "check plan", "ok": false, "note": "'Mara takes the note' has no reason in the story so far (nobody wants it; give the character a reason on the page or cut it)", "t": 238.9}
+{"para": "04", "stage": "plan a1", "model": "opus", "secs": 46.0, "note": "", "t": 285.0}
+{"para": "04", "stage": "check plan", "ok": true, "note": "", "t": 288.8}
+{"para": "05", "stage": "plan a0", "model": "opus", "secs": 46.3, "note": "", "t": 335.1}
+{"para": "05", "stage": "check plan", "ok": true, "note": "", "t": 339.6}
+{"para": "06", "stage": "plan a0", "model": "opus", "secs": 44.0, "note": "", "t": 383.6}
+{"para": "06", "stage": "check plan", "ok": false, "note": "'Mara realises: not: the note is for Mara' cannot happen: they have no way to know that", "t": 388.0}
+{"para": "06", "stage": "plan a1", "model": "opus", "secs": 50.0, "note": "", "t": 438.1}
+{"para": "06", "stage": "check plan", "ok": true, "note": "", "t": 445.9}
+{"para": "07", "stage": "plan a0", "model": "opus", "secs": 43.7, "note": "", "t": 489.8}
+{"para": "07", "stage": "check plan", "ok": true, "note": "", "t": 493.9}
+{"para": "08", "stage": "plan a0", "model": "opus", "secs": 32.7, "note": "", "t": 527.1}
+{"para": "08", "stage": "check plan", "ok": true, "note": "", "t": 537.4}
+{"para": "09", "stage": "plan a0", "model": "opus", "secs": 184.9, "note": "", "t": 722.7}
+{"para": "09", "stage": "check plan", "ok": true, "note": "", "t": 757.3}
+{"para": "10", "stage": "plan a0", "model": "opus", "secs": 89.6, "note": "", "t": 847.6}
+{"para": "10", "stage": "check plan", "ok": true, "note": "", "t": 864.6}
+{"para": "11", "stage": "plan a0", "model": "opus", "secs": 117.6, "note": "", "t": 982.6}
+{"para": "11", "stage": "check plan", "ok": true, "note": "", "t": 1009.7}
+{"para": "12", "stage": "plan a0", "model": "opus", "secs": 54.6, "note": "", "t": 1064.9}
+{"para": "12", "stage": "check plan", "ok": true, "note": "", "t": 1076.6}
+{"stage": "plans refine beats r0", "ok": false, "note": "lingers spark note misread gossip truth truth amends climb negotiate negotiate kiss", "t": 1085.4}
+{"para": "06", "stage": "replan r0", "model": "opus", "secs": 16.4, "note": "", "t": 1101.9}
+{"para": "06", "stage": "check plan", "ok": true, "note": "", "t": 1103.4}
+{"para": "10", "stage": "replan r0", "model": "opus", "secs": 9.7, "note": "", "t": 1113.2}
+{"para": "10", "stage": "check plan", "ok": true, "note": "", "t": 1114.3}
+{"stage": "plans refine beats r1", "ok": true, "note": "lingers spark note misread gossip truth amends climb negotiate kiss", "t": 1114.8}
+{"para": "01", "stage": "write a0", "model": "opus", "secs": 11.8, "note": "", "t": 1126.7}

@@ -1,0 +1,18 @@
+{
+ "events": [
+  "adopt mara at(mara,lab)",
+  "move mara lab",
+  "confide mara kiran",
+  "tell mara kiran noteForKiran",
+  "notice kiran noteForKiran told:mara",
+  "tell mara kiran !noteForMara",
+  "notice kiran !noteForMara told:mara",
+  "adopt kiran at(kiran,roof)"
+ ],
+ "claims": [
+  "thinks kiran noteForKiran",
+  "goal kiran at(kiran,roof)",
+  "at mara lab"
+ ],
+ "beat": "amends"
+}

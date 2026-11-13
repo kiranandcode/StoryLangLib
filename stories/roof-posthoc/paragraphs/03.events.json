@@ -1,0 +1,46 @@
+{
+ "events": [
+  {
+   "e": "intend kiran teaBreak",
+   "at": 2,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move kiran kitchen",
+   "at": 24,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "intend theo theNote",
+   "at": 68,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "take theo note",
+   "at": 77,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "drop theo note",
+   "at": 104,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move theo roof",
+   "at": 147,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "at theo roof",
+  "at kiran kitchen",
+  "unaware kiran noteForKiran",
+  "goal theo at(kiran,roof)"
+ ]
+}

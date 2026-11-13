@@ -1,0 +1,11 @@
+{
+ "events": [
+  "move mara roof"
+ ],
+ "claims": [
+  "at mara roof",
+  "at kiran lab",
+  "falseBelief kiran noteForMara"
+ ],
+ "beat": "truth"
+}

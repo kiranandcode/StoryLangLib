@@ -1,0 +1,22 @@
+{
+ "events": [
+  {
+   "e": "sarcasm kiran theo kiranLikesTheo",
+   "at": 76,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice theo kiranLikesTheo inferred",
+   "at": 141,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "knows theo kiranLikesTheo",
+  "thinksThinks kiran theo kiranLikesTheo",
+  "bond kiran theo attraction > 0",
+  "bond theo kiran attraction > 0"
+ ]
+}

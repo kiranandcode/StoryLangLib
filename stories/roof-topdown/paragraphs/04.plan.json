@@ -1,0 +1,18 @@
+{
+ "events": [
+  "adopt mara at(mara,lab)",
+  "move mara lab",
+  "notice mara objAt(note,lab) seen",
+  "adopt mara holds(mara,note)",
+  "take mara note",
+  "notice mara maraReadNote seen",
+  "notice mara noteForMara inferred",
+  "adopt mara at(mara,roof)"
+ ],
+ "claims": [
+  "falseBelief mara noteForMara",
+  "holds mara note",
+  "goal mara at(mara,roof)"
+ ],
+ "beat": "misread"
+}

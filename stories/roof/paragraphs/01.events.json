@@ -1,0 +1,46 @@
+{
+ "events": [
+  {
+   "e": "adopt theo at(theo,lab)",
+   "at": 51,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move theo lab",
+   "at": 37,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "flirt theo kiran",
+   "at": 67,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "hint theo kiran theoLikesKiran",
+   "at": 127,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran theoLikesKiran sensed",
+   "at": 142,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "flirt kiran theo",
+   "at": 161,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "at theo lab",
+  "at kiran lab",
+  "thinks kiran theoLikesKiran",
+  "bond kiran theo attraction > 0"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "events": [
+  "adopt theo at(theo,lab)",
+  "move theo lab",
+  "flirt theo kiran"
+ ],
+ "claims": [
+  "at theo lab",
+  "goal theo at(theo,lab)",
+  "true theoLikesKiran"
+ ],
+ "beat": "lingers"
+}

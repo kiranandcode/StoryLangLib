@@ -1,0 +1,117 @@
+{
+ "status": "failed",
+ "secs": 10.6,
+ "theorems": {
+  "story_valid": {
+   "line": 75,
+   "statement": "story_valid : story.Valid spec.start",
+   "ok": true
+  },
+  "p01_valid": {
+   "line": 77,
+   "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
+   "ok": true
+  },
+  "p02_valid": {
+   "line": 79,
+   "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
+   "ok": true
+  },
+  "p03_valid": {
+   "line": 81,
+   "statement": "p03_valid : Valid spec.start (story.upTo owner 2)",
+   "ok": true
+  },
+  "p04_valid": {
+   "line": 83,
+   "statement": "p04_valid : Valid spec.start (story.upTo owner 3)",
+   "ok": true
+  },
+  "p05_valid": {
+   "line": 85,
+   "statement": "p05_valid : Valid spec.start (story.upTo owner 4)",
+   "ok": true
+  },
+  "p06_valid": {
+   "line": 87,
+   "statement": "p06_valid : Valid spec.start (story.upTo owner 5)",
+   "ok": true
+  },
+  "p07_valid": {
+   "line": 89,
+   "statement": "p07_valid : Valid spec.start (story.upTo owner 6)",
+   "ok": true
+  },
+  "p08_valid": {
+   "line": 91,
+   "statement": "p08_valid : Valid spec.start (story.upTo owner 7)",
+   "ok": true
+  },
+  "p09_valid": {
+   "line": 93,
+   "statement": "p09_valid : Valid spec.start (story.upTo owner 8)",
+   "ok": true
+  },
+  "p10_valid": {
+   "line": 95,
+   "statement": "p10_valid : Valid spec.start (story.upTo owner 9)",
+   "ok": true
+  },
+  "p11_valid": {
+   "line": 97,
+   "statement": "p11_valid : Valid spec.start (story.upTo owner 10)",
+   "ok": true
+  },
+  "p12_valid": {
+   "line": 99,
+   "statement": "p12_valid : Valid spec.start (story.upTo owner 11)",
+   "ok": true
+  },
+  "beats_valid": {
+   "line": 107,
+   "statement": "beats_valid : Valid beats.start beatStory",
+   "ok": true
+  },
+  "plans_do_not_refine_beats": {
+   "line": 108,
+   "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
+   "ok": true
+  }
+ },
+ "errors": [
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/01.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/02.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/03.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/04.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/05.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/06.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/07.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/08.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/09.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/10.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
+ ],
+ "guards": [
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/01.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/02.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/03.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/04.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors",
+  "no such file or directory (error code: 2)\n  file: stories/roof-posthoc/paragraphs/05.plan.json",
+  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
+ ],
+ "file": "stories/roof-posthoc/Proofs.lean",
+ "at": 1794541831.2917042
+}

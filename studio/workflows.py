@@ -125,7 +125,12 @@ def call_model(model: str, prompt: str, system: str) -> tuple[str, dict]:
 
 
 def langlib(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([str(LANGLIB), *args], capture_output=True, text=True)
+    for _ in range(60):  # the binary is briefly missing while `lake build` relinks it
+        try:
+            return subprocess.run([str(LANGLIB), *args], capture_output=True, text=True)
+        except FileNotFoundError:
+            time.sleep(2)
+    raise FileNotFoundError(LANGLIB)
 
 
 def report(story: Path) -> dict:

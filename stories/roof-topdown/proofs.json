@@ -1,0 +1,25 @@
+{
+ "status": "ok",
+ "secs": 24.0,
+ "theorems": {
+  "story_valid": {
+   "line": 27,
+   "statement": "story_valid : story.Valid spec.start",
+   "ok": true
+  },
+  "beats_valid": {
+   "line": 35,
+   "statement": "beats_valid : Valid beats.start beatStory",
+   "ok": true
+  },
+  "plans_do_not_refine_beats": {
+   "line": 36,
+   "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
+   "ok": true
+  }
+ },
+ "errors": [],
+ "guards": [],
+ "file": "stories/roof-topdown/Proofs.lean",
+ "at": 1794542205.620546
+}

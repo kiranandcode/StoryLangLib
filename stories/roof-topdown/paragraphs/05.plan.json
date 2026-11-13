@@ -1,0 +1,15 @@
+{
+ "events": [
+  "move kiran lab",
+  "tell mara kiran theoLikesMara",
+  "tell mara kiran noteForMara",
+  "notice kiran theoLikesMara told:mara",
+  "notice kiran noteForMara told:mara"
+ ],
+ "claims": [
+  "at kiran lab",
+  "thinks kiran theoLikesMara",
+  "falseBelief kiran noteForMara"
+ ],
+ "beat": "gossip"
+}

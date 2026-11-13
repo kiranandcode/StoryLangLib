@@ -1,0 +1,15 @@
+{
+ "events": [
+  "ask mara theo noteForMara",
+  "answer theo mara !noteForMara",
+  "notice mara !noteForMara told:theo",
+  "tell theo mara noteForKiran",
+  "notice mara noteForKiran told:theo"
+ ],
+ "claims": [
+  "thinks mara noteForKiran",
+  "thinks mara !noteForMara",
+  "at mara roof"
+ ],
+ "beat": "truth"
+}

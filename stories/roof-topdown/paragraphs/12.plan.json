@@ -1,0 +1,14 @@
+{
+ "events": [
+  "act kiran theo kiss",
+  "notice kiran did(kiran,theo,kiss) sensed",
+  "notice theo did(kiran,theo,kiss) sensed",
+  "notice kiran theoLikesKiran sensed"
+ ],
+ "claims": [
+  "true did(kiran,theo,kiss)",
+  "knows kiran theoLikesKiran",
+  "bond kiran theo attraction > 0"
+ ],
+ "beat": "kiss"
+}

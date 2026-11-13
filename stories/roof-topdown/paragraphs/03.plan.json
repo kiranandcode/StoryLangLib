@@ -1,0 +1,16 @@
+{
+ "events": [
+  "intend kiran teaBreak",
+  "move kiran kitchen",
+  "adopt theo at(kiran,roof)",
+  "intend theo theNote",
+  "drop theo note",
+  "move theo roof"
+ ],
+ "claims": [
+  "at kiran kitchen",
+  "at theo roof",
+  "true objAt(note,lab)"
+ ],
+ "beat": "note"
+}

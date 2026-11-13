@@ -1,0 +1,46 @@
+{
+ "events": [
+  {
+   "e": "intend kiran teaBreak",
+   "at": 2,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move kiran kitchen",
+   "at": 9,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt theo at(kiran,roof)",
+   "at": 113,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "intend theo theNote",
+   "at": 113,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "drop theo note",
+   "at": 151,
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move theo roof",
+   "at": 167,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "at kiran kitchen",
+  "at theo roof",
+  "true objAt(note,lab)",
+  "goal theo at(kiran,roof)"
+ ]
+}

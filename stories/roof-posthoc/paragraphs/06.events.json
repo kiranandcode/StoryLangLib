@@ -1,0 +1,16 @@
+{
+ "events": [
+  {
+   "e": "move mara roof",
+   "at": 15,
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "at mara roof",
+  "falseBelief kiran noteForMara",
+  "falseBelief kiran theoLikesMara",
+  "unaware kiran noteForKiran"
+ ]
+}
