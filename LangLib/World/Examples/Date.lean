@@ -1,4 +1,4 @@
-import LangLib.World.Goals
+import LangLib.World.Story
 
 /-!
 # Example: a date (unknowns, dialogue, goals and plans)
@@ -33,10 +33,6 @@ abbrev Fact := SpaceFact Ch Pl Unit ⊕ SocialFact Ch ⊕ Info
 abbrev A := SpaceEv Ch Pl Unit ⊕ MindEv Ch Fact ⊕ SocialEv Ch ⊕ DialogueEv Ch Fact
 abbrev E := A ⊕ GoalEv Ch Fact A
 
-instance : DecidableEq A :=
-  @instDecidableEqSum _ _ inferInstance (@instDecidableEqSum _ _ inferInstance
-    (@instDecidableEqSum _ _ inferInstance inferInstance))
-instance : DecidableEq E := @instDecidableEqSum _ _ inferInstance inferInstance
 
 structure W where
   loc : Ch → Pl
@@ -93,10 +89,8 @@ instance : Truth W Info := ⟨fun _ i => match i with
 instance : Credence W Ch Fact := socialCredence
 instance : Rapport W Ch := bondRapport
 
-/-- The outer sum is built explicitly (instance search gives up at this depth). -/
-instance : Domain W E := @instDomainSum W A (GoalEv Ch Fact A) inferInstance inferInstance
-instance : Observable W E Fact Pl := @instObservableSum W A (GoalEv Ch Fact A) Fact Pl inferInstance inferInstance
-instance : Purpose W E Ch Fact := @instPurposeSum W A (GoalEv Ch Fact A) Ch Fact inferInstance inferInstance
+cached_instance DecidableEq A
+world_instances W, E, Fact, Pl, Ch
 
 def sp (e : SpaceEv Ch Pl Unit) : A := ev e
 def dl (e : DialogueEv Ch Fact) : A := ev e

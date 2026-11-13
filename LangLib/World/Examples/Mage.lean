@@ -1,3 +1,4 @@
+import LangLib.World.Story
 import LangLib.World.Mind
 import LangLib.World.Magic
 
@@ -47,8 +48,7 @@ instance : HasMana W Ch where
 instance : Cast Ch := ⟨[.kiran, .marcus]⟩
 
 abbrev E := SpaceEv Ch Pl Unit ⊕ MindEv Ch Fact ⊕ MagicEv Ch
-instance : DecidableEq E :=
-  @instDecidableEqSum _ _ inferInstance (@instDecidableEqSum _ _ inferInstance inferInstance)
+world_instances W, E, Fact, Pl, Ch
 
 open Ch Pl
 def mg (e : MagicEv Ch) : E := ev e

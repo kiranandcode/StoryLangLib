@@ -67,7 +67,10 @@ abbrev ev {E S : Type} [Inject E S] (e : E) : S := Inject.inj e
 class Perceive (W E : Type) where
   perceive : W → E → W → W
 
-instance (priority := low) {W E : Type} : Perceive W E := ⟨fun _ _ w => w⟩
+/-- For worlds where nobody perceives anything. There is deliberately no default
+instance: if a story's perception instance fails to resolve, that should be an
+error, not silently no witnessing. -/
+def Perceive.none {W E : Type} : Perceive W E := ⟨fun _ _ w => w⟩
 
 /-- Story time, advanced by one after every event. Without an instance it
 stands still at 0. -/

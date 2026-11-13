@@ -1,3 +1,4 @@
+import LangLib.World.Story
 import LangLib.World.Mind
 import LangLib.World.Social
 
@@ -90,7 +91,7 @@ instance : TopicTrust W Ch Fact where
 instance : Credence W Ch Fact := socialCredence
 
 abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact
-instance : DecidableEq E := @instDecidableEqSum _ _ inferInstance inferInstance
+world_instances W, E, Fact, Pl, Ch
 
 def sp (e : SpaceEv Ch Pl Ob) : E := ev e
 def mi (e : MindEv Ch Fact) : E := ev e
