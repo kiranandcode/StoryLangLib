@@ -1,44 +1,64 @@
 {
  "status": "ok",
- "secs": 1.7,
+ "secs": 2.2,
  "theorems": {
   "story_valid": {
-   "line": 35,
+   "line": 39,
    "statement": "story_valid : story.Valid spec.start",
    "ok": true
   },
   "p01_valid": {
-   "line": 37,
+   "line": 41,
    "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
    "ok": true
   },
   "p01_claim0": {
-   "line": 39,
+   "line": 43,
    "statement": "p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
    "ok": true
   },
   "p01_claim1": {
-   "line": 41,
+   "line": 45,
    "statement": "p01_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
    "ok": true
   },
   "p02_valid": {
-   "line": 43,
+   "line": 47,
    "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
    "ok": true
   },
   "p02_claim0": {
-   "line": 45,
+   "line": 49,
    "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 1)) = true",
    "ok": true
   },
-  "beats_valid": {
+  "p03_valid": {
+   "line": 51,
+   "statement": "p03_valid : Valid spec.start (story.upTo owner 2)",
+   "ok": true
+  },
+  "p03_claim0": {
    "line": 53,
+   "statement": "p03_claim0 : (Claim.holdsTrue (Fact.at_ 0 1, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "p03_claim1": {
+   "line": 55,
+   "statement": "p03_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "p03_claim2": {
+   "line": 57,
+   "statement": "p03_claim2 : (Claim.holdsTrue (Fact.objAt 0 0, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "beats_valid": {
+   "line": 65,
    "statement": "beats_valid : Valid beats.start beatStory",
    "ok": true
   },
   "plans_do_not_refine_beats": {
-   "line": 54,
+   "line": 66,
    "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
    "ok": true
   }
@@ -46,5 +66,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794544122.5238762
+ "at": 1794544201.595547
 }

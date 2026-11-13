@@ -1,0 +1,18 @@
+{
+ "incremental": {
+  "checks run": 5,
+  "checks failed": 0,
+  "rewrites": 0,
+  "re-reads": 0,
+  "annotation rounds": 3,
+  "model calls": 0,
+  "writer": "interactive agent",
+  "wall secs": 156,
+  "paragraphs": 3,
+  "valid paragraphs": 3,
+  "failing paragraphs": 0,
+  "claims failing": 0,
+  "annotations accepted": 3,
+  "story": "valid"
+ }
+}
