@@ -98,8 +98,26 @@ examples, so the CLI's verdicts and the `decide +kernel` proofs in
 `Proofs.lean` run the same definitions; `Refine.lean` adds refinement between
 layers (`Refines abs fine coarse := fine.filterMap abs = coarse`, with
 `Refines.trans`) and a beat layer with STRIPS-style preconditions.
-`studio/workflows.py` runs the three writing workflows (incremental, top-down,
-post hoc) with the checker in the loop.
+The writing itself happens in an interactive Claude session (or subagents
+Kiran can watch), never a headless model call. That session writes the prose,
+the annotation and the event reading, and drives `studio/workflows.py`, a
+checking CLI that makes no model calls:
+
+```
+python3 studio/workflows.py brief           stories/roof 3   what the writer needs for paragraph 3
+python3 studio/workflows.py tokens          stories/roof 3   the leaves the annotation must have
+python3 studio/workflows.py extract         stories/roof 3   event language, world and rules for its reading
+python3 studio/workflows.py paragraph-check stories/roof 3   annotation, events, claims, plan: exit 1 with the why
+python3 studio/workflows.py plan-check      stories/roof     beats and paragraph plans (top-down)
+python3 studio/workflows.py refine-check    stories/roof     the paragraphs refine the beat story (so far)
+python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
+```
+
+`--log incremental` appends each verdict to `runs/incremental.jsonl` for the
+Studio's run panel; `summary` and `compare` total them. Every child the Studio
+or the CLI starts (langlib, lake, lean) runs in its own process group under
+`nice -n 10` with a timeout and is killed on cancellation, reload and
+shutdown; one Lean job runs at a time across both (`studio/procs.py`).
 
 ## Building
 

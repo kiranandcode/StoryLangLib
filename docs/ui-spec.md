@@ -84,8 +84,10 @@ consent) does not depend on it.
 - Frontend: Vite + TypeScript (React or Svelte), hot module reload; file
   watching pushes updates (SSE or websocket).
 - Story store: plain files under `stories/`, git-friendly.
-- Model calls: `claude -p` like `eval/run_eval.py` (the writer model is
-  swappable; the checker does not care which model wrote the prose).
+- Model calls: none from the app or its scripts. The writer is an interactive
+  Claude session (or subagents/termlings Kiran can see) that drives the
+  checking CLI `studio/workflows.py`; the checker does not care which model
+  wrote the prose.
 
 ## Done when
 

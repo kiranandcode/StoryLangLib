@@ -1,51 +1,54 @@
-"""The Studio's three writing workflows, with the Lean checker in the loop.
+"""The Studio's checking CLI. It makes no model calls: an interactive agent
+(a Claude session Kiran can see) writes the prose, the annotation and the
+event readings, and drives these checks; the Studio shows the results live.
 
-    python3 studio/workflows.py incremental stories/roof [--paras 1-3]
-    python3 studio/workflows.py topdown     stories/roof-topdown
-    python3 studio/workflows.py posthoc     stories/roof-posthoc
-    python3 studio/workflows.py compare     stories/roof stories/roof-topdown stories/roof-posthoc
+    python3 studio/workflows.py status          <story>
+    python3 studio/workflows.py brief           <story> <n>   what the writer needs for paragraph n
+    python3 studio/workflows.py tokens          <story> <n>   the tokens the annotation's leaves must be
+    python3 studio/workflows.py extract         <story> <n>   the event language, world and rules for reading n
+    python3 studio/workflows.py paragraph-check <story> <n>   annotation (langlib check), events, claims, plan
+    python3 studio/workflows.py plan-check      <story> [n]   beats valid; paragraph plans (NN.plan.json) valid
+    python3 studio/workflows.py refine-check    <story>       plans and prose refine the beats
+    python3 studio/workflows.py prove           <story>       Proofs.lean regenerated and checked
+    python3 studio/workflows.py log             <story> <workflow> <stage> [--para NN] [--ok|--fail] [--note ...]
+    python3 studio/workflows.py summary         <story> <workflow>
+    python3 studio/workflows.py compare         <story> <story> ...
 
-All three leave the same artefacts per paragraph under `paragraphs/`: the
-prose (NN.txt), its checked langlib annotation (NN.json), the events and
-claims read off it (NN.events.json), and, top-down, its plan (NN.plan.json).
-`langlib story <dir>` is the judge throughout; the Studio shows the result
-live. Every model call and checker verdict is logged to runs/<workflow>.jsonl.
+Checks print what is wrong as the writer should hear it and exit 1 when
+something is; with `--log <workflow>` they also append their verdict to
+runs/<workflow>.jsonl, which the Studio's run panel shows.
 
-* incremental: write paragraph k from the outline; annotate it (until
-  `langlib check` accepts); read its events and claims; check the story so far;
-  if the checker objects, send its `why` back to the writer and rewrite.
-* topdown: check the beats; plan each paragraph as events and check the plans
-  (repairing plans the checker rejects); write each paragraph from its plan;
-  re-extract its events and check that the prose realises the plan; prove the
-  layers refine each other in Lean.
-* posthoc: write the whole story in one call; then per paragraph annotate
-  (parts of speech, references), extract the scene events, then the
-  higher-level claims (beliefs, relationships, consent), and check that the
-  events imply the claims.
+The workflows (docs/ui-spec.md), as the agent runs them:
+
+* incremental: per paragraph k: `brief`, write NN.txt; `tokens`, write the
+  annotation NN.json (eval/prompt.md); `extract`, write NN.events.json;
+  `paragraph-check` until it passes (re-read before blaming the prose, then
+  rewrite the prose with the checker's `why`); `prove`; next paragraph.
+* topdown: `plan-check` the beats; write NN.plan.json per paragraph and
+  `plan-check` them; `refine-check`; then write prose per plan and
+  `paragraph-check` (which also compares the prose's events with its plan).
+* posthoc: write all of NN.txt; then per paragraph annotate, extract events,
+  then claims, `paragraph-check`.
+
+Every langlib/lake child goes through studio/procs.py: own process group,
+nice -n 10, a timeout, one Lean job at a time machine-wide.
 """
 
 from __future__ import annotations
-import sys as _sys
-_sys.exit("Disabled: model calls must go through an interactive Claude termling or subagent, "
-          "never `claude -p` or an API key (Kiran, 2026-11-12).")
 
 import argparse
 import json
-import re
-import subprocess
 import sys
 import time
+import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "eval"))
-from run_eval import call_model as _call, extract_json, feedback, unclosed  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import procs  # noqa: E402
+import proofs  # noqa: E402
+from procs import ROOT  # noqa: E402
 
-LANGLIB = ROOT / ".lake/build/bin/langlib"
-ANNOTATE = (ROOT / "eval/prompt.md").read_text()
-WRITER_SYSTEM = ("You are a literary fiction writer collaborating with the author, who is also the "
-                 "main character. You output only the prose asked for, no commentary.")
-JSON_SYSTEM = "You are an annotation engine. You output a single JSON document and nothing else."
+SERVER = "http://127.0.0.1:8765"
 
 EVENT_SYNTAX = """\
 Events are one line each: a verb, then ids.
@@ -72,77 +75,60 @@ Claims about the state after the paragraph, one per line:
   goal C L        bond C D DIM OP N   (DIM = trust | attraction | affection | tension; OP = >= <= == > <)
 """
 
+READING_RULES = """\
+- List what the paragraph says happens, as told, one event per clause that asserts one; not wishes,
+  hypotheticals or things merely remembered.
+- Use ids, never names. Use only the verbs and ids above.
+- "at": the index of the token (verb or key word) that asserts the event.
+- "phase": "main", or "meanwhile" when the text cuts to something happening at the same time, or
+  "flashback" (with "gap": minutes) for something that happened earlier.
+- Motives: every move, take, drop, give and act needs a reason among the events (an earlier
+  `adopt`/`intend`, or one in this paragraph). When the prose gives or implies one ("came back for a
+  cable", "saw your window lit", "went to make tea", "wanted to see"), encode it as `adopt C L` just
+  before the action, where L is what the action brings about (`at(C,P)` for a move, `holds(C,O)` for a
+  take, `did(C,D,ACT)` for an act), or `intend C PLAN` when it starts one of the named plans. If the
+  prose gives no reason at all, do not invent one.
+- Speech: `tell` for sincere statements of a fact in the list; `sarcasm` when someone says the opposite
+  of what they mean; `hint` for implication; `ask`/`answer` for a question about a fact; `askAct`,
+  `agree` for asking for and giving consent to an intimate act.
+- A character jumping to a conclusion: `notice C L inferred` (`assumed` only for a guess they do not
+  really believe).
+- `tell`, `hint`, `answer` only for statements of the listed fact ids (or where someone is, when a
+  character says so); small talk and feelings without a fact id are not events.
+- Claims (1-4) only about the listed fact ids, consent and bonds: who now believes what, false
+  beliefs, consent given. No nested beliefs unless the paragraph is about what one character thinks
+  another believes.
+- Before blaming the prose for a checker objection, re-read: where the reading over-read the prose (an
+  event or claim it does not assert) or missed a reason it does give, correct the reading; where the
+  prose really asserts it, keep it, and the objection stands against the prose.
+Write paragraphs/NN.events.json as
+  {"events": [{"e": "...", "at": 12, "phase": "main", "src": "text"}], "claims": ["..."]}
+"""
 
-class Run:
-    """Logs every step of a workflow to runs/<name>.jsonl."""
-
-    def __init__(self, story: Path, name: str):
-        self.story, self.name = story, name
-        (story / "runs").mkdir(exist_ok=True)
-        self.path = story / "runs" / f"{name}.jsonl"
-        self.path.write_text("")
-        self.calls = 0
-        self.secs = 0.0
-        self.cost = 0.0
-        self.objections: list[dict] = []
-        self.rewrites = 0
-        self.annotation_rounds = 0
-        self.t0 = time.time()
-
-    def log(self, **kw):
-        kw.setdefault("t", round(time.time() - self.t0, 1))
-        with self.path.open("a") as f:
-            f.write(json.dumps(kw) + "\n")
-        print(f"[{self.name}] " + " ".join(f"{k}={v}" for k, v in kw.items() if k not in ("text",))[:300], flush=True)
-
-    def call(self, model: str, prompt: str, system: str, stage: str, para: str = "") -> str:
-        t = time.time()
-        raw, meta = call_model(model, prompt, system)
-        self.calls += 1
-        self.secs += time.time() - t
-        self.cost += meta.get("cost") or 0
-        self.log(para=para, stage=stage, model=model, secs=meta.get("secs"), note=meta.get("error", "")[:200])
-        return raw
-
-    def summary(self) -> dict:
-        return {"model calls": self.calls, "model secs": round(self.secs), "wall secs": round(time.time() - self.t0),
-                "cost usd": round(self.cost, 2), "checker objections": len(self.objections),
-                "rewrites": self.rewrites, "annotation rounds": self.annotation_rounds}
-
-
-def call_model(model: str, prompt: str, system: str) -> tuple[str, dict]:
-    t0 = time.time()
-    p = subprocess.run(
-        ["claude", "-p", "--model", model, "--tools", "", "--setting-sources", "",
-         "--strict-mcp-config", "--no-session-persistence", "--output-format", "json",
-         "--system-prompt", system],
-        input=prompt, capture_output=True, text=True, timeout=1800)
-    meta = {"secs": round(time.time() - t0, 1)}
-    try:
-        out = json.loads(p.stdout)
-    except json.JSONDecodeError:
-        return "", meta | {"error": (p.stderr or p.stdout)[-500:]}
-    meta["cost"] = out.get("total_cost_usd")
-    if out.get("is_error"):
-        meta["error"] = str(out.get("result", ""))[:500]
-    return out.get("result", ""), meta
+CRAFT = """\
+Close third person, past tense, in Kiran's point of view (in scenes Kiran is not in, the point of view
+of whoever is there). Interiority over choreography: what she notices, wants, hesitates over. Specific
+sensory detail over adjectives; vary sentence rhythm; no cliches, no euphemism stacks. Dialogue in
+double quotes ("), attributed. Keep the reader oriented in place and time. Consent is part of the
+scene, said out loud, as character, not paperwork. One paragraph of 80 to 150 words."""
 
 
-def langlib(*args: str) -> subprocess.CompletedProcess:
+# ---------------------------------------------------------------------------- the story on disk
+
+def langlib(*args: str, timeout: float = 120) -> procs.Result:
     for _ in range(60):  # the binary is briefly missing while `lake build` relinks it
-        try:
-            return subprocess.run([str(LANGLIB), *args], capture_output=True, text=True)
-        except FileNotFoundError:
-            time.sleep(2)
-    raise FileNotFoundError(LANGLIB)
+        if procs.LANGLIB.exists():
+            return procs.run(procs.langlib_argv(*args), timeout=timeout)
+        time.sleep(2)
+    raise FileNotFoundError(procs.LANGLIB)
 
 
-def report(story: Path) -> dict:
-    return json.loads(langlib("story", str(story)).stdout)
-
-
-def tokens(text_path: Path) -> list[str]:
-    return langlib("tokenize", str(text_path)).stdout.splitlines()
+def report(d: Path) -> dict:
+    res = langlib("story", str(d))
+    try:
+        return json.loads(res.stdout)
+    except json.JSONDecodeError:
+        return {"error": (res.stderr or res.stdout)[-2000:]}
 
 
 class Story:
@@ -152,6 +138,13 @@ class Story:
         self.meta = json.loads((d / "meta.json").read_text()) if (d / "meta.json").exists() else {}
         self.pdir = d / "paragraphs"
         self.pdir.mkdir(exist_ok=True)
+
+    def f(self, k: int, ext: str) -> Path:
+        return self.pdir / f"{k:02}.{ext}"
+
+    def outline(self, k: int) -> dict:
+        o = self.spec.get("outline", [])
+        return o[k - 1] if 0 < k <= len(o) else {}
 
     def world_text(self) -> str:
         s = self.spec
@@ -172,394 +165,307 @@ class Story:
 
     def persona_text(self) -> str:
         s = self.spec
-        out = []
-        for c in s["characters"]:
-            out.append(f"- {c['name']}: {', '.join(c['traits'])}; cares most about {', then '.join(c['values'])}.")
+        out = [f"- {c['name']} ({c['pron']}): {', '.join(c['traits'])}; cares most about {', then '.join(c['values'])}."
+               for c in s["characters"]]
         bonds = s.get("start", {}).get("bonds", {})
         out.append("Starting feelings (0 none, 2 strong): " + "; ".join(
             f"{k.replace('>', ' toward ')}: " + ", ".join(f"{d} {n}" for d, n in v.items()) for k, v in bonds.items()))
         return "\n".join(out)
 
     def prose_so_far(self, upto: int) -> str:
-        out = []
-        for i in range(1, upto):
-            f = self.pdir / f"{i:02}.txt"
-            if f.exists():
-                out.append(f.read_text().strip())
-        return "\n\n".join(out)
+        return "\n\n".join(self.f(i, "txt").read_text().strip() for i in range(1, upto) if self.f(i, "txt").exists())
 
     def events_so_far(self, upto: int) -> list[str]:
         evs = []
         for i in range(1, upto):
-            f = self.pdir / f"{i:02}.events.json"
-            if f.exists():
-                evs += [e["e"] for e in json.loads(f.read_text()).get("events", [])]
-            elif (self.pdir / f"{i:02}.plan.json").exists():
-                evs += json.loads((self.pdir / f"{i:02}.plan.json").read_text()).get("events", [])
+            if self.f(i, "events.json").exists():
+                evs += [e["e"] for e in json.loads(self.f(i, "events.json").read_text()).get("events", [])]
+            elif self.f(i, "plan.json").exists():
+                evs += json.loads(self.f(i, "plan.json").read_text()).get("events", [])
         return evs
 
-
-CRAFT = """\
-Craft: close third person, past tense, in Kiran's point of view (in scenes Kiran is not in, the
-point of view of whoever is there). Interiority over choreography: what she notices, wants,
-hesitates over. Specific sensory detail over adjectives; vary sentence rhythm; no cliches, no
-euphemism stacks, no em-dash flourishes in every sentence. Dialogue in double quotes ("),
-attributed. Keep the reader oriented in place and time. Consent is part of the scene, said
-out loud, as character, not paperwork. Write ONE paragraph of 80 to 150 words."""
+    def written(self) -> list[int]:
+        return sorted(int(p.stem) for p in self.pdir.glob("[0-9][0-9].txt"))
 
 
-def write_prompt(st: Story, k: int, brief: str, plan: list[str] | None, objection: str = "", prev: str = "") -> str:
-    p = [f"We are writing a short story, '{st.spec.get('title', '')}', one paragraph at a time.",
-         "Kiran is the author herself (a self-insert); write her as Kiran.",
-         "\n## The people\n" + st.persona_text(),
-         f"\n## Explicitness\n{st.meta.get('explicitness', 'sensual but not graphic')}",
-         "\n## " + CRAFT]
-    so_far = st.prose_so_far(k)
-    p.append("\n## The story so far\n" + (so_far or "(this is the first paragraph)"))
-    p.append(f"\n## Paragraph {k}: what happens\n{brief}")
-    if plan:
-        p.append("\nThe paragraph must assert exactly these events, in this order, and nothing else of "
-                 "consequence (no other moves, decisions, statements of fact between characters):\n" +
-                 "\n".join(f"- {e}" for e in plan) + "\n\n" + st.world_text())
-    if objection:
-        p.append(f"\n## Your previous draft\n{prev}\n\n## The story checker objects\n{objection}\n\n"
-                 "Rewrite the paragraph so the objection no longer applies: either do not assert the "
-                 "move, or show on the page what justifies it (the checker's 'first establish' list says what would).")
-    p.append("\nOutput only the paragraph.")
-    return "\n".join(p)
+def para(r: dict, k: int) -> dict | None:
+    return next((p for p in r.get("paragraphs", []) if p["name"] == f"{k:02}"), None)
 
 
-def annotate(run: Run, st: Story, k: int, model: str, rounds: int = 3) -> bool:
-    nm = f"{k:02}"
-    text_path = st.pdir / f"{nm}.txt"
-    doc_path = st.pdir / f"{nm}.json"
-    text = text_path.read_text()
-    toks = tokens(text_path)
-    base = ANNOTATE + f"\n## Passage\n\n{text}\n\n## Tokens (the leaves must be exactly these, in order)\n\n" + \
-        " ".join(f"{i}:{t}" for i, t in enumerate(toks)) + \
-        "\n\nUse these entity ids for the story's people and places where they are mentioned: " + \
-        ", ".join(c["id"] for c in st.spec["characters"]) + ", " + ", ".join(p["id"] for p in st.spec["places"]) + \
-        ", " + ", ".join(o["id"] for o in st.spec["objects"]) + "."
-    prompt = base
-    for r in range(1, rounds + 1):
-        run.annotation_rounds += 1
-        doc = extract_json(run.call(model, prompt, JSON_SYSTEM, f"annotate r{r}", nm))
-        tmp = st.pdir / f".{nm}.r{r}.json"
-        tmp.write_text(doc)
-        p = langlib("check", str(text_path), str(tmp))
-        try:
-            rep = json.loads(p.stdout)
-        except json.JSONDecodeError:
-            rep = {"ok": False, "parseError": p.stdout or p.stderr}
-        run.log(para=nm, stage=f"check r{r}", ok=rep.get("ok", False),
-                note="; ".join((rep.get("edits") or [])[:2] + (rep.get("refIssues") or [])[:2]) or rep.get("parseError", ""))
-        if rep.get("ok"):
-            doc_path.write_text(json.dumps(json.loads(doc), indent=None))
-            tmp.unlink()
-            return True
-        tmp.unlink()
-        prompt = base + "\n## Your previous answer\n\n" + doc + "\n\n## Checker report\n\n" + \
-            feedback(rep, doc) + "\n\nOutput the corrected JSON document in full."
-    return False
-
-
-def extract(run: Run, st: Story, k: int, model: str, claims: bool = True,
-            review: tuple[str, list[str]] | None = None) -> dict:
-    """Read the events (and claims) a paragraph asserts, anchored to its tokens."""
-    nm = f"{k:02}"
-    text_path = st.pdir / f"{nm}.txt"
-    toks = tokens(text_path)
-    prompt = "\n".join([
-        "Read one paragraph of a story and list the events it asserts, in the story world's event language.",
-        "\n## The world\n" + st.world_text(),
-        "\n## Event language\n" + EVENT_SYNTAX,
-        "\n## Events of the earlier paragraphs (for context; do not repeat them)\n" +
-        ("\n".join(st.events_so_far(k)) or "(none)"),
-        "\n## Earlier prose\n" + (st.prose_so_far(k) or "(none)"),
-        f"\n## Paragraph {k}\n{text_path.read_text()}",
-        "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
-        """
-## Rules
-- List what the paragraph says happens, as told, one event per clause that asserts one; not wishes,
-  hypotheticals or things merely remembered.
-- Use ids, never names. Use only the verbs and ids above.
-- "at": the index of the token (verb or key word) that asserts the event.
-- "phase": "main", or "meanwhile" when the text cuts to something happening at the same time, or
-  "flashback" (with "gap": minutes) for something that happened earlier.
-- Motives: every move, take, drop, give and act needs a reason among the events (an earlier
-  `adopt`/`intend`, or one in this paragraph). When the prose gives or implies one ("came back for a
-  cable", "saw your window lit", "went to make tea", "wanted to see"), encode it as `adopt C L` just
-  before the action, where L is what the action brings about (`at(C,P)` for a move, `holds(C,O)` for a
-  take, `did(C,D,ACT)` for an act), or `intend C PLAN` when it starts one of the named plans. If the
-  prose gives no reason at all, do not invent one.
-- Speech: `tell` for sincere statements of a fact in the list; `sarcasm` when someone says the opposite
-  of what they mean; `hint` for implication; `ask`/`answer` for a question about a fact; `askAct`,
-  `agree` for asking for and giving consent to an intimate act.
-- A character jumping to a conclusion: `notice C L inferred` (`assumed` only for a guess they do not
-  really believe).
-- `tell`, `hint`, `answer` only for statements of the listed fact ids (or where someone is, when a
-  character says so); small talk and feelings without a fact id are not events.
-- Claims only about the listed fact ids, consent and bonds; do not claim nested beliefs unless the
-  paragraph is explicitly about what one character thinks another believes.""",
-        ("\n## Claims\n" + CLAIM_SYNTAX + "\nAlso list what the paragraph implies about minds and "
-         "relationships right after it (who now believes what, false beliefs, consent given), 1-4 claims.") if claims else "",
-        ("\n## Your previous reading\n" + review[0] + "\n\n## The story checker rejects it\n" +
-         "\n".join(f"- {o}" for o in review[1]) +
-         "\nRe-read the paragraph. Where your reading over-read the prose (an event or claim it does not "
-         "assert) or missed a reason it does give (a motive), correct the reading. Where the prose really "
-         "does assert it, keep it: the objection then stands against the prose.") if review else "",
-        "\nOutput JSON only: {\"events\": [{\"e\": \"...\", \"at\": 12, \"phase\": \"main\"}], \"claims\": [\"...\"]}",
-    ])
-    raw = run.call(model, prompt, JSON_SYSTEM, "re-read" if review else "extract", nm)
-    try:
-        out = json.loads(extract_json(raw))
-    except json.JSONDecodeError:
-        out = {"events": [], "claims": []}
-    out.setdefault("claims", [])
-    for e in out.get("events", []):
-        e["src"] = "text"
-    (st.pdir / f"{nm}.events.json").write_text(json.dumps(out, indent=1))
-    return out
-
-
-def reread(run: Run, st: Story, k: int, model: str, obj: list[str], claims: bool = True) -> list[str]:
-    """Before blaming the prose, let the extractor look again at what the checker rejected."""
-    nm = f"{k:02}"
-    cur = (st.pdir / f"{nm}.events.json").read_text()
-    out = extract(run, st, k, model, claims=claims, review=(cur, obj))
-    obj2 = objections(st, k, check_claims=claims)
-    run.log(para=nm, stage="re-read", ok=not obj2, note=" | ".join(obj2))
-    return obj2
-
-
-def objections(st: Story, k: int, check_claims: bool = True) -> list[str]:
+def objections(r: dict, k: int, check_claims: bool = True) -> list[str]:
     """What the checker says is wrong with paragraph k, as the writer should hear it."""
-    r = report(st.d)
     if "error" in r:
         return [f"the story file could not be read: {r['error']}"]
-    p = next((p for p in r["paragraphs"] if p["name"] == f"{k:02}"), None)
+    p = para(r, k)
     if p is None:
         return []
     out = [f"'{e['gloss']}' cannot happen: {e['why']}" for e in p["events"] if e["status"] == "no"]
-    out += [f"'{e['gloss']}' has no reason in the story so far (nobody wants it; give the character a reason on the page or cut it)"
-            for e in p["events"] if e["unmotivated"]]
+    out += [f"'{e['gloss']}' has no reason in the story so far (nobody wants it; give the character a reason "
+            "on the page or cut it)" for e in p["events"] if e["unmotivated"]]
     if check_claims:
         out += [f"the paragraph implies '{c['claim']}', but the events do not support it" for c in p["claims"] if not c["holds"]]
     out += p["errors"]
+    real = p.get("realisation") or {}
+    if real and not real.get("realises", True):
+        out.append("the paragraph does not realise its plan exactly: " +
+                   (f"missing {', '.join(real['missing'])}; " if real.get("missing") else "") +
+                   (f"it also asserts {', '.join(real['extra'])}" if real.get("extra") else ""))
     return out
 
 
-def brief(st: Story, k: int) -> str:
-    return st.spec["outline"][k - 1]["brief"]
+def annotation_feedback(rep: dict) -> list[str]:
+    if "parseError" in rep:
+        return [f"the annotation JSON was rejected: {rep['parseError']}"]
+    out = []
+    if not rep.get("tokensMatch", True):
+        out.append(f"the leaves do not match the passage: {rep['srcTokens']} tokens in the text, "
+                   f"{rep['treeTokens']} in the tree, {rep['editCount']} differences:")
+        out += [f"  {e}" for e in rep["edits"]]
+    if rep.get("badLeaves"):
+        out.append("these leaves are not single tokens (split them): " + ", ".join(rep["badLeaves"]))
+    out += [f"reference: {i}" for i in rep.get("refIssues", [])[:15]]
+    return out
 
 
-def paras_arg(s: str, n: int) -> list[int]:
-    if not s:
-        return list(range(1, n + 1))
-    a, _, b = s.partition("-")
-    return list(range(int(a), int(b or a) + 1))
+def check_annotation(st: Story, k: int) -> list[str]:
+    doc = st.f(k, "json")
+    if not doc.exists():
+        return [f"no annotation yet: write {doc.relative_to(ROOT)} (eval/prompt.md; leaves = `tokens` output)"]
+    res = langlib("check", str(st.f(k, "txt")), str(doc))
+    try:
+        rep = json.loads(res.stdout)
+    except json.JSONDecodeError:
+        rep = {"ok": False, "parseError": (res.stdout or res.stderr)[-1000:]}
+    return [] if rep.get("ok") else annotation_feedback(rep) or ["langlib check rejected the annotation"]
 
 
-# ---------------------------------------------------------------------------- workflow 2
+# ---------------------------------------------------------------------------- run log
 
-def incremental(d: Path, paras: str, writer: str, annotator: str, max_rewrites: int = 2):
-    st = Story(d)
-    run = Run(d, "incremental")
-    for k in paras_arg(paras, len(st.spec["outline"])):
-        nm = f"{k:02}"
-        draft, objection = "", ""
-        for attempt in range(max_rewrites + 1):
-            draft = run.call(writer, write_prompt(st, k, brief(st, k), None, objection, draft),
-                             WRITER_SYSTEM, f"write a{attempt}", nm).strip()
-            (st.pdir / f"{nm}.txt").write_text(draft + "\n")
-            for f in [f"{nm}.json", f"{nm}.events.json"]:
-                (st.pdir / f).unlink(missing_ok=True)
-            if not annotate(run, st, k, annotator):
-                run.log(para=nm, stage="annotation", ok=False, note="not accepted after 3 rounds")
-            extract(run, st, k, writer)
-            obj = objections(st, k)
-            run.log(para=nm, stage="check", ok=not obj, note=" | ".join(obj))
-            if obj:
-                run.objections += [{"para": nm, "attempt": attempt, "stage": "reading", "why": o} for o in obj]
-                obj = reread(run, st, k, writer, obj)
-            if not obj:
-                break
-            run.objections += [{"para": nm, "attempt": attempt, "stage": "prose", "why": o} for o in obj]
-            if attempt == max_rewrites:
-                break
-            run.rewrites += 1
-            objection = "\n".join(f"- {o}" for o in obj)
-    write_summary(d, "incremental", run.summary())
+def log(d: Path, workflow: str | None, **kw) -> None:
+    if not workflow:
+        return
+    (d / "runs").mkdir(exist_ok=True)
+    kw.setdefault("t", round(time.time(), 1))
+    with (d / "runs" / f"{workflow}.jsonl").open("a") as f:
+        f.write(json.dumps(kw) + "\n")
 
 
-# ---------------------------------------------------------------------------- workflow 1
-
-def plan_prompt(st: Story, k: int, previous: list[str], objection: str = "", prev: str = "") -> str:
-    o = st.spec["outline"][k - 1]
-    return "\n".join([
-        "Plan one paragraph of a story as a list of events in the story world's event language.",
-        "\n## The world\n" + st.world_text(), "\n## Event language\n" + EVENT_SYNTAX,
-        "\n## The beats\n" + "\n".join(f"- {b['id']}: {b['label']} (key events: {', '.join(b.get('keys', []))})"
-                                        for b in st.spec["beats"]["vocab"]),
-        "\n## Events planned so far\n" + ("\n".join(previous) or "(none)"),
-        f"\n## Paragraph {k} (beat: {o['beat']})\n{o['brief']}",
-        "\nInclude the beat's key event if this paragraph realises the beat. Give characters reasons "
-        "(adopt, intend) for the moves they make. Also list 1-3 claims (" + CLAIM_SYNTAX.splitlines()[0] +
-        ") that should hold after the paragraph.\n" + CLAIM_SYNTAX,
-        (f"\n## Your previous plan\n{prev}\n\n## The checker objects\n{objection}\nRepair the plan." if objection else ""),
-        "\nOutput JSON only: {\"events\": [\"...\"], \"claims\": [\"...\"]}"])
+def verdict_out(problems: list[str], ok_msg: str) -> int:
+    if problems:
+        print("\n".join(f"- {p}" for p in problems))
+        return 1
+    print(ok_msg)
+    return 0
 
 
-def refinement_objections(st: Story, ks: list[int]) -> dict[int, str]:
+# ---------------------------------------------------------------------------- subcommands
+
+def cmd_status(a) -> int:
+    st = Story(a.story)
+    r = report(a.story)
+    if "error" in r:
+        print(r["error"])
+        return 1
+    print(f"{st.spec.get('title', a.story.name)}: story {'valid' if r['verdict']['valid'] else 'plausible' if r['verdict']['plausible'] else 'failing'}")
+    for p in r["paragraphs"]:
+        doc = "annotated" if p["doc"] and p["doc"]["check"]["ok"] else "annotation missing/rejected"
+        print(f"  {p['name']}: {p['verdict']}, {len(p['events'])} events, {doc}")
+    pf = a.story / "proofs.json"
+    if pf.exists():
+        pr = json.loads(pf.read_text())
+        bad = [k for k, v in pr.get("theorems", {}).items() if not v.get("ok")]
+        print(f"proofs: {pr.get('status')} ({len(pr.get('theorems', {})) - len(bad)}/{len(pr.get('theorems', {}))} proved)")
+    n = len(st.spec.get("outline", []))
+    nxt = next((k for k in range(1, n + 1) if not st.f(k, "txt").exists()), None)
+    if nxt:
+        print(f"next: paragraph {nxt}: {st.outline(nxt).get('brief', '')}")
+    print(f"meta: {json.dumps(st.meta)}")
+    return 0
+
+
+def cmd_brief(a) -> int:
+    st, k = Story(a.story), a.n
+    o = st.outline(k)
+    print("\n".join([
+        f"# Paragraph {k} of '{st.spec.get('title', '')}'" + (f" (beat: {o['beat']})" if o.get("beat") else ""),
+        "Kiran is the author herself (a self-insert); write her as Kiran.",
+        "\n## The people\n" + st.persona_text(),
+        "\n## Point of view\n" + st.meta.get("pov", "close third, past tense, Kiran's"),
+        "\n## Explicitness\n" + st.meta.get("explicitness", "sensual but not graphic"),
+        "\n## Craft\n" + CRAFT,
+        "\n## The story so far\n" + (st.prose_so_far(k) or "(this is the first paragraph)"),
+        "\n## What happens\n" + o.get("brief", "(no outline entry)"),
+    ]))
+    if st.f(k, "plan.json").exists():
+        plan = json.loads(st.f(k, "plan.json").read_text())
+        print("\n## Its plan: assert exactly these events, in order, and nothing else of consequence\n" +
+              "\n".join(f"- {e}" for e in plan.get("events", [])))
+    print(f"\nWrite it to {st.f(k, 'txt').relative_to(ROOT)}.")
+    return 0
+
+
+def cmd_tokens(a) -> int:
+    st = Story(a.story)
+    res = langlib("tokenize", str(st.f(a.n, "txt")))
+    toks = res.stdout.splitlines()
+    print(" ".join(f"{i}:{t}" for i, t in enumerate(toks)))
+    print(f"\n{len(toks)} tokens. Entity ids: " + ", ".join(
+        [c["id"] for c in st.spec["characters"]] + [p["id"] for p in st.spec["places"]] + [o["id"] for o in st.spec["objects"]]))
+    return 0
+
+
+def cmd_extract(a) -> int:
+    st, k = Story(a.story), a.n
+    toks = langlib("tokenize", str(st.f(k, "txt"))).stdout.splitlines()
+    print("\n".join([
+        f"# Reading paragraph {k}: the events it asserts, in the story world's event language",
+        "\n## The world\n" + st.world_text(),
+        "\n## Event language\n" + EVENT_SYNTAX,
+        "\n## Claim language\n" + CLAIM_SYNTAX,
+        "\n## Events of the earlier paragraphs (do not repeat them)\n" + ("\n".join(st.events_so_far(k)) or "(none)"),
+        f"\n## Paragraph {k}\n" + st.f(k, "txt").read_text().strip(),
+        "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
+        "\n## Rules\n" + READING_RULES,
+    ]))
+    return 0
+
+
+def cmd_paragraph_check(a) -> int:
+    st, k = Story(a.story), a.n
+    if not st.f(k, "txt").exists():
+        return verdict_out([f"no prose: {st.f(k, 'txt').relative_to(ROOT)}"], "")
+    ann = check_annotation(st, k)
+    r = report(a.story)
+    obj = [] if st.f(k, "events.json").exists() or st.f(k, "plan.json").exists() else \
+        [f"no reading yet: write {st.f(k, 'events.json').relative_to(ROOT)} (`extract` prints the rules)"]
+    obj += objections(r, k)
+    p = para(r, k)
+    log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),
+        annotation=not ann, verdict=p and p["verdict"], note=" | ".join(ann[:3] + obj)[:1000])
+    if p:
+        print(f"paragraph {k:02}: {p['verdict']}; " + "; ".join(e["gloss"] + ("" if e["status"] == "yes" else f" [{e['status']}]")
+                                                         for e in p["events"]))
+        if p.get("assumptions"):
+            print("assumptions: " + "; ".join(map(str, p["assumptions"])))
+    return verdict_out([f"annotation: {x}" for x in ann] + obj, "ok: annotation accepted, events possible and motivated, claims hold")
+
+
+def cmd_plan_check(a) -> int:
+    st = Story(a.story)
+    r = report(a.story)
+    if "error" in r:
+        return verdict_out([r["error"]], "")
+    b = r.get("beats") or {}
+    out = [] if b.get("valid", True) else [f"the beat story is not valid: {b.get('failure')}"]
+    ks = [a.n] if a.n else [k for k in range(1, len(st.spec.get("outline", [])) + 1) if st.f(k, "plan.json").exists()]
+    for k in ks:
+        out += [f"{k:02} plan: {o}" for o in objections(r, k)]
+    log(a.story, a.log, stage="plan-check", para=f"{a.n:02}" if a.n else "", ok=not out, note=" | ".join(out)[:1000])
+    return verdict_out(out, f"ok: beats valid; plans {', '.join(f'{k:02}' for k in ks) or '(none)'} valid")
+
+
+def refinement_objections(st: Story, ks: list[int]) -> dict[int, list[str]]:
     """Why the plans do not abstract to the beat story: each beat's key event
     must occur exactly once, in a paragraph of that beat."""
-    keys = {e: b["id"] for b in st.spec["beats"]["vocab"] for e in b.get("keys", [])}
-    beat_of = {k: st.spec["outline"][k - 1]["beat"] for k in ks}
+    vocab = st.spec.get("beats", {}).get("vocab", [])
+    keys = {e: b["id"] for b in vocab for e in b.get("keys", [])}
+    beat_of = {k: st.outline(k).get("beat") for k in ks}
     found: dict[str, list[int]] = {}
     out: dict[int, list[str]] = {}
     for k in ks:
-        plan = json.loads((st.pdir / f"{k:02}.plan.json").read_text())
-        for e in plan.get("events", []):
+        src = st.f(k, "events.json") if st.f(k, "events.json").exists() else st.f(k, "plan.json")
+        evs = [e["e"] if isinstance(e, dict) else e for e in json.loads(src.read_text()).get("events", [])]
+        for e in evs:
             if e in keys:
                 found.setdefault(keys[e], []).append(k)
                 if keys[e] != beat_of[k]:
-                    out.setdefault(k, []).append(f"`{e}` is the key event of beat '{keys[e]}', which belongs to "
-                                                 f"another paragraph; this paragraph is beat '{beat_of[k]}'. Express it differently or drop it.")
-    for b in st.spec["beats"]["vocab"]:
+                    out.setdefault(k, []).append(f"`{e}` is the key event of beat '{keys[e]}', which belongs to another "
+                                                 f"paragraph; this paragraph is beat '{beat_of[k]}'")
+    for b in vocab:
         mine = [k for k in ks if beat_of[k] == b["id"]]
         got = [k for k in found.get(b["id"], []) if beat_of[k] == b["id"]]
-        if mine and not got:
-            out.setdefault(mine[-1], []).append(f"this paragraph must contain the key event of beat '{b['id']}': one of {', '.join(b['keys'])}")
+        if mine and not got and max(mine) <= max(ks):
+            out.setdefault(mine[-1], []).append(f"the beat '{b['id']}' needs its key event in its paragraphs: one of {', '.join(b['keys'])}")
         for k in got[:-1] if len(got) > 1 else []:
-            out.setdefault(k, []).append(f"the key event of beat '{b['id']}' occurs again in a later paragraph ({got[-1]}); keep it only there")
-    return {k: "\n".join(v) for k, v in out.items()}
+            out.setdefault(k, []).append(f"the key event of beat '{b['id']}' occurs again later ({got[-1]}); keep it only there")
+    return out
 
 
-def topdown(d: Path, paras: str, writer: str, annotator: str, max_rewrites: int = 2):
-    st = Story(d)
-    run = Run(d, "topdown")
-    ks = paras_arg(paras, len(st.spec["outline"]))
-    r = report(d)
-    run.log(stage="beats", ok=bool(r.get("beats", {}).get("valid")), note=str(r.get("beats", {}).get("failure")))
-    # layer 1 -> 2: plans, checked as a story before any prose
-    for k in ks:
-        nm = f"{k:02}"
-        prev, objection = "", ""
-        for attempt in range(max_rewrites + 1):
-            raw = run.call(writer, plan_prompt(st, k, st.events_so_far(k), objection, prev), JSON_SYSTEM, f"plan a{attempt}", nm)
-            try:
-                plan = json.loads(extract_json(raw))
-            except json.JSONDecodeError:
-                plan = {"events": [], "claims": []}
-            plan["beat"] = st.spec["outline"][k - 1]["beat"]
-            (st.pdir / f"{nm}.plan.json").write_text(json.dumps(plan, indent=1))
-            (st.pdir / f"{nm}.events.json").unlink(missing_ok=True)
-            obj = objections(st, k)
-            run.log(para=nm, stage="check plan", ok=not obj, note=" | ".join(obj))
-            if not obj:
-                break
-            run.objections += [{"para": nm, "layer": "plan", "why": o} for o in obj]
-            if attempt < max_rewrites:
-                run.rewrites += 1
-            prev, objection = json.dumps(plan), "\n".join(f"- {o}" for o in obj)
-    for rnd in range(max_rewrites + 1):
-        r = report(d)
-        ok = bool(r.get("beats", {}).get("refines"))
-        run.log(stage=f"plans refine beats r{rnd}", ok=ok, note=" ".join(r.get("beats", {}).get("abstracted", [])))
-        if ok or rnd == max_rewrites:
-            break
-        for k, why in refinement_objections(st, ks).items():
-            nm = f"{k:02}"
-            run.objections.append({"para": nm, "layer": "refinement", "why": why})
-            run.rewrites += 1
-            prev = (st.pdir / f"{nm}.plan.json").read_text()
-            raw = run.call(writer, plan_prompt(st, k, st.events_so_far(k), why, prev), JSON_SYSTEM, f"replan r{rnd}", nm)
-            try:
-                plan = json.loads(extract_json(raw))
-            except json.JSONDecodeError:
-                continue
-            plan["beat"] = st.spec["outline"][k - 1]["beat"]
-            (st.pdir / f"{nm}.plan.json").write_text(json.dumps(plan, indent=1))
-            run.log(para=nm, stage="check plan", ok=not objections(st, k), note=" | ".join(objections(st, k)))
-    # layer 2 -> 3: prose from plans, re-extracted and compared
-    for k in ks:
-        nm = f"{k:02}"
-        plan = json.loads((st.pdir / f"{nm}.plan.json").read_text())
-        draft, objection = "", ""
-        for attempt in range(max_rewrites + 1):
-            draft = run.call(writer, write_prompt(st, k, st.spec["outline"][k - 1]["brief"], plan["events"], objection, draft),
-                             WRITER_SYSTEM, f"write a{attempt}", nm).strip()
-            (st.pdir / f"{nm}.txt").write_text(draft + "\n")
-            for f in [f"{nm}.json", f"{nm}.events.json"]:
-                (st.pdir / f).unlink(missing_ok=True)
-            annotate(run, st, k, annotator)
-            extract(run, st, k, writer, claims=False)
-            if objections(st, k, check_claims=False) or not (next(p for p in report(d)["paragraphs"] if p["name"] == nm).get("realisation") or {}).get("realises", True):
-                reread(run, st, k, writer, objections(st, k, check_claims=False) or
-                       ["the reading does not match the paragraph's plan; check each planned event is or is not asserted"], claims=False)
-            rr = report(d)
-            p = next(p for p in rr["paragraphs"] if p["name"] == nm)
-            real = p.get("realisation") or {}
-            obj = objections(st, k)
-            if real and not real.get("realises"):
-                obj.append("the paragraph does not realise its plan exactly: " +
-                           (f"missing {', '.join(real['missing'])}; " if real.get("missing") else "") +
-                           (f"it also asserts {', '.join(real['extra'])}" if real.get("extra") else ""))
-            run.log(para=nm, stage="check prose", ok=not obj, note=" | ".join(obj))
-            if not obj:
-                break
-            run.objections += [{"para": nm, "layer": "prose", "why": o} for o in obj]
-            if attempt == max_rewrites:
-                break
-            run.rewrites += 1
-            objection = "\n".join(f"- {o}" for o in obj)
-    write_summary(d, "topdown", run.summary())
+def cmd_refine_check(a) -> int:
+    st = Story(a.story)
+    r = report(a.story)
+    if "error" in r:
+        return verdict_out([r["error"]], "")
+    b = r.get("beats") or {}
+    ks = [k for k in st.written() or range(1, len(st.spec.get("outline", [])) + 1)
+          if st.f(k, "events.json").exists() or st.f(k, "plan.json").exists()]
+    done = [k for k in ks if all(st.outline(j).get("beat") != st.outline(k).get("beat") or j in ks
+                                 for j in range(1, len(st.spec.get("outline", [])) + 1))]
+    abstracted, story = b.get("abstracted", []), b.get("story", [])
+    out = []
+    complete = len(ks) == len(st.spec.get("outline", []))
+    if complete and not b.get("refines"):
+        out.append(f"the paragraphs abstract to {abstracted}, not the beat story {story}")
+    elif not complete and abstracted != story[:len(abstracted)]:
+        out.append(f"so far the paragraphs abstract to {abstracted}, which is not a prefix of the beat story {story}")
+    for k, why in sorted(refinement_objections(st, done if not complete else ks).items()):
+        out += [f"{k:02}: {w}" for w in why]
+    print(f"beats: {'valid' if b.get('valid') else 'invalid'}; abstracted so far: {' '.join(abstracted) or '(none)'}")
+    log(a.story, a.log, stage="refine-check", ok=not out, note=" | ".join(out)[:1000])
+    return verdict_out(out, "ok: the layers refine " + ("the beat story" if complete else "a prefix of the beat story"))
 
 
-# ---------------------------------------------------------------------------- workflow 3
-
-def posthoc(d: Path, paras: str, writer: str, annotator: str):
-    st = Story(d)
-    run = Run(d, "posthoc")
-    n = len(st.spec["outline"])
-    prompt = "\n".join([
-        f"Write the short story '{st.spec.get('title', '')}' in {n} paragraphs, one per item of the outline below.",
-        "Kiran is the author herself (a self-insert); write her as Kiran.",
-        "\n## The people\n" + st.persona_text(),
-        f"\n## Explicitness\n{st.meta.get('explicitness', 'sensual but not graphic')}",
-        "\n## " + CRAFT.replace("Write ONE paragraph of 80 to 150 words.", "Each paragraph 80 to 150 words."),
-        "\n## Outline\n" + "\n".join(f"{i + 1}. {o['brief']}" for i, o in enumerate(st.spec["outline"])),
-        f"\nOutput exactly {n} paragraphs separated by blank lines, nothing else."])
-    raw = run.call(writer, prompt, WRITER_SYSTEM, "write all")
-    ps = [p.strip() for p in re.split(r"\n\s*\n", raw.strip()) if p.strip()]
-    run.log(stage="split", ok=len(ps) == n, note=f"{len(ps)} paragraphs")
-    for f in st.pdir.glob("*"):
-        f.unlink()
-    for i, p in enumerate(ps[:n], 1):
-        (st.pdir / f"{i:02}.txt").write_text(p + "\n")
-    for k in range(1, min(n, len(ps)) + 1):
-        nm = f"{k:02}"
-        annotate(run, st, k, annotator)                       # layer 1: the parts-of-speech tree
-        out = extract(run, st, k, writer, claims=False)       # layer 2: scene events
-        claims = run.call(writer, "\n".join([                 # layer 3: beliefs, relationships, consent
-            "Read this paragraph of a story and state what it implies about the characters' minds and "
-            "relationships right after it.", "\n## The world\n" + st.world_text(), "\n## Claim language\n" + CLAIM_SYNTAX,
-            "\n## Story so far\n" + st.prose_so_far(k), f"\n## Paragraph {k}\n" + (st.pdir / f"{nm}.txt").read_text(),
-            "\nList 1-4 claims that the paragraph makes true (new beliefs, false beliefs, consent, bonds). "
-            "Output JSON only: {\"claims\": [\"...\"]}"]), JSON_SYSTEM, "claims", nm)
+def server_prove(d: Path, timeout: float) -> dict | None:
+    """Ask the running Studio to prove (so its UI shows it) and wait for proofs.json."""
+    pf = d / "proofs.json"
+    before = json.loads(pf.read_text()).get("at", 0) if pf.exists() else 0
+    try:
+        urllib.request.urlopen(urllib.request.Request(f"{SERVER}/api/story/{d.name}/prove", method="POST"), timeout=3)
+    except OSError:
+        return None
+    t0 = time.time()
+    while time.time() - t0 < timeout:
+        time.sleep(2)
         try:
-            out["claims"] = json.loads(extract_json(claims)).get("claims", [])
-        except json.JSONDecodeError:
-            out["claims"] = []
-        (st.pdir / f"{nm}.events.json").write_text(json.dumps(out, indent=1))
-        obj = objections(st, k)                               # layer 4: the implications between layers
-        run.log(para=nm, stage="check", ok=not obj, note=" | ".join(obj))
-        run.objections += [{"para": nm, "why": o} for o in obj]
-    write_summary(d, "posthoc", run.summary())
+            pr = json.loads(pf.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if pr.get("at", 0) > max(before, t0):
+            return pr
+    return {"status": "timeout", "theorems": {}, "errors": [f"no result from the Studio after {timeout}s"]}
 
 
-def write_summary(d: Path, name: str, s: dict):
-    r = report(d)
+def cmd_prove(a) -> int:
+    pr = None if a.local else server_prove(a.story, proofs.LEAN_TIMEOUT + 60)
+    if pr is None:
+        pr = proofs.prove(a.story)
+    thms = pr.get("theorems", {})
+    bad = {k: v for k, v in thms.items() if not v.get("ok")}
+    print(f"proofs: {pr['status']} in {pr.get('secs', '?')}s: {len(thms) - len(bad)}/{len(thms)} theorems proved")
+    log(a.story, a.log, stage="prove", ok=pr["status"] == "ok", note=f"{len(thms) - len(bad)}/{len(thms)}; " +
+        " | ".join(f"{k}: {v.get('error', '')[:150]}" for k, v in bad.items())[:1000])
+    problems = [f"{k} ({v['statement'][:120]}): {v.get('error', 'failed')[:300]}" for k, v in bad.items()]
+    problems += [e for e in pr.get("errors", []) if not bad] + ([pr["error"]] if pr.get("error") else [])
+    return verdict_out(problems if pr["status"] != "ok" else [], "ok: every theorem proved")
+
+
+def cmd_log(a) -> int:
+    log(a.story, a.workflow, stage=a.stage, para=a.para or "", ok=a.ok, note=a.note or "")
+    return 0
+
+
+def cmd_summary(a) -> int:
+    f = a.story / "runs" / f"{a.workflow}.jsonl"
+    steps = [json.loads(l) for l in f.read_text().splitlines() if l.strip()] if f.exists() else []
+    checks = [s for s in steps if s.get("stage") in ("paragraph-check", "plan-check", "refine-check")]
+    s = {"checks run": len(checks), "checks failed": sum(not c.get("ok") for c in checks),
+         "rewrites": sum(s.get("stage") == "rewrite" for s in steps),
+         "re-reads": sum(s.get("stage") == "re-read" for s in steps),
+         "annotation rounds": sum(s.get("stage") == "annotate" for s in steps) or None,
+         "model calls": 0, "writer": "interactive agent"}
+    if len(steps) > 1:
+        s["wall secs"] = round(steps[-1]["t"] - steps[0]["t"])
+    r = report(a.story)
     if "paragraphs" in r:
         s["paragraphs"] = len(r["paragraphs"])
         s["valid paragraphs"] = sum(p["verdict"] == "valid" for p in r["paragraphs"])
@@ -567,39 +473,67 @@ def write_summary(d: Path, name: str, s: dict):
         s["claims failing"] = sum(not c["holds"] for p in r["paragraphs"] for c in p["claims"])
         s["annotations accepted"] = sum(bool(p["doc"] and p["doc"]["check"]["ok"]) for p in r["paragraphs"])
         s["story"] = "valid" if r["verdict"]["valid"] else "plausible" if r["verdict"]["plausible"] else "failing"
-    f = d / "runs" / "summary.json"
-    allsum = json.loads(f.read_text()) if f.exists() else {}
-    allsum[name] = s
-    f.write_text(json.dumps(allsum, indent=1))
+    sf = a.story / "runs" / "summary.json"
+    allsum = json.loads(sf.read_text()) if sf.exists() else {}
+    allsum[a.workflow] = s
+    sf.write_text(json.dumps(allsum, indent=1))
     print(json.dumps(s, indent=1))
+    return 0
 
 
-def compare(dirs: list[Path]):
+def cmd_compare(a) -> int:
     merged = {}
-    for d in dirs:
+    for d in a.stories:
         f = d / "runs" / "summary.json"
         if f.exists():
             merged.update(json.loads(f.read_text()))
-    for d in dirs:
+    for d in a.stories:
         (d / "runs").mkdir(exist_ok=True)
         (d / "runs" / "summary.json").write_text(json.dumps(merged, indent=1))
     print(json.dumps(merged, indent=1))
+    return 0
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("workflow", choices=["incremental", "topdown", "posthoc", "compare"])
-    ap.add_argument("dirs", nargs="+")
-    ap.add_argument("--paras", default="")
-    ap.add_argument("--writer", default="opus")
-    ap.add_argument("--annotator", default="opus")
+def main() -> int:
+    procs.install_signal_handlers()
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    def story_cmd(name, fn, n=None, help=""):
+        p = sub.add_parser(name, help=help)
+        p.add_argument("story", type=lambda s: Path(s).resolve())
+        if n == "required":
+            p.add_argument("n", type=int)
+        elif n == "optional":
+            p.add_argument("n", type=int, nargs="?", default=0)
+        p.add_argument("--log", metavar="WORKFLOW", help="append the verdict to runs/WORKFLOW.jsonl")
+        p.set_defaults(fn=fn)
+        return p
+
+    story_cmd("status", cmd_status, help="paragraphs, verdicts, proofs, what is next")
+    story_cmd("brief", cmd_brief, "required", "what the writer needs for paragraph n")
+    story_cmd("tokens", cmd_tokens, "required", "paragraph n's tokens, numbered")
+    story_cmd("extract", cmd_extract, "required", "event language, world and rules for reading paragraph n")
+    story_cmd("paragraph-check", cmd_paragraph_check, "required", "annotation, events, claims, plan of paragraph n")
+    story_cmd("plan-check", cmd_plan_check, "optional", "beats and paragraph plans valid")
+    story_cmd("refine-check", cmd_refine_check, help="paragraphs refine the beat story")
+    story_cmd("prove", cmd_prove, help="regenerate and check Proofs.lean").add_argument(
+        "--local", action="store_true", help="prove here even if the Studio is running")
+    story_cmd("summary", cmd_summary, help="summarise a workflow's run log").add_argument("workflow")
+    lp = story_cmd("log", cmd_log, help="append a step to runs/WORKFLOW.jsonl")
+    lp.add_argument("workflow")
+    lp.add_argument("stage")
+    lp.add_argument("--para")
+    lp.add_argument("--note")
+    g = lp.add_mutually_exclusive_group()
+    g.add_argument("--ok", dest="ok", action="store_true", default=None)
+    g.add_argument("--fail", dest="ok", action="store_false")
+    cp = sub.add_parser("compare", help="merge the workflows' summaries")
+    cp.add_argument("stories", nargs="+", type=lambda s: Path(s).resolve())
+    cp.set_defaults(fn=cmd_compare)
     a = ap.parse_args()
-    dirs = [Path(x).resolve() for x in a.dirs]
-    if a.workflow == "compare":
-        return compare(dirs)
-    fn = {"incremental": incremental, "topdown": topdown, "posthoc": posthoc}[a.workflow]
-    fn(dirs[0], a.paras, a.writer, a.annotator)
+    return a.fn(a)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
