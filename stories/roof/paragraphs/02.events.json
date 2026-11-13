@@ -1,0 +1,6 @@
+{"events": [
+  {"e": "sarcasm kiran theo kiranLikesTheo", "at": 11, "phase": "main", "src": "text"},
+  {"e": "notice theo kiranLikesTheo inferred", "at": 70, "phase": "main", "src": "text"},
+  {"e": "flirt theo kiran", "at": 79, "phase": "main", "src": "text"}
+ ],
+ "claims": ["thinks theo kiranLikesTheo"]}

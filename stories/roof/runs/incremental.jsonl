@@ -2,3 +2,8 @@
 {"stage": "annotate", "para": "01", "ok": true, "note": "1 round", "t": 1794544058.6}
 {"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794544059.0}
 {"stage": "prove", "ok": true, "note": "6/6; ", "t": 1794544069.0}
+{"stage": "write", "para": "02", "ok": null, "note": "agent wrote 02.txt", "t": 1794544092.9}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794544113.3}
+{"stage": "annotate", "para": "02", "ok": true, "note": "1 round", "t": 1794544119.5}
+{"stage": "refine-check", "ok": true, "note": "", "t": 1794544119.7}
+{"stage": "prove", "ok": true, "note": "8/8; ", "t": 1794544123.8}
