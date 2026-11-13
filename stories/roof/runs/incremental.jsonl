@@ -1,39 +1,4 @@
-{"para": "01", "stage": "write a0", "model": "opus", "secs": 14.0, "note": "", "t": 14.0}
-{"para": "01", "stage": "annotate r1", "model": "opus", "secs": 95.0, "note": "", "t": 109.2}
-{"para": "01", "stage": "check r1", "ok": true, "note": "", "t": 109.5}
-{"para": "01", "stage": "extract", "model": "opus", "secs": 17.0, "note": "", "t": 126.8}
-{"para": "01", "stage": "check", "ok": true, "note": "", "t": 127.1}
-{"para": "02", "stage": "write a0", "model": "opus", "secs": 20.1, "note": "", "t": 147.2}
-{"para": "02", "stage": "annotate r1", "model": "opus", "secs": 106.8, "note": "", "t": 254.1}
-{"para": "02", "stage": "check r1", "ok": true, "note": "", "t": 256.0}
-{"para": "02", "stage": "extract", "model": "opus", "secs": 38.2, "note": "", "t": 294.5}
-{"para": "02", "stage": "check", "ok": true, "note": "", "t": 298.0}
-{"para": "03", "stage": "write a0", "model": "opus", "secs": 34.6, "note": "", "t": 332.6}
-{"para": "03", "stage": "annotate r1", "model": "opus", "secs": 101.8, "note": "", "t": 434.8}
-{"para": "03", "stage": "check r1", "ok": true, "note": "", "t": 435.2}
-{"para": "03", "stage": "extract", "model": "opus", "secs": 31.1, "note": "", "t": 466.9}
-{"para": "03", "stage": "check", "ok": false, "note": "the paragraph implies 'goal theo at(kiran,roof)', but the events do not support it", "t": 471.6}
-{"para": "03", "stage": "re-read", "model": "opus", "secs": 35.7, "note": "", "t": 508.5}
-{"para": "03", "stage": "re-read", "ok": true, "note": "", "t": 509.9}
-{"para": "04", "stage": "write a0", "model": "opus", "secs": 37.6, "note": "", "t": 547.5}
-{"para": "04", "stage": "annotate r1", "model": "opus", "secs": 98.5, "note": "", "t": 648.7}
-{"para": "04", "stage": "check r1", "ok": true, "note": "", "t": 650.4}
-{"para": "04", "stage": "extract", "model": "opus", "secs": 49.6, "note": "", "t": 701.3}
-{"para": "04", "stage": "check", "ok": true, "note": "", "t": 704.5}
-{"para": "05", "stage": "write a0", "model": "opus", "secs": 56.6, "note": "", "t": 761.2}
-{"para": "05", "stage": "annotate r1", "model": "opus", "secs": 124.4, "note": "", "t": 888.3}
-{"para": "05", "stage": "check r1", "ok": true, "note": "", "t": 889.4}
-{"para": "05", "stage": "extract", "model": "opus", "secs": 53.7, "note": "", "t": 945.0}
-{"para": "05", "stage": "check", "ok": true, "note": "", "t": 949.4}
-{"para": "06", "stage": "write a0", "model": "opus", "secs": 48.4, "note": "", "t": 997.9}
-{"para": "06", "stage": "annotate r1", "model": "opus", "secs": 141.0, "note": "", "t": 1140.2}
-{"para": "06", "stage": "check r1", "ok": true, "note": "", "t": 1151.3}
-{"para": "06", "stage": "extract", "model": "opus", "secs": 145.4, "note": "", "t": 1310.8}
-{"para": "06", "stage": "check", "ok": true, "note": "", "t": 1320.0}
-{"para": "07", "stage": "write a0", "model": "opus", "secs": 64.0, "note": "", "t": 1384.0}
-{"para": "07", "stage": "annotate r1", "model": "opus", "secs": 221.6, "note": "", "t": 1609.9}
-{"para": "07", "stage": "check r1", "ok": true, "note": "", "t": 1610.0}
-{"para": "07", "stage": "extract", "model": "opus", "secs": 12.1, "note": "", "t": 1622.2}
-{"para": "07", "stage": "check", "ok": false, "note": "'Mara realises: not: Theo likes Mara' cannot happen: they have no way to know that", "t": 1622.3}
-{"para": "07", "stage": "re-read", "model": "opus", "secs": 10.5, "note": "", "t": 1632.9}
-{"para": "07", "stage": "re-read", "ok": true, "note": "", "t": 1633.0}
+{"stage": "write", "para": "01", "ok": null, "note": "agent wrote 01.txt (interactive session)", "t": 1794544031.5}
+{"stage": "annotate", "para": "01", "ok": true, "note": "1 round", "t": 1794544058.6}
+{"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794544059.0}
+{"stage": "prove", "ok": true, "note": "6/6; ", "t": 1794544069.0}

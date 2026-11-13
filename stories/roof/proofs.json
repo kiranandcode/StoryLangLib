@@ -1,61 +1,40 @@
 {
- "status": "failed",
- "secs": 68.2,
+ "status": "ok",
+ "secs": 1.5,
  "theorems": {
   "story_valid": {
-   "line": 35,
+   "line": 31,
    "statement": "story_valid : story.Valid spec.start",
    "ok": true
   },
   "p01_valid": {
-   "line": 37,
+   "line": 33,
    "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
    "ok": true
   },
   "p01_claim0": {
-   "line": 39,
+   "line": 35,
    "statement": "p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
    "ok": true
   },
   "p01_claim1": {
-   "line": 41,
+   "line": 37,
    "statement": "p01_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
    "ok": true
   },
-  "p01_claim2": {
-   "line": 43,
-   "statement": "p01_claim2 : (Claim.thinks 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
-  "p01_claim3": {
-   "line": 45,
-   "statement": "p01_claim3 : (Claim.bond 0 1 (Dim.attraction) (Cmp.gt) 0).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
-  "p02_valid": {
-   "line": 47,
-   "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
-   "ok": true
-  },
   "beats_valid": {
-   "line": 55,
+   "line": 45,
    "statement": "beats_valid : Valid beats.start beatStory",
    "ok": true
   },
   "plans_do_not_refine_beats": {
-   "line": 56,
+   "line": 46,
    "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
    "ok": true
   }
  },
- "errors": [
-  "no such file or directory (error code: 2)\n  file: stories/roof/paragraphs/02.plan.json",
-  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
- ],
- "guards": [
-  "no such file or directory (error code: 2)\n  file: stories/roof/paragraphs/02.plan.json",
-  "cannot evaluate code because 'sorryAx' uses 'sorry' and/or contains errors"
- ],
+ "errors": [],
+ "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794541896.486903
+ "at": 1794544067.4896882
 }
