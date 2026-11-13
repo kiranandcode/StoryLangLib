@@ -10,10 +10,9 @@ the UI follows whatever the agent writes.
 from __future__ import annotations
 
 import asyncio
+import atexit
 import json
 import os
-import re
-import subprocess
 import time
 from pathlib import Path
 
@@ -22,17 +21,23 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from watchfiles import awatch
 
-ROOT = Path(__file__).resolve().parent.parent
+import procs
+import proofs as lean
+from procs import LANGLIB, ROOT
+
 STORIES = ROOT / "stories"
-LANGLIB = ROOT / ".lake/build/bin/langlib"
 DIST = Path(__file__).resolve().parent / "web/dist"
+PROOF_DEBOUNCE = 1.0
 
 app = FastAPI(title="StoryLangLib Studio")
 
 reports: dict[str, dict] = {}
 proofs: dict[str, dict] = {}
 proof_tasks: dict[str, asyncio.Task] = {}
+report_tasks: dict[str, asyncio.Task] = {}
+background: set[asyncio.Task] = set()
 clients: set[asyncio.Queue] = set()
+atexit.register(procs.kill_all)
 
 
 def story_dirs() -> list[str]:
@@ -41,19 +46,13 @@ def story_dirs() -> list[str]:
     return sorted(p.name for p in STORIES.iterdir() if (p / "story.json").exists())
 
 
-def namespace(name: str) -> str:
-    return "Stories." + "".join(w.capitalize() for w in re.split(r"[^A-Za-z0-9]+", name) if w)
-
-
-def run_report(name: str) -> dict:
-    t0 = time.time()
-    p = subprocess.run([str(LANGLIB), "story", str(STORIES / name)],
-                       capture_output=True, text=True, timeout=120)
+async def run_report(name: str) -> dict:
+    res = await procs.arun(procs.langlib_argv("story", str(STORIES / name)), timeout=120)
     try:
-        r = json.loads(p.stdout)
+        r = json.loads(res.stdout)
     except json.JSONDecodeError:
-        r = {"error": (p.stderr or p.stdout)[-2000:]}
-    r["secs"] = round(time.time() - t0, 2)
+        r = {"error": (res.stderr or res.stdout)[-2000:]}
+    r["secs"] = res.secs
     r["name"] = name
     for extra in ["meta.json", "runs/summary.json"]:
         f = STORIES / name / extra
@@ -76,81 +75,50 @@ async def broadcast(msg: dict) -> None:
 
 
 async def check_proofs(name: str) -> None:
-    """Regenerate the story's Lean file and check it; record each theorem's fate."""
-    d = STORIES / name
-    lean_file = d / "Proofs.lean"
+    """Regenerate the story's Lean file and check it; record each theorem's fate.
+    Cancelling this task kills the running story-lean or lean process group."""
     proofs[name] = {**proofs.get(name, {}), "status": "running", "started": time.time()}
     await broadcast({"type": "proofs", "story": name, "proofs": proofs[name]})
-    t0 = time.time()
-    gen = await asyncio.create_subprocess_exec(
-        str(LANGLIB), "story-lean", str(d), namespace(name),
-        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
-    out, err = await gen.communicate()
-    if gen.returncode != 0:
-        proofs[name] = {"status": "error", "error": err.decode()[-2000:], "theorems": {}}
-        await broadcast({"type": "proofs", "story": name, "proofs": proofs[name]})
-        return
-    src = out.decode()
-    if not lean_file.exists() or lean_file.read_text() != src:
-        lean_file.write_text(src)
-    lines = src.splitlines()
-    thms = {}
-    for i, line in enumerate(lines, 1):
-        m = re.match(r"theorem (\S+)", line)
-        if m:
-            thms[m.group(1)] = {"line": i, "statement": line.removeprefix("theorem ").split(" := by")[0]}
-    proc = await asyncio.create_subprocess_exec(
-        "lake", "env", "lean", str(lean_file.relative_to(ROOT)), cwd=ROOT,
-        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
     try:
-        lout, _ = await proc.communicate()
+        proofs[name] = await lean.aprove(STORIES / name)
     except asyncio.CancelledError:
-        proc.kill()
+        proofs[name] = {**proofs.get(name, {}), "status": "superseded"}
         raise
-    text = lout.decode()
-    errors: list[tuple[int, str]] = []
-    for m in re.finditer(r"^[^\n]*Proofs\.lean:(\d+):\d+: error: (.*?)(?=^\S[^\n]*\.lean:\d+:\d+:|\Z)", text, re.M | re.S):
-        errors.append((int(m.group(1)), m.group(2).strip()[:500]))
-    starts = sorted((v["line"], k) for k, v in thms.items())
-    for k, v in thms.items():
-        v["ok"] = True
-    for line, msg in errors:
-        owner = None
-        for l, k in starts:
-            if l <= line:
-                owner = k
-        if owner and thms[owner]["line"] <= line:
-            # an error inside a theorem's own lines
-            nxt = [l for l, _ in starts if l > thms[owner]["line"]]
-            if not nxt or line < nxt[0]:
-                thms[owner]["ok"] = False
-                thms[owner]["error"] = msg
-    guards = [msg for line, msg in errors if "guard" in msg.lower() or not any(
-        v["line"] <= line for v in thms.values())]
-    proofs[name] = {"status": "ok" if proc.returncode == 0 else "failed",
-                    "secs": round(time.time() - t0, 1), "theorems": thms,
-                    "errors": [m for _, m in errors][:20], "guards": guards[:10],
-                    "file": str(lean_file.relative_to(ROOT)), "at": time.time()}
-    (d / "proofs.json").write_text(json.dumps(proofs[name], indent=1))
     await broadcast({"type": "proofs", "story": name, "proofs": proofs[name]})
 
 
 def schedule_proofs(name: str) -> None:
+    """Debounced: a newer change cancels (and kills) the story's previous run."""
     t = proof_tasks.get(name)
     if t and not t.done():
         t.cancel()
 
     async def later():
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(PROOF_DEBOUNCE)
         await check_proofs(name)
     proof_tasks[name] = asyncio.create_task(later())
 
 
 async def refresh(name: str, prove: bool = True) -> None:
-    reports[name] = await asyncio.to_thread(run_report, name)
+    reports[name] = await run_report(name)
     await broadcast({"type": "story", "story": name, "at": time.time()})
     if prove and os.environ.get("STUDIO_PROOFS", "1") == "1":
         schedule_proofs(name)
+
+
+def schedule_refresh(name: str, prove: bool = True) -> None:
+    t = report_tasks.get(name)
+    if t and not t.done():
+        t.cancel()
+
+    async def go():
+        try:
+            await refresh(name, prove)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:  # a broken story must not stop the server
+            reports[name] = {"error": str(e), "name": name}
+    report_tasks[name] = asyncio.create_task(go())
 
 
 async def watch() -> None:
@@ -166,16 +134,13 @@ async def watch() -> None:
                 rel = p.relative_to(STORIES)
             except ValueError:
                 continue
-            if p.name in ("Proofs.lean", "proofs.json") or "runs" in rel.parts[1:2]:
+            if p.name in ("Proofs.lean", "proofs.json") or p.name.startswith(".") or "runs" in rel.parts[1:2]:
                 continue
             if rel.parts:
                 touched.add(rel.parts[0])
         for name in touched:
             if (STORIES / name / "story.json").exists():
-                try:
-                    await refresh(name)
-                except Exception as e:
-                    reports[name] = {"error": str(e), "name": name}
+                schedule_refresh(name)
 
 
 async def warm() -> None:
@@ -192,11 +157,27 @@ async def warm() -> None:
             reports[name] = {"error": str(e), "name": name}
 
 
+def spawn(coro) -> None:
+    t = asyncio.create_task(coro)
+    background.add(t)
+    t.add_done_callback(background.discard)
+
+
 @app.on_event("startup")
 async def startup() -> None:
+    procs.reap_stale()  # groups a killed predecessor left behind
     # serve at once; reports fill in (and are pushed) as they are computed
-    asyncio.create_task(warm())
-    asyncio.create_task(watch())
+    spawn(warm())
+    spawn(watch())
+
+
+@app.on_event("shutdown")
+async def shutdown() -> None:
+    tasks = [t for t in [*background, *proof_tasks.values(), *report_tasks.values()] if not t.done()]
+    for t in tasks:
+        t.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)
+    procs.kill_all()
 
 
 @app.get("/api/stories")
@@ -209,7 +190,7 @@ async def get_story(name: str):
     if name not in story_dirs():
         raise HTTPException(404, f"no story {name}")
     if name not in reports:
-        reports[name] = await asyncio.to_thread(run_report, name)
+        reports[name] = await run_report(name)
     return {**reports[name], "proofs": proofs.get(name, {"status": "none"})}
 
 
