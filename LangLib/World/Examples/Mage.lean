@@ -1,4 +1,4 @@
-import LangLib.World.Story
+import LangLib.World.Derive
 import LangLib.World.Mind
 import LangLib.World.Magic
 
@@ -17,7 +17,8 @@ open LangLib.World
 
 inductive Ch | kiran | theo deriving DecidableEq, Repr
 inductive Pl | tower | hall deriving DecidableEq, Repr
-abbrev Fact := SpaceFact Ch Pl Unit ⊕ MagicFact Ch
+inductive Fact | space (x : SpaceFact Ch Pl Unit) | magic (x : MagicFact Ch)
+  deriving DecidableEq, Repr, StoryFact
 
 structure W where
   loc : Ch → Pl
@@ -47,8 +48,8 @@ instance : HasMana W Ch where
 
 instance : Cast Ch := ⟨[.kiran, .theo]⟩
 
-abbrev E := SpaceEv Ch Pl Unit ⊕ MindEv Ch Fact ⊕ MagicEv Ch
-world_instances W, E, Fact, Pl, Ch
+inductive E | space (x : SpaceEv Ch Pl Unit) | mind (x : MindEv Ch Fact) | magic (x : MagicEv Ch)
+  deriving DecidableEq, Repr, StoryEvent
 
 open Ch Pl
 def mg (e : MagicEv Ch) : E := ev e

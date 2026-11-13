@@ -1,4 +1,4 @@
-import LangLib.World.Story
+import LangLib.World.Derive
 import LangLib.World.Mind
 import LangLib.World.Social
 
@@ -35,7 +35,8 @@ inductive Ob | letter deriving DecidableEq, Repr
 inductive Secret | read (c : Ch) deriving DecidableEq, Repr
 open Ch Pl Ob
 
-abbrev Fact := SpaceFact Ch Pl Ob ⊕ Secret
+inductive Fact | space (x : SpaceFact Ch Pl Ob) | secret (x : Secret)
+  deriving DecidableEq, Repr, StoryFact
 
 def holds (c : Ch) : Fact := ev (SpaceFact.holds c letter : SpaceFact Ch Pl Ob)
 def read (c : Ch) : Fact := ev (Secret.read c)
@@ -85,13 +86,13 @@ instance : Clock W := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 
 instance : TopicTrust W Ch Fact where
   topical w c d l := match c, d, l.1 with
-    | kiran, mara, .inr _ => if w.wary then some ("not to be trusted about secrets", -5) else none
+    | kiran, mara, .secret _ => if w.wary then some ("not to be trusted about secrets", -5) else none
     | _, _, _ => none
 
 instance : Credence W Ch Fact := socialCredence
 
-abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact
-world_instances W, E, Fact, Pl, Ch
+inductive E | space (x : SpaceEv Ch Pl Ob) | mind (x : MindEv Ch Fact)
+  deriving DecidableEq, Repr, StoryEvent
 
 def sp (e : SpaceEv Ch Pl Ob) : E := ev e
 def mi (e : MindEv Ch Fact) : E := ev e
@@ -149,7 +150,7 @@ theorem realise_after_seeing :
 /-! ## Why: explanations -/
 
 /--
-info: ["not Sum.inr (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara)) (prior for being told +3, trusts the speaker +1, gullible +1 = 5; LangLib.World.Upgrade.radical): outranked by Sum.inr (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara))"]
+info: ["not LangLib.World.Gossip.Fact.secret (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara)) (prior for being told +3, trusts the speaker +1, gullible +1 = 5; LangLib.World.Upgrade.radical): outranked by LangLib.World.Gossip.Fact.secret (LangLib.World.Gossip.Secret.read (LangLib.World.Gossip.Ch.mara))"]
 -/
 #guard_msgs in
 #eval explain (run start (act1 ++ act2 ++ act3)) kiran (read mara, false)

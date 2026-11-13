@@ -56,9 +56,10 @@ class Inject (E S : Type) where
   inj : E → S
 
 instance {E : Type} : Inject E E := ⟨id⟩
-instance {E S₁ S₂ : Type} [Inject E S₁] : Inject E (S₁ ⊕ S₂) := ⟨fun e => .inl (Inject.inj e)⟩
-instance (priority := low) {E S₁ S₂ : Type} [Inject E S₂] : Inject E (S₁ ⊕ S₂) :=
-  ⟨fun e => .inr (Inject.inj e)⟩
+
+-- No instances for `⊕`: "go left" and "go right" would overlap. Story types are
+-- named inductives with one `Inject` per constructor (`deriving StoryEvent`,
+-- `deriving StoryFact`, in `Derive.lean`).
 
 /-- Put a module's event (or fact) into the story's sum type. -/
 abbrev ev {E S : Type} [Inject E S] (e : E) : S := Inject.inj e

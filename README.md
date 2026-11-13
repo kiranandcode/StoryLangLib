@@ -36,7 +36,8 @@ $ langlib check examples/cata.txt bad.json
 Story worlds are assembled from modules, and stories about them are theorems:
 
 ```lean
-abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact ⊕ SocialEv Ch
+inductive E | space (x : SpaceEv Ch Pl Ob) | mind (x : MindEv Ch Fact) | social (x : SocialEv Ch)
+  deriving DecidableEq, Repr, StoryEvent   -- Inject, Domain, Observable, Purpose, by dispatch
 
 def told : List E :=
   [ so (.confide theo kiran), so (.flirt theo kiran), so (.flirt kiran theo),
@@ -144,6 +145,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
 | LangLib/World/Dialogue | Questions under discussion, answers, hints (implicature), sarcasm read by rapport, promises (kept/broken), requests |
 | LangLib/World/Goals   | Goals, plans, `Purpose` of each action; `motives` explains every action or flags it unmotivated; `planWorks` |
+| LangLib/World/Derive  | `deriving StoryEvent` / `deriving StoryFact`: one `Inject` per constructor and composite instances by dispatch (no overlapping instances, small instance terms) |
 | LangLib/World/Lexicon | Verb lexicons per module (incl. evidential and dialogue verbs); adverbials ("meanwhile", "an hour earlier") to time constraints |
 | eval                  | Corpus, model runner, analysis, Jev reference check                         |
 | viz                   | Scripts for the figures in `viz/out`                                        |

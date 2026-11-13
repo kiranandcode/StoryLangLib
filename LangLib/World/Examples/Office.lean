@@ -1,4 +1,4 @@
-import LangLib.World.Story
+import LangLib.World.Derive
 import LangLib.World.Mind
 import LangLib.World.Social
 
@@ -30,7 +30,8 @@ inductive Pl | office | roof deriving DecidableEq, Repr
 inductive Ob | letter deriving DecidableEq, Repr
 open Ch Pl Ob
 
-abbrev Fact := SpaceFact Ch Pl Ob ⊕ SocialFact Ch
+inductive Fact | space (x : SpaceFact Ch Pl Ob) | social (x : SocialFact Ch)
+  deriving DecidableEq, Repr, StoryFact
 
 structure W where
   loc : Ch → Pl
@@ -69,9 +70,9 @@ def persona : Ch → Persona
 instance : HasPersona W Ch := ⟨fun _ => persona⟩
 instance : Cast Ch := ⟨[kiran, theo, mara]⟩
 
-abbrev E := SpaceEv Ch Pl Ob ⊕ MindEv Ch Fact ⊕ SocialEv Ch
+inductive E | space (x : SpaceEv Ch Pl Ob) | mind (x : MindEv Ch Fact) | social (x : SocialEv Ch)
+  deriving DecidableEq, Repr, StoryEvent
 
-world_instances W, E, Fact, Pl, Ch
 
 def sp (e : SpaceEv Ch Pl Ob) : E := ev e
 def so (e : SocialEv Ch) : E := ev e
@@ -173,7 +174,7 @@ theorem flashback_contradiction :
 
 /--
 info: [(7,
-  "out of character (shy people hold back); to justify it, first establish: attraction draws them on or the confident make the first move")]
+    "out of character (shy people hold back); to justify it, first establish: attraction draws them on or the confident make the first move")]
 -/
 #guard_msgs in
 #eval [(7, Domain.why (run start [sp (.drop theo letter), sp (.move theo roof),

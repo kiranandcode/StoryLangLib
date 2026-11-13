@@ -1,37 +1,16 @@
 import LangLib.World.Goals
 
 /-!
-# Declaring a story world
+# Escape hatch for unusual instances
 
-Instance synthesis is limited by the *size* of the term it builds
-(`synthInstance.maxSize`, default 128). A story's event type is a sum of
-modules, and each module's `Domain` instance takes a dozen instance arguments,
-some of them sums again (truth over the story's fact type), so the composite
-term for a four-module story exceeds the limit.
-
-The remedy (Lean reference manual, *Instance Synthesis*: keep instance terms
-small) is to declare the composite instances once, at top level: a declared
-instance is a single atom in later searches. `world_instances W, E, Φ, P, C`
-does that for a story with world `W`, events `E`, facts `Φ`, places `P` and
-characters `C`.
+Story event and fact types are declared as named inductives that derive their
+instances (`deriving StoryEvent`, `deriving StoryFact`; see `Derive.lean`), so
+instance search neither backtracks nor builds large terms. For anything else
+that would exceed `synthInstance.maxSize`, `cached_instance C` declares the
+instance once at top level, so later searches use it as a single atom.
 -/
 
 namespace LangLib.World
-
-open Lean in
-/-- Declare the composite instances of a story world once, so that later
-synthesis uses them as atoms. (The size limit is raised only while building
-these; the option name is built with `mkIdent` so macro hygiene leaves it alone.) -/
-macro "world_instances " W:term ", " E:term ", " Φ:term ", " P:term ", " C:term : command => do
-  let o := mkIdent `synthInstance.maxSize
-  `(set_option $o 2048 in instance : DecidableEq $E := inferInstance
-    set_option $o 2048 in instance : Truth $W $Φ := inferInstance
-    set_option $o 2048 in instance : Supersedes $Φ := inferInstance
-    set_option $o 2048 in instance : Fluent $Φ := inferInstance
-    set_option $o 2048 in instance : Observable $W $E $Φ $P := inferInstance
-    set_option $o 2048 in instance : Purpose $W $E $C $Φ := inferInstance
-    set_option $o 2048 in instance : Domain $W $E := inferInstance
-    set_option $o 2048 in instance : Perceive $W $E := inferInstance)
 
 open Lean in
 /-- `cached_instance C` declares one composite instance, e.g.
@@ -41,3 +20,4 @@ macro "cached_instance " t:term : command => do
   `(set_option $o 2048 in instance : $t := inferInstance)
 
 end LangLib.World
+

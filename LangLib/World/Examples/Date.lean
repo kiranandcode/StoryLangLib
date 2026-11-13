@@ -1,4 +1,4 @@
-import LangLib.World.Story
+import LangLib.World.Derive
 
 /-!
 # Example: a date (unknowns, dialogue, goals and plans)
@@ -29,9 +29,12 @@ inductive Pl | bar | street | home deriving DecidableEq, Repr
 inductive Info | single (c : Ch) | likes (c d : Ch) deriving DecidableEq, Repr
 open Ch Pl
 
-abbrev Fact := SpaceFact Ch Pl Unit ⊕ SocialFact Ch ⊕ Info
-abbrev A := SpaceEv Ch Pl Unit ⊕ MindEv Ch Fact ⊕ SocialEv Ch ⊕ DialogueEv Ch Fact
-abbrev E := A ⊕ GoalEv Ch Fact A
+inductive Fact | space (x : SpaceFact Ch Pl Unit) | social (x : SocialFact Ch) | info (x : Info)
+  deriving DecidableEq, Repr, StoryFact
+inductive A | space (x : SpaceEv Ch Pl Unit) | mind (x : MindEv Ch Fact) | social (x : SocialEv Ch) | dialogue (x : DialogueEv Ch Fact)
+  deriving DecidableEq, Repr, StoryEvent
+inductive E | action (x : A) | goal (x : GoalEv Ch Fact A)
+  deriving DecidableEq, Repr, StoryEvent
 
 
 structure W where
@@ -89,13 +92,11 @@ instance : Truth W Info := ⟨fun _ i => match i with
 instance : Credence W Ch Fact := socialCredence
 instance : Rapport W Ch := bondRapport
 
-cached_instance DecidableEq A
-world_instances W, E, Fact, Pl, Ch
 
 def sp (e : SpaceEv Ch Pl Unit) : A := ev e
 def dl (e : DialogueEv Ch Fact) : A := ev e
-def act (a : A) : E := .inl a
-def goal (g : GoalEv Ch Fact A) : E := .inr g
+def act (a : A) : E := .action a
+def goal (g : GoalEv Ch Fact A) : E := .goal g
 def single (c : Ch) : Fact := ev (Info.single c)
 def likes (c d : Ch) : Fact := ev (Info.likes c d)
 def at_ (c : Ch) (p : Pl) : Fact := ev (SpaceFact.at_ c p : SpaceFact Ch Pl Unit)
