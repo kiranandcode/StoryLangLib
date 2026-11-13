@@ -5,7 +5,9 @@ def usage : String := "usage:
   langlib tokenize <text-file>              print tokens, one per line
   langlib check <text-file> <doc.json>      check an encoding against its text (JSON report)
   langlib render <doc.json>                 print the text a document renders to
-  langlib pretty <doc.json>                 print bracketed trees"
+  langlib pretty <doc.json>                 print bracketed trees
+  langlib story <dir>                       check a story directory, per paragraph (JSON report)
+  langlib story-lean <dir> <namespace>      print the story as a Lean file of theorems"
 
 def readDoc (p : String) : IO Doc := do
   match docOfString (← IO.FS.readFile p) with
@@ -47,5 +49,15 @@ def main : List String → IO UInt32
     let toks := d.render
     for c in d.clauses do
       IO.println s!"{toks.getD c.at_ ""}/{c.verb} subj={c.subj} obj={c.obj} objNoun={c.objNoun} obls={c.obls} oblNouns={c.oblNouns} comp={c.comp.map (toks.getD · "")} embedded={c.embedded} advs={c.advs}"
+    pure 0
+  | ["story", dir] => do
+    try
+      IO.println (← LangLib.Studio.storyReport dir).compress
+      pure 0
+    catch e =>
+      IO.println (Json.mkObj [("error", toString e)]).compress
+      pure 1
+  | ["story-lean", dir, ns] => do
+    IO.print (← LangLib.Studio.storyLean dir ns)
     pure 0
   | _ => do IO.eprintln usage; pure 64
