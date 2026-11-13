@@ -1,0 +1,428 @@
+{
+  "title": "Eleven, on the Roof (top-down)",
+  "characters": [
+    {
+      "id": "kiran",
+      "name": "Kiran",
+      "pron": "she",
+      "traits": [
+        "shy",
+        "romantic"
+      ],
+      "values": [
+        "curiosity",
+        "desire",
+        "safety",
+        "pride"
+      ]
+    },
+    {
+      "id": "theo",
+      "name": "Theo",
+      "pron": "he",
+      "traits": [
+        "confident",
+        "honest"
+      ],
+      "values": [
+        "desire",
+        "honesty",
+        "pride"
+      ]
+    },
+    {
+      "id": "mara",
+      "name": "Mara",
+      "pron": "she",
+      "traits": [
+        "romantic",
+        "openMinded"
+      ],
+      "values": [
+        "curiosity",
+        "loyalty",
+        "desire"
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "lab"
+    },
+    {
+      "id": "kitchen"
+    },
+    {
+      "id": "roof"
+    }
+  ],
+  "objects": [
+    {
+      "id": "note"
+    }
+  ],
+  "atoms": [
+    {
+      "id": "noteForKiran",
+      "label": "the note is for Kiran",
+      "truth": true,
+      "group": "noteFor"
+    },
+    {
+      "id": "noteForMara",
+      "label": "the note is for Mara",
+      "truth": false,
+      "group": "noteFor"
+    },
+    {
+      "id": "theoLikesKiran",
+      "label": "Theo likes Kiran",
+      "truth": true,
+      "group": "theoLikes"
+    },
+    {
+      "id": "theoLikesMara",
+      "label": "Theo likes Mara",
+      "truth": false,
+      "group": "theoLikes"
+    },
+    {
+      "id": "kiranLikesTheo",
+      "label": "Kiran likes Theo",
+      "truth": true
+    },
+    {
+      "id": "maraReadNote",
+      "label": "Mara has read the note",
+      "truth": true
+    }
+  ],
+  "lore": [
+    {
+      "if": [
+        "noteForKiran"
+      ],
+      "then": "theoLikesKiran"
+    },
+    {
+      "if": [
+        "noteForMara"
+      ],
+      "then": "theoLikesMara"
+    },
+    {
+      "if": [
+        "holds(mara,note)"
+      ],
+      "then": "maraReadNote"
+    }
+  ],
+  "plans": [
+    {
+      "id": "teaBreak",
+      "agent": "kiran",
+      "goal": "at(kiran,lab)",
+      "steps": [
+        "move kiran kitchen",
+        "move kiran lab"
+      ]
+    },
+    {
+      "id": "theNote",
+      "agent": "theo",
+      "goal": "at(kiran,roof)",
+      "steps": [
+        "drop theo note",
+        "move theo roof"
+      ]
+    }
+  ],
+  "start": {
+    "at": {
+      "kiran": "lab"
+    },
+    "holds": {
+      "note": "theo"
+    },
+    "bonds": {
+      "kiran>theo": {
+        "trust": 1,
+        "attraction": 1
+      },
+      "theo>kiran": {
+        "trust": 2,
+        "attraction": 2
+      },
+      "kiran>mara": {
+        "trust": 2,
+        "affection": 2
+      },
+      "mara>kiran": {
+        "trust": 2,
+        "affection": 2
+      },
+      "mara>theo": {
+        "trust": 1,
+        "attraction": 1
+      },
+      "theo>mara": {
+        "trust": 1
+      }
+    },
+    "knows": {
+      "kiran": [
+        "kiranLikesTheo"
+      ],
+      "theo": [
+        "theoLikesKiran",
+        "noteForKiran",
+        "!noteForMara"
+      ]
+    }
+  },
+  "beats": {
+    "conds": [
+      "lingering",
+      "spark",
+      "noteLeft",
+      "misread",
+      "kiranDoubts",
+      "truthOut",
+      "kiranKnows",
+      "together",
+      "negotiated",
+      "kissed"
+    ],
+    "init": [],
+    "vocab": [
+      {
+        "id": "lingers",
+        "label": "Theo finds an excuse to stay",
+        "add": [
+          "lingering"
+        ],
+        "keys": [
+          "move theo lab"
+        ]
+      },
+      {
+        "id": "spark",
+        "label": "Banter that is not quite banter",
+        "pre": [
+          "lingering"
+        ],
+        "add": [
+          "spark"
+        ],
+        "keys": [
+          "flirt theo kiran"
+        ]
+      },
+      {
+        "id": "note",
+        "label": "Theo leaves a note and goes up",
+        "pre": [
+          "spark"
+        ],
+        "add": [
+          "noteLeft"
+        ],
+        "keys": [
+          "drop theo note"
+        ]
+      },
+      {
+        "id": "misread",
+        "label": "Mara finds the note and reads it as hers",
+        "pre": [
+          "noteLeft"
+        ],
+        "add": [
+          "misread"
+        ],
+        "keys": [
+          "notice mara noteForMara assumed"
+        ]
+      },
+      {
+        "id": "gossip",
+        "label": "Mara tells Kiran Theo has asked her up",
+        "pre": [
+          "misread"
+        ],
+        "add": [
+          "kiranDoubts"
+        ],
+        "keys": [
+          "tell mara kiran theoLikesMara"
+        ]
+      },
+      {
+        "id": "truth",
+        "label": "On the roof, Theo sets Mara straight",
+        "pre": [
+          "misread"
+        ],
+        "add": [
+          "truthOut"
+        ],
+        "del": [
+          "misread"
+        ],
+        "keys": [
+          "tell theo mara noteForKiran"
+        ]
+      },
+      {
+        "id": "amends",
+        "label": "Mara comes down and tells Kiran",
+        "pre": [
+          "truthOut",
+          "kiranDoubts"
+        ],
+        "add": [
+          "kiranKnows"
+        ],
+        "del": [
+          "kiranDoubts"
+        ],
+        "keys": [
+          "tell mara kiran noteForKiran"
+        ]
+      },
+      {
+        "id": "climb",
+        "label": "Kiran goes up",
+        "pre": [
+          "kiranKnows"
+        ],
+        "add": [
+          "together"
+        ],
+        "keys": [
+          "move kiran roof"
+        ]
+      },
+      {
+        "id": "negotiate",
+        "label": "They ask, and answer, out loud",
+        "pre": [
+          "together"
+        ],
+        "add": [
+          "negotiated"
+        ],
+        "keys": [
+          "askAct theo kiran kiss"
+        ]
+      },
+      {
+        "id": "kiss",
+        "label": "The kiss",
+        "pre": [
+          "negotiated"
+        ],
+        "add": [
+          "kissed"
+        ],
+        "keys": [
+          "act kiran theo kiss"
+        ]
+      }
+    ],
+    "story": [
+      "lingers",
+      "spark",
+      "note",
+      "misread",
+      "gossip",
+      "truth",
+      "amends",
+      "climb",
+      "negotiate",
+      "kiss"
+    ]
+  },
+  "lexicon": [
+    {
+      "verb": "like",
+      "subj": "theo",
+      "obj": "kiran",
+      "lit": "theoLikesKiran"
+    },
+    {
+      "verb": "like",
+      "subj": "theo",
+      "obj": "mara",
+      "lit": "theoLikesMara"
+    },
+    {
+      "verb": "like",
+      "subj": "kiran",
+      "obj": "theo",
+      "lit": "kiranLikesTheo"
+    },
+    {
+      "verb": "want",
+      "subj": "theo",
+      "obj": "mara",
+      "lit": "theoLikesMara"
+    },
+    {
+      "verb": "want",
+      "subj": "theo",
+      "obj": "kiran",
+      "lit": "theoLikesKiran"
+    }
+  ],
+  "outline": [
+    {
+      "beat": "lingers",
+      "brief": "Late in the lab, Kiran at her bench. Theo, the visiting engineer whose last day is tomorrow, comes back in for a cable he says he forgot (an excuse to stay). He is easy and direct; he flirts with her."
+    },
+    {
+      "beat": "spark",
+      "brief": "Kiran answers with dry teasing: she says the opposite of what she feels (that she cannot stand him / is glad he's leaving), and he reads it correctly and grins."
+    },
+    {
+      "beat": "note",
+      "brief": "Kiran steps out to the kitchen to make tea (she plans to come straight back). Theo, alone, writes a short unsigned-but-initialled note ('Roof. Eleven. There's something I should have said. \u2014T') and leaves it on the shared bench, then goes up to the roof."
+    },
+    {
+      "beat": "misread",
+      "brief": "Mara, Kiran's labmate and friend, comes back to the lab for her charger, finds the note on the shared bench between her desk and Kiran's, picks it up and reads it, and decides it is meant for her. She wants to go up."
+    },
+    {
+      "beat": "gossip",
+      "brief": "Kiran comes back with her tea. Mara, giddy, tells her Theo likes her (Mara) and has asked her up to the roof. Kiran believes her friend; it lands hard, and she hides it."
+    },
+    {
+      "beat": "truth",
+      "brief": "Mara goes up to the roof. (Kiran stays at her bench, pretending to work.)"
+    },
+    {
+      "beat": "truth",
+      "brief": "On the roof, Mara asks Theo whether the note was for her. He answers, gently, that it was not; he tells her it was for Kiran."
+    },
+    {
+      "beat": "amends",
+      "brief": "Mara comes back down to the lab and tells Kiran the truth: the note was for her. Kiran decides she wants to go up."
+    },
+    {
+      "beat": "climb",
+      "brief": "Kiran climbs the stairs to the roof, the note in her mind, the city below."
+    },
+    {
+      "beat": "negotiate",
+      "brief": "On the roof Kiran asks Theo whether the note was for her; he answers that it was. He confides what he should have said earlier. She hints that she feels the same."
+    },
+    {
+      "beat": "negotiate",
+      "brief": "Theo asks, out loud and plainly, whether he can kiss her. Kiran says yes; he says yes too (consent on both sides, explicit). Kiran wants it."
+    },
+    {
+      "beat": "kiss",
+      "brief": "The kiss: Kiran kisses Theo. Close on what she notices."
+    }
+  ]
+}

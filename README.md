@@ -65,6 +65,42 @@ From text to theorem: `examples/office.txt` was annotated by Opus, accepted by
 story (flashback "an hour earlier", a "meanwhile"), timed by the solver, and
 proved valid (`LangLib/World/Examples/OfficeText.lean`).
 
+## Studio
+
+StoryLangLib Studio is a local app for writing a story with an LLM where every
+paragraph is checked against the story's model, and the reader can see that
+model (`docs/ui-spec.md`; design notes in `docs/ui-reading.md` and
+`docs/ui-visualisation.md`).
+
+```
+studio/run.sh                     # http://localhost:5177
+```
+
+The left panel is the prose (chill: just the text; overview: entity mentions,
+quotes, events, time words and warnings layered on without reflowing it). The
+right panel threads the logic paragraph by paragraph: a storyline of where
+everyone is, then for each paragraph its events and verdicts, belief changes
+with their explanations, bonds and consent, goals, claims, plan realisation,
+time, and whether its Lean theorems are proved. Both follow the files under
+`stories/<name>/` as they change.
+
+A story is data: `story.json` (cast with personas, places, objects, facts,
+lore, plans, opening state, beats, outline) and `paragraphs/NN.{txt,json,events.json,plan.json}`.
+The Lean side is the judge:
+
+```
+langlib story <dir>                    per-paragraph report (JSON) the Studio renders
+langlib story-lean <dir> <namespace>   the story as a Lean file of theorems (Proofs.lean)
+```
+
+`LangLib/Studio` builds one world from a `Spec` with the same modules as the
+examples, so the CLI's verdicts and the `decide +kernel` proofs in
+`Proofs.lean` run the same definitions; `Refine.lean` adds refinement between
+layers (`Refines abs fine coarse := fine.filterMap abs = coarse`, with
+`Refines.trans`) and a beat layer with STRIPS-style preconditions.
+`studio/workflows.py` runs the three writing workflows (incremental, top-down,
+post hoc) with the checker in the loop.
+
 ## Building
 
 The project is a plain Lake package:
