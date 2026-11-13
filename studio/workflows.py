@@ -254,7 +254,8 @@ def annotate(run: Run, st: Story, k: int, model: str, rounds: int = 3) -> bool:
     return False
 
 
-def extract(run: Run, st: Story, k: int, model: str, claims: bool = True, plan_hint: list[str] | None = None) -> dict:
+def extract(run: Run, st: Story, k: int, model: str, claims: bool = True,
+            review: tuple[str, list[str]] | None = None) -> dict:
     """Read the events (and claims) a paragraph asserts, anchored to its tokens."""
     nm = f"{k:02}"
     text_path = st.pdir / f"{nm}.txt"
@@ -285,12 +286,22 @@ def extract(run: Run, st: Story, k: int, model: str, claims: bool = True, plan_h
 - Speech: `tell` for sincere statements of a fact in the list; `sarcasm` when someone says the opposite
   of what they mean; `hint` for implication; `ask`/`answer` for a question about a fact; `askAct`,
   `agree` for asking for and giving consent to an intimate act.
-- A character jumping to a conclusion: `notice C L assumed`.""",
+- A character jumping to a conclusion: `notice C L inferred` (`assumed` only for a guess they do not
+  really believe).
+- `tell`, `hint`, `answer` only for statements of the listed fact ids (or where someone is, when a
+  character says so); small talk and feelings without a fact id are not events.
+- Claims only about the listed fact ids, consent and bonds; do not claim nested beliefs unless the
+  paragraph is explicitly about what one character thinks another believes.""",
         ("\n## Claims\n" + CLAIM_SYNTAX + "\nAlso list what the paragraph implies about minds and "
          "relationships right after it (who now believes what, false beliefs, consent given), 1-4 claims.") if claims else "",
+        ("\n## Your previous reading\n" + review[0] + "\n\n## The story checker rejects it\n" +
+         "\n".join(f"- {o}" for o in review[1]) +
+         "\nRe-read the paragraph. Where your reading over-read the prose (an event or claim it does not "
+         "assert) or missed a reason it does give (a motive), correct the reading. Where the prose really "
+         "does assert it, keep it: the objection then stands against the prose.") if review else "",
         "\nOutput JSON only: {\"events\": [{\"e\": \"...\", \"at\": 12, \"phase\": \"main\"}], \"claims\": [\"...\"]}",
     ])
-    raw = run.call(model, prompt, JSON_SYSTEM, "extract", nm)
+    raw = run.call(model, prompt, JSON_SYSTEM, "re-read" if review else "extract", nm)
     try:
         out = json.loads(extract_json(raw))
     except json.JSONDecodeError:
@@ -300,6 +311,16 @@ def extract(run: Run, st: Story, k: int, model: str, claims: bool = True, plan_h
         e["src"] = "text"
     (st.pdir / f"{nm}.events.json").write_text(json.dumps(out, indent=1))
     return out
+
+
+def reread(run: Run, st: Story, k: int, model: str, obj: list[str], claims: bool = True) -> list[str]:
+    """Before blaming the prose, let the extractor look again at what the checker rejected."""
+    nm = f"{k:02}"
+    cur = (st.pdir / f"{nm}.events.json").read_text()
+    out = extract(run, st, k, model, claims=claims, review=(cur, obj))
+    obj2 = objections(st, k, check_claims=claims)
+    run.log(para=nm, stage="re-read", ok=not obj2, note=" | ".join(obj2))
+    return obj2
 
 
 def objections(st: Story, k: int, check_claims: bool = True) -> list[str]:
@@ -349,9 +370,12 @@ def incremental(d: Path, paras: str, writer: str, annotator: str, max_rewrites: 
             extract(run, st, k, writer)
             obj = objections(st, k)
             run.log(para=nm, stage="check", ok=not obj, note=" | ".join(obj))
+            if obj:
+                run.objections += [{"para": nm, "attempt": attempt, "stage": "reading", "why": o} for o in obj]
+                obj = reread(run, st, k, writer, obj)
             if not obj:
                 break
-            run.objections += [{"para": nm, "attempt": attempt, "why": o} for o in obj]
+            run.objections += [{"para": nm, "attempt": attempt, "stage": "prose", "why": o} for o in obj]
             if attempt == max_rewrites:
                 break
             run.rewrites += 1
@@ -375,6 +399,31 @@ def plan_prompt(st: Story, k: int, previous: list[str], objection: str = "", pre
         ") that should hold after the paragraph.\n" + CLAIM_SYNTAX,
         (f"\n## Your previous plan\n{prev}\n\n## The checker objects\n{objection}\nRepair the plan." if objection else ""),
         "\nOutput JSON only: {\"events\": [\"...\"], \"claims\": [\"...\"]}"])
+
+
+def refinement_objections(st: Story, ks: list[int]) -> dict[int, str]:
+    """Why the plans do not abstract to the beat story: each beat's key event
+    must occur exactly once, in a paragraph of that beat."""
+    keys = {e: b["id"] for b in st.spec["beats"]["vocab"] for e in b.get("keys", [])}
+    beat_of = {k: st.spec["outline"][k - 1]["beat"] for k in ks}
+    found: dict[str, list[int]] = {}
+    out: dict[int, list[str]] = {}
+    for k in ks:
+        plan = json.loads((st.pdir / f"{k:02}.plan.json").read_text())
+        for e in plan.get("events", []):
+            if e in keys:
+                found.setdefault(keys[e], []).append(k)
+                if keys[e] != beat_of[k]:
+                    out.setdefault(k, []).append(f"`{e}` is the key event of beat '{keys[e]}', which belongs to "
+                                                 f"another paragraph; this paragraph is beat '{beat_of[k]}'. Express it differently or drop it.")
+    for b in st.spec["beats"]["vocab"]:
+        mine = [k for k in ks if beat_of[k] == b["id"]]
+        got = [k for k in found.get(b["id"], []) if beat_of[k] == b["id"]]
+        if mine and not got:
+            out.setdefault(mine[-1], []).append(f"this paragraph must contain the key event of beat '{b['id']}': one of {', '.join(b['keys'])}")
+        for k in got[:-1] if len(got) > 1 else []:
+            out.setdefault(k, []).append(f"the key event of beat '{b['id']}' occurs again in a later paragraph ({got[-1]}); keep it only there")
+    return {k: "\n".join(v) for k, v in out.items()}
 
 
 def topdown(d: Path, paras: str, writer: str, annotator: str, max_rewrites: int = 2):
@@ -404,9 +453,25 @@ def topdown(d: Path, paras: str, writer: str, annotator: str, max_rewrites: int 
             if attempt < max_rewrites:
                 run.rewrites += 1
             prev, objection = json.dumps(plan), "\n".join(f"- {o}" for o in obj)
-    r = report(d)
-    run.log(stage="plans refine beats", ok=bool(r.get("beats", {}).get("refines")),
-            note=" ".join(r.get("beats", {}).get("abstracted", [])))
+    for rnd in range(max_rewrites + 1):
+        r = report(d)
+        ok = bool(r.get("beats", {}).get("refines"))
+        run.log(stage=f"plans refine beats r{rnd}", ok=ok, note=" ".join(r.get("beats", {}).get("abstracted", [])))
+        if ok or rnd == max_rewrites:
+            break
+        for k, why in refinement_objections(st, ks).items():
+            nm = f"{k:02}"
+            run.objections.append({"para": nm, "layer": "refinement", "why": why})
+            run.rewrites += 1
+            prev = (st.pdir / f"{nm}.plan.json").read_text()
+            raw = run.call(writer, plan_prompt(st, k, st.events_so_far(k), why, prev), JSON_SYSTEM, f"replan r{rnd}", nm)
+            try:
+                plan = json.loads(extract_json(raw))
+            except json.JSONDecodeError:
+                continue
+            plan["beat"] = st.spec["outline"][k - 1]["beat"]
+            (st.pdir / f"{nm}.plan.json").write_text(json.dumps(plan, indent=1))
+            run.log(para=nm, stage="check plan", ok=not objections(st, k), note=" | ".join(objections(st, k)))
     # layer 2 -> 3: prose from plans, re-extracted and compared
     for k in ks:
         nm = f"{k:02}"
@@ -420,6 +485,9 @@ def topdown(d: Path, paras: str, writer: str, annotator: str, max_rewrites: int 
                 (st.pdir / f).unlink(missing_ok=True)
             annotate(run, st, k, annotator)
             extract(run, st, k, writer, claims=False)
+            if objections(st, k, check_claims=False) or not (next(p for p in report(d)["paragraphs"] if p["name"] == nm).get("realisation") or {}).get("realises", True):
+                reread(run, st, k, writer, objections(st, k, check_claims=False) or
+                       ["the reading does not match the paragraph's plan; check each planned event is or is not asserted"], claims=False)
             rr = report(d)
             p = next(p for p in rr["paragraphs"] if p["name"] == nm)
             real = p.get("realisation") or {}

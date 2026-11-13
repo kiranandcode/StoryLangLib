@@ -172,11 +172,13 @@ async def watch() -> None:
                 touched.add(rel.parts[0])
         for name in touched:
             if (STORIES / name / "story.json").exists():
-                await refresh(name)
+                try:
+                    await refresh(name)
+                except Exception as e:
+                    reports[name] = {"error": str(e), "name": name}
 
 
-@app.on_event("startup")
-async def startup() -> None:
+async def warm() -> None:
     for name in story_dirs():
         f = STORIES / name / "proofs.json"
         if f.exists():
@@ -184,7 +186,16 @@ async def startup() -> None:
                 proofs[name] = json.loads(f.read_text())
             except json.JSONDecodeError:
                 pass
-        await refresh(name, prove=not f.exists())
+        try:
+            await refresh(name, prove=not f.exists())
+        except Exception as e:  # a broken story must not stop the server
+            reports[name] = {"error": str(e), "name": name}
+
+
+@app.on_event("startup")
+async def startup() -> None:
+    # serve at once; reports fill in (and are pushed) as they are computed
+    asyncio.create_task(warm())
     asyncio.create_task(watch())
 
 
@@ -198,7 +209,7 @@ async def get_story(name: str):
     if name not in story_dirs():
         raise HTTPException(404, f"no story {name}")
     if name not in reports:
-        await refresh(name)
+        reports[name] = await asyncio.to_thread(run_report, name)
     return {**reports[name], "proofs": proofs.get(name, {"status": "none"})}
 
 

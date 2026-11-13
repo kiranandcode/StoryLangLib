@@ -13,7 +13,7 @@ if [ ! -x .venv/bin/uvicorn ]; then
 fi
 [ -d web/node_modules ] || (cd web && npm install --silent)
 
-.venv/bin/uvicorn server:app --reload --reload-include '*.py' --port "$STUDIO_API_PORT" --log-level warning &
+.venv/bin/uvicorn server:app --reload --reload-exclude 'workflows.py' --reload-exclude 'web/*' --reload-exclude '.venv/*' --timeout-graceful-shutdown 1 --port "$STUDIO_API_PORT" --log-level warning &
 API=$!
 trap "kill $API 2>/dev/null" EXIT INT TERM
 echo "StoryLangLib Studio: http://localhost:$STUDIO_PORT"
