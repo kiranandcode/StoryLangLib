@@ -23,11 +23,11 @@ live. Every model call and checker verdict is logged to runs/<workflow>.jsonl.
   higher-level claims (beliefs, relationships, consent), and check that the
   events imply the claims.
 """
+
+from __future__ import annotations
 import sys as _sys
 _sys.exit("Disabled: model calls must go through an interactive Claude termling or subagent, "
           "never `claude -p` or an API key (Kiran, 2026-11-12).")
-
-from __future__ import annotations
 
 import argparse
 import json
