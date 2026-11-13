@@ -1,6 +1,10 @@
 """Minimal client for TypeSafe's Jev (System One): typed questions about a
 state, answered with calibrated probabilities. Key from JEV_API_KEY or
 TYPESAFE_API_KEY. Docs: https://docs.typesafe.ai/introduction/quickstart"""
+import sys as _sys
+_sys.exit("Disabled: model calls must go through an interactive Claude termling or subagent, "
+          "never `claude -p` or an API key (Kiran, 2026-11-12).")
+
 import json, os, urllib.request
 
 URL = "https://api.typesafe.ai/v1/systemone"

@@ -7,6 +7,10 @@ usage: python3 run_eval.py [--models haiku,sonnet,opus,fable] [--conds raw,token
 Results go to runs/<model>/<cond>/<passage>.r<n>.{json,check.json} and
 runs/results.jsonl (one line per passage x model x condition).
 """
+import sys as _sys
+_sys.exit("Disabled: model calls must go through an interactive Claude termling or subagent, "
+          "never `claude -p` or an API key (Kiran, 2026-11-12).")
+
 import argparse, json, pathlib, re, subprocess, time
 from concurrent.futures import ThreadPoolExecutor
 
