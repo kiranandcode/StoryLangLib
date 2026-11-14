@@ -117,6 +117,23 @@ theorem validB_iff : ∀ (w : W) (es : List E), validB w es = true ↔ Valid w e
 instance (w : W) (es : List E) : Decidable (Valid w es) :=
   decidable_of_iff _ (validB_iff w es)
 
+/-- Running a story in two parts runs it in one. -/
+theorem run_append : ∀ (w : W) (es fs : List E), run w (es ++ fs) = run (run w es) fs
+  | _, [], _ => rfl
+  | w, e :: es, fs => run_append (next w e) es fs
+
+/-- A story is valid iff its first part is, and its second part is from where
+the first leaves off: so a long story can be checked from checkpoints. -/
+theorem valid_append : ∀ (w : W) (es fs : List E), Valid w (es ++ fs) ↔ Valid w es ∧ Valid (run w es) fs
+  | _, [], _ => ⟨fun h => ⟨.nil, h⟩, fun h => h.2⟩
+  | w, e :: es, fs => by
+    constructor
+    · rintro (_ | ⟨h₁, h₂, h₃⟩)
+      have := (valid_append (next w e) es fs).mp h₃
+      exact ⟨.cons h₁ h₂ this.1, this.2⟩
+    · rintro ⟨(_ | ⟨h₁, h₂, h₃⟩), h₄⟩
+      exact .cons h₁ h₂ ((valid_append (next w e) es fs).mpr ⟨h₃, h₄⟩)
+
 /-- The first event that is not allowed, with its position and reason. -/
 def firstFailure : W → List E → Nat → Option (Nat × String)
   | _, [], _ => none

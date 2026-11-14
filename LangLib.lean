@@ -21,6 +21,8 @@ import LangLib.World.Nen
 import LangLib.World.Examples.Office
 import LangLib.World.Examples.Mage
 import LangLib.World.Examples.Fight
+import LangLib.World.Examples.FightSnaps
+import LangLib.World.Examples.FightMinds
 import LangLib.World.Examples.Gossip
 import LangLib.World.Lexicon
 import LangLib.World.Examples.OfficeText

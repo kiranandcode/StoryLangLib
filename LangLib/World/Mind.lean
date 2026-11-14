@@ -34,7 +34,7 @@ relationships lowers trust in `d`).
 **Events.** Observation (`Perceive`): after any `Observable` event, everyone
 present who can perceive (`Perceives`; by default everyone) sees what it
 showed (and sees each other see it). `tell` is heard by
-everyone present, `whisper` only by the listener, and both need the speaker to
+everyone present who can perceive, `whisper` only by the listener, and both need the speaker to
 think what they say; `lie` needs them not to. `notice c l e` is coming to
 believe `l` by evidence `e`; a perception (`seen`, `sensed`) must be of
 something true. `realise c l` is factive: `l` must be true and must follow
@@ -385,13 +385,13 @@ def mindOk3 (w : W) : MindEv C Φ → Tri
   | .notice _ l e => Tri.ofBool (!e.perceptual || truthLit w l)
   | .realise c l => Tri.ofBool (truthLit w l && (closure (view w c)).contains l)
 
-instance [Cast C] : Domain W (MindEv C Φ) where
+instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
   ok3 := mindOk3
   ok w e := mindOk3 w e == .yes
   step w
     | .tell c d l =>
       let w := meet w c d
-      let hearers := Cast.all.filter fun x => x != c && loc w x == loc w c
+      let hearers := Cast.all.filter fun x => x != c && loc w x == loc w c && Perceives.perceives w x
       let w := hearers.foldl (fun w x => learn w x (ofLit l) (.told c)) w
       learn w c (.bel d (ofLit l)) .self
     | .whisper c d l | .lie c d l =>
