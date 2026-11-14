@@ -1,0 +1,48 @@
+/* Wrapping: nothing scrolls sideways at any width. Long identifiers, JSON
+   and Lean statements break where they must; prose breaks only words that
+   cannot fit a line (break-word keeps its min-content sizing). Loaded last. */
+
+html, body { overflow-x: hidden; }
+body { overflow-wrap: anywhere; }
+.shell, .main, .prose-pane, .right, .logic, .cards, .lcard, .sec, .storyview { min-width: 0; max-width: 100%; }
+.prose { overflow-wrap: break-word; }
+.prose-pane, .logic { overflow-x: hidden; }
+
+/* top bar: controls wrap onto a second line instead of pushing the page wide */
+.topbar { flex-wrap: wrap; row-gap: 6px; }
+.topbar .title { white-space: nowrap; }
+.topbar select { max-width: 100%; min-width: 0; text-overflow: ellipsis; }
+
+/* code, Lean and JSON */
+code, .lit, pre, .err {
+  white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%;
+}
+pre { margin: 4px 0; overflow-x: hidden; }
+
+/* logic cards and their rows */
+.lc-head { flex-wrap: wrap; row-gap: 2px; }
+.evs .ev > *, .belief .bl > *, .row, .chips > * { min-width: 0; overflow-wrap: anywhere; }
+.evs .ev .g { min-width: min(60%, 12em); }
+.badge { white-space: normal; max-width: 100%; }
+.belief .bl { flex-wrap: wrap; }
+
+/* tables shrink to the panel; their cells wrap */
+.matrix, .bonds { max-width: 100%; }
+.matrix th, .matrix td, .bonds td { overflow-wrap: anywhere; word-break: break-word; }
+.storyview section { overflow-x: hidden; }
+
+/* hover cards never run off the window */
+.card-pop { max-width: min(340px, calc(100vw - 16px)); max-height: calc(100vh - 16px); overflow: hidden; overflow-wrap: anywhere; }
+
+/* narrow windows */
+@media (max-width: 900px) {
+  .right { width: 100%; }
+  .cards { padding-left: 96px; }
+}
+@media (max-width: 760px) {
+  .topbar { padding: 6px 10px; gap: 8px; }
+  .prose { padding-left: 2.6rem; padding-right: 0.9rem; }
+  .gutter { left: -2.5em; right: auto; width: 2.2em; }
+  .legend { padding: 0 0.9rem; }
+  .storyview { padding: 6px 10px; }
+}

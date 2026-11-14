@@ -183,7 +183,7 @@ export function App() {
           </aside>
         )}
       </div>
-      {hover && overview && <div className="card-pop" style={{ left: Math.min(hover.x, innerWidth - 360), top: Math.min(hover.y, innerHeight - 160) }}>{hover.body}</div>}
+      {hover && overview && <div className="card-pop" style={{ left: Math.max(8, Math.min(hover.x, innerWidth - Math.min(340, innerWidth - 16) - 8)), top: Math.max(8, Math.min(hover.y, innerHeight - 160)) }}>{hover.body}</div>}
     </div>
   )
 }

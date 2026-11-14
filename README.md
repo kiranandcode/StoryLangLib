@@ -73,8 +73,15 @@ model (`docs/ui-spec.md`; design notes in `docs/ui-reading.md` and
 `docs/ui-visualisation.md`).
 
 ```
-studio/run.sh                     # http://localhost:5177
+studio/run.sh                     # the Electron app, plus http://localhost:5177 in any browser
+studio/run.sh --browser           # no Electron window
 ```
+
+In development the window loads the Vite dev server, so the renderer hot
+reloads; `studio/web/electron/dev.cjs` restarts the main process when
+`electron/*.cjs` changes. Closing the window, Cmd+Q or a TERM to `run.sh`
+stops the API and Vite, and the API's shutdown kills every Lean and langlib
+process group it started.
 
 The left panel is the prose (chill: just the text; overview: entity mentions,
 quotes, events, time words and warnings layered on without reflowing it). The
