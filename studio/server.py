@@ -16,12 +16,13 @@ import os
 import time
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from watchfiles import awatch
 
 import procs
+import request_log
 import proofs as lean
 from procs import LANGLIB, ROOT
 
@@ -123,10 +124,14 @@ def schedule_refresh(name: str, prove: bool = True) -> None:
 
 async def watch() -> None:
     STORIES.mkdir(exist_ok=True)
-    async for changes in awatch(STORIES, LANGLIB, debounce=300):
+    request_log.LOG.touch(exist_ok=True)
+    async for changes in awatch(STORIES, LANGLIB, request_log.LOG, debounce=300):
         touched = set()
         for _, path in changes:
             p = Path(path)
+            if p == request_log.LOG:
+                await broadcast({"type": "requests", "at": time.time()})
+                continue
             if p == LANGLIB:
                 touched |= set(story_dirs())
                 continue
@@ -209,6 +214,29 @@ async def runs(name: str):
             out.append({"workflow": f.stem,
                         "steps": [json.loads(l) for l in f.read_text().splitlines() if l.strip()]})
     return out
+
+
+@app.get("/api/requests")
+async def list_requests():
+    return await asyncio.to_thread(request_log.all_requests)
+
+
+@app.post("/api/requests")
+async def new_request(body: dict = Body(...)):
+    try:
+        return await asyncio.to_thread(
+            request_log.create, body.get("kind", "story"), body.get("text", ""),
+            body.get("story", ""), body.get("para", ""), body.get("quote", ""))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/api/requests/{rid}/withdraw")
+async def withdraw(rid: str):
+    try:
+        return await asyncio.to_thread(request_log.set_status, rid, "declined", "withdrawn by Kiran", "kiran")
+    except KeyError as e:
+        raise HTTPException(404, str(e))
 
 
 @app.get("/api/events")

@@ -123,3 +123,44 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
   .main { flex-direction: column; }
   .right { width: 100%; height: 45vh; border-left: none; border-top: 1px solid var(--rule); }
 }
+
+/* requests */
+.gutter .mark.req-mark { cursor: pointer; opacity: 0.35; font-size: 11px; }
+.para:hover .gutter .mark.req-mark, .gutter .mark.req-mark.has { opacity: 1; color: var(--accent); }
+.topbar .req-btn.on { color: var(--accent); border-color: var(--accent); }
+.modal-back { position: fixed; inset: 0; z-index: 80; background: rgba(0, 0, 0, 0.25); display: flex; align-items: flex-start; justify-content: center; padding: 12vh 12px 12px; }
+.composer {
+  width: min(560px, 100%); background: var(--paper); color: var(--ink); border: 1px solid var(--rule-2);
+  border-radius: 10px; box-shadow: var(--shadow); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.composer-head, .composer-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.composer-foot .spacer, .req-head .spacer { flex: 1; }
+.composer .seg { display: inline-flex; }
+.composer .seg button { background: transparent; border: 1px solid var(--rule-2); padding: 3px 10px; cursor: pointer; color: var(--ink-2); margin-left: -1px; }
+.composer .seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.composer .seg button:last-child { border-radius: 0 6px 6px 0; }
+.composer .seg button.on { background: var(--paper-2); color: var(--ink); border-color: var(--ink-3); }
+.composer textarea {
+  width: 100%; resize: vertical; font: inherit; font-size: 14px; line-height: 1.5; color: var(--ink);
+  background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 6px; padding: 8px 10px;
+}
+.composer textarea:focus { outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 0; }
+.composer .btn { background: transparent; border: 1px solid var(--rule-2); border-radius: 6px; padding: 3px 12px; cursor: pointer; color: var(--ink-2); }
+.composer .btn.primary { color: var(--paper); background: var(--accent); border-color: var(--accent); }
+.composer .btn.primary:disabled { opacity: 0.45; cursor: default; }
+.req-quote {
+  margin: 0; padding: 4px 10px; border-left: 2px solid var(--rule-2); color: var(--ink-2);
+  font-family: 'Literata Variable', Georgia, serif; font-style: italic; font-size: 13px;
+}
+.reqs { list-style: none; padding: 0; margin: 0; }
+.req { border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); padding: 8px 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px; }
+.req-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.req-head a { cursor: pointer; text-decoration: underline; text-decoration-color: var(--rule-2); }
+.req-text { white-space: pre-wrap; }
+.req-reply { white-space: pre-wrap; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 5px; }
+.req-reply::before { content: '↳ '; color: var(--ink-3); }
+.req.st-done, .req.st-declined { opacity: 0.75; }
+.badge.req-open { color: var(--ink-3); }
+.badge.req-claimed, .badge.req-working { color: var(--accent); }
+.badge.req-done { color: var(--ok); }
+.badge.req-declined { color: var(--ink-3); }

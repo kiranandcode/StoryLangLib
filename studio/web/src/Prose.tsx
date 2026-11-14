@@ -54,11 +54,13 @@ interface ParaProps {
   hoverEnt: string | null
   setHoverEnt: (e: string | null) => void
   setHover: (h: Hover | null) => void
+  onRequest?: (index: number) => void
+  requests?: number
   onSelect: (i: number) => void
 }
 
 export const ParagraphView = React.memo(function ParagraphView(props: ParaProps) {
-  const { report, p, index, overview, current, hoverEnt, setHoverEnt, setHover, onSelect } = props
+  const { report, p, index, overview, current, hoverEnt, setHoverEnt, setHover, onSelect, onRequest, requests } = props
   const doc = p.doc
   const evAt = useMemo(() => {
     const m = new Map<number, { e: string; gloss?: string; status?: string; why?: string; lex?: boolean }[]>()
@@ -143,6 +145,9 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
               onMouseEnter={e => { const r = (e.target as HTMLElement).getBoundingClientRect(); setHover({ x: r.right + 8, y: r.top, body: <div>{w.text}</div> }) }}
               onMouseLeave={() => setHover(null)}>{w.glyph}</span>))}
           {warn.length === 0 && p.text.trim() && <span className="mark ok" title={p.verdict}>·</span>}
+          {onRequest && <span className={`mark req-mark ${requests ? 'has' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => onRequest(index)}
+            title={requests ? `${requests} open request${requests > 1 ? 's' : ''} on this paragraph; click to add another` : 'request a change to this paragraph (select text first to quote it)'}>
+            {requests ? `✎${requests}` : '✎'}</span>}
         </span>
       )}
       {body ?? <span>({p.events.length} planned events, no prose yet: {p.events.map(e => e.gloss).join('; ')})</span>}

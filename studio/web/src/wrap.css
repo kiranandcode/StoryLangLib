@@ -6,6 +6,10 @@ html, body { overflow-x: hidden; }
 body { overflow-wrap: anywhere; }
 .shell, .main, .prose-pane, .right, .logic, .cards, .lcard, .sec, .storyview { min-width: 0; max-width: 100%; }
 .prose { overflow-wrap: break-word; }
+/* room for the margin (paragraph number, marks, ✎) inside the pane at any width */
+.prose { max-width: calc(66ch + 4.6rem); padding-left: 3.6rem; padding-right: 1.25rem; }
+.gutter { left: -3.2em; right: auto; width: 2.6em; }
+.legend { max-width: calc(66ch + 4.6rem); padding-left: 3.6rem; }
 .prose-pane, .logic { overflow-x: hidden; }
 
 /* top bar: controls wrap onto a second line instead of pushing the page wide */
@@ -41,8 +45,8 @@ pre { margin: 4px 0; overflow-x: hidden; }
 }
 @media (max-width: 760px) {
   .topbar { padding: 6px 10px; gap: 8px; }
-  .prose { padding-left: 2.6rem; padding-right: 0.9rem; }
-  .gutter { left: -2.5em; right: auto; width: 2.2em; }
-  .legend { padding: 0 0.9rem; }
+  .prose { padding-left: 2.8rem; padding-right: 0.9rem; }
+  .gutter { left: -2.6em; width: 2.2em; }
+  .legend { padding: 0 0.9rem 0 2.8rem; }
   .storyview { padding: 6px 10px; }
 }

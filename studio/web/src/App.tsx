@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import type { Report } from './types'
+import type { Report, StudioRequest } from './types'
+import { Composer, RequestsView, type Draft } from './Requests'
 import { ParagraphView, type Hover, entityColour } from './Prose'
 import { LogicPanel } from './Logic'
 import { ProofView, RunsView, StoryView } from './StoryViews'
@@ -12,7 +13,7 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'story' | 'proofs' | 'runs'
+type Tab = 'paragraphs' | 'story' | 'proofs' | 'runs' | 'requests'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
@@ -30,6 +31,8 @@ export function App() {
   const [hoverEnt, setHoverEnt] = useState<string | null>(null)
   const [live, setLive] = useState(false)
   const [flash, setFlash] = useState(0)
+  const [requests, setRequests] = useState<StudioRequest[]>([])
+  const [draft, setDraft] = useState<Draft | null>(null)
   const proseRef = useRef<HTMLDivElement>(null)
   const logicRef = useRef<HTMLDivElement>(null)
   const fromProse = useRef(false)
@@ -56,6 +59,11 @@ export function App() {
   }, [])
   useEffect(() => { load(story) }, [story, load])
 
+  const loadRequests = useCallback(() => {
+    fetch('/api/requests').then(r => r.json()).then(setRequests).catch(() => {})
+  }, [])
+  useEffect(loadRequests, [loadRequests])
+
   // live: the server pushes an event whenever the story's files change
   useEffect(() => {
     if (new URLSearchParams(location.search).has('static')) return  // screenshots: no live stream
@@ -64,12 +72,13 @@ export function App() {
     es.onerror = () => setLive(false)
     es.onmessage = m => {
       const msg = JSON.parse(m.data)
+      if (msg.type === 'requests') { loadRequests(); return }
       if (msg.story !== story) return
       if (msg.type === 'story') load(story)
       if (msg.type === 'proofs') setReport(r => r ? { ...r, proofs: msg.proofs } : r)
     }
     return () => es.close()
-  }, [story, load])
+  }, [story, load, loadRequests])
 
   // the paragraph at the reading line (40% down) is current
   useEffect(() => {
@@ -106,10 +115,26 @@ export function App() {
     if (el && pane) pane.scrollTo({ top: el.offsetTop - pane.clientHeight * 0.3, behavior: 'smooth' })
   }, [])
 
-  // keyboard: d theme, o overview, j/k paragraphs
+  // a request, anchored to the selected prose (or the given paragraph)
+  const openComposer = useCallback((index?: number, kind: 'story' | 'tool' = 'story') => {
+    const sel = window.getSelection()
+    let quote = '', para = index
+    if (sel && !sel.isCollapsed && proseRef.current?.contains(sel.anchorNode)) {
+      quote = sel.toString().trim().replace(/\s+/g, ' ')
+      const el = (sel.anchorNode instanceof Element ? sel.anchorNode : sel.anchorNode?.parentElement)?.closest<HTMLElement>('[data-para]')
+      if (el && para === undefined) para = Number(el.dataset.para)
+    }
+    setDraft({ kind, quote, para: para !== undefined && report ? report.paragraphs[para]?.name ?? '' : '' })
+  }, [report])
+  const openReqs = (name: string) => requests.filter(r => r.kind === 'story' && r.story === story && r.para === name &&
+    ['open', 'claimed', 'working'].includes(r.status)).length
+  const pending = requests.filter(r => (r.kind === 'tool' || r.story === story) && ['open', 'claimed', 'working'].includes(r.status)).length
+
+  // keyboard: d theme, o overview, j/k paragraphs, r request
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).tagName === 'SELECT' || e.metaKey || e.ctrlKey) return
+      if (['SELECT', 'TEXTAREA', 'INPUT'].includes((e.target as HTMLElement).tagName) || e.metaKey || e.ctrlKey || draft) return
+      if (e.key === 'r') { e.preventDefault(); openComposer() }
       if (e.key === 'd') setTheme(theme === 'dark' ? 'light' : 'dark')
       if (e.key === 'o') setMode(mode === 'chill' ? 'overview' : 'chill')
       if (e.key === 'j' && report) select(Math.min(report.paragraphs.length - 1, current + 1))
@@ -141,6 +166,8 @@ export function App() {
         {report && overview && proofs && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
           onClick={() => setTab('proofs')} style={{ cursor: 'pointer' }}>
           {proofs.status === 'running' ? 'Lean: checking…' : proofs.status === 'none' ? 'Lean: –' : `Lean ${okThm}/${nThm}`}</span>}
+        <button className={`btn req-btn ${pending ? 'on' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => openComposer()}
+          title="request a change to the story or the tool (r); select prose first to quote it">Request{pending ? ` · ${pending}` : ''}</button>
         <button className="btn" onClick={() => setSize(String(Math.max(16, Number(size) - 1)))} title="smaller text">A−</button>
         <button className="btn" onClick={() => setSize(String(Math.min(26, Number(size) + 1)))} title="larger text">A+</button>
         <button className="btn" onClick={() => setFace(face === 'serif' ? 'sans' : 'serif')} title="serif or Atkinson Hyperlegible">{face === 'serif' ? 'Serif' : 'Sans'}</button>
@@ -159,7 +186,7 @@ export function App() {
               {report.paragraphs.map((p, i) => (
                 <ParagraphView key={p.name} report={report} p={p} index={i} overview={overview}
                   current={overview && i === current} hoverEnt={hoverEnt} setHoverEnt={setHoverEnt}
-                  setHover={setHover} onSelect={select} />
+                  setHover={setHover} onSelect={select} onRequest={openComposer} requests={openReqs(p.name)} />
               ))}
             </article>
             {overview && <div className="legend">
@@ -173,16 +200,19 @@ export function App() {
         {overview && report && !report.error && (
           <aside className="right">
             <nav className="tabs">
-              {(['paragraphs', 'story', 'proofs', 'runs'] as Tab[]).map(t =>
+              {(['paragraphs', 'story', 'proofs', 'runs', 'requests'] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
+            {tab === 'requests' && <div className="logic"><RequestsView requests={requests} story={story} onNew={() => openComposer()}
+              onSelectPara={name => select(Math.max(0, report.paragraphs.findIndex(p => p.name === name)))} /></div>}
           </aside>
         )}
       </div>
+      {draft && <Composer story={story} draft={draft} onClose={() => setDraft(null)} onSent={() => { loadRequests(); setTab('requests') }} />}
       {hover && overview && <div className="card-pop" style={{ left: Math.max(8, Math.min(hover.x, innerWidth - Math.min(340, innerWidth - 16) - 8)), top: Math.max(8, Math.min(hover.y, innerHeight - 160)) }}>{hover.body}</div>}
     </div>
   )

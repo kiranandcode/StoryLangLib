@@ -120,6 +120,16 @@ python3 studio/workflows.py refine-check    stories/roof     the paragraphs refi
 python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
 ```
 
+Kiran asks for changes from the Studio itself: **Request** in the top bar
+(or `r`, or ✎ in a paragraph's margin; selected prose is quoted) files a
+change to the story or to the tool in `studio/requests.jsonl`. An agent
+listens through the repo's MCP server `studio` (`studio/studio_mcp.py`,
+registered in `.mcp.json`): `await_request` blocks until a request arrives,
+sending a progress ping every 15 s so the call outlives the client's tool
+timeout; the agent does the work, then `reply` marks it working, done or
+declined, and the Requests tab shows the reply. The server calls no model;
+it hands Kiran's words to whichever interactive session is listening.
+
 `--log incremental` appends each verdict to `runs/incremental.jsonl` for the
 Studio's run panel; `summary` and `compare` total them. Every child the Studio
 or the CLI starts (langlib, lake, lean) runs in its own process group under

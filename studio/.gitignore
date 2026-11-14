@@ -4,3 +4,4 @@ web/dist/
 __pycache__/
 web/tsconfig.tsbuildinfo
 .pgids
+requests.jsonl

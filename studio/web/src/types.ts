@@ -149,3 +149,18 @@ export interface Report {
   meta?: Record<string, unknown>
   summary?: Record<string, unknown>
 }
+
+export type RequestStatus = 'open' | 'claimed' | 'working' | 'done' | 'declined'
+export interface StudioRequest {
+  id: string
+  kind: 'story' | 'tool'
+  story: string
+  para: string
+  quote: string
+  text: string
+  at: number
+  status: RequestStatus
+  reply?: string
+  updated?: number
+  history: { status: RequestStatus; reply?: string; by?: string; at: number }[]
+}
