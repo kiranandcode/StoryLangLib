@@ -123,7 +123,9 @@ CRAFT = """\
 Close third person, past tense, in Kiran's point of view (in scenes Kiran is not in, the point of view
 of whoever is there). Interiority over choreography: what she notices, wants, hesitates over. Specific
 sensory detail over adjectives; vary sentence rhythm; no cliches, no euphemism stacks. Dialogue in
-double quotes ("), attributed. Keep the reader oriented in place and time. Consent is part of the
+double quotes ("), attributed. Keep the reader oriented in place and time. The setting in story.json
+is for the model, not a description to deliver: name only what the moment needs (a thing touched,
+seen, or that carries feeling), never tour the room's layout; the prose must just not contradict it. Consent is part of the
 scene, said out loud, as character, not paperwork. One paragraph of 80 to 150 words."""
 
 

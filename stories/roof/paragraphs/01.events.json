@@ -1,54 +1,11 @@
 {
- "text_sha": "79e8490a4ccc81f6",
+ "text_sha": "76a220a9a217cad3",
  "world_sha": "c8c0b8abcc0e97cf",
  "events": [
-  {
-   "e": "adopt ran at(ran,lab)",
-   "at": 91,
-   "w": "scarf",
-   "phase": "main",
-   "src": "text"
-  },
-  {
-   "e": "move ran lab",
-   "at": 79,
-   "w": "came",
-   "phase": "main",
-   "src": "text"
-  },
-  {
-   "e": "flirt ran kiran",
-   "at": 194,
-   "w": "smiled",
-   "phase": "main",
-   "src": "text"
-  }
+  {"e": "adopt ran at(ran,lab)", "at": 35, "w": "scarf", "phase": "main", "src": "text"},
+  {"e": "move ran lab", "at": 23, "w": "came", "phase": "main", "src": "text"},
+  {"e": "flirt ran kiran", "at": 123, "w": "smiled", "phase": "main", "src": "text"}
  ],
- "claims": [
-  "at ran lab",
-  "at kiran lab",
-  "true raining"
- ],
- "staging": [
-  {
-   "s": "in kdesk rows",
-   "at": 23,
-   "w": "where"
-  },
-  {
-   "s": "near rows window",
-   "at": 27,
-   "w": "by"
-  },
-  {
-   "s": "farFrom table rows",
-   "at": 62,
-   "w": "far"
-  },
-  {
-   "s": "leftOf rdesk kdesk",
-   "at": 110,
-   "w": "left"
-  }
- ]
+ "claims": ["at ran lab", "at kiran lab", "true raining"],
+ "staging": [{"s": "beside rdesk kdesk", "at": 52, "w": "beside"}]
 }
