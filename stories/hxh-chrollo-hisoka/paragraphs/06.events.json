@@ -1,0 +1,25 @@
+{
+ "text_sha": "d1eaf4b37c45908d",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "notice chrollo gumOnHead seen",
+   "at": 50,
+   "w": "seen",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "knows chrollo gumOnHead"
+ ],
+ "nen": [
+  "behead hisoka c2",
+  "tech hisoka in",
+  "use hisoka bungeeGum c2 left",
+  "tech chrollo gyo",
+  "spot chrollo c2",
+  "strike hisoka chrollo 2",
+  "untech hisoka in"
+ ]
+}

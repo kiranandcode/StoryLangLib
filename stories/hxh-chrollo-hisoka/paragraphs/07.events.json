@@ -1,0 +1,48 @@
+{
+ "text_sha": "000045343e2f816f",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "adopt chrollo !gfUp",
+   "at": 3,
+   "w": "free",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make chrollo !gfUp",
+   "at": 8,
+   "w": "let",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice hisoka decoyIsChrollo inferred",
+   "at": 54,
+   "w": "sure",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "falseBelief hisoka gfUp",
+  "falseBelief hisoka decoyIsChrollo"
+ ],
+ "nen": [
+  "openBook chrollo sunMoon",
+  "bookmark chrollo sunMoon",
+  "closeBook chrollo",
+  "use chrollo sunMoon c1 right",
+  "use chrollo sunMoon c3 right",
+  "use chrollo sunMoon c4 right",
+  "openBook chrollo convertHands",
+  "bookmark chrollo convertHands",
+  "closeBook chrollo",
+  "use chrollo convertHands c1 right",
+  "openBook chrollo blackVoice",
+  "use chrollo blackVoice c1 left",
+  "order chrollo c1",
+  "move chrollo ring",
+  "notice hisoka is(c1,chrollo) inferred"
+ ]
+}

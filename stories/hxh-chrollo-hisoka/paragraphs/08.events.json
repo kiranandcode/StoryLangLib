@@ -1,0 +1,55 @@
+{
+ "text_sha": "4c1ae3e3f499e205",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "notice hisoka !decoyIsChrollo seen",
+   "at": 9,
+   "w": "was",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice hisoka !needsBoth inferred",
+   "at": 33,
+   "w": "understood",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt chrollo hisokaMaimed",
+   "at": 67,
+   "w": "set",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make chrollo hisokaMaimed",
+   "at": 76,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "thinks hisoka !decoyIsChrollo",
+  "knows hisoka !needsBoth",
+  "true hisokaMaimed"
+ ],
+ "nen": [
+  "strike hisoka c1 3",
+  "detonate c1 c1",
+  "notice hisoka !is(c1,chrollo) inferred",
+  "notice hisoka !needsBothHands(sunMoon) inferred",
+  "move chrollo stands",
+  "use chrollo blackVoice c3 left",
+  "bookmark chrollo blackVoice",
+  "openBook chrollo sunMoon",
+  "use chrollo sunMoon c2 left",
+  "charge chrollo c2",
+  "order chrollo c3",
+  "move chrollo ring",
+  "detonate c2 c3",
+  "lose hisoka left"
+ ]
+}

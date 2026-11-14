@@ -1,0 +1,244 @@
+{
+ "title": "Chrollo against Hisoka",
+ "characters": [
+  {
+   "id": "chrollo",
+   "name": "Chrollo",
+   "pron": "he",
+   "traits": [
+    "cautious",
+    "secretive",
+    "proud"
+   ],
+   "values": [
+    "curiosity",
+    "power",
+    "pride"
+   ]
+  },
+  {
+   "id": "hisoka",
+   "name": "Hisoka",
+   "pron": "he",
+   "traits": [
+    "brash",
+    "proud"
+   ],
+   "values": [
+    "desire",
+    "power",
+    "pride"
+   ]
+  },
+  {
+   "id": "judge",
+   "name": "the judge",
+   "pron": "he",
+   "traits": [],
+   "values": []
+  },
+  {
+   "id": "fan",
+   "name": "the spectator",
+   "pron": "he",
+   "traits": [],
+   "values": []
+  },
+  {
+   "id": "decoy",
+   "name": "the decoy",
+   "pron": "it",
+   "traits": [],
+   "values": []
+  }
+ ],
+ "places": [
+  {
+   "id": "ring",
+   "kind": "fighting ring",
+   "desc": "the ring of the arena, open on all sides to the stands",
+   "words": [
+    "ring",
+    "arena"
+   ]
+  },
+  {
+   "id": "stands",
+   "kind": "stands",
+   "desc": "tiers of seats around the ring, full of spectators",
+   "words": [
+    "stands",
+    "seats",
+    "tiers"
+   ]
+  },
+  {
+   "id": "upper",
+   "kind": "upper floor",
+   "desc": "the second floor of the stands, under the ceiling",
+   "words": [
+    "floor",
+    "gallery"
+   ],
+   "attrs": {
+    "level": "upper"
+   }
+  }
+ ],
+ "objects": [],
+ "scenery": [
+  {
+   "id": "book",
+   "what": "Chrollo's book, Skill Hunter: a page for each stolen ability",
+   "words": [
+    "book"
+   ],
+   "owner": "chrollo",
+   "count": 1
+  },
+  {
+   "id": "bookmark",
+   "what": "Chrollo's one bookmark",
+   "words": [
+    "bookmark"
+   ],
+   "owner": "chrollo",
+   "count": 1
+  },
+  {
+   "id": "antenna",
+   "what": "a Black Voice antenna",
+   "words": [
+    "antenna"
+   ],
+   "owner": "chrollo",
+   "count": 1
+  }
+ ],
+ "atoms": [
+  {
+   "id": "usesBoth",
+   "label": "Sun and Moon is worked with both hands (a sun with the left, a moon with the right)",
+   "truth": true
+  },
+  {
+   "id": "needsBoth",
+   "label": "Sun and Moon needs both hands free at once",
+   "truth": false
+  },
+  {
+   "id": "gfNeedsBoth",
+   "label": "Gallery Fake needs both hands free",
+   "truth": true
+  },
+  {
+   "id": "sealsStay",
+   "label": "the seals stay until they explode",
+   "truth": true
+  },
+  {
+   "id": "elderDead",
+   "label": "the owner of Sun and Moon, the elder of Meteor City, is dead",
+   "truth": true
+  },
+  {
+   "id": "decoyIsChrollo",
+   "label": "the man Hisoka strikes is Chrollo",
+   "truth": false
+  },
+  {
+   "id": "gumOnHead",
+   "label": "Hisoka's gum is stuck to the puppet's head",
+   "truth": true
+  },
+  {
+   "id": "judgeHeld",
+   "label": "the judge is under Chrollo's control",
+   "truth": false,
+   "state": true
+  },
+  {
+   "id": "judgeDead",
+   "label": "the judge is dead",
+   "truth": false,
+   "state": true
+  },
+  {
+   "id": "chrolloHidden",
+   "label": "Chrollo is hidden in the crowd",
+   "truth": false,
+   "state": true
+  },
+  {
+   "id": "gfUp",
+   "label": "Gallery Fake is active",
+   "truth": false,
+   "state": true
+  },
+  {
+   "id": "hisokaMaimed",
+   "label": "Hisoka has lost his left hand",
+   "truth": false,
+   "state": true
+  }
+ ],
+ "start": {
+  "at": {
+   "chrollo": "ring",
+   "hisoka": "ring",
+   "judge": "ring",
+   "fan": "stands",
+   "decoy": "stands"
+  },
+  "bonds": {
+   "hisoka>chrollo": {
+    "trust": 1,
+    "attraction": 2,
+    "tension": 2
+   },
+   "chrollo>hisoka": {
+    "trust": 0,
+    "tension": 2
+   }
+  },
+  "knows": {
+   "chrollo": [
+    "usesBoth",
+    "!needsBoth",
+    "gfNeedsBoth",
+    "sealsStay",
+    "elderDead",
+    "!decoyIsChrollo"
+   ]
+  }
+ },
+ "outline": [
+  {
+   "brief": "The judge starts the fight. Chrollo opens his book at Black Voice and drives an antenna into the judge, who turns on Hisoka; Hisoka reads the plan: the judge as a shield."
+  },
+  {
+   "brief": "The book is gone from Chrollo's hands. He sets a sun on the judge with his left hand and a moon with his right; the marks touch and the judge dies in the blast. Hisoka asks where the book went."
+  },
+  {
+   "brief": "Chrollo explains his abilities, truthfully: Sun and Moon is worked with both hands; the seals stay until they explode; Gallery Fake needs both hands free; the seals' owner is dead and they still hold. Hisoka concludes that Sun and Moon needs both hands free (false)."
+  },
+  {
+   "brief": "Chrollo takes a spectator's face with Convert Hands (left hand, while the right holds the book), shuts the book on its bookmark and vanishes into the stands."
+  },
+  {
+   "brief": "Copies made with Gallery Fake, stamped with orders to break Hisoka, come at him. He goes down into the stands. As long as the copies stand, he reasons, Gallery Fake is up."
+  },
+  {
+   "brief": "Hisoka tears the head off a puppet, sticks Bungee Gum to it under In, and swings it into Chrollo's blind spot from his foot; it lands, but Chrollo had seen it coming with Gyo. Chrollo vanishes again."
+  },
+  {
+   "brief": "Chrollo lets Gallery Fake go; the sealed copies stay standing, so Hisoka still thinks it is up. A copy wearing Chrollo's face, driven by Black Voice, walks at Hisoka, who takes it for Chrollo and strikes."
+  },
+  {
+   "brief": "The decoy explodes. Hisoka understands: the seals are made one hand at a time, so Chrollo never needed both hands free; the copies outlast Gallery Fake. A full-power bomb in a headless body, touched by a controlled copy, takes his left hand."
+  },
+  {
+   "brief": "Hisoka retreats to the upper floor. Chrollo orders the last copies up after him, to get close and blow. Cornered, Hisoka wonders whether this is where he dies."
+  }
+ ]
+}

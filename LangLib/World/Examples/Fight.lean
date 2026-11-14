@@ -1,3 +1,4 @@
+import Lean.Data.Json
 import LangLib.World.Derive
 import LangLib.World.Nen
 
@@ -172,7 +173,7 @@ def p6 : List E :=
 /-- 7. The decoy. Order Stamp lapses as the page turns; the bookmark leaves
 Gallery Fake, and the sealed copies stay. Moons with the right hand, the book
 shut; Convert Hands' right hand gives a copy Chrollo's face; Black Voice drives
-it at Hisoka. Hisoka strikes "Chrollo"; it is a copy, and it explodes. -/
+it at Hisoka, who is sure it is Chrollo. -/
 def p7 : List E :=
   [nn (.openBook chrollo sunMoon), nn (.bookmark chrollo sunMoon), nn (.closeBook chrollo)] ++
   ([c1, c3, c4].map fun x => nn (.use chrollo sunMoon x .right)) ++
@@ -180,16 +181,18 @@ def p7 : List E :=
    nn (.use chrollo convertHands c1 .right),
    nn (.openBook chrollo blackVoice), nn (.use chrollo blackVoice c1 .left), nn (.order chrollo c1),
    sp (.move chrollo ring),
-   mi (.notice hisoka (nf (.is c1 chrollo), true) .inferred),
-   nn (.strike hisoka c1 3), nn (.detonate c1 c1),
-   mi (.notice hisoka (nf (.is c1 chrollo), false) .inferred),
-   mi (.notice hisoka (nf (.needsBothHands sunMoon), false) .inferred)]
+   mi (.notice hisoka (nf (.is c1 chrollo), true) .inferred)]
 
-/-- 8. The bomb in the headless body: an antenna in a moon-sealed copy, the
-bookmark to Black Voice, the book open at Sun and Moon, a full sun held on the
-body; the controlled copy touches it. Hisoka loses his left hand. -/
+/-- 8. Hisoka strikes "Chrollo": a copy, and it explodes; he sees through the
+decoy and the hands. Then the bomb in the headless body: an antenna in a
+moon-sealed copy, the bookmark to Black Voice, the book open at Sun and Moon,
+a full sun held on the body; the controlled copy touches it. Hisoka loses his
+left hand. -/
 def p8 : List E :=
-  [sp (.move chrollo stands), nn (.use chrollo blackVoice c3 .left), nn (.bookmark chrollo blackVoice),
+  [nn (.strike hisoka c1 3), nn (.detonate c1 c1),
+   mi (.notice hisoka (nf (.is c1 chrollo), false) .inferred),
+   mi (.notice hisoka (nf (.needsBothHands sunMoon), false) .inferred),
+   sp (.move chrollo stands), nn (.use chrollo blackVoice c3 .left), nn (.bookmark chrollo blackVoice),
    nn (.openBook chrollo sunMoon), nn (.use chrollo sunMoon c2 .left), nn (.charge chrollo c2),
    nn (.order chrollo c3), sp (.move chrollo ring), nn (.detonate c2 c3), nn (.lose hisoka .left)]
 
@@ -210,8 +213,63 @@ def after (k : Nat) : W := run start (([p1, p2, p3, p4, p5, p6, p7, p8, p9].take
 
 def ends : W := run start fight
 
-/-- The state after paragraphs `1..k` and the first `n` moves of paragraph `k + 1`. -/
+/-- The state after paragraphs `1..k` and the first `n` moves of paragraph `k + 1`.
+The paragraphs are those of `stories/hxh-chrollo-hisoka`: each one's `events.json`
+lists these moves under `"nen"`. -/
 def during (k n : Nat) : W := run (after k) (([p1, p2, p3, p4, p5, p6, p7, p8, p9].getD k []).take n)
+
+/-! ## Tied to the story files
+
+Each paragraph's `events.json` lists its Nen moves under `"nen"`, one line per
+move in this file's words; the guards fail if the two drift apart. -/
+
+def nm {α : Type} [Repr α] (a : α) : String := (((reprStr a).splitOn ".").getLast!).replace "_" ""
+
+def Fact.show : Fact → String
+  | .space (.at_ c p) => s!"at({nm c},{nm p})"
+  | .space _ => "?"
+  | .nen x => match x with
+    | .can c a => s!"can({nm c},{nm a})" | .active c a => s!"active({nm c},{nm a})"
+    | .marked x k => s!"marked({nm x},{nm k})" | .looksLike x y => s!"looksLike({nm x},{nm y})"
+    | .is x y => s!"is({nm x},{nm y})" | .needsBothHands a => s!"needsBothHands({nm a})"
+    | .usesBothHands a => s!"usesBothHands({nm a})" | .gone x => s!"gone({nm x})"
+
+def litShow (l : Fact × Bool) : String := (if l.2 then "" else "!") ++ l.1.show
+
+def E.show : E → String
+  | .space (.move c p) => s!"move {nm c} {nm p}"
+  | .space _ => "?"
+  | .mind (.tell c d l) => s!"tell {nm c} {nm d} {litShow l}"
+  | .mind (.notice c l e) => s!"notice {nm c} {litShow l} {nm e}"
+  | .mind _ => "?"
+  | .nen x => match x with
+    | .tech c t => s!"tech {nm c} {nm t}" | .untech c t => s!"untech {nm c} {nm t}"
+    | .openBook c a => s!"openBook {nm c} {nm a}" | .closeBook c => s!"closeBook {nm c}"
+    | .bookmark c a => s!"bookmark {nm c} {nm a}"
+    | .use c a t h => s!"use {nm c} {nm a} {nm t} {nm h}"
+    | .charge c t => s!"charge {nm c} {nm t}" | .release c a => s!"release {nm c} {nm a}"
+    | .order c x => s!"order {nm c} {nm x}" | .behead c x => s!"behead {nm c} {nm x}"
+    | .detonate x y => s!"detonate {nm x} {nm y}" | .spot c x => s!"spot {nm c} {nm x}"
+    | .strike c t n => s!"strike {nm c} {nm t} {n}" | .lose c h => s!"lose {nm c} {nm h}"
+    | .hide c => s!"hide {nm c}" | .emerge c => s!"emerge {nm c}"
+
+open Lean in
+def nenOf (src : String) : List String :=
+  match Json.parse src with
+  | .ok j => match j.getObjVal? "nen" with
+    | .ok (.arr a) => a.toList.filterMap (·.getStr?.toOption)
+    | _ => []
+  | .error _ => []
+
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/01.events.json") == p1.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/02.events.json") == p2.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/03.events.json") == p3.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/04.events.json") == p4.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/05.events.json") == p5.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/06.events.json") == p6.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/07.events.json") == p7.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/08.events.json") == p8.map E.show
+#guard nenOf (include_str "../../../stories/hxh-chrollo-hisoka/paragraphs/09.events.json") == p9.map E.show
 
 /-! ## Key turns -/
 
@@ -291,8 +349,8 @@ theorem copies_outlive_gallery_fake :
 /-- The decoy: when Hisoka strikes, he believes the body in front of him is
 Chrollo. It is a copy wearing his face. -/
 theorem hisoka_strikes_a_decoy :
-    falseBelief (during 6 15) hisoka (nf (.is c1 chrollo)) = true ∧
-    (during 6 15).nen.looks c1 = chrollo := by decide +kernel
+    falseBelief (after 7) hisoka (nf (.is c1 chrollo)) = true ∧
+    (after 7).nen.looks c1 = chrollo := by decide +kernel
 
 /-- Afterwards he sees through both: the decoy, and the hands. -/
 theorem hisoka_sees_through_it :

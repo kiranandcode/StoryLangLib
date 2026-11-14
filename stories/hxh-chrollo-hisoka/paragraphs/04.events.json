@@ -1,0 +1,53 @@
+{
+ "text_sha": "5900ac6e336088a6",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "adopt chrollo chrolloHidden",
+   "at": 44,
+   "w": "hide",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt chrollo at(chrollo,stands)",
+   "at": 44,
+   "w": "hide",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move chrollo stands",
+   "at": 39,
+   "w": "slipped",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make chrollo chrolloHidden",
+   "at": 39,
+   "w": "slipped",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice hisoka !at(chrollo,ring) seen",
+   "at": 7,
+   "w": "was",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "thinks hisoka !at(chrollo,ring)",
+  "true chrolloHidden"
+ ],
+ "nen": [
+  "openBook chrollo convertHands",
+  "move chrollo stands",
+  "use chrollo convertHands fan left",
+  "bookmark chrollo convertHands",
+  "closeBook chrollo",
+  "hide chrollo"
+ ]
+}

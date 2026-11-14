@@ -1,0 +1,7 @@
+{
+ "source": "an animated version of the manga's fight (YouTube gSA2yPyl0sk, no audio dialogue); its on-screen text was OCRed into the gitignored source/ dir. The prose and outline here are paraphrase, not transcript.",
+ "pov": "close third person, past tense; Hisoka's point of view, since the fight turns on what he does not know",
+ "nen": "The Studio's world knows space, minds and state atoms, not Nen: the Nen moves of each paragraph are listed under \"nen\" in its events.json and proved in LangLib/World/Examples/Fight.lean (p1..p9 there are these paragraphs).",
+ "writer": "interactive Claude session (Opus 5.5), no headless model calls",
+ "annotator": "interactive Claude session (Opus 5.5), no headless model calls"
+}

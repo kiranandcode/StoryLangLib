@@ -1,0 +1,28 @@
+{
+ "text_sha": "04308be97ddbcbc4",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "adopt chrollo judgeHeld",
+   "at": 52,
+   "w": "hide",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make chrollo judgeHeld",
+   "at": 20,
+   "w": "drove",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "knows hisoka judgeHeld"
+ ],
+ "nen": [
+  "openBook chrollo blackVoice",
+  "use chrollo blackVoice judge left",
+  "order chrollo judge"
+ ]
+}

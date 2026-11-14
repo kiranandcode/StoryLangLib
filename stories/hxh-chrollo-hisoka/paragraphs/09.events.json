@@ -1,0 +1,34 @@
+{
+ "text_sha": "302a067f8f761de3",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "adopt hisoka at(hisoka,upper)",
+   "at": 1,
+   "w": "fell",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move hisoka upper",
+   "at": 1,
+   "w": "fell",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "at hisoka upper",
+  "true hisokaMaimed"
+ ],
+ "nen": [
+  "move hisoka upper",
+  "move chrollo stands",
+  "openBook chrollo orderStamp",
+  "use chrollo orderStamp c4 left",
+  "charge chrollo c4",
+  "order chrollo c4",
+  "move c4 upper",
+  "detonate c4 c4"
+ ]
+}

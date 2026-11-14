@@ -1,0 +1,25 @@
+{
+ "text_sha": "1318a5c6dd5f358f",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "become judgeDead",
+   "at": 38,
+   "w": "dead",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "true judgeDead"
+ ],
+ "nen": [
+  "bookmark chrollo blackVoice",
+  "openBook chrollo sunMoon",
+  "use chrollo sunMoon judge left",
+  "bookmark chrollo sunMoon",
+  "closeBook chrollo",
+  "use chrollo sunMoon judge right",
+  "detonate judge judge"
+ ]
+}

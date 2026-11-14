@@ -1,0 +1,65 @@
+{
+ "text_sha": "afc7a851365a5da7",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "adopt chrollo gfUp",
+   "at": 21,
+   "w": "made",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make chrollo gfUp",
+   "at": 21,
+   "w": "made",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt hisoka at(hisoka,stands)",
+   "at": 42,
+   "w": "meet",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move hisoka stands",
+   "at": 36,
+   "w": "went",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice hisoka gfUp inferred",
+   "at": 53,
+   "w": "told",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "knows hisoka gfUp"
+ ],
+ "nen": [
+  "openBook chrollo galleryFake",
+  "bookmark chrollo galleryFake",
+  "closeBook chrollo",
+  "use chrollo galleryFake c1 both",
+  "use chrollo galleryFake c2 both",
+  "use chrollo galleryFake c3 both",
+  "use chrollo galleryFake c4 both",
+  "openBook chrollo sunMoon",
+  "use chrollo sunMoon c1 left",
+  "use chrollo sunMoon c2 left",
+  "use chrollo sunMoon c3 left",
+  "use chrollo sunMoon c4 left",
+  "openBook chrollo orderStamp",
+  "use chrollo orderStamp c2 left",
+  "use chrollo orderStamp c3 left",
+  "move hisoka stands",
+  "order chrollo c2",
+  "order chrollo c3",
+  "notice hisoka active(chrollo,galleryFake) inferred"
+ ]
+}

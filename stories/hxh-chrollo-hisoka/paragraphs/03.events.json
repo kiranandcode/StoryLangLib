@@ -1,0 +1,53 @@
+{
+ "text_sha": "bf8c118c28c13f56",
+ "world_sha": "34788e701c02c39e",
+ "events": [
+  {
+   "e": "tell chrollo hisoka usesBoth",
+   "at": 17,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell chrollo hisoka sealsStay",
+   "at": 33,
+   "w": "stayed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell chrollo hisoka elderDead",
+   "at": 43,
+   "w": "dead",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell chrollo hisoka gfNeedsBoth",
+   "at": 47,
+   "w": "needed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice hisoka needsBoth inferred",
+   "at": 58,
+   "w": "conclusion",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  "knows hisoka usesBoth",
+  "falseBelief hisoka needsBoth"
+ ],
+ "nen": [
+  "tell chrollo hisoka usesBothHands(sunMoon)",
+  "tell chrollo hisoka needsBothHands(galleryFake)",
+  "tell chrollo hisoka can(chrollo,convertHands)",
+  "tell chrollo hisoka can(chrollo,orderStamp)",
+  "tell chrollo hisoka can(chrollo,galleryFake)",
+  "notice hisoka needsBothHands(sunMoon) inferred"
+ ]
+}
