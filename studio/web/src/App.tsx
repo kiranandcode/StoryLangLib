@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import type { Report, StudioRequest } from './types'
 import { Composer, RequestsView, type Draft } from './Requests'
-import { ContextMenu, InspectorView, describeTarget, targetsAt, type Menu, type MenuItem, type Vocab } from './Inspector'
 import { ParagraphView, type Hover, entityColour } from './Prose'
 import { LogicPanel } from './Logic'
 import { ProofView, RunsView, StoryView } from './StoryViews'
@@ -14,7 +13,7 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
+type Tab = 'paragraphs' | 'story' | 'proofs' | 'runs' | 'requests'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
@@ -22,7 +21,7 @@ export function App() {
   const [report, setReport] = useState<Report | null>(null)
   const [theme, setTheme] = usePref<'light' | 'dark'>('studio.theme',
     document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light')
-  const [mode, setMode] = usePref<'chill' | 'overview' | 'edit'>('studio.mode', 'overview')
+  const [mode, setMode] = usePref<'chill' | 'overview'>('studio.mode', 'overview')
   const [pos, setPos] = usePref<'on' | 'off'>('studio.pos', 'off')
   const [face, setFace] = usePref<'serif' | 'sans'>('studio.face', 'serif')
   const [size, setSize] = usePref<string>('studio.size', '20')
@@ -34,10 +33,6 @@ export function App() {
   const [flash, setFlash] = useState(0)
   const [requests, setRequests] = useState<StudioRequest[]>([])
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [menu, setMenu] = useState<Menu | null>(null)
-  const [inspecting, setInspecting] = useState<string | null>(null)
-  const [vocab, setVocab] = useState<Vocab | null>(null)
-  useEffect(() => { fetch('/api/vocab').then(r => r.json()).then(setVocab).catch(() => {}) }, [])
   const proseRef = useRef<HTMLDivElement>(null)
   const logicRef = useRef<HTMLDivElement>(null)
   const fromProse = useRef(false)
@@ -47,7 +42,7 @@ export function App() {
     const q = new URLSearchParams(location.search)
     if (q.get('story')) setStory(q.get('story')!)
     if (q.get('theme')) setTheme(q.get('theme') as 'light' | 'dark')
-    if (q.get('mode')) setMode(q.get('mode') as 'chill' | 'overview' | 'edit')
+    if (q.get('mode')) setMode(q.get('mode') as 'chill' | 'overview')
     if (q.get('tab')) setTab(q.get('tab') as Tab)
   }, [])
 
@@ -131,47 +126,6 @@ export function App() {
     }
     setDraft({ kind, quote, para: para !== undefined && report ? report.paragraphs[para]?.name ?? '' : '' })
   }, [report])
-  const ask = useCallback((target: string, text = '') => {
-    if (!report) return
-    const [kind, key] = target.split(':')
-    const para = kind === 'para' || kind === 'ev' ? key : ''
-    setDraft({ kind: 'story', para, quote: '', target, about: describeTarget(report, target), text })
-  }, [report])
-
-  const onContextMenu = (e: React.MouseEvent) => {
-    if (mode !== 'edit' || !report) return
-    e.preventDefault()
-    const targets = targetsAt(e.target as HTMLElement)
-    const sel = window.getSelection()
-    const quote = sel && !sel.isCollapsed && proseRef.current?.contains(sel.anchorNode) ? sel.toString().trim().replace(/\s+/g, ' ') : ''
-    const items: MenuItem[] = []
-    const inspect = (t: string) => { setInspecting(t); setTab('inspect') }
-    for (const t of targets) {
-      const [kind, key, idx] = t.split(':')
-      const what = describeTarget(report, t)
-      if (items.length) items.push({ label: '', run: () => {}, sep: true })
-      if (kind === 'char' || kind === 'fact' || kind === 'bond') {
-        items.push({ label: `Inspect ${what}`, run: () => inspect(t) })
-        items.push({ label: `Ask the agent to change ${what}…`, run: () => ask(t) })
-      } else if (kind === 'ev') {
-        const ev = report.paragraphs.find(p => p.name === key)?.events[Number(idx)]
-        items.push({ label: `Inspect ${what}`, run: () => inspect(t) })
-        items.push({ label: 'This reading is wrong…', run: () => ask(t, `The reading of ¶${key} is wrong about \`${ev?.e ?? ''}\`: `) })
-        items.push({ label: 'Change what happens here…', run: () => ask(t) })
-      } else if (kind === 'para') {
-        if (quote) items.push({ label: `Ask about “${quote.length > 32 ? quote.slice(0, 32) + '…' : quote}”…`, run: () => {
-          setDraft({ kind: 'story', para: key, quote, target: t, about: `¶ ${key}, the selection` }) } })
-        items.push({ label: `Rewrite ¶ ${key}…`, run: () => ask(t) })
-        items.push({ label: `Show ¶ ${key}'s logic`, run: () => { setTab('paragraphs'); select(Math.max(0, report.paragraphs.findIndex(p => p.name === key))) } })
-      } else if (kind === 'place' || kind === 'obj') {
-        items.push({ label: `Ask the agent about ${what}…`, run: () => ask(t) })
-      }
-    }
-    if (items.length) items.push({ label: '', run: () => {}, sep: true })
-    items.push({ label: 'Ask for a change to the tool…', run: () => setDraft({ kind: 'tool', para: '', quote: '' }), dim: true })
-    setMenu({ x: e.clientX, y: e.clientY, items })
-  }
-
   const openReqs = (name: string) => requests.filter(r => r.kind === 'story' && r.story === story && r.para === name &&
     ['open', 'claimed', 'working'].includes(r.status)).length
   const pending = requests.filter(r => (r.kind === 'tool' || r.story === story) && ['open', 'claimed', 'working'].includes(r.status)).length
@@ -179,11 +133,10 @@ export function App() {
   // keyboard: d theme, o overview, j/k paragraphs, r request
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (['SELECT', 'TEXTAREA', 'INPUT'].includes((e.target as HTMLElement).tagName) || e.metaKey || e.ctrlKey || draft || menu) return
+      if (['SELECT', 'TEXTAREA', 'INPUT'].includes((e.target as HTMLElement).tagName) || e.metaKey || e.ctrlKey || draft) return
       if (e.key === 'r') { e.preventDefault(); openComposer() }
       if (e.key === 'd') setTheme(theme === 'dark' ? 'light' : 'dark')
       if (e.key === 'o') setMode(mode === 'chill' ? 'overview' : 'chill')
-      if (e.key === 'e') setMode(mode === 'edit' ? 'overview' : 'edit')
       if (e.key === 'j' && report) select(Math.min(report.paragraphs.length - 1, current + 1))
       if (e.key === 'k') select(Math.max(0, current - 1))
     }
@@ -191,13 +144,13 @@ export function App() {
     return () => window.removeEventListener('keydown', onKey)
   })
 
-  const overview = mode !== 'chill'
+  const overview = mode === 'overview'
   const proofs = report?.proofs
   const nThm = Object.keys(proofs?.theorems ?? {}).length
   const okThm = Object.values(proofs?.theorems ?? {}).filter(t => t.ok).length
 
   return (
-    <div className={`shell ${mode === 'edit' ? 'editing' : ''}`} onContextMenu={onContextMenu}>
+    <div className="shell">
       <header className="topbar">
         <span className="title">StoryLangLib Studio</span>
         {stories.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
@@ -205,7 +158,6 @@ export function App() {
         <span className="seg" role="group" aria-label="mode">
           <button className={mode === 'chill' ? 'on' : ''} onClick={() => setMode('chill')} title="just the prose (o)">Chill</button>
           <button className={mode === 'overview' ? 'on' : ''} onClick={() => setMode('overview')} title="annotations and logic (o)">Overview</button>
-          <button className={mode === 'edit' ? 'on' : ''} onClick={() => setMode('edit')} title="right-click anything to inspect, adjust or ask the agent (e)">Edit</button>
         </span>
         {overview && <button className={`btn ${pos === 'on' ? 'on' : ''}`} onClick={() => setPos(pos === 'on' ? 'off' : 'on')} title="tint parts of speech">POS</button>}
         <span className="spacer" />
@@ -214,8 +166,8 @@ export function App() {
         {report && overview && proofs && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
           onClick={() => setTab('proofs')} style={{ cursor: 'pointer' }}>
           {proofs.status === 'running' ? 'Lean: checking…' : proofs.status === 'none' ? 'Lean: –' : `Lean ${okThm}/${nThm}`}</span>}
-        {pending > 0 && <button className="btn req-btn on" onClick={() => setTab('requests')}
-          title="requests the agent has not finished; r to ask for another">requests · {pending}</button>}
+        <button className={`btn req-btn ${pending ? 'on' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => openComposer()}
+          title="request a change to the story or the tool (r); select prose first to quote it">Request{pending ? ` · ${pending}` : ''}</button>
         <button className="btn" onClick={() => setSize(String(Math.max(16, Number(size) - 1)))} title="smaller text">A−</button>
         <button className="btn" onClick={() => setSize(String(Math.min(26, Number(size) + 1)))} title="larger text">A+</button>
         <button className="btn" onClick={() => setFace(face === 'serif' ? 'sans' : 'serif')} title="serif or Atkinson Hyperlegible">{face === 'serif' ? 'Serif' : 'Sans'}</button>
@@ -248,20 +200,18 @@ export function App() {
         {overview && report && !report.error && (
           <aside className="right">
             <nav className="tabs">
-              {(['paragraphs', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
+              {(['paragraphs', 'story', 'proofs', 'runs', 'requests'] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
-            {tab === 'inspect' && <div className="logic"><InspectorView report={report} target={inspecting} current={current} vocab={vocab} onAsk={t => ask(t)} /></div>}
             {tab === 'requests' && <div className="logic"><RequestsView requests={requests} story={story} onNew={() => openComposer()}
               onSelectPara={name => select(Math.max(0, report.paragraphs.findIndex(p => p.name === name)))} /></div>}
           </aside>
         )}
       </div>
-      {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
       {draft && <Composer story={story} draft={draft} onClose={() => setDraft(null)} onSent={() => { loadRequests(); setTab('requests') }} />}
       {hover && overview && <div className="card-pop" style={{ left: Math.max(8, Math.min(hover.x, innerWidth - Math.min(340, innerWidth - 16) - 8)), top: Math.max(8, Math.min(hover.y, innerHeight - 160)) }}>{hover.body}</div>}
     </div>
