@@ -1,0 +1,10 @@
+{
+ "events": [
+  "adopt kiran did(kiran,ran,kiss)",
+  "act kiran ran kiss"
+ ],
+ "claims": [
+  "true did(kiran,ran,kiss)"
+ ],
+ "beat": "kiss"
+}

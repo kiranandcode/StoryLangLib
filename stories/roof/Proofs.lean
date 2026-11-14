@@ -27,14 +27,38 @@ def p02 : List Ev := [Ev.sarcasm 0 1 (Fact.atom 3, true), Ev.notice 1 (Fact.atom
 def p03 : List Ev := [Ev.intend 0 0, Ev.move 0 1, Ev.intend 1 1, Ev.drop 1 0, Ev.move 1 2]
 #guard eventsMatch spec (include_str "paragraphs/03.events.json") p03
 
-def owner : List Nat := [0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2]
+/-- paragraph 04 -/
+def p04 : List Ev := [Ev.move 0 0, Ev.adopt 0 (Fact.holds 0 0, true), Ev.take 0 0]
+#guard eventsMatch spec (include_str "paragraphs/04.plan.json") p04
+
+/-- paragraph 05 -/
+def p05 : List Ev := [Ev.notice 0 (Fact.atom 1, true) (Evid.assumed), Ev.adopt 0 (Fact.at_ 0 2, true)]
+#guard eventsMatch spec (include_str "paragraphs/05.plan.json") p05
+
+/-- paragraph 06 -/
+def p06 : List Ev := [Ev.move 0 2]
+#guard eventsMatch spec (include_str "paragraphs/06.plan.json") p06
+
+/-- paragraph 07 -/
+def p07 : List Ev := [Ev.tell 1 0 (Fact.atom 0, true), Ev.tell 1 0 (Fact.atom 2, true)]
+#guard eventsMatch spec (include_str "paragraphs/07.plan.json") p07
+
+/-- paragraph 08 -/
+def p08 : List Ev := [Ev.askAct 1 0 (Act.kiss), Ev.agree 0 1 (Act.kiss), Ev.agree 1 0 (Act.kiss)]
+#guard eventsMatch spec (include_str "paragraphs/08.plan.json") p08
+
+/-- paragraph 09 -/
+def p09 : List Ev := [Ev.adopt 0 (Fact.did 0 1 (Act.kiss), true), Ev.act 0 1 (Act.kiss)]
+#guard eventsMatch spec (include_str "paragraphs/09.plan.json") p09
+
+def owner : List Nat := [0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 7, 7, 8, 8]
 
 /-- The story with its solved timeline (minutes); `Timed.Valid` re-checks it. -/
 def story : Timed (E spec) :=
-  { told := (p01 ++ p02 ++ p03).map (Ev.toE spec),
-    constraints := [{ i := 0, rels := [Allen.before, Allen.meets], j := 1 }, { i := 1, rels := [Allen.before, Allen.meets], j := 2 }, { i := 2, rels := [Allen.before, Allen.meets], j := 3 }, { i := 3, rels := [Allen.before, Allen.meets], j := 4 }, { i := 4, rels := [Allen.before, Allen.meets], j := 5 }, { i := 5, rels := [Allen.before, Allen.meets], j := 6 }, { i := 6, rels := [Allen.before, Allen.meets], j := 7 }, { i := 7, rels := [Allen.before, Allen.meets], j := 8 }, { i := 8, rels := [Allen.before, Allen.meets], j := 9 }, { i := 9, rels := [Allen.before, Allen.meets], j := 10 }],
+  { told := (p01 ++ p02 ++ p03 ++ p04 ++ p05 ++ p06 ++ p07 ++ p08 ++ p09).map (Ev.toE spec),
+    constraints := [{ i := 0, rels := [Allen.before, Allen.meets], j := 1 }, { i := 1, rels := [Allen.before, Allen.meets], j := 2 }, { i := 2, rels := [Allen.before, Allen.meets], j := 3 }, { i := 3, rels := [Allen.before, Allen.meets], j := 4 }, { i := 4, rels := [Allen.before, Allen.meets], j := 5 }, { i := 5, rels := [Allen.before, Allen.meets], j := 6 }, { i := 6, rels := [Allen.before, Allen.meets], j := 7 }, { i := 7, rels := [Allen.before, Allen.meets], j := 8 }, { i := 8, rels := [Allen.before, Allen.meets], j := 9 }, { i := 9, rels := [Allen.before, Allen.meets], j := 10 }, { i := 10, rels := [Allen.before, Allen.meets], j := 11 }, { i := 11, rels := [Allen.before, Allen.meets], j := 12 }, { i := 12, rels := [Allen.before, Allen.meets], j := 13 }, { i := 13, rels := [Allen.before, Allen.meets], j := 14 }, { i := 14, rels := [Allen.before, Allen.meets], j := 15 }, { i := 15, rels := [Allen.before, Allen.meets], j := 16 }, { i := 16, rels := [Allen.before, Allen.meets], j := 17 }, { i := 17, rels := [Allen.before, Allen.meets], j := 18 }, { i := 18, rels := [Allen.before, Allen.meets], j := 19 }, { i := 19, rels := [Allen.before, Allen.meets], j := 20 }, { i := 20, rels := [Allen.before, Allen.meets], j := 21 }, { i := 21, rels := [Allen.before, Allen.meets], j := 22 }, { i := 22, rels := [Allen.before, Allen.meets], j := 23 }],
     metric := [],
-    timeline := [{ s := 0, e := 1 }, { s := 2, e := 3 }, { s := 4, e := 5 }, { s := 6, e := 7 }, { s := 8, e := 9 }, { s := 10, e := 11 }, { s := 12, e := 13 }, { s := 14, e := 15 }, { s := 16, e := 17 }, { s := 18, e := 19 }, { s := 20, e := 21 }] }
+    timeline := [{ s := 0, e := 1 }, { s := 2, e := 3 }, { s := 4, e := 5 }, { s := 6, e := 7 }, { s := 8, e := 9 }, { s := 10, e := 11 }, { s := 12, e := 13 }, { s := 14, e := 15 }, { s := 16, e := 17 }, { s := 18, e := 19 }, { s := 20, e := 21 }, { s := 22, e := 23 }, { s := 24, e := 25 }, { s := 26, e := 27 }, { s := 28, e := 29 }, { s := 30, e := 31 }, { s := 32, e := 33 }, { s := 34, e := 35 }, { s := 36, e := 37 }, { s := 38, e := 39 }, { s := 40, e := 41 }, { s := 42, e := 43 }, { s := 44, e := 45 }, { s := 46, e := 47 }] }
 
 theorem story_valid : story.Valid spec.start := by decide +kernel
 
@@ -56,13 +80,47 @@ theorem p03_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start
 /-- true objAt(note,lab) -/
 theorem p03_claim2 : (Claim.holdsTrue (Fact.objAt 0 0, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
 
+theorem p04_valid : Valid spec.start (story.upTo owner 3) := by decide +kernel
+/-- at kiran lab -/
+theorem p04_claim0 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 3)) = true := by decide +kernel
+/-- holds kiran note -/
+theorem p04_claim1 : (Claim.holdsTrue (Fact.holds 0 0, true)).eval (run spec.start (story.upTo owner 3)) = true := by decide +kernel
+/-- unaware kiran at(ran,roof) -/
+theorem p04_claim2 : (Claim.unaware 0 (Fact.at_ 1 2)).eval (run spec.start (story.upTo owner 3)) = true := by decide +kernel
+
+theorem p05_valid : Valid spec.start (story.upTo owner 4) := by decide +kernel
+/-- goal kiran at(kiran,roof) -/
+theorem p05_claim0 : (Claim.goal 0 (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 4)) = true := by decide +kernel
+
+theorem p06_valid : Valid spec.start (story.upTo owner 5) := by decide +kernel
+/-- at kiran roof -/
+theorem p06_claim0 : (Claim.holdsTrue (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 5)) = true := by decide +kernel
+/-- at ran roof -/
+theorem p06_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 5)) = true := by decide +kernel
+
+theorem p07_valid : Valid spec.start (story.upTo owner 6) := by decide +kernel
+/-- thinks kiran ranLikesKiran -/
+theorem p07_claim0 : (Claim.thinks 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 6)) = true := by decide +kernel
+/-- thinks kiran noteConfession -/
+theorem p07_claim1 : (Claim.thinks 0 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 6)) = true := by decide +kernel
+
+theorem p08_valid : Valid spec.start (story.upTo owner 7) := by decide +kernel
+/-- consented kiran ran kiss -/
+theorem p08_claim0 : (Claim.consented 0 1 (Act.kiss)).eval (run spec.start (story.upTo owner 7)) = true := by decide +kernel
+/-- consented ran kiran kiss -/
+theorem p08_claim1 : (Claim.consented 1 0 (Act.kiss)).eval (run spec.start (story.upTo owner 7)) = true := by decide +kernel
+
+theorem p09_valid : Valid spec.start (story.upTo owner 8) := by decide +kernel
+/-- true did(kiran,ran,kiss) -/
+theorem p09_claim0 : (Claim.holdsTrue (Fact.did 0 1 (Act.kiss), true)).eval (run spec.start (story.upTo owner 8)) = true := by decide +kernel
+
 def beats : Beats := { conds := ["lingering", "spark", "noteLeft", "found", "doubting", "together", "kiranKnows", "negotiated", "kissed"], vocab := [{ id := "lingers", label := "Ran finds an excuse to stay", pre := [], add := [0], del := [], keys := [Ev.move 1 0] }, { id := "spark", label := "Banter that is not quite banter", pre := [0], add := [1], del := [], keys := [Ev.sarcasm 0 1 (Fact.atom 3, true)] }, { id := "note", label := "Ran leaves a note and goes up", pre := [1], add := [2], del := [], keys := [Ev.drop 1 0] }, { id := "find", label := "Kiran comes back and finds the note", pre := [2], add := [3], del := [], keys := [Ev.take 0 0] }, { id := "doubt", label := "Kiran reads it as old times' sake", pre := [3], add := [4], del := [], keys := [Ev.notice 0 (Fact.atom 1, true) (Evid.assumed)] }, { id := "climb", label := "Kiran goes up anyway", pre := [3], add := [5], del := [], keys := [Ev.move 0 2] }, { id := "confess", label := "On the roof, Ran says what he should have said", pre := [5], add := [6], del := [4], keys := [Ev.tell 1 0 (Fact.atom 2, true)] }, { id := "negotiate", label := "They ask, and answer, out loud", pre := [6], add := [7], del := [], keys := [Ev.askAct 1 0 (Act.kiss)] }, { id := "kiss", label := "The kiss", pre := [7], add := [8], del := [], keys := [Ev.act 0 1 (Act.kiss)] }], init := [] }
 
 def beatStory : List (BeatEv beats) := [0, 1, 2, 3, 4, 5, 6, 7, 8].map (⟨·⟩)
 
-def plans : List Ev := [Ev.adopt 1 (Fact.at_ 1 0, true), Ev.move 1 0, Ev.flirt 1 0, Ev.sarcasm 0 1 (Fact.atom 3, true), Ev.notice 1 (Fact.atom 3, true) (Evid.inferred), Ev.flirt 1 0, Ev.intend 0 0, Ev.move 0 1, Ev.intend 1 1, Ev.drop 1 0, Ev.move 1 2]
+def plans : List Ev := [Ev.adopt 1 (Fact.at_ 1 0, true), Ev.move 1 0, Ev.flirt 1 0, Ev.sarcasm 0 1 (Fact.atom 3, true), Ev.notice 1 (Fact.atom 3, true) (Evid.inferred), Ev.flirt 1 0, Ev.intend 0 0, Ev.move 0 1, Ev.intend 1 1, Ev.drop 1 0, Ev.move 1 2, Ev.move 0 0, Ev.adopt 0 (Fact.holds 0 0, true), Ev.take 0 0, Ev.notice 0 (Fact.atom 1, true) (Evid.assumed), Ev.adopt 0 (Fact.at_ 0 2, true), Ev.move 0 2, Ev.tell 1 0 (Fact.atom 0, true), Ev.tell 1 0 (Fact.atom 2, true), Ev.askAct 1 0 (Act.kiss), Ev.agree 0 1 (Act.kiss), Ev.agree 1 0 (Act.kiss), Ev.adopt 0 (Fact.did 0 1 (Act.kiss), true), Ev.act 0 1 (Act.kiss)]
 
 theorem beats_valid : Valid beats.start beatStory := by decide +kernel
-theorem plans_do_not_refine_beats : ¬ Refines beats.abs plans beatStory := by decide +kernel
+theorem plans_refine_beats : Refines beats.abs plans beatStory := by decide +kernel
 
 end Stories.Roof

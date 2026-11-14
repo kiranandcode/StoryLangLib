@@ -1,6 +1,30 @@
-{"events": [
-  {"e": "sarcasm kiran ran kiranLikesRan", "at": 11, "phase": "main", "src": "text"},
-  {"e": "notice ran kiranLikesRan inferred", "at": 70, "phase": "main", "src": "text"},
-  {"e": "flirt ran kiran", "at": 79, "phase": "main", "src": "text"}
+{
+ "text_sha": "70e1cd129763428c",
+ "world_sha": "93e1f4f6024d558e",
+ "events": [
+  {
+   "e": "sarcasm kiran ran kiranLikesRan",
+   "at": 11,
+   "w": "counting",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice ran kiranLikesRan inferred",
+   "at": 70,
+   "w": "grin",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "flirt ran kiran",
+   "at": 79,
+   "w": "miss",
+   "phase": "main",
+   "src": "text"
+  }
  ],
- "claims": ["thinks ran kiranLikesRan"]}
+ "claims": [
+  "thinks ran kiranLikesRan"
+ ]
+}

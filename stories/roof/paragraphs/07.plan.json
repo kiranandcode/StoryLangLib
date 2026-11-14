@@ -1,0 +1,11 @@
+{
+ "events": [
+  "tell ran kiran noteConfession",
+  "tell ran kiran ranLikesKiran"
+ ],
+ "claims": [
+  "thinks kiran ranLikesKiran",
+  "thinks kiran noteConfession"
+ ],
+ "beat": "confess"
+}

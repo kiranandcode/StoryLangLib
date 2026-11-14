@@ -53,8 +53,10 @@ def describe(r: dict) -> dict:
         out["story_dir"] = str(d.relative_to(ROOT))
         if r.get("para"):
             out["paragraph_files"] = [str(p.relative_to(ROOT)) for p in sorted((d / "paragraphs").glob(f"{r['para']}.*"))]
-        out["how"] = ("Edit the story files, then annotate/extract and run `python3 studio/workflows.py "
-                      "paragraph-check` and `prove` (--log requests); commit; then reply.")
+        out["how"] = ("Edit the story files. After any prose edit re-derive NN.json and NN.events.json (`extract`; "
+                      "stamp text_sha, world_sha, w); after any story.json change re-derive every reading and keep a "
+                      "checked NN.plan.json for every unwritten paragraph. Then `paragraph-check`, `plan-check`, "
+                      "`refine-check` and `prove` (--log requests); commit; then reply (it reruns these checks).")
     else:
         out["how"] = "A change to the Studio or langlib: make it, check it, commit; then reply."
     return out
@@ -98,6 +100,12 @@ def run_checks(req: dict) -> list[dict]:
         lines = [l for l in p.stdout.splitlines() if l.strip()]
         out.append({"check": f"paragraph-check {nm}", "ok": p.returncode == 0,
                     "detail": [l.removeprefix("- ") for l in lines if l.startswith("- ")][:8] or lines[-1:]})
+    for cmd in ("plan-check", "refine-check"):  # the world and the plans still agree, for every paragraph
+        p = subprocess.run([sys.executable, str(ROOT / "studio/workflows.py"), cmd, str(d), "--log", "requests"],
+                           capture_output=True, text=True, timeout=300)
+        lines = [l for l in p.stdout.splitlines() if l.strip()]
+        out.append({"check": cmd, "ok": p.returncode == 0,
+                    "detail": [l.removeprefix("- ") for l in lines if l.startswith("- ")][:8] or lines[-1:]})
     newest = max((f.stat().st_mtime for f in [d / "story.json", *(d / "paragraphs").glob("*")] if f.exists()), default=0)
     try:
         pr = json.loads((d / "proofs.json").read_text())
@@ -119,8 +127,9 @@ def reply(args):
     if status == "done" and checks and not all(c["ok"] for c in checks if c["check"] != "proofs") and not args.get("force"):
         failing = [f"{c['check']}: {'; '.join(c['detail'])}" for c in checks if not c["ok"]]
         return {"refused": "a story request is done only when its paragraphs pass paragraph-check (the reading "
-                           "re-derived from the current prose, stamped with its text_sha, events possible, claims "
-                           "holding). Fix these, or reply with force=true and say why in the text.",
+                           "re-derived from the current prose and world, stamped with its text_sha and world_sha, "
+                           "events possible, claims holding) and plan-check and refine-check pass (a checked plan "
+                           "for every unwritten paragraph). Fix these, or reply with force=true and say why in the text.",
                 "failing": failing}
     r = store.set_status(args["id"], status, args.get("text") or "", WHO, checks)
     return {k: r.get(k) for k in ("id", "status", "reply", "checks")}

@@ -1,0 +1,12 @@
+{
+ "events": [
+  "askAct ran kiran kiss",
+  "agree kiran ran kiss",
+  "agree ran kiran kiss"
+ ],
+ "claims": [
+  "consented kiran ran kiss",
+  "consented ran kiran kiss"
+ ],
+ "beat": "negotiate"
+}

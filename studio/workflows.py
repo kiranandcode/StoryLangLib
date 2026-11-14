@@ -103,10 +103,11 @@ READING_RULES = """\
   event or claim it does not assert) or missed a reason it does give, correct the reading; where the
   prose really asserts it, keep it, and the objection stands against the prose.
 Write paragraphs/NN.events.json as
-  {"text_sha": "<the text_sha printed at the end>",
+  {"text_sha": "<the text_sha printed at the end>", "world_sha": "<the world_sha printed at the end>",
    "events": [{"e": "...", "at": 12, "w": "<token 12>", "phase": "main", "src": "text"}], "claims": ["..."]}
-`text_sha` ties the reading to this exact prose and `w` ties each event to its token: after any
-prose edit, `paragraph-check` reports the reading stale until it is re-derived from the new text.
+`text_sha` ties the reading to this exact prose, `world_sha` to this world, and `w` ties each event
+to its token: after any prose edit or world change (story.json), `paragraph-check` reports the
+reading stale until it is re-derived.
 """
 
 CRAFT = """\
@@ -331,6 +332,7 @@ def cmd_extract(a) -> int:
         "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
         "\n## Rules\n" + READING_RULES,
         f"\ntext_sha for this prose: {freshness.text_sha(st.f(k, 'txt').read_text())}",
+        f"world_sha for this world: {freshness.world_sha(st.world_text())}",
     ]))
     return 0
 
@@ -344,11 +346,12 @@ def cmd_paragraph_check(a) -> int:
     obj = [] if st.f(k, "events.json").exists() or st.f(k, "plan.json").exists() else \
         [f"no reading yet: write {st.f(k, 'events.json').relative_to(ROOT)} (`extract` prints the rules)"]
     toks = langlib("tokenize", str(st.f(k, "txt"))).stdout.splitlines()
-    fr = freshness.reading(st.pdir, f"{k:02}", toks)
+    ws = freshness.world_sha(st.world_text())
+    fr = freshness.reading(st.pdir, f"{k:02}", toks, ws)
     obj += [f"stale reading: {w}" for w in fr["why"]]
     if fr["status"] == "unstamped":
-        obj.append(f"reading not stamped: re-derive it from the current prose (`extract`) and record "
-                   f"\"text_sha\": \"{fr['sha']}\" in {st.f(k, 'events.json').name}")
+        obj.append(f"reading not stamped: re-derive it from the current prose and world (`extract`) and record "
+                   f"\"text_sha\": \"{fr['sha']}\", \"world_sha\": \"{ws}\" in {st.f(k, 'events.json').name}")
     obj += objections(r, k)
     p = para(r, k)
     log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),
@@ -369,6 +372,11 @@ def cmd_plan_check(a) -> int:
     b = r.get("beats") or {}
     out = [] if b.get("valid", True) else [f"the beat story is not valid: {b.get('failure')}"]
     ks = [a.n] if a.n else [k for k in range(1, len(st.spec.get("outline", [])) + 1) if st.f(k, "plan.json").exists()]
+    if not a.n:  # after any world change, every paragraph still to write needs a plan checked against it
+        out += [f"{k:02} ({st.outline(k).get('beat')}): " + (f"prose but no reading; `extract` it into paragraphs/{k:02}.events.json"
+                if st.f(k, "txt").exists() else f"no prose and no plan; write paragraphs/{k:02}.plan.json")
+                for k in range(1, len(st.spec.get("outline", [])) + 1)
+                if not st.f(k, "plan.json").exists() and not st.f(k, "events.json").exists()]
     for k in ks:
         out += [f"{k:02} plan: {o}" for o in objections(r, k)]
     log(a.story, a.log, stage="plan-check", para=f"{a.n:02}" if a.n else "", ok=not out, note=" | ".join(out)[:1000])

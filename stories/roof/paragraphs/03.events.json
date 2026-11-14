@@ -1,8 +1,46 @@
-{"events": [
-  {"e": "intend kiran teaBreak", "at": 25, "phase": "main", "src": "text"},
-  {"e": "move kiran kitchen", "at": 35, "phase": "main", "src": "text"},
-  {"e": "intend ran theNote", "at": 73, "phase": "main", "src": "text"},
-  {"e": "drop ran note", "at": 103, "phase": "main", "src": "text"},
-  {"e": "move ran roof", "at": 123, "phase": "main", "src": "text"}
+{
+ "text_sha": "eecb9690dd33b8ab",
+ "world_sha": "93e1f4f6024d558e",
+ "events": [
+  {
+   "e": "intend kiran teaBreak",
+   "at": 25,
+   "w": "Two",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move kiran kitchen",
+   "at": 35,
+   "w": "carried",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "intend ran theNote",
+   "at": 73,
+   "w": "wrote",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "drop ran note",
+   "at": 103,
+   "w": "set",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move ran roof",
+   "at": 123,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
  ],
- "claims": ["at kiran kitchen", "at ran roof", "true objAt(note,lab)"]}
+ "claims": [
+  "at kiran kitchen",
+  "at ran roof",
+  "true objAt(note,lab)"
+ ]
+}

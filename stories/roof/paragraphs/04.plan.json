@@ -1,0 +1,13 @@
+{
+ "events": [
+  "move kiran lab",
+  "adopt kiran holds(kiran,note)",
+  "take kiran note"
+ ],
+ "claims": [
+  "at kiran lab",
+  "holds kiran note",
+  "unaware kiran at(ran,roof)"
+ ],
+ "beat": "find"
+}

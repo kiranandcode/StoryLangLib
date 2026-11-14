@@ -1,0 +1,10 @@
+{
+ "events": [
+  "move kiran roof"
+ ],
+ "claims": [
+  "at kiran roof",
+  "at ran roof"
+ ],
+ "beat": "climb"
+}
