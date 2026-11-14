@@ -499,6 +499,11 @@ instance : Observable W (NenEv C Ab) Φ P where
 
 end
 
+/-- Only the living perceive, and only people: a copy is a puppet with no mind
+of its own, and one not yet made is nowhere. -/
+instance {W C Ab : Type} [HasNen W C Ab] : Perceives W C where
+  perceives w c := (HasNen.nen w).present c && (HasNen.nen w).body c == Body.person
+
 instance {C Ab : Type} [DecidableEq C] [DecidableEq Ab] : Supersedes (NenFact C Ab) where
   supersedes
     | .looksLike x _, .looksLike x' _ => x == x'

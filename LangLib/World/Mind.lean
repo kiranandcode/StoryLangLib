@@ -32,7 +32,8 @@ them, `Credence.onBetrayal` fires once for that report (a story with
 relationships lowers trust in `d`).
 
 **Events.** Observation (`Perceive`): after any `Observable` event, everyone
-present sees what it showed (and sees each other see it). `tell` is heard by
+present who can perceive (`Perceives`; by default everyone) sees what it
+showed (and sees each other see it). `tell` is heard by
 everyone present, `whisper` only by the listener, and both need the speaker to
 think what they say; `lie` needs them not to. `notice c l e` is coming to
 believe `l` by evidence `e`; a perception (`seen`, `sensed`) must be of
@@ -92,6 +93,13 @@ class Credence (W C Φ : Type) where
   stubborn : W → C → Bool
   /-- `c` has caught `d` out -/
   onBetrayal : W → C → C → W
+
+/-- Who can perceive at all: a story says, for instance, that the dead and
+mindless puppets see nothing. Without an instance, everyone does. -/
+class Perceives (W C : Type) where
+  perceives : W → C → Bool
+
+instance (priority := low) {W C : Type} : Perceives W C := ⟨fun _ _ => true⟩
 
 instance (priority := low) {W C Φ : Type} : Credence W C Φ :=
   ⟨fun _ _ _ _ => [], fun _ _ => 3, fun _ _ => false, fun w _ _ => w⟩
@@ -300,8 +308,8 @@ private def content : Belief C Φ → Option (BLit Φ)
 
 /-- `c` comes to have `b` by evidence `e`. Testimony also records that the
 speaker said it. A perception that clashes with an uncaught report from `d`
-catches `d` out. -/
-def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
+catches `d` out (unless `check` is off: see `witness`). -/
+def learnWith (check : Bool) (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
   match content b with
   | none => w
   | some l =>
@@ -313,7 +321,7 @@ def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
     | some d => insert w hs (.bel d b) e .radical rank rs
     | none => hs
   let w := setBeliefs w c hs
-  if !e.perceptual then w else
+  if !check || !e.perceptual then w else
   let v := view w c
   let liars := (beliefs w c).filterMap fun h =>
     match h.src.speaker, litOf h.b with
@@ -323,12 +331,23 @@ def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W :=
     if liars.any (·.1 == h) then { h with caught := true } else h)
   liars.foldl (fun w (_, d) => Credence.onBetrayal (Φ := Φ) w c d) w
 
-/-- Everyone at `p` sees `φs`, and sees the others see them. -/
-def witness [Cast C] (w : W) (p : P) (φs : List Φ) : W :=
-  let present := Cast.all.filter fun x => loc w x == p
+def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W := learnWith true w c b e
+
+/-- Everyone at `p` who perceives sees `φs`, and sees the other perceivers see
+them.
+
+Each witness learns `φ`, which runs the check for reports `φ` catches out, and
+then that each other witness saw it. Those nested beliefs are learned without
+the check: a nested belief does not enter the view (`lits` keeps first-order
+literals only) and has no speaker, so right after the check for `φ` the same
+check could find no one new. Skipping it gives the same state, one view per
+fact instead of one per pair of witnesses. -/
+def witness [Cast C] [Perceives W C] (w : W) (p : P) (φs : List Φ) : W :=
+  let present := Cast.all.filter fun x => loc w x == p && Perceives.perceives w x
   present.foldl (fun w x =>
-    (φs.flatMap fun φ => .atom φ :: (present.filter (· != x)).map fun y => .bel y (.atom φ)).foldl
-      (fun w b => learn w x b .seen) w) w
+    φs.foldl (fun w φ =>
+      ((present.filter (· != x)).foldl (fun w y => learnWith false w x (.bel y (.atom φ)) .seen)
+        (learn w x (.atom φ) .seen))) w) w
 
 def mindOk3 (w : W) : MindEv C Φ → Tri
   | .tell c d l | .whisper c d l => (together3 w c d).and (Tri.ofBool ((view w c).contains l))
@@ -387,7 +406,7 @@ def explain (w : W) (c : C) (l : BLit Φ) : List String :=
 end
 
 /-- Witnessing: after each event, those present see what it showed. -/
-instance {E : Type} [Cast C] [Observable W E Φ P] : Perceive W E where
+instance {E : Type} [Cast C] [Perceives W C] [Observable W E Φ P] : Perceive W E where
   perceive before e after :=
     match Observable.seen before e with
     | some (p, φs) => witness after p φs
