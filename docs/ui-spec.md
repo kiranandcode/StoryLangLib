@@ -43,6 +43,14 @@ All three end in the same artefacts per paragraph: text, checked langlib
 document, extracted events/constraints, the world state after it, and a
 verdict with Lean proofs where they apply.
 
+The setting is checked beside the plot, in Python (`studio/setting.py`), not
+Lean: story.json can give each place a `kind`, `fixtures` and `excludes`
+(words the place can't have), plus `scenery` (things people carry) and a
+`layout` of spatial relations between fixtures. Each reading lists the
+`things` its prose names and the `staging` it asserts. `paragraph-check`
+flags undeclared things, fixtures named away from their place, nouns the
+reading missed, excluded words in the prose, and staging the layout lacks.
+
 1. **Top-down (refinement).** The agent writes the plot as beats (a coarse
    story over a beat vocabulary), checks it; breaks each beat into paragraph
    plans (events), checks them; then writes each paragraph's prose and checks

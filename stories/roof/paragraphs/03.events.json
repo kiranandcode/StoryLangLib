@@ -1,6 +1,6 @@
 {
  "text_sha": "a75c0336efbbef1e",
- "world_sha": "93e1f4f6024d558e",
+ "world_sha": "aa387b505040a138",
  "events": [
   {
    "e": "intend kiran teaBreak",
@@ -42,5 +42,79 @@
   "at kiran kitchen",
   "at ran roof",
   "true objAt(note,lab)"
+ ],
+ "things": [
+  {
+   "t": "laptop",
+   "at": 31,
+   "w": "laptop"
+  },
+  {
+   "t": "mug",
+   "at": 37,
+   "w": "mug"
+  },
+  {
+   "t": "kitchen",
+   "at": 40,
+   "w": "kitchen"
+  },
+  {
+   "t": "corridor",
+   "at": 46,
+   "w": "corridor"
+  },
+  {
+   "t": "kettle",
+   "at": 51,
+   "w": "kettle"
+  },
+  {
+   "t": "lab",
+   "at": 59,
+   "w": "lab"
+  },
+  {
+   "t": "note",
+   "at": 64,
+   "w": "page"
+  },
+  {
+   "t": "notebook",
+   "at": 70,
+   "w": "notebook"
+  },
+  {
+   "t": "roof",
+   "at": 81,
+   "w": "Roof"
+  },
+  {
+   "t": "kdesk",
+   "at": 107,
+   "w": "desk"
+  },
+  {
+   "t": "keyboard",
+   "at": 112,
+   "w": "keyboard"
+  },
+  {
+   "t": "stairs",
+   "at": 124,
+   "w": "stairs"
+  }
+ ],
+ "staging": [
+  {
+   "s": "leadsTo corridor kitchen",
+   "at": 43,
+   "w": "end"
+  },
+  {
+   "s": "leadsTo stairs roof",
+   "at": 125,
+   "w": "up"
+  }
  ]
 }

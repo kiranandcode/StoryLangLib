@@ -47,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import procs  # noqa: E402
 import freshness  # noqa: E402
 import proofs  # noqa: E402
+import setting  # noqa: E402
 from procs import ROOT  # noqa: E402
 
 SERVER = "http://127.0.0.1:8765"
@@ -102,9 +103,18 @@ READING_RULES = """\
 - Before blaming the prose for a checker objection, re-read: where the reading over-read the prose (an
   event or claim it does not assert) or missed a reason it does give, correct the reading; where the
   prose really asserts it, keep it, and the objection stands against the prose.
+- Setting (when the world declares one): "things" lists every mention of a physical thing or place
+  (furniture, devices, rooms, things carried; not body parts, weather, light, or what is only
+  digital), each as the id of the place, plot object, fixture or scenery it is ("t", a list when one
+  word names several, e.g. both rows of desks), with "phase": "recalled" for one only remembered.
+  A thing the world lacks gets no made-up id: name it as it is and let the check ask for it.
+  "staging" lists every spatial relation the prose asserts between fixed things, in the relations
+  below; the check holds them to the layout.
+""" + setting.RELATION_TEXT + """
 Write paragraphs/NN.events.json as
   {"text_sha": "<the text_sha printed at the end>", "world_sha": "<the world_sha printed at the end>",
-   "events": [{"e": "...", "at": 12, "w": "<token 12>", "phase": "main", "src": "text"}], "claims": ["..."]}
+   "events": [{"e": "...", "at": 12, "w": "<token 12>", "phase": "main", "src": "text"}], "claims": ["..."],
+   "things": [{"t": "...", "at": 3, "w": "<token 3>"}], "staging": [{"s": "beside a b", "at": 7, "w": "<token 7>"}]}
 `text_sha` ties the reading to this exact prose, `world_sha` to this world, and `w` ties each event
 to its token: after any prose edit or world change (story.json), `paragraph-check` reports the
 reading stale until it is re-derived.
@@ -159,6 +169,7 @@ class Story:
                          f"values, most important first: {' > '.join(c['values'])}")
         lines.append("Places: " + ", ".join(p["id"] for p in s["places"]))
         lines.append("Objects: " + ", ".join(o["id"] for o in s["objects"]))
+        lines += setting.world_lines(s)
         lines.append("Facts (ids):")
         for a in s["atoms"]:
             lines.append(f"  {a['id']}: {a['label']}")
@@ -315,7 +326,7 @@ def cmd_tokens(a) -> int:
     toks = res.stdout.splitlines()
     print(" ".join(f"{i}:{t}" for i, t in enumerate(toks)))
     print(f"\n{len(toks)} tokens. Entity ids: " + ", ".join(
-        [c["id"] for c in st.spec["characters"]] + [p["id"] for p in st.spec["places"]] + [o["id"] for o in st.spec["objects"]]))
+        [c["id"] for c in st.spec["characters"]] + list(setting.fixtures(st.spec))))
     return 0
 
 
@@ -353,6 +364,7 @@ def cmd_paragraph_check(a) -> int:
         obj.append(f"reading not stamped: re-derive it from the current prose and world (`extract`) and record "
                    f"\"text_sha\": \"{fr['sha']}\", \"world_sha\": \"{ws}\" in {st.f(k, 'events.json').name}")
     obj += objections(r, k)
+    obj += [f"setting: {x}" for x in setting.check(a.story, k, toks, st.events_so_far(k))]
     p = para(r, k)
     log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),
         annotation=not ann, verdict=p and p["verdict"], note=" | ".join(ann[:3] + obj)[:1000])

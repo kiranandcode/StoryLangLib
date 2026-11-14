@@ -35,19 +35,213 @@
   ],
   "places": [
     {
-      "id": "lab"
+      "id": "lab",
+      "kind": "computer lab",
+      "desc": "open plan, cosy and warmly lit; late at night only Kiran and Ran are in it",
+      "words": [
+        "lab"
+      ],
+      "fixtures": [
+        {
+          "id": "kdesk",
+          "what": "Kiran's desk, at the corner end of the window row",
+          "words": [
+            "desk",
+            "corner"
+          ]
+        },
+        {
+          "id": "rdesk",
+          "what": "the desk on Kiran's left, which Ran has borrowed all week",
+          "words": [
+            "desk"
+          ]
+        },
+        {
+          "id": "rchair",
+          "what": "the chair at Ran's desk",
+          "words": [
+            "chair"
+          ]
+        },
+        {
+          "id": "rowA",
+          "what": "the row of desks along the window, Kiran's row",
+          "words": [
+            "row",
+            "desk"
+          ]
+        },
+        {
+          "id": "rowB",
+          "what": "the second row of desks, back to back with the window row",
+          "words": [
+            "row",
+            "desk"
+          ]
+        },
+        {
+          "id": "dividers",
+          "what": "low dividers between neighbouring desks; they screen only the desk tops, so you see the person to your left or right",
+          "words": [
+            "divider"
+          ]
+        },
+        {
+          "id": "window",
+          "what": "the window the two rows run along",
+          "words": [
+            "window"
+          ]
+        },
+        {
+          "id": "lamps",
+          "what": "the desk lamps",
+          "words": [
+            "lamp"
+          ]
+        },
+        {
+          "id": "printers",
+          "what": "the printers and other shared machines",
+          "words": [
+            "printer"
+          ]
+        },
+        {
+          "id": "table",
+          "what": "the big table on the far side of the desk space",
+          "words": [
+            "table"
+          ]
+        },
+        {
+          "id": "labdoor",
+          "what": "the lab door",
+          "words": [
+            "door"
+          ]
+        },
+        {
+          "id": "laptop",
+          "what": "Kiran's laptop, on her desk",
+          "words": [
+            "laptop"
+          ]
+        },
+        {
+          "id": "keyboard",
+          "what": "Kiran's keyboard",
+          "words": [
+            "keyboard"
+          ]
+        },
+        {
+          "id": "corridor",
+          "what": "the corridor from the lab to the kitchen",
+          "words": [
+            "corridor"
+          ]
+        },
+        {
+          "id": "stairs",
+          "what": "the stairs up to the roof",
+          "words": [
+            "stair",
+            "stairs"
+          ]
+        }
+      ],
+      "excludes": [
+        "bench",
+        "fume hood",
+        "tube",
+        "tube rack",
+        "test tube",
+        "centrifuge",
+        "pipette",
+        "beaker",
+        "stool",
+        "glovebox",
+        "incubator"
+      ]
     },
     {
-      "id": "kitchen"
+      "id": "kitchen",
+      "kind": "small shared kitchen at the end of the corridor",
+      "words": [
+        "kitchen"
+      ],
+      "fixtures": [
+        {
+          "id": "kettle",
+          "what": "the kitchen kettle",
+          "words": [
+            "kettle"
+          ]
+        }
+      ]
     },
     {
-      "id": "roof"
+      "id": "roof",
+      "kind": "the flat roof of the building, over the city",
+      "words": [
+        "roof"
+      ]
     }
   ],
   "objects": [
     {
-      "id": "note"
+      "id": "note",
+      "what": "Ran's note, a page torn from his notebook",
+      "words": [
+        "note",
+        "page"
+      ]
     }
+  ],
+  "scenery": [
+    {
+      "id": "scarf",
+      "what": "Ran's scarf",
+      "of": "ran",
+      "words": [
+        "scarf"
+      ]
+    },
+    {
+      "id": "mug",
+      "what": "Kiran's mug",
+      "of": "kiran",
+      "words": [
+        "mug"
+      ]
+    },
+    {
+      "id": "notebook",
+      "what": "Ran's notebook",
+      "of": "ran",
+      "words": [
+        "notebook"
+      ]
+    }
+  ],
+  "layout": [
+    "in kdesk rowA",
+    "in rdesk rowA",
+    "leftOf rdesk kdesk",
+    "at rchair rdesk",
+    "near rowA window",
+    "near rowB window",
+    "backToBack rowA rowB",
+    "in dividers rowA",
+    "in dividers rowB",
+    "farFrom table rowA",
+    "farFrom table rowB",
+    "on laptop kdesk",
+    "partOf keyboard laptop",
+    "leadsTo corridor kitchen",
+    "leadsTo stairs roof"
   ],
   "atoms": [
     {
