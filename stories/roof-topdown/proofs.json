@@ -1,25 +1,265 @@
 {
  "status": "ok",
- "secs": 24.0,
+ "secs": 126.4,
  "theorems": {
   "story_valid": {
-   "line": 27,
+   "line": 75,
    "statement": "story_valid : story.Valid spec.start",
    "ok": true
   },
+  "p01_valid": {
+   "line": 77,
+   "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
+   "ok": true
+  },
+  "p01_claim0": {
+   "line": 79,
+   "statement": "p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
+  },
+  "p01_claim1": {
+   "line": 81,
+   "statement": "p01_claim1 : (Claim.goal 1 (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
+  },
+  "p01_claim2": {
+   "line": 83,
+   "statement": "p01_claim2 : (Claim.holdsTrue (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 0)) = true",
+   "ok": true
+  },
+  "p02_valid": {
+   "line": 85,
+   "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
+   "ok": true
+  },
+  "p02_claim0": {
+   "line": 87,
+   "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 1)) = true",
+   "ok": true
+  },
+  "p02_claim1": {
+   "line": 89,
+   "statement": "p02_claim1 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 1)) = true",
+   "ok": true
+  },
+  "p02_claim2": {
+   "line": 91,
+   "statement": "p02_claim2 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 1)) = true",
+   "ok": true
+  },
+  "p03_valid": {
+   "line": 93,
+   "statement": "p03_valid : Valid spec.start (story.upTo owner 2)",
+   "ok": true
+  },
+  "p03_claim0": {
+   "line": 95,
+   "statement": "p03_claim0 : (Claim.holdsTrue (Fact.at_ 0 1, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "p03_claim1": {
+   "line": 97,
+   "statement": "p03_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "p03_claim2": {
+   "line": 99,
+   "statement": "p03_claim2 : (Claim.holdsTrue (Fact.objAt 0 0, true)).eval (run spec.start (story.upTo owner 2)) = true",
+   "ok": true
+  },
+  "p04_valid": {
+   "line": 101,
+   "statement": "p04_valid : Valid spec.start (story.upTo owner 3)",
+   "ok": true
+  },
+  "p04_claim0": {
+   "line": 103,
+   "statement": "p04_claim0 : (Claim.falseBelief 2 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 3)) = true",
+   "ok": true
+  },
+  "p04_claim1": {
+   "line": 105,
+   "statement": "p04_claim1 : (Claim.holdsTrue (Fact.holds 2 0, true)).eval (run spec.start (story.upTo owner 3)) = true",
+   "ok": true
+  },
+  "p04_claim2": {
+   "line": 107,
+   "statement": "p04_claim2 : (Claim.goal 2 (Fact.at_ 2 2, true)).eval (run spec.start (story.upTo owner 3)) = true",
+   "ok": true
+  },
+  "p05_valid": {
+   "line": 109,
+   "statement": "p05_valid : Valid spec.start (story.upTo owner 4)",
+   "ok": true
+  },
+  "p05_claim0": {
+   "line": 111,
+   "statement": "p05_claim0 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 4)) = true",
+   "ok": true
+  },
+  "p05_claim1": {
+   "line": 113,
+   "statement": "p05_claim1 : (Claim.thinks 0 (Fact.atom 3, true)).eval (run spec.start (story.upTo owner 4)) = true",
+   "ok": true
+  },
+  "p05_claim2": {
+   "line": 115,
+   "statement": "p05_claim2 : (Claim.falseBelief 0 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 4)) = true",
+   "ok": true
+  },
+  "p06_valid": {
+   "line": 117,
+   "statement": "p06_valid : Valid spec.start (story.upTo owner 5)",
+   "ok": true
+  },
+  "p06_claim0": {
+   "line": 119,
+   "statement": "p06_claim0 : (Claim.holdsTrue (Fact.at_ 2 2, true)).eval (run spec.start (story.upTo owner 5)) = true",
+   "ok": true
+  },
+  "p06_claim1": {
+   "line": 121,
+   "statement": "p06_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 5)) = true",
+   "ok": true
+  },
+  "p06_claim2": {
+   "line": 123,
+   "statement": "p06_claim2 : (Claim.falseBelief 0 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 5)) = true",
+   "ok": true
+  },
+  "p07_valid": {
+   "line": 125,
+   "statement": "p07_valid : Valid spec.start (story.upTo owner 6)",
+   "ok": true
+  },
+  "p07_claim0": {
+   "line": 127,
+   "statement": "p07_claim0 : (Claim.thinks 2 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 6)) = true",
+   "ok": true
+  },
+  "p07_claim1": {
+   "line": 129,
+   "statement": "p07_claim1 : (Claim.thinks 2 (Fact.atom 1, false)).eval (run spec.start (story.upTo owner 6)) = true",
+   "ok": true
+  },
+  "p07_claim2": {
+   "line": 131,
+   "statement": "p07_claim2 : (Claim.holdsTrue (Fact.at_ 2 2, true)).eval (run spec.start (story.upTo owner 6)) = true",
+   "ok": true
+  },
+  "p08_valid": {
+   "line": 133,
+   "statement": "p08_valid : Valid spec.start (story.upTo owner 7)",
+   "ok": true
+  },
+  "p08_claim0": {
+   "line": 135,
+   "statement": "p08_claim0 : (Claim.thinks 0 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 7)) = true",
+   "ok": true
+  },
+  "p08_claim1": {
+   "line": 137,
+   "statement": "p08_claim1 : (Claim.goal 0 (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 7)) = true",
+   "ok": true
+  },
+  "p08_claim2": {
+   "line": 139,
+   "statement": "p08_claim2 : (Claim.holdsTrue (Fact.at_ 2 0, true)).eval (run spec.start (story.upTo owner 7)) = true",
+   "ok": true
+  },
+  "p09_valid": {
+   "line": 141,
+   "statement": "p09_valid : Valid spec.start (story.upTo owner 8)",
+   "ok": true
+  },
+  "p09_claim0": {
+   "line": 143,
+   "statement": "p09_claim0 : (Claim.holdsTrue (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 8)) = true",
+   "ok": true
+  },
+  "p09_claim1": {
+   "line": 145,
+   "statement": "p09_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 8)) = true",
+   "ok": true
+  },
+  "p09_claim2": {
+   "line": 147,
+   "statement": "p09_claim2 : (Claim.thinks 0 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 8)) = true",
+   "ok": true
+  },
+  "p10_valid": {
+   "line": 149,
+   "statement": "p10_valid : Valid spec.start (story.upTo owner 9)",
+   "ok": true
+  },
+  "p10_claim0": {
+   "line": 151,
+   "statement": "p10_claim0 : (Claim.knows 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 9)) = true",
+   "ok": true
+  },
+  "p10_claim1": {
+   "line": 153,
+   "statement": "p10_claim1 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 9)) = true",
+   "ok": true
+  },
+  "p10_claim2": {
+   "line": 155,
+   "statement": "p10_claim2 : (Claim.holdsTrue (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 9)) = true",
+   "ok": true
+  },
+  "p11_valid": {
+   "line": 157,
+   "statement": "p11_valid : Valid spec.start (story.upTo owner 10)",
+   "ok": true
+  },
+  "p11_claim0": {
+   "line": 159,
+   "statement": "p11_claim0 : (Claim.consented 0 1 (Act.kiss)).eval (run spec.start (story.upTo owner 10)) = true",
+   "ok": true
+  },
+  "p11_claim1": {
+   "line": 161,
+   "statement": "p11_claim1 : (Claim.consented 1 0 (Act.kiss)).eval (run spec.start (story.upTo owner 10)) = true",
+   "ok": true
+  },
+  "p11_claim2": {
+   "line": 163,
+   "statement": "p11_claim2 : (Claim.goal 0 (Fact.did 0 1 (Act.kiss), true)).eval (run spec.start (story.upTo owner 10)) = true",
+   "ok": true
+  },
+  "p12_valid": {
+   "line": 165,
+   "statement": "p12_valid : Valid spec.start (story.upTo owner 11)",
+   "ok": true
+  },
+  "p12_claim0": {
+   "line": 167,
+   "statement": "p12_claim0 : (Claim.holdsTrue (Fact.did 0 1 (Act.kiss), true)).eval (run spec.start (story.upTo owner 11)) = true",
+   "ok": true
+  },
+  "p12_claim1": {
+   "line": 169,
+   "statement": "p12_claim1 : (Claim.knows 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 11)) = true",
+   "ok": true
+  },
+  "p12_claim2": {
+   "line": 171,
+   "statement": "p12_claim2 : (Claim.bond 0 1 (Dim.attraction) (Cmp.gt) 0).eval (run spec.start (story.upTo owner 11)) = true",
+   "ok": true
+  },
   "beats_valid": {
-   "line": 35,
+   "line": 179,
    "statement": "beats_valid : Valid beats.start beatStory",
    "ok": true
   },
-  "plans_do_not_refine_beats": {
-   "line": 36,
-   "statement": "plans_do_not_refine_beats : \u00ac Refines beats.abs plans beatStory",
+  "plans_refine_beats": {
+   "line": 180,
+   "statement": "plans_refine_beats : Refines beats.abs plans beatStory",
    "ok": true
   }
  },
  "errors": [],
  "guards": [],
  "file": "stories/roof-topdown/Proofs.lean",
- "at": 1794542205.620546
+ "at": 1794675647.806379
 }

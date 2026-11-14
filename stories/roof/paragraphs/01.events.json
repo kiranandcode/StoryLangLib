@@ -1,6 +1,6 @@
 {
  "text_sha": "79e8490a4ccc81f6",
- "world_sha": "aa387b505040a138",
+ "world_sha": "c8c0b8abcc0e97cf",
  "events": [
   {
    "e": "adopt ran at(ran,lab)",
@@ -26,119 +26,22 @@
  ],
  "claims": [
   "at ran lab",
-  "at kiran lab"
- ],
- "things": [
-  {
-   "t": "lab",
-   "at": 4,
-   "w": "lab"
-  },
-  {
-   "t": "printers",
-   "at": 11,
-   "w": "printers"
-  },
-  {
-   "t": "kdesk",
-   "at": 20,
-   "w": "corner"
-  },
-  {
-   "t": "kdesk",
-   "at": 21,
-   "w": "desk"
-  },
-  {
-   "t": [
-    "rowA",
-    "rowB"
-   ],
-   "at": 26,
-   "w": "rows"
-  },
-  {
-   "t": "window",
-   "at": 29,
-   "w": "window"
-  },
-  {
-   "t": "lamps",
-   "at": 37,
-   "w": "lamp"
-  },
-  {
-   "t": "dividers",
-   "at": 45,
-   "w": "dividers"
-  },
-  {
-   "t": "table",
-   "at": 59,
-   "w": "table"
-  },
-  {
-   "t": [
-    "rowA",
-    "rowB"
-   ],
-   "at": 66,
-   "w": "desks"
-  },
-  {
-   "t": "labdoor",
-   "at": 74,
-   "w": "door"
-  },
-  {
-   "t": "scarf",
-   "at": 91,
-   "w": "scarf"
-  },
-  {
-   "t": "rdesk",
-   "at": 107,
-   "w": "desk"
-  },
-  {
-   "t": "dividers",
-   "at": 122,
-   "w": "divider"
-  },
-  {
-   "t": "rchair",
-   "at": 127,
-   "w": "chair"
-  }
+  "at kiran lab",
+  "true raining"
  ],
  "staging": [
   {
-   "s": "in kdesk rowA",
+   "s": "in kdesk rows",
    "at": 23,
    "w": "where"
   },
   {
-   "s": "near rowA window",
+   "s": "near rows window",
    "at": 27,
    "w": "by"
   },
   {
-   "s": "near rowB window",
-   "at": 27,
-   "w": "by"
-  },
-  {
-   "s": "backToBack rowA rowB",
-   "at": 31,
-   "w": "back"
-  },
-  {
-   "s": "farFrom table rowA",
-   "at": 62,
-   "w": "far"
-  },
-  {
-   "s": "farFrom table rowB",
+   "s": "farFrom table rows",
    "at": 62,
    "w": "far"
   },

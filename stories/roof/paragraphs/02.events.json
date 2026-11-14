@@ -1,6 +1,6 @@
 {
  "text_sha": "a2c93f4ebc447d53",
- "world_sha": "aa387b505040a138",
+ "world_sha": "c8c0b8abcc0e97cf",
  "events": [
   {
    "e": "sarcasm kiran ran kiranLikesRan",
@@ -26,18 +26,6 @@
  ],
  "claims": [
   "thinks ran kiranLikesRan"
- ],
- "things": [
-  {
-   "t": "kdesk",
-   "at": 22,
-   "w": "corner"
-  },
-  {
-   "t": "printers",
-   "at": 30,
-   "w": "printer"
-  }
  ],
  "staging": []
 }

@@ -115,6 +115,9 @@ structure Word where
   feats : List (String × String) := []
   /-- the entity this word mentions (pronouns, bare names) -/
   ref : Option EntityId := none
+  /-- for a noun that names no entity: what it is instead (`abstract`, `time`,
+  `body`, ...); for an adjective: `impression`, a point-of-view judgement -/
+  sense : Option String := none
   deriving Repr, Inhabited
 
 /-- Annotation on a phrase node. -/
@@ -125,6 +128,8 @@ structure NodeInfo where
   ref : Option EntityId := none
   /-- for `QUOTE`: who says or thinks it -/
   speaker : Option EntityId := none
+  /-- what the constituent's nouns are, when it names no entity -/
+  sense : Option String := none
   deriving Repr, Inhabited
 
 inductive Tree where

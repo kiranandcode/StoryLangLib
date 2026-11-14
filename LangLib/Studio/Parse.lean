@@ -17,11 +17,26 @@ act kiran theo kiss     ask kiran theo noteForKiran
 answer theo kiran noteForKiran                  hint kiran theo kiranLikesTheo
 sarcasm theo kiran theoLikesKiran               promise theo kiran at(theo,roof)
 adopt theo at(theo,roof)                        intend theo roofPlan
+make kiran lampsOn      become !raining
 ```
 
 A literal is an atom id, `!` for its denial, or a built-in fact:
 `at(c,p)`, `objAt(o,p)`, `holds(c,o)`, `did(a,b,act)`. Evidence is one of
-`seen sensed inferred assumed rumour self told:c relayed:c`.
+`seen sensed inferred assumed rumour self told:c relayed:c`. `make` and
+`become` take a literal of a state atom.
+
+The setting (all optional):
+
+```
+"places":  [{"id": "lab", "kind": "computer lab", "desc": "...", "words": ["lab"],
+             "attrs": {"kind": "computer"},
+             "fixtures": [{"id": "kdesk", "what": "...", "words": ["desk"], "owner": "kiran",
+                           "count": 1, "attrs": {"position": "corner"}}]}]
+"scenery": [{"id": "scarf", "what": "Ran's scarf", "owner": "ran", "words": ["scarf"]}]
+"objects": [{"id": "note", "words": ["note", "page"]}]
+"layout":  ["leftOf rdesk kdesk", "leadsTo stairs roof"]
+"atoms":   [{"id": "raining", "label": "it is raining", "truth": true, "state": true}]
+```
 -/
 
 namespace LangLib.Studio
@@ -64,10 +79,11 @@ structure Names where
   objects : List String
   atoms : List String
   plans : List String := []
+  things : List String := []
 
 def Spec.names (s : Spec) : Names :=
   { chars := s.chars.map (·.id), places := s.places, objects := s.objects,
-    atoms := s.atoms.map (·.id), plans := s.plans.map (·.id) }
+    atoms := s.atoms.map (·.id), plans := s.plans.map (·.id), things := s.things.map (·.id) }
 
 private def idx (kind : String) (xs : List String) (x : String) : Except String Nat :=
   match xs.idxOf? x with
@@ -77,6 +93,29 @@ private def idx (kind : String) (xs : List String) (x : String) : Except String 
 def Names.ch (n : Names) := idx "character" n.chars
 def Names.pl (n : Names) := idx "place" n.places
 def Names.ob (n : Names) := idx "object" n.objects
+
+def Names.spot? (n : Names) (x : String) : Option Spot :=
+  (n.places.idxOf? x).map .place <|> (n.things.idxOf? x).map .thing <|> (n.objects.idxOf? x).map .obj
+
+def Names.spot (n : Names) (x : String) : Except String Spot :=
+  match n.spot? x with
+  | some p => pure p
+  | none => throw s!"unknown place or thing \"{x}\" (known: {", ".intercalate (n.places ++ n.things ++ n.objects)})"
+
+def Names.spotS (n : Names) : Spot → String
+  | .place i => n.places.getD i s!"?{i}" | .thing i => n.things.getD i s!"?{i}"
+  | .obj i => n.objects.getD i s!"?{i}"
+
+def Names.fixed (n : Names) (str : String) : Except String Fixed := do
+  match (str.splitOn " ").filter (· != "") with
+  | [r, a, b] =>
+    let some r := Rel.ofString? r
+      | throw s!"unknown relation \"{r}\" in \"{str}\" (known: {" ".intercalate (Rel.all.map (·.name))})"
+    pure (r, ← n.spot a, ← n.spot b)
+  | _ => throw s!"cannot read relation \"{str}\": write RELATION A B"
+
+def Names.fixedS (n : Names) : Fixed → String
+  | (r, a, b) => s!"{r.name} {n.spotS a} {n.spotS b}"
 
 private def args (s : String) (pre : String) : Option (List String) :=
   if s.startsWith pre && s.endsWith ")" then
@@ -104,6 +143,11 @@ def Names.evid (n : Names) (s : String) : Except String (Evid Nat) :=
     if s.startsWith "told:" then return .told (← n.ch (s.drop 5).toString)
     else if s.startsWith "relayed:" then return .relayed (← n.ch (s.drop 8).toString)
     else throw s!"unknown evidence \"{s}\""
+
+private def stateLit (n : Names) (l : String) : Except String (Nat × Bool) := do
+  match ← n.lit l with
+  | (.atom a, v) => pure (a, v)
+  | _ => throw s!"\"{l}\" is not a state (a fact id, or ! and one)"
 
 private def act (x : String) : Except String Act :=
   match Act.ofString? x with | some a => pure a | none => throw s!"unknown act \"{x}\""
@@ -140,6 +184,8 @@ def Names.ev (n : Names) (str : String) : Except String Ev := do
   | ["dropGoal", c, l] => return .dropGoal (← n.ch c) (← n.lit l)
   | ["intend", c, p] => return .intend (← n.ch c) (← idx "plan" n.plans p)
   | ["abandon", c, l] => return .abandon (← n.ch c) (← n.lit l)
+  | ["make", c, l] => let (a, v) ← stateLit n l; return .make (← n.ch c) a v
+  | ["become", l] => let (a, v) ← stateLit n l; return .become a v
   | _ => bad
 
 /-! ## Printing back -/
@@ -189,11 +235,14 @@ def Names.evS (n : Names) : Ev → String
   | .dropGoal c l => s!"dropGoal {n.chS c} {n.litS l}"
   | .intend c p => s!"intend {n.chS c} {n.plans.getD p s!"?{p}"}"
   | .abandon c l => s!"abandon {n.chS c} {n.litS l}"
+  | .make c a v => s!"make {n.chS c} {n.litS (.atom a, v)}"
+  | .become a v => s!"become {n.litS (.atom a, v)}"
 
 /-- Which characters an event involves (for the storyline and colouring). -/
 def Ev.parties : Ev → List Nat
   | .move c _ | .take c _ | .drop c _ | .notice c _ _ | .realise c _ | .adopt c _
-  | .dropGoal c _ | .intend c _ | .abandon c _ => [c]
+  | .dropGoal c _ | .intend c _ | .abandon c _ | .make c _ _ => [c]
+  | .become _ _ => []
   | .give c d _ | .tell c d _ | .whisper c d _ | .lie c d _ | .flirt c d | .confide c d
   | .argue c d | .askAct c d _ | .agree c d _ | .withdraw c d _ | .act c d _ | .ask c d _
   | .answer c d _ | .hint c d _ | .sarcasm c d _ | .promise c d _ | .request c d _ => [c, d]
@@ -207,6 +256,11 @@ private def arr (j : Json) (k : String) : List Json :=
   match j.getObjVal? k with | .ok (.arr a) => a.toList | _ => []
 private def obj (j : Json) (k : String) : List (String × Json) :=
   match j.getObjVal? k with | .ok (.obj kvs) => kvs.toList | _ => []
+
+private def lower (xs : List String) : List String := xs.map (·.toLower)
+
+private def attrsOf (j : Json) : List (String × String) :=
+  (obj j "attrs").filterMap fun (k, v) => (v.getStr?.toOption).map fun x => (k, x.toLower)
 
 private def need {α} (what : String) : Option α → Except String α
   | some a => pure a | none => throw s!"missing {what}"
@@ -223,13 +277,31 @@ def specOfJson (j : Json) : Except String Spec := do
             values := ← enumList "value" Value.ofString? (strs c "values") } : CharSpec)
   let places ← (arr j "places").mapM fun p => need "place id" (str p "id")
   let objects ← (arr j "objects").mapM fun p => need "object id" (str p "id")
+  let thingIds := ((arr j "places").flatMap fun p => (arr p "fixtures").filterMap (str · "id")) ++
+    (arr j "scenery").filterMap (str · "id")
+  let n0 : Names := { chars := chars.map (·.id), places, objects,
+                      atoms := (arr j "atoms").filterMap (str · "id"),
+                      plans := (arr j "plans").filterMap (str · "id"), things := thingIds }
   let atoms ← (arr j "atoms").mapM fun a => do
     let id ← need "atom id" (str a "id")
     pure ({ id, label := (str a "label").getD id,
             truth := (a.getObjValAs? Bool "truth").toOption.getD true,
-            group := (str a "group").getD "" } : AtomSpec)
-  let n0 : Names := { chars := chars.map (·.id), places, objects, atoms := atoms.map (·.id),
-                      plans := (arr j "plans").filterMap (str · "id") }
+            group := (str a "group").getD "",
+            state := (a.getObjValAs? Bool "state").toOption.getD false,
+            about := ← (str a "about").mapM n0.spot } : AtomSpec)
+  let thing (place : Option Nat) (t : Json) : Except String ThingSpec := do
+    let id ← need "fixture or scenery id" (str t "id")
+    pure { id, what := (str t "what").getD "", place, owner := ← ((str t "owner" <|> str t "of").mapM n0.ch),
+           count := (t.getObjValAs? Nat "count").toOption, words := lower (strs t "words"), attrs := attrsOf t }
+  let fixtures ← ((arr j "places").zipIdx).flatMapM fun (p, i) => (arr p "fixtures").mapM (thing (some i))
+  let scenery ← (arr j "scenery").mapM (thing none)
+  let placeInfo := ((arr j "places").zipIdx).filterMap fun (p, i) =>
+    if (str p "kind").isNone && (arr p "fixtures").isEmpty && (strs p "words").isEmpty then none
+    else some (i, ({ kind := (str p "kind").getD "", desc := (str p "desc").getD "",
+                     words := lower (strs p "words"), attrs := attrsOf p } : PlaceInfo))
+  let objWords := ((arr j "objects").zipIdx).filterMap fun (o, i) =>
+    let ws := lower (strs o "words"); if ws.isEmpty then none else some (i, ws)
+  let layout ← (strs j "layout").mapM n0.fixed
   let lore ← (arr j "lore").mapM fun r => do
     pure ((← (strs r "if").mapM n0.lit), ← n0.lit (← need "lore then" (str r "then")))
   let plans ← (arr j "plans").mapM fun p => do
@@ -263,6 +335,7 @@ def specOfJson (j : Json) : Except String Spec := do
     match v with
     | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
     | _ => pure []
-  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, goals }
+  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, goals,
+         placeInfo, things := fixtures ++ scenery, objWords, layout }
 
 end LangLib.Studio

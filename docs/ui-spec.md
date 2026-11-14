@@ -43,13 +43,19 @@ All three end in the same artefacts per paragraph: text, checked langlib
 document, extracted events/constraints, the world state after it, and a
 verdict with Lean proofs where they apply.
 
-The setting is checked beside the plot, in Python (`studio/setting.py`), not
-Lean: story.json can give each place a `kind`, `fixtures` and `excludes`
-(words the place can't have), plus `scenery` (things people carry) and a
-`layout` of spatial relations between fixtures. Each reading lists the
-`things` its prose names and the `staging` it asserts. `paragraph-check`
-flags undeclared things, fixtures named away from their place, nouns the
-reading missed, excluded words in the prose, and staging the layout lacks.
+The setting is part of the formal model (`LangLib/Studio/Place.lean`,
+`Setting.lean`). story.json can say what each place is (`kind`, `words`,
+`attrs`), its `fixtures`, the `scenery` people carry, the words for plot
+objects, and a `layout` of spatial relations with laws (symmetry, inverses,
+no thing left of something left of it). In the annotation every noun has a
+`ref` to a world id or a `sense` (abstract, time, body, ... ; offstage only in
+speech), so nothing physical goes unchecked; a thing's head noun must be one of
+its words, its adjectives its attributes (or marked `impression`), its
+possessor its owner, its numeral its count, and a fixture is only named while
+someone is in its place. Readings list the `staging` the prose asserts, which
+must follow from the layout. Atoms marked `state` change through `make` and
+`become` events. `Proofs.lean` proves each paragraph's setting verdict and the
+layout's consistency by `decide`.
 
 1. **Top-down (refinement).** The agent writes the plot as beats (a coarse
    story over a beat vocabulary), checks it; breaks each beat into paragraph

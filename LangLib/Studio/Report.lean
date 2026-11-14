@@ -4,6 +4,7 @@ import LangLib.World.Lexicon
 import LangLib.Studio.Parse
 import LangLib.Studio.Refine
 import LangLib.Studio.Claim
+import LangLib.Studio.Setting
 
 /-!
 # The Studio's per-paragraph report
@@ -62,6 +63,9 @@ structure Para where
   beat : Option String := none
   /-- a reading error (bad event string, unparsable document) -/
   errors : List String := []
+  /-- spatial relations the prose asserts, with the token each is anchored at -/
+  staging : List Fixed := []
+  stagingAt : List (Option Nat × Option String) := []
 
 /-- How to read facts off complement clauses ("she thought Theo liked her"). -/
 structure FactLex where
@@ -95,6 +99,8 @@ def A.toEv : A s → Ev
   | .dialogue (.hint c d l) => .hint c.i d.i (unlit l) | .dialogue (.sarcasm c d l) => .sarcasm c.i d.i (unlit l)
   | .dialogue (.promise c d l) => .promise c.i d.i (unlit l)
   | .dialogue (.request c d l) => .request c.i d.i (unlit l)
+  | .state (.make c a v) => .make c.i a v
+  | .state (.become a v) => .become a v
 
 /-! ## English glosses -/
 
@@ -137,6 +143,8 @@ def Spec.evGloss (s : Spec) : Ev → String
   | .dropGoal c l => s!"{s.charName c} no longer wants: {s.litGloss l}"
   | .intend c p => s!"{s.charName c} plans: {(s.plans[p]?.map (·.id)).getD "?"}"
   | .abandon c l => s!"{s.charName c} gives up on: {s.litGloss l}"
+  | .make c a v => s!"{s.charName c} makes it so: {s.litGloss (.atom a, v)}"
+  | .become a v => s!"it comes about: {s.litGloss (.atom a, v)}"
 
 /-! ## Time -/
 
@@ -199,6 +207,14 @@ def walk : W s → List (Nat × E s) → List (Step s) × W s
                          why := if Domain.ok3 w e == .yes then "" else Domain.why w e, before := w }
     let (rest, w') := walk (next w e) es
     (st :: rest, w')
+
+/-- Every place someone is in, in the states from event `from_` of `es` on
+(the scene of a paragraph whose first event is `from_`). -/
+def sceneOf (w₀ : W s) (es : List (E s)) (from_ : Nat) : List Nat :=
+  let at_ (w : W s) : List Nat := w.known.map fun c => (w.loc c).i
+  let (_, _, out) := es.foldl (fun (w, i, acc) e =>
+    (next w e, i + 1, if i ≥ from_ then acc ++ at_ w else acc)) (w₀, 0, [])
+  (out ++ at_ (run w₀ es)).eraseDups
 
 /-! ## Snapshots -/
 
@@ -268,7 +284,8 @@ def stateJ (s : Spec) (w : W s) : Json :=
       ("by", s.names.chS c.i), ("to", s.names.chS d.i), ("lit", s.names.litS (unlit l)),
       ("kept", truthLit w l)]).toArray),
     ("questions", Json.arr (w.questions.map fun (c, d, f) => Json.str
-      s!"{s.names.chS c.i} asked {s.names.chS d.i}: {s.names.factS f.f}?").toArray)]
+      s!"{s.names.chS c.i} asked {s.names.chS d.i}: {s.names.factS f.f}?").toArray),
+    ("states", Json.mkObj ((s.atoms.zipIdx.filter (·.1.state)).map fun (a, i) => (a.id, Json.bool (w.atomNow i))))]
 
 /-- What changed between two states. -/
 def deltaJ (s : Spec) (w₀ w₁ : W s) : Json :=
@@ -438,6 +455,26 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
     let claims := p.claims.map fun c => match n.claim c with
       | .ok cl => Json.mkObj [("claim", c), ("holds", cl.eval w)]
       | .error e => Json.mkObj [("claim", c), ("holds", false), ("error", e)]
+    -- the setting: every noun accounted for, held to the world, the scene and the layout
+    -- the paragraph's states start after every earlier paragraph's events
+    let firstMine := (seq.filter fun (i, _) => paraOf i < k).length
+    let settingJ : Json := match p.doc with
+      | some d =>
+        if !s.hasSetting then Json.null else
+        let scene := sceneOf start (seq.map (·.2)) firstMine
+        let u := usesOf s d
+        let toks := d.render
+        let anchors := (p.staging.zip p.stagingAt).filterMap fun (st, at_, w) =>
+          match at_, w with
+          | some i, some w => if toks[i]? == some w then none else
+            some s!"stale reading: staging '{n.fixedS st}' points at token {i} '{toks.getD i "?"}', not '{w}'"
+          | _, _ => none
+        Json.mkObj [("issues", Json.arr ((anchors ++ s.settingIssues scene u p.staging).map Json.str).toArray),
+          ("scene", Json.arr ((scene.map n.plS).map Json.str).toArray),
+          ("uses", Json.arr (u.uses.map fun x => Json.mkObj [("at", x.at_), ("w", x.form),
+            ("is", match x.target with
+              | .spot y => n.spotS y | .char c => n.chS c | .other e _ => e)]).toArray)]
+      | none => Json.null
     let real := match p.plan with
       | some plan =>
         if p.items.all (·.src == "plan") then Json.null else
@@ -464,7 +501,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
                     ("why", st.why)]).toArray),
       ("retro", Json.arr (earlierChanged.map fun (st : Step s) => Json.mkObj [("i", st.i), ("status", triName st.status),
         ("why", st.why)]).toArray),
-      ("claims", Json.arr claims.toArray), ("realisation", real),
+      ("claims", Json.arr claims.toArray), ("realisation", real), ("setting", settingJ),
       ("delta", deltaJ s prev w), ("state", stateJ s w)])
     storyline := storyline.push (Json.mkObj (s.chs.map fun c => (n.chS c.i, placeOf s w c)))
     prev := w
@@ -508,6 +545,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
       ("assumptions", (assumptions start chrono 0).length),
       ("failure", match firstFailure start chrono 0 with
         | some (i, why) => Json.mkObj [("i", i), ("why", why)] | none => Json.null)]),
-    ("beats", beatsJ)]
+    ("beats", beatsJ),
+    ("layout", Json.arr (s.layoutIssues.map Json.str).toArray)]
 
 end LangLib.Studio

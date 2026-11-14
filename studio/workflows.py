@@ -47,7 +47,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import procs  # noqa: E402
 import freshness  # noqa: E402
 import proofs  # noqa: E402
-import setting  # noqa: E402
 from procs import ROOT  # noqa: E402
 
 SERVER = "http://127.0.0.1:8765"
@@ -67,6 +66,7 @@ Events are one line each: a verb, then ids.
   promise C D L       request C D L
   adopt C L           (C comes to want L: use when the text shows a decision or desire that explains a later move)
   intend C PLAN       (C sets out on one of the named plans)
+  make C L            become L            (a state fact changes: C brings it about / it comes about by itself)
 A literal L is a fact id, `!id` for its negation, or at(C,P), holds(C,O), objAt(O,P), did(C,D,ACT).
 """
 
@@ -103,18 +103,17 @@ READING_RULES = """\
 - Before blaming the prose for a checker objection, re-read: where the reading over-read the prose (an
   event or claim it does not assert) or missed a reason it does give, correct the reading; where the
   prose really asserts it, keep it, and the objection stands against the prose.
-- Setting (when the world declares one): "things" lists every mention of a physical thing or place
-  (furniture, devices, rooms, things carried; not body parts, weather, light, or what is only
-  digital), each as the id of the place, plot object, fixture or scenery it is ("t", a list when one
-  word names several, e.g. both rows of desks), with "phase": "recalled" for one only remembered.
-  A thing the world lacks gets no made-up id: name it as it is and let the check ask for it.
-  "staging" lists every spatial relation the prose asserts between fixed things, in the relations
-  below; the check holds them to the layout.
-""" + setting.RELATION_TEXT + """
+- Staging (when the world has a layout): list every spatial relation the prose asserts between fixed
+  things (fixtures, places), never people or plot objects, as "RELATION A B":
+    beside backToBack facing near farFrom across   (symmetric)
+    leftOf rightOf above below                     (leftOf A B: A is on the left as one sits at B)
+    in on at partOf leadsTo                        (A is in / on / at / part of B; A leads to place B)
+  The model holds them to the layout. What the prose names, and how it describes it, is checked from
+  the annotation (every noun a `ref` to a world id or a `sense`), not listed here.
 Write paragraphs/NN.events.json as
   {"text_sha": "<the text_sha printed at the end>", "world_sha": "<the world_sha printed at the end>",
    "events": [{"e": "...", "at": 12, "w": "<token 12>", "phase": "main", "src": "text"}], "claims": ["..."],
-   "things": [{"t": "...", "at": 3, "w": "<token 3>"}], "staging": [{"s": "beside a b", "at": 7, "w": "<token 7>"}]}
+   "staging": [{"s": "beside a b", "at": 7, "w": "<token 7>"}]}
 `text_sha` ties the reading to this exact prose, `world_sha` to this world, and `w` ties each event
 to its token: after any prose edit or world change (story.json), `paragraph-check` reports the
 reading stale until it is re-derived.
@@ -169,15 +168,34 @@ class Story:
                          f"values, most important first: {' > '.join(c['values'])}")
         lines.append("Places: " + ", ".join(p["id"] for p in s["places"]))
         lines.append("Objects: " + ", ".join(o["id"] for o in s["objects"]))
-        lines += setting.world_lines(s)
+        lines += self.setting_lines()
         lines.append("Facts (ids):")
         for a in s["atoms"]:
-            lines.append(f"  {a['id']}: {a['label']}")
+            lines.append(f"  {a['id']}: {a['label']}" + (" (a state: make / become change it)" if a.get("state") else ""))
         if s.get("plans"):
             lines.append("Plans:")
             for p in s["plans"]:
                 lines.append(f"  {p['id']} (by {p['agent']}, for {p['goal']}): {'; '.join(p['steps'])}")
         return "\n".join(lines)
+
+    def setting_lines(self) -> list[str]:
+        """The setting as the reader sees it (the model checks it: LangLib/Studio/Setting.lean)."""
+        s, out = self.spec, []
+        def thing(t: dict) -> str:
+            bits = [t.get("what", "")] + [f"{k} {v}" for k, v in t.get("attrs", {}).items()]
+            bits += [f"owner {t['owner']}"] if t.get("owner") else []
+            bits += [f"{t['count']} of them"] if t.get("count", 1) != 1 else []
+            return f"{t['id']}: " + "; ".join(b for b in bits if b) + f" [words: {', '.join(t.get('words', []))}]"
+        for p in s["places"]:
+            if p.get("kind") or p.get("fixtures"):
+                out.append(f"  {p['id']}: {p.get('kind', '')}" + (f"; {p['desc']}" if p.get("desc") else ""))
+                out += [f"    {thing(f)}" for f in p.get("fixtures", [])]
+        if s.get("scenery"):
+            out.append("Scenery (carried or used, not plot objects):")
+            out += [f"  {thing(t)}" for t in s["scenery"]]
+        if s.get("layout"):
+            out.append("Layout: " + "; ".join(s["layout"]))
+        return (["Setting:"] + out) if out else []
 
     def persona_text(self) -> str:
         s = self.spec
@@ -221,6 +239,8 @@ def objections(r: dict, k: int, check_claims: bool = True) -> list[str]:
     if check_claims:
         out += [f"the paragraph implies '{c['claim']}', but the events do not support it" for c in p["claims"] if not c["holds"]]
     out += p["errors"]
+    out += [f"setting: {x}" for x in (p.get("setting") or {}).get("issues", [])]
+    out += [f"setting: {x}" for x in r.get("layout", [])]
     real = p.get("realisation") or {}
     if real and not real.get("realises", True):
         out.append("the paragraph does not realise its plan exactly: " +
@@ -325,8 +345,15 @@ def cmd_tokens(a) -> int:
     res = langlib("tokenize", str(st.f(a.n, "txt")))
     toks = res.stdout.splitlines()
     print(" ".join(f"{i}:{t}" for i, t in enumerate(toks)))
+    s = st.spec
+    things = [f["id"] for p in s["places"] for f in p.get("fixtures", [])] + [t["id"] for t in s.get("scenery", [])]
     print(f"\n{len(toks)} tokens. Entity ids: " + ", ".join(
-        [c["id"] for c in st.spec["characters"]] + list(setting.fixtures(st.spec))))
+        [c["id"] for c in s["characters"]] + [p["id"] for p in s["places"]] + things + [o["id"] for o in s["objects"]]))
+    if things:
+        print("\nEvery noun (NOUN/PROPN leaf) must be accounted for: a `ref` (on the leaf, or on the phrase it heads) to\n"
+              "one of those ids (entity id = world id), or a \"sense\": abstract time event body weather light sound\n"
+              "substance digital figurative part person offstage (offstage only in speech). Adjectives on a world\n"
+              "thing must be its declared attributes, or carry \"sense\": \"impression\". The setting is in `extract`.")
     return 0
 
 
@@ -364,7 +391,6 @@ def cmd_paragraph_check(a) -> int:
         obj.append(f"reading not stamped: re-derive it from the current prose and world (`extract`) and record "
                    f"\"text_sha\": \"{fr['sha']}\", \"world_sha\": \"{ws}\" in {st.f(k, 'events.json').name}")
     obj += objections(r, k)
-    obj += [f"setting: {x}" for x in setting.check(a.story, k, toks, st.events_so_far(k))]
     p = para(r, k)
     log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),
         annotation=not ann, verdict=p and p["verdict"], note=" | ".join(ann[:3] + obj)[:1000])

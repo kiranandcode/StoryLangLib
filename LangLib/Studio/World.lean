@@ -1,4 +1,5 @@
 import LangLib.World.Goals
+import LangLib.Studio.Place
 
 /-!
 # A story world from data
@@ -18,6 +19,12 @@ in a story's Lean file run the same definitions.
   lore and exclusions come from `s`.
 * `Ev` is the surface event syntax stories are written in; `Ev.toE` reads it
   into the module events.
+* Atoms marked `state` are fluents that events change: `make c l` (a
+  character brings it about, so needs a reason, and must be where the thing it
+  is about is) and `become l` (it comes about by itself, like the rain
+  stopping). Other atoms are fixed truths.
+* The setting (`Place.lean`) rides along in the spec: place kinds, fixtures,
+  scenery, the words for plot objects, and the layout.
 -/
 
 namespace LangLib.Studio
@@ -46,6 +53,7 @@ inductive Ev where
   | promise (c d : Nat) (l : Fact × Bool) | request (c d : Nat) (l : Fact × Bool)
   | adopt (c : Nat) (g : Fact × Bool) | dropGoal (c : Nat) (g : Fact × Bool)
   | intend (c : Nat) (plan : Nat) | abandon (c : Nat) (g : Fact × Bool)
+  | make (c : Nat) (a : Nat) (v : Bool) | become (a : Nat) (v : Bool)
   deriving DecidableEq, Repr, BEq
 
 structure CharSpec where
@@ -62,6 +70,10 @@ structure AtomSpec where
   truth : Bool
   /-- atoms in the same non-empty group exclude each other -/
   group : String := ""
+  /-- a state events change (`make`, `become`); `truth` is its opening value -/
+  state : Bool := false
+  /-- the place or thing the state is about (whoever changes it must be there) -/
+  about : Option Spot := none
   deriving Repr, DecidableEq
 
 structure PlanSpec where
@@ -89,6 +101,13 @@ structure Spec where
   /-- what characters know at the start (their own knowledge) -/
   knows : List (Nat × (Fact × Bool)) := []
   goals : List (Nat × (Fact × Bool)) := []
+  /-- what kind of place each place is, by place index -/
+  placeInfo : List (Nat × PlaceInfo) := []
+  /-- fixtures and scenery -/
+  things : List ThingSpec := []
+  /-- the nouns that name each plot object -/
+  objWords : List (Nat × List String) := []
+  layout : List Fixed := []
   deriving Repr, DecidableEq
 
 structure Ch (s : Spec) where i : Nat deriving DecidableEq, Repr
@@ -98,6 +117,12 @@ structure SFact (s : Spec) where f : Fact deriving DecidableEq, Repr
 
 variable {s : Spec}
 
+/-- State changes: `make c a v` (c sets atom `a` to `v`), `become a v`. -/
+inductive StEv (s : Spec) where
+  | make (c : Ch s) (a : Nat) (v : Bool)
+  | become (a : Nat) (v : Bool)
+  deriving DecidableEq, Repr
+
 instance : Cast (Ch s) := ⟨(List.range s.chars.length).map (⟨·⟩)⟩
 
 inductive A (s : Spec) where
@@ -105,6 +130,7 @@ inductive A (s : Spec) where
   | mind (x : MindEv (Ch s) (SFact s))
   | social (x : SocialEv (Ch s))
   | dialogue (x : DialogueEv (Ch s) (SFact s))
+  | state (x : StEv s)
   deriving DecidableEq, Repr
 
 inductive E (s : Spec) where
@@ -127,6 +153,8 @@ structure W (s : Spec) where
   goals : Ch s → List (SFact s × Bool)
   plans : Ch s → List (Plan (A s) (SFact s)) := fun _ => []
   clock : Nat := 0
+  /-- current values of the state atoms that have changed -/
+  states : List (Nat × Bool) := []
 
 def upd {α β : Type} [DecidableEq α] (f : α → β) (a : α) (b : β) : α → β :=
   fun x => if x = a then b else f x
@@ -143,12 +171,13 @@ def Fact.supersedes (s : Spec) : Fact → Fact → Bool
       | _, _ => false
   | _, _ => false
 
-def Fact.fluent : Fact → Bool
+def Fact.fluent (s : Spec) : Fact → Bool
   | .at_ .. | .objAt .. | .holds .. => true
+  | .atom i => (s.atoms[i]?.map (·.state)).getD false
   | _ => false
 
 instance : Supersedes (SFact s) := ⟨fun a b => a.f.supersedes s b.f⟩
-instance : Fluent (SFact s) := ⟨fun a => a.f.fluent⟩
+instance : Fluent (SFact s) := ⟨fun a => a.f.fluent s⟩
 instance : Lore (SFact s) :=
   ⟨s.lore.map fun (body, (h, b)) => ⟨body.map fun (f, p) => (⟨f⟩, p), (⟨h⟩, b)⟩⟩
 
@@ -208,16 +237,71 @@ instance : HasGoals (W s) (Ch s) (SFact s) (A s) where
 
 instance : Clock (W s) := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 
+def lookup {β : Type} (xs : List (Nat × β)) (k : Nat) : Option β :=
+  (xs.find? (·.1 == k)).map (·.2)
+
+def W.atomNow (w : W s) (i : Nat) : Bool :=
+  (lookup w.states i).getD ((s.atoms[i]?.map (·.truth)).getD false)
+
+/-- Where a spot is, when it is fixed: a place, or a fixture's place. -/
+def Spec.spotPlace (s : Spec) : Spot → Option Nat
+  | .place p => some p
+  | .thing t => (s.things[t]?).bind (·.place)
+  | .obj _ => none
+
 def Fact.truth (w : W s) : Fact → Bool
   | .at_ c p => w.loc ⟨c⟩ == ⟨p⟩
   | .objAt o p => w.holder ⟨o⟩ == none && w.objLoc ⟨o⟩ == ⟨p⟩
   | .holds c o => w.holder ⟨o⟩ == some ⟨c⟩
   | .did _ _ _ => true
-  | .atom i => (s.atoms[i]?.map (·.truth)).getD false
+  | .atom i => w.atomNow i
 
 instance : Truth (W s) (SFact s) := ⟨fun w f => f.f.truth w⟩
 instance : Credence (W s) (Ch s) (SFact s) := socialCredence
 instance : Rapport (W s) (Ch s) := bondRapport
+
+/-! ## State changes -/
+
+def Spec.isState (s : Spec) (a : Nat) : Bool := (s.atoms[a]?.map (·.state)).getD false
+
+def Spec.stateLabel (s : Spec) (a : Nat) : String := (s.atoms[a]?.map (·.label)).getD s!"?{a}"
+
+/-- Where a state's change must happen: the place of what it is about. -/
+def Spec.stateWhere (s : Spec) (a : Nat) : Option Nat :=
+  (s.atoms[a]?.bind (·.about)).bind s.spotPlace
+
+def StEv.ok3 (w : W s) : StEv s → Tri
+  | .make c a v =>
+    if !s.isState a || w.atomNow a == v then .no
+    else match s.stateWhere a with
+      | some p => if w.known.contains c then Tri.ofBool (w.loc c == ⟨p⟩) else .unknown
+      | none => .yes
+  | .become a v => Tri.ofBool (s.isState a && w.atomNow a != v)
+
+def StEv.why (w : W s) : StEv s → String
+  | .make c a v =>
+    if !s.isState a then s!"'{s.stateLabel a}' is not a state that can change (mark the atom \"state\": true)"
+    else if w.atomNow a == v then s!"it is already so: {if v then "" else "not: "}{s.stateLabel a}"
+    else if !w.known.contains c then "assumes they were where it is"
+    else "they are not where it is"
+  | .become a v =>
+    if !s.isState a then s!"'{s.stateLabel a}' is not a state that can change (mark the atom \"state\": true)"
+    else if w.atomNow a == v then s!"it is already so: {if v then "" else "not: "}{s.stateLabel a}"
+    else ""
+
+def StEv.step (w : W s) : StEv s → W s
+  | .make c a v =>
+    let w := match s.stateWhere a with
+      | some p => if w.known.contains c then w else { w with loc := upd w.loc c ⟨p⟩, known := c :: w.known }
+      | none => w
+    { w with states := (a, v) :: w.states.filter (·.1 != a) }
+  | .become a v => { w with states := (a, v) :: w.states.filter (·.1 != a) }
+
+instance : Domain (W s) (StEv s) where
+  ok w e := e.ok3 w == .yes
+  ok3 w e := e.ok3 w
+  why w e := e.why w
+  step w e := e.step w
 
 /-! ## Events: injections and dispatch -/
 
@@ -230,13 +314,13 @@ instance : Inject (GoalEv (Ch s) (SFact s) (A s)) (E s) := ⟨.goal⟩
 
 instance : Domain (W s) (A s) where
   ok w | .space x => Domain.ok w x | .mind x => Domain.ok w x
-       | .social x => Domain.ok w x | .dialogue x => Domain.ok w x
+       | .social x => Domain.ok w x | .dialogue x => Domain.ok w x | .state x => Domain.ok w x
   ok3 w | .space x => Domain.ok3 w x | .mind x => Domain.ok3 w x
-        | .social x => Domain.ok3 w x | .dialogue x => Domain.ok3 w x
+        | .social x => Domain.ok3 w x | .dialogue x => Domain.ok3 w x | .state x => Domain.ok3 w x
   why w | .space x => Domain.why w x | .mind x => Domain.why w x
-        | .social x => Domain.why w x | .dialogue x => Domain.why w x
+        | .social x => Domain.why w x | .dialogue x => Domain.why w x | .state x => Domain.why w x
   step w | .space x => Domain.step w x | .mind x => Domain.step w x
-         | .social x => Domain.step w x | .dialogue x => Domain.step w x
+         | .social x => Domain.step w x | .dialogue x => Domain.step w x | .state x => Domain.step w x
 
 instance : Domain (W s) (E s) where
   ok w | .action x => Domain.ok w x | .goal x => Domain.ok w x
@@ -245,7 +329,11 @@ instance : Domain (W s) (E s) where
   step w | .action x => Domain.step w x | .goal x => Domain.step w x
 
 instance : Observable (W s) (A s) (SFact s) (Pl s) where
-  seen w | .space x => Observable.seen w x | .social x => Observable.seen w x | _ => none
+  seen w | .space x => Observable.seen w x | .social x => Observable.seen w x
+         -- whoever is there sees a state come about (a negative one shows nothing to see)
+         | .state (.make c a true) => some (w.loc c, [⟨.atom a⟩])
+         | .state (.become a true) => (s.stateWhere a).map fun p => (⟨p⟩, [⟨.atom a⟩])
+         | _ => none
 
 instance : Observable (W s) (E s) (SFact s) (Pl s) where
   seen w | .action x => Observable.seen w x | .goal _ => none
@@ -256,9 +344,11 @@ needs no goal. -/
 instance : Purpose (W s) (A s) (Ch s) (SFact s) where
   agent | .space x => Purpose.agent (W := W s) (Φ := SFact s) x
         | .social (.act a _ _) => some a
+        | .state (.make c _ _) => some c
         | _ => none
   effects w | .space x => Purpose.effects (C := Ch s) w x
             | .social x => Purpose.effects (C := Ch s) w x
+            | .state (.make _ a v) => [(⟨.atom a⟩, v)]
             | _ => []
 
 instance : Purpose (W s) (E s) (Ch s) (SFact s) where
@@ -297,6 +387,8 @@ def Ev.toA : Ev → Option (A s)
   | .sarcasm c d l => some (.dialogue (.sarcasm ⟨c⟩ ⟨d⟩ (lit l)))
   | .promise c d l => some (.dialogue (.promise ⟨c⟩ ⟨d⟩ (lit l)))
   | .request c d l => some (.dialogue (.request ⟨c⟩ ⟨d⟩ (lit l)))
+  | .make c a v => some (.state (.make ⟨c⟩ a v))
+  | .become a v => some (.state (.become a v))
   | _ => none
 
 def Spec.plan (s : Spec) (k : Nat) : Plan (A s) (SFact s) :=
@@ -315,9 +407,6 @@ def Ev.toE (s : Spec) : Ev → E s
 
 def own (l : Fact × Bool) : Held (Ch s) (SFact s) :=
   { b := ofLit (lit l), src := .self, rank := 10, stamp := 0, up := .hard }
-
-def lookup {β : Type} (xs : List (Nat × β)) (k : Nat) : Option β :=
-  (xs.find? (·.1 == k)).map (·.2)
 
 /-- The opening state. -/
 def Spec.start (s : Spec) : W s where

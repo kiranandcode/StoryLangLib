@@ -9,7 +9,8 @@ stories/<name>/
   paragraphs/NN.txt          the prose of paragraph NN
   paragraphs/NN.plan.json    {"beat": "...", "events": [...], "claims": [...]}
   paragraphs/NN.json         its langlib annotation
-  paragraphs/NN.events.json  {"events": [{"e": "...", "at": 12, "phase": "main"}], "claims": [...]}
+  paragraphs/NN.events.json  {"events": [{"e": "...", "at": 12, "phase": "main"}], "claims": [...],
+                              "staging": [{"s": "leftOf rdesk kdesk", "at": 110, "w": "left"}]}
 ```
 
 A paragraph's events are those read off its prose (`events.json`) when there
@@ -107,9 +108,19 @@ def loadStory (dir : System.FilePath) : IO Loaded := do
       items := (plan.getD []).zipIdx.map fun ((ev : Ev), (i : Nat)) =>
         let ph := (phases[i]?.bind fun (j : Json) => j.getStr?.toOption).getD "main"
         ({ ev := ev, src := "plan", phase := Phase.ofString ph } : Item)
+    let mut staging : List Fixed := []
+    let mut stagingAt : List (Option Nat × Option String) := []
+    if let some ej := evJ then
+      for it in arr ej "staging" do
+        let str := (it.getStr?.toOption <|> (it.getObjValAs? String "s").toOption).getD ""
+        match n.fixed str with
+        | .ok f =>
+          staging := staging ++ [f]
+          stagingAt := stagingAt ++ [((it.getObjValAs? Nat "at").toOption, (it.getObjValAs? String "w").toOption)]
+        | .error m => errors := errors ++ [s!"staging: {m}"]
     let claims := (evJ.map (strs · "claims")).getD [] ++ (planJ.map (strs · "claims")).getD []
     let beat := planJ.bind fun pj => (pj.getObjValAs? String "beat").toOption
-    pure ({ name := nm, text, doc, plan, items, claims := claims.eraseDups, beat, errors } : Para)
+    pure ({ name := nm, text, doc, plan, items, claims := claims.eraseDups, beat, errors, staging, stagingAt } : Para)
   pure { spec, beats, beatStory, lex, paras }
 
 def storyReport (dir : System.FilePath) : IO Json := do
@@ -133,6 +144,23 @@ def eventsMatch (s : Spec) (str : String) (evs : List Ev) : Bool :=
         (e.getStr?.toOption <|> (e.getObjValAs? String "e").toOption)
       | _ => []
     (es.mapM s.names.ev).toOption == some evs
+  | .error _ => false
+
+/-- A paragraph's annotation still reads as `u`. -/
+def usesMatch (s : Spec) (str : String) (u : Uses) : Bool :=
+  match docOfString str with
+  | .ok d => usesOf s d == u
+  | .error _ => false
+
+/-- A paragraph's events file still stages `st`. -/
+def stagingMatch (s : Spec) (str : String) (st : List Fixed) : Bool :=
+  match Json.parse str with
+  | .ok j =>
+    let xs := match j.getObjVal? "staging" with
+      | .ok (.arr a) => a.toList.filterMap fun (e : Json) =>
+        (e.getStr?.toOption <|> (e.getObjValAs? String "s").toOption)
+      | _ => []
+    (xs.mapM s.names.fixed).toOption == some st
   | .error _ => false
 
 /-- One-line `repr` (structure instances must not wrap below their first field). -/
@@ -194,11 +222,25 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
         let b := cl.eval w
         out := out ++ s!"/-- {c} -/\ntheorem p{nm}_claim{j} : ({lean (rs cl)}).eval (run spec.start {up}) = {b} := by decide +kernel\n"
       | .error _ => pure ()
+    if s.hasSetting then
+      if let some d := p.doc then
+        let u := usesOf s d
+        let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
+        let scene := sceneOf s.start es prev
+        let ok := s.settingOk scene u p.staging
+        out := out ++ s!"def p{nm}uses : Uses := {lean (rs u)}\n"
+        out := out ++ s!"#guard usesMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}uses\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        if !p.staging.isEmpty then
+          out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
+        out := out ++ s!"theorem p{nm}_setting : spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = {ok} := by decide +kernel\n"
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
         out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)} := by decide +kernel\n"
     out := out ++ "\n"
+  if s.hasSetting then
+    out := out ++ s!"theorem layout_{if s.layoutOk then "consistent" else "inconsistent"} : spec.layoutOk = {s.layoutOk} := by decide +kernel\n\n"
   if let some B := l.beats then
     let ids := B.vocab.map (·.id)
     let coarse : List Nat := l.beatStory.filterMap ids.idxOf?

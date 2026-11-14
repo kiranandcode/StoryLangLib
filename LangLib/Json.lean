@@ -20,7 +20,8 @@ A compact format meant to be written by an LLM:
 
 A leaf has `w` (the token) and `p` (UPOS); a node has `c` (category) and `k`
 (children). Optional: `r` role, `l` lemma, `f` features object, `ref` entity,
-`spk` speaker (on QUOTE nodes), `topic` (on a sentence root).
+`spk` speaker (on QUOTE nodes), `topic` (on a sentence root), `sense` (what a
+noun that names no entity is: `abstract`, `time`, ...).
 Errors carry a JSON path such as `sentences[3].k[0].k[2]`.
 -/
 
@@ -55,7 +56,7 @@ partial def treeOfJson (path : String) (j : Json) : Except String Tree := do
       | .ok (.obj kvs) => kvs.toList.filterMap fun (k, v) =>
           match v.getStr? with | .ok s => some (k, s) | .error _ => none
       | _ => []
-    pure (.leaf { form, upos, role, lemma := optStr j "l", feats, ref })
+    pure (.leaf { form, upos, role, lemma := optStr j "l", feats, ref, sense := optStr j "sense" })
   | .error _ =>
     let some cat ← enumField path "c" Cat.ofString? j
       | throw s!"{path}: object is neither a leaf (w) nor a node (c)"
@@ -65,7 +66,7 @@ partial def treeOfJson (path : String) (j : Json) : Except String Tree := do
     let mut kids := #[]
     for h : i in [0:kidsJ.size] do
       kids := kids.push (← treeOfJson s!"{path}.k[{i}]" kidsJ[i])
-    pure (.node { cat, role, ref, speaker := optStr j "spk" } kids.toList)
+    pure (.node { cat, role, ref, speaker := optStr j "spk", sense := optStr j "sense" } kids.toList)
 
 def entityOfJson (path : String) (j : Json) : Except String Entity := do
   let some id := optStr j "id" | throw s!"{path}: entity needs id"
@@ -145,7 +146,7 @@ def docOfFlat (j : Json) : Except String Doc := do
     if infos.contains id then throw s!"{path}: duplicate node id \"{id}\""
     let some cat ← enumField path "c" Cat.ofString? n | throw s!"{path}: node needs c"
     let role ← enumField path "r" Role.ofString? n
-    infos := infos.insert id ({ cat, role, ref := optStr n "ref", speaker := optStr n "spk" },
+    infos := infos.insert id ({ cat, role, ref := optStr n "ref", speaker := optStr n "spk", sense := optStr n "sense" },
                               optStr n "topic")
     match optStr n "in" with
     | some p => items := items.push (p, .node id)
@@ -195,12 +196,13 @@ partial def Tree.toJson : Tree → Json
     let fs := withOpt fs "l" w.lemma
     let fs := if w.feats.isEmpty then fs else
       fs ++ [("f", Json.mkObj (w.feats.map fun (k, v) => (k, Json.str v)))]
-    Json.mkObj (withOpt fs "ref" w.ref)
+    Json.mkObj (withOpt (withOpt fs "ref" w.ref) "sense" w.sense)
   | .node i kids =>
     let fs : List (String × Json) := [("c", i.cat.name)]
     let fs := withOpt fs "r" (i.role.map Role.name)
     let fs := withOpt fs "ref" i.ref
     let fs := withOpt fs "spk" i.speaker
+    let fs := withOpt fs "sense" i.sense
     Json.mkObj (fs ++ [("k", Json.arr (kids.map Tree.toJson).toArray)])
 
 def Doc.toJson (d : Doc) : Json :=

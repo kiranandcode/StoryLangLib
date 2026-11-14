@@ -41,6 +41,9 @@
       "words": [
         "lab"
       ],
+      "attrs": {
+        "kind": "computer"
+      },
       "fixtures": [
         {
           "id": "kdesk",
@@ -48,51 +51,58 @@
           "words": [
             "desk",
             "corner"
-          ]
+          ],
+          "owner": "kiran",
+          "count": 1,
+          "attrs": {
+            "position": "corner"
+          }
         },
         {
           "id": "rdesk",
           "what": "the desk on Kiran's left, which Ran has borrowed all week",
           "words": [
             "desk"
-          ]
+          ],
+          "count": 1
         },
         {
           "id": "rchair",
           "what": "the chair at Ran's desk",
           "words": [
             "chair"
-          ]
+          ],
+          "count": 1
         },
         {
-          "id": "rowA",
-          "what": "the row of desks along the window, Kiran's row",
+          "id": "rows",
+          "what": "the two rows of desks along the window, set back to back",
           "words": [
             "row",
             "desk"
-          ]
-        },
-        {
-          "id": "rowB",
-          "what": "the second row of desks, back to back with the window row",
-          "words": [
-            "row",
-            "desk"
-          ]
+          ],
+          "count": 2,
+          "attrs": {
+            "arrangement": "back-to-back"
+          }
         },
         {
           "id": "dividers",
           "what": "low dividers between neighbouring desks; they screen only the desk tops, so you see the person to your left or right",
           "words": [
             "divider"
-          ]
+          ],
+          "attrs": {
+            "height": "low"
+          }
         },
         {
           "id": "window",
-          "what": "the window the two rows run along",
+          "what": "the window the rows run along",
           "words": [
             "window"
-          ]
+          ],
+          "count": 1
         },
         {
           "id": "lamps",
@@ -113,35 +123,45 @@
           "what": "the big table on the far side of the desk space",
           "words": [
             "table"
-          ]
+          ],
+          "count": 1,
+          "attrs": {
+            "size": "big"
+          }
         },
         {
           "id": "labdoor",
           "what": "the lab door",
           "words": [
             "door"
-          ]
+          ],
+          "count": 1
         },
         {
           "id": "laptop",
           "what": "Kiran's laptop, on her desk",
           "words": [
             "laptop"
-          ]
+          ],
+          "owner": "kiran",
+          "count": 1
         },
         {
           "id": "keyboard",
           "what": "Kiran's keyboard",
           "words": [
             "keyboard"
-          ]
+          ],
+          "owner": "kiran",
+          "count": 1
         },
         {
           "id": "corridor",
           "what": "the corridor from the lab to the kitchen",
           "words": [
             "corridor"
-          ]
+          ],
+          "count": 1
         },
         {
           "id": "stairs",
@@ -151,19 +171,6 @@
             "stairs"
           ]
         }
-      ],
-      "excludes": [
-        "bench",
-        "fume hood",
-        "tube",
-        "tube rack",
-        "test tube",
-        "centrifuge",
-        "pipette",
-        "beaker",
-        "stool",
-        "glovebox",
-        "incubator"
       ]
     },
     {
@@ -178,7 +185,8 @@
           "what": "the kitchen kettle",
           "words": [
             "kettle"
-          ]
+          ],
+          "count": 1
         }
       ]
     },
@@ -204,40 +212,39 @@
     {
       "id": "scarf",
       "what": "Ran's scarf",
-      "of": "ran",
       "words": [
         "scarf"
-      ]
+      ],
+      "owner": "ran",
+      "count": 1
     },
     {
       "id": "mug",
       "what": "Kiran's mug",
-      "of": "kiran",
       "words": [
         "mug"
-      ]
+      ],
+      "owner": "kiran",
+      "count": 1
     },
     {
       "id": "notebook",
       "what": "Ran's notebook",
-      "of": "ran",
       "words": [
         "notebook"
-      ]
+      ],
+      "owner": "ran",
+      "count": 1
     }
   ],
   "layout": [
-    "in kdesk rowA",
-    "in rdesk rowA",
+    "in kdesk rows",
+    "in rdesk rows",
     "leftOf rdesk kdesk",
     "at rchair rdesk",
-    "near rowA window",
-    "near rowB window",
-    "backToBack rowA rowB",
-    "in dividers rowA",
-    "in dividers rowB",
-    "farFrom table rowA",
-    "farFrom table rowB",
+    "near rows window",
+    "in dividers rows",
+    "farFrom table rows",
     "on laptop kdesk",
     "partOf keyboard laptop",
     "leadsTo corridor kitchen",
@@ -265,6 +272,12 @@
       "id": "kiranLikesRan",
       "label": "Kiran likes Ran",
       "truth": true
+    },
+    {
+      "id": "raining",
+      "label": "it is raining",
+      "truth": true,
+      "state": true
     }
   ],
   "lore": [
