@@ -86,6 +86,8 @@ export function RequestsView({ requests, story, onNew, onSelectPara }: {
             {r.quote && <blockquote className="req-quote">“{r.quote}”</blockquote>}
             <div className="req-text">{r.text}</div>
             {r.reply && <div className="req-reply">{r.reply}</div>}
+            {r.checks && r.checks.length > 0 && <ul className="req-checks">{r.checks.map((c, i) =>
+              <li key={i} className={c.ok ? 'ok' : 'bad'}>{c.ok ? '✓' : '✕'} {c.check}{!c.ok || c.check === 'proofs' ? <span className="dim">: {c.detail.join('; ')}</span> : null}</li>)}</ul>}
           </li>))}
         </ul>
       </section>

@@ -119,6 +119,12 @@ function Card({ report, p, index, current, theorems, onSelect }: {
           {proved ? '⊢ proved' : anyFailed ? '⊬ proof failed' : '⊢ …'}</span>}
       </div>
 
+      {p.freshness && (p.freshness.status === 'stale' || p.freshness.status === 'unstamped') && <Section title="reading">
+        {p.freshness.status === 'stale'
+          ? p.freshness.why.map((w, i) => <div key={i} className="row bad">stale: {w}</div>)
+          : <div className="row warn">not stamped: these events may predate the current prose (no text_sha)</div>}
+      </Section>}
+
       {p.events.length > 0 && <Section title="events">
         <ul className="evs">{p.events.map((e, i) => (
           <li key={i} className={`ev st-${e.status}`}>

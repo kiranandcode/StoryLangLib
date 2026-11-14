@@ -45,6 +45,8 @@ def _fold(lines: list[str]) -> dict[str, dict]:
             r["status"] = e["status"]
             if e.get("reply"):
                 r["reply"] = e["reply"]
+            if "checks" in e:
+                r["checks"] = e["checks"]
             r["history"].append({k: e.get(k) for k in ("status", "reply", "by", "at")})
             r["updated"] = e["at"]
     return reqs
@@ -78,14 +80,25 @@ def create(kind: str, text: str, story: str = "", para: str = "", quote: str = "
     return _fold([json.dumps(e)])[e["id"]]
 
 
-def set_status(rid: str, status: str, reply: str = "", by: str = "") -> dict:
+def get(rid: str) -> dict:
+    with _locked() as f:
+        reqs = _read(f)
+    if rid not in reqs:
+        raise KeyError(f"no request {rid}")
+    return reqs[rid]
+
+
+def set_status(rid: str, status: str, reply: str = "", by: str = "", checks: list | None = None) -> dict:
     if status not in STATUSES:
         raise ValueError(f"status must be one of {', '.join(STATUSES)}")
     with _locked() as f:
         reqs = _read(f)
         if rid not in reqs:
             raise KeyError(f"no request {rid}")
-        _append(f, {"op": "status", "id": rid, "status": status, "reply": reply, "by": by, "at": time.time()})
+        e = {"op": "status", "id": rid, "status": status, "reply": reply, "by": by, "at": time.time()}
+        if checks is not None:
+            e["checks"] = checks
+        _append(f, e)
         return _read(f)[rid]
 
 

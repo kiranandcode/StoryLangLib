@@ -45,6 +45,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import procs  # noqa: E402
+import freshness  # noqa: E402
 import proofs  # noqa: E402
 from procs import ROOT  # noqa: E402
 
@@ -102,7 +103,10 @@ READING_RULES = """\
   event or claim it does not assert) or missed a reason it does give, correct the reading; where the
   prose really asserts it, keep it, and the objection stands against the prose.
 Write paragraphs/NN.events.json as
-  {"events": [{"e": "...", "at": 12, "phase": "main", "src": "text"}], "claims": ["..."]}
+  {"text_sha": "<the text_sha printed at the end>",
+   "events": [{"e": "...", "at": 12, "w": "<token 12>", "phase": "main", "src": "text"}], "claims": ["..."]}
+`text_sha` ties the reading to this exact prose and `w` ties each event to its token: after any
+prose edit, `paragraph-check` reports the reading stale until it is re-derived from the new text.
 """
 
 CRAFT = """\
@@ -326,6 +330,7 @@ def cmd_extract(a) -> int:
         f"\n## Paragraph {k}\n" + st.f(k, "txt").read_text().strip(),
         "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
         "\n## Rules\n" + READING_RULES,
+        f"\ntext_sha for this prose: {freshness.text_sha(st.f(k, 'txt').read_text())}",
     ]))
     return 0
 
@@ -338,6 +343,12 @@ def cmd_paragraph_check(a) -> int:
     r = report(a.story)
     obj = [] if st.f(k, "events.json").exists() or st.f(k, "plan.json").exists() else \
         [f"no reading yet: write {st.f(k, 'events.json').relative_to(ROOT)} (`extract` prints the rules)"]
+    toks = langlib("tokenize", str(st.f(k, "txt"))).stdout.splitlines()
+    fr = freshness.reading(st.pdir, f"{k:02}", toks)
+    obj += [f"stale reading: {w}" for w in fr["why"]]
+    if fr["status"] == "unstamped":
+        obj.append(f"reading not stamped: re-derive it from the current prose (`extract`) and record "
+                   f"\"text_sha\": \"{fr['sha']}\" in {st.f(k, 'events.json').name}")
     obj += objections(r, k)
     p = para(r, k)
     log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),

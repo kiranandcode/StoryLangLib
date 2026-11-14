@@ -102,6 +102,7 @@ export interface Paragraph {
   realisation: { planned: string[]; missing: string[]; extra: string[]; realises: boolean } | null
   delta: Delta
   state: State
+  freshness?: { status: 'none' | 'unstamped' | 'fresh' | 'stale'; why: string[]; sha: string }
 }
 
 export interface Character { id: string; name: string; pron: string; traits: string[]; values: string[] }
@@ -163,4 +164,5 @@ export interface StudioRequest {
   reply?: string
   updated?: number
   history: { status: RequestStatus; reply?: string; by?: string; at: number }[]
+  checks?: { check: string; ok: boolean; detail: string[] }[] | null
 }

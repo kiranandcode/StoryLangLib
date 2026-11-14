@@ -21,6 +21,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from watchfiles import awatch
 
+import freshness
 import procs
 import request_log
 import proofs as lean
@@ -55,6 +56,9 @@ async def run_report(name: str) -> dict:
         r = {"error": (res.stderr or res.stdout)[-2000:]}
     r["secs"] = res.secs
     r["name"] = name
+    pdir = STORIES / name / "paragraphs"
+    for p in r.get("paragraphs", []):
+        p["freshness"] = freshness.reading(pdir, p["name"])  # hash only; anchors are checked by the CLI
     for extra in ["meta.json", "runs/summary.json"]:
         f = STORIES / name / extra
         if f.exists():

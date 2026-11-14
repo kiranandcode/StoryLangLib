@@ -144,6 +144,7 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
             <span key={i} className={`mark ${w.cls}`}
               onMouseEnter={e => { const r = (e.target as HTMLElement).getBoundingClientRect(); setHover({ x: r.right + 8, y: r.top, body: <div>{w.text}</div> }) }}
               onMouseLeave={() => setHover(null)}>{w.glyph}</span>))}
+          {p.freshness?.status === 'stale' && <span className="mark bad" title={`reading is stale: ${p.freshness.why.join('; ')}`}>⟳</span>}
           {warn.length === 0 && p.text.trim() && <span className="mark ok" title={p.verdict}>·</span>}
           {onRequest && <span className={`mark req-mark ${requests ? 'has' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => onRequest(index)}
             title={requests ? `${requests} open request${requests > 1 ? 's' : ''} on this paragraph; click to add another` : 'request a change to this paragraph (select text first to quote it)'}>

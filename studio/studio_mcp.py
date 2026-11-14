@@ -16,6 +16,7 @@ Registered for the repo in .mcp.json. CLI for poking:
 """
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -82,9 +83,47 @@ def await_request(args, poll=1.0, progress_every=15.0):
         time.sleep(poll)
 
 
+def run_checks(req: dict) -> list[dict]:
+    """Deterministic checks of what a story request touched: paragraph-check
+    (annotation, reading fresh and stamped, events, claims) for its paragraph,
+    or every paragraph, plus whether the proofs are newer than the files."""
+    if req.get("kind") != "story" or not req.get("story"):
+        return []
+    d = ROOT / "stories" / req["story"]
+    paras = [req["para"]] if req.get("para") else sorted(p.stem for p in (d / "paragraphs").glob("[0-9][0-9].txt"))
+    out = []
+    for nm in paras:
+        p = subprocess.run([sys.executable, str(ROOT / "studio/workflows.py"), "paragraph-check", str(d), str(int(nm)),
+                            "--log", "requests"], capture_output=True, text=True, timeout=300)
+        lines = [l for l in p.stdout.splitlines() if l.strip()]
+        out.append({"check": f"paragraph-check {nm}", "ok": p.returncode == 0,
+                    "detail": [l.removeprefix("- ") for l in lines if l.startswith("- ")][:8] or lines[-1:]})
+    newest = max((f.stat().st_mtime for f in [d / "story.json", *(d / "paragraphs").glob("*")] if f.exists()), default=0)
+    try:
+        pr = json.loads((d / "proofs.json").read_text())
+        thms = pr.get("theorems", {})
+        ok = sum(1 for t in thms.values() if t.get("ok"))
+        current = pr.get("at", 0) >= newest
+        out.append({"check": "proofs", "ok": pr.get("status") == "ok" and current,
+                    "detail": [f"{pr.get('status')}: {ok}/{len(thms)} proved" +
+                               ("" if current else "; older than the latest edit (the Studio re-proves on change; run `prove`)")]})
+    except (OSError, json.JSONDecodeError):
+        out.append({"check": "proofs", "ok": False, "detail": ["no proofs.json: run `prove`"]})
+    return out
+
+
 def reply(args):
-    r = store.set_status(args["id"], args.get("status") or "done", args.get("text") or "", WHO)
-    return {k: r.get(k) for k in ("id", "status", "reply")}
+    status = args.get("status") or "done"
+    req = store.get(args["id"])
+    checks = run_checks(req) if status in ("done", "working") and req.get("kind") == "story" else None
+    if status == "done" and checks and not all(c["ok"] for c in checks if c["check"] != "proofs") and not args.get("force"):
+        failing = [f"{c['check']}: {'; '.join(c['detail'])}" for c in checks if not c["ok"]]
+        return {"refused": "a story request is done only when its paragraphs pass paragraph-check (the reading "
+                           "re-derived from the current prose, stamped with its text_sha, events possible, claims "
+                           "holding). Fix these, or reply with force=true and say why in the text.",
+                "failing": failing}
+    r = store.set_status(args["id"], status, args.get("text") or "", WHO, checks)
+    return {k: r.get(k) for k in ("id", "status", "reply", "checks")}
 
 
 def list_requests(args):
@@ -105,11 +144,15 @@ TOOLS = {
         await_request),
     "reply": (
         "Update a request: status working (you started), done (with what you changed and the commit), or "
-        "declined (with why). The Studio shows the reply under Kiran's request.",
+        "declined (with why). For story requests the server runs the deterministic checks itself "
+        "(paragraph-check of the paragraph, or all; proofs current) and records them on the request; "
+        "`done` is refused while a paragraph fails, e.g. when the prose changed but the reading was not "
+        "re-derived and re-stamped. The Studio shows the reply and the checks under Kiran's request.",
         {"type": "object", "required": ["id", "status"], "properties": {
             "id": {"type": "string"},
             "status": {"type": "string", "enum": ["working", "done", "declined", "open"]},
-            "text": {"type": "string"}}},
+            "text": {"type": "string"},
+            "force": {"type": "boolean", "description": "mark done although checks fail (say why in text)"}}},
         reply),
     "list_requests": (
         "Kiran's requests and their status (open, claimed, working, done, declined).",
