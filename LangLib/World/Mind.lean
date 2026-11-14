@@ -223,10 +223,10 @@ private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
 def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
   closure (admit (lits ((beliefs w c).filter (·.about ≤ t))))
 
-/-- What `c` believes now. Changeable facts are judged by the most recent
+/-- What `c` believes now (the definition; `view` computes it).  Changeable facts are judged by the most recent
 information; permanent facts *concluded* (by the lore) about any earlier time
 are kept, so "she held the letter then" still yields "she has read it". -/
-def view (w : W) (c : C) : List (BLit Φ) :=
+def viewSpec (w : W) (c : C) : List (BLit Φ) :=
   let base := lits (beliefs w c)
   let now := closure (admit base)
   let times := ((beliefs w c).map (·.about)).eraseDups
@@ -238,6 +238,35 @@ def view (w : W) (c : C) : List (BLit Φ) :=
   let settled := (times.flatMap fun t =>
     (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && survives l).eraseDups
   closure (admit (settled ++ base))
+
+/-- What `c` believes now: `viewSpec`, computed without the work that cannot
+change it. With no lore rules nothing is settled, so the per-time views are not
+built; with nothing settled the view is `now`, which is not admitted twice
+(`view_eq_viewSpec`). -/
+def view (w : W) (c : C) : List (BLit Φ) :=
+  let base := lits (beliefs w c)
+  let now := closure (admit base)
+  let times := ((beliefs w c).map (·.about)).eraseDups
+  let survives (l : BLit Φ) : Bool := (Lore.rules (Φ := Φ)).any fun r =>
+    r.head == l && r.body.all fun b => Fluent.fluent b.1 || now.contains b
+  let settled := if (Lore.rules (Φ := Φ)).isEmpty then [] else (times.flatMap fun t =>
+    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && survives l).eraseDups
+  if settled.isEmpty then now else closure (admit (settled ++ base))
+
+theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
+  unfold view viewSpec
+  simp only
+  split
+  · rename_i h
+    have hr := List.isEmpty_iff.mp h
+    have hn : ∀ ts : List Nat,
+        (ts.flatMap fun t => List.filter (fun _ => false) (viewAt w c t)) = [] := by
+      intro ts; induction ts <;> simp_all
+    simp [hr, hn]
+  · split
+    · rename_i _ h
+      rw [List.isEmpty_iff.mp h]; rfl
+    · rfl
 
 /-- What `c` believed at story time `s`, as they remember it: the view their
 base had then. -/
@@ -252,7 +281,8 @@ def viewOf (w : W) (c d : C) : List (BLit Φ) :=
 
 theorem view_consistent (w : W) (c : C)
     (h : consistent (closure ([] : List (BLit Φ))) = true) :
-    consistent (view w c) = true := admit_consistent _ h
+    consistent (view w c) = true := by
+  rw [view_eq_viewSpec]; exact admit_consistent _ h
 
 /-- `c` now believes `φ` held at time `t`. -/
 def thinksWas (w : W) (c : C) (φ : Φ) (t : Nat) : Bool := (viewAt w c t).contains (φ, true)
