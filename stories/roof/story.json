@@ -17,31 +17,19 @@
       ]
     },
     {
-      "id": "theo",
-      "name": "Theo",
+      "id": "ran",
+      "name": "Ranulf",
       "pron": "he",
       "traits": [
         "confident",
-        "honest"
+        "honest",
+        "loyal"
       ],
       "values": [
         "desire",
+        "loyalty",
         "honesty",
         "pride"
-      ]
-    },
-    {
-      "id": "mara",
-      "name": "Mara",
-      "pron": "she",
-      "traits": [
-        "romantic",
-        "openMinded"
-      ],
-      "values": [
-        "curiosity",
-        "loyalty",
-        "desire"
       ]
     }
   ],
@@ -63,58 +51,34 @@
   ],
   "atoms": [
     {
-      "id": "noteForKiran",
-      "label": "the note is for Kiran",
+      "id": "noteConfession",
+      "label": "the note is a confession",
       "truth": true,
-      "group": "noteFor"
+      "group": "noteMeans"
     },
     {
-      "id": "noteForMara",
-      "label": "the note is for Mara",
+      "id": "noteOldTimes",
+      "label": "the note is only for old times' sake",
       "truth": false,
-      "group": "noteFor"
+      "group": "noteMeans"
     },
     {
-      "id": "theoLikesKiran",
-      "label": "Theo likes Kiran",
-      "truth": true,
-      "group": "theoLikes"
-    },
-    {
-      "id": "theoLikesMara",
-      "label": "Theo likes Mara",
-      "truth": false,
-      "group": "theoLikes"
-    },
-    {
-      "id": "kiranLikesTheo",
-      "label": "Kiran likes Theo",
+      "id": "ranLikesKiran",
+      "label": "Ran likes Kiran",
       "truth": true
     },
     {
-      "id": "maraReadNote",
-      "label": "Mara has read the note",
+      "id": "kiranLikesRan",
+      "label": "Kiran likes Ran",
       "truth": true
     }
   ],
   "lore": [
     {
       "if": [
-        "noteForKiran"
+        "noteConfession"
       ],
-      "then": "theoLikesKiran"
-    },
-    {
-      "if": [
-        "noteForMara"
-      ],
-      "then": "theoLikesMara"
-    },
-    {
-      "if": [
-        "holds(mara,note)"
-      ],
-      "then": "maraReadNote"
+      "then": "ranLikesKiran"
     }
   ],
   "plans": [
@@ -129,11 +93,11 @@
     },
     {
       "id": "theNote",
-      "agent": "theo",
+      "agent": "ran",
       "goal": "at(kiran,roof)",
       "steps": [
-        "drop theo note",
-        "move theo roof"
+        "drop ran note",
+        "move ran roof"
       ]
     }
   ],
@@ -142,41 +106,28 @@
       "kiran": "lab"
     },
     "holds": {
-      "note": "theo"
+      "note": "ran"
     },
     "bonds": {
-      "kiran>theo": {
-        "trust": 1,
+      "kiran>ran": {
+        "trust": 2,
+        "affection": 2,
         "attraction": 1
       },
-      "theo>kiran": {
+      "ran>kiran": {
         "trust": 2,
+        "affection": 2,
         "attraction": 2
-      },
-      "kiran>mara": {
-        "trust": 2,
-        "affection": 2
-      },
-      "mara>kiran": {
-        "trust": 2,
-        "affection": 2
-      },
-      "mara>theo": {
-        "trust": 1,
-        "attraction": 1
-      },
-      "theo>mara": {
-        "trust": 1
       }
     },
     "knows": {
       "kiran": [
-        "kiranLikesTheo"
+        "kiranLikesRan"
       ],
-      "theo": [
-        "theoLikesKiran",
-        "noteForKiran",
-        "!noteForMara"
+      "ran": [
+        "ranLikesKiran",
+        "noteConfession",
+        "!noteOldTimes"
       ]
     }
   },
@@ -185,11 +136,10 @@
       "lingering",
       "spark",
       "noteLeft",
-      "misread",
-      "kiranDoubts",
-      "truthOut",
-      "kiranKnows",
+      "found",
+      "doubting",
       "together",
+      "kiranKnows",
       "negotiated",
       "kissed"
     ],
@@ -197,12 +147,12 @@
     "vocab": [
       {
         "id": "lingers",
-        "label": "Theo finds an excuse to stay",
+        "label": "Ran finds an excuse to stay",
         "add": [
           "lingering"
         ],
         "keys": [
-          "move theo lab"
+          "move ran lab"
         ]
       },
       {
@@ -215,12 +165,12 @@
           "spark"
         ],
         "keys": [
-          "sarcasm kiran theo kiranLikesTheo"
+          "sarcasm kiran ran kiranLikesRan"
         ]
       },
       {
         "id": "note",
-        "label": "Theo leaves a note and goes up",
+        "label": "Ran leaves a note and goes up",
         "pre": [
           "spark"
         ],
@@ -228,73 +178,40 @@
           "noteLeft"
         ],
         "keys": [
-          "drop theo note"
+          "drop ran note"
         ]
       },
       {
-        "id": "misread",
-        "label": "Mara finds the note and reads it as hers",
+        "id": "find",
+        "label": "Kiran comes back and finds the note",
         "pre": [
           "noteLeft"
         ],
         "add": [
-          "misread"
+          "found"
         ],
         "keys": [
-          "notice mara noteForMara inferred"
+          "take kiran note"
         ]
       },
       {
-        "id": "gossip",
-        "label": "Mara tells Kiran Theo has asked her up",
+        "id": "doubt",
+        "label": "Kiran reads it as old times' sake",
         "pre": [
-          "misread"
+          "found"
         ],
         "add": [
-          "kiranDoubts"
+          "doubting"
         ],
         "keys": [
-          "tell mara kiran theoLikesMara"
-        ]
-      },
-      {
-        "id": "truth",
-        "label": "On the roof, Theo sets Mara straight",
-        "pre": [
-          "misread"
-        ],
-        "add": [
-          "truthOut"
-        ],
-        "del": [
-          "misread"
-        ],
-        "keys": [
-          "tell theo mara noteForKiran"
-        ]
-      },
-      {
-        "id": "amends",
-        "label": "Mara comes down and tells Kiran",
-        "pre": [
-          "truthOut",
-          "kiranDoubts"
-        ],
-        "add": [
-          "kiranKnows"
-        ],
-        "del": [
-          "kiranDoubts"
-        ],
-        "keys": [
-          "tell mara kiran noteForKiran"
+          "notice kiran noteOldTimes assumed"
         ]
       },
       {
         "id": "climb",
-        "label": "Kiran goes up",
+        "label": "Kiran goes up anyway",
         "pre": [
-          "kiranKnows"
+          "found"
         ],
         "add": [
           "together"
@@ -304,16 +221,32 @@
         ]
       },
       {
+        "id": "confess",
+        "label": "On the roof, Ran says what he should have said",
+        "pre": [
+          "together"
+        ],
+        "add": [
+          "kiranKnows"
+        ],
+        "del": [
+          "doubting"
+        ],
+        "keys": [
+          "tell ran kiran ranLikesKiran"
+        ]
+      },
+      {
         "id": "negotiate",
         "label": "They ask, and answer, out loud",
         "pre": [
-          "together"
+          "kiranKnows"
         ],
         "add": [
           "negotiated"
         ],
         "keys": [
-          "askAct theo kiran kiss"
+          "askAct ran kiran kiss"
         ]
       },
       {
@@ -326,7 +259,7 @@
           "kissed"
         ],
         "keys": [
-          "act kiran theo kiss"
+          "act kiran ran kiss"
         ]
       }
     ],
@@ -334,11 +267,10 @@
       "lingers",
       "spark",
       "note",
-      "misread",
-      "gossip",
-      "truth",
-      "amends",
+      "find",
+      "doubt",
       "climb",
+      "confess",
       "negotiate",
       "kiss"
     ]
@@ -346,83 +278,59 @@
   "lexicon": [
     {
       "verb": "like",
-      "subj": "theo",
+      "subj": "ran",
       "obj": "kiran",
-      "lit": "theoLikesKiran"
-    },
-    {
-      "verb": "like",
-      "subj": "theo",
-      "obj": "mara",
-      "lit": "theoLikesMara"
+      "lit": "ranLikesKiran"
     },
     {
       "verb": "like",
       "subj": "kiran",
-      "obj": "theo",
-      "lit": "kiranLikesTheo"
+      "obj": "ran",
+      "lit": "kiranLikesRan"
     },
     {
       "verb": "want",
-      "subj": "theo",
-      "obj": "mara",
-      "lit": "theoLikesMara"
-    },
-    {
-      "verb": "want",
-      "subj": "theo",
+      "subj": "ran",
       "obj": "kiran",
-      "lit": "theoLikesKiran"
+      "lit": "ranLikesKiran"
     }
   ],
   "outline": [
     {
       "beat": "lingers",
-      "brief": "Late in the lab, Kiran at her bench. Theo, the visiting engineer whose last day is tomorrow, comes back in for a cable he says he forgot (an excuse to stay). He is easy and direct; he flirts with her."
+      "brief": "Late in the lab, Kiran at her bench. Ranulf (Ran), her childhood friend, back in town for a week after fifteen years away and leaving tomorrow, comes back in for a scarf he says he forgot (an excuse to stay). He is easy and direct; he flirts with her."
     },
     {
       "beat": "spark",
-      "brief": "Kiran answers with dry teasing: she says the opposite of what she feels (that she cannot stand him / is glad he's leaving), and he reads it correctly and grins."
+      "brief": "Kiran answers with dry teasing: she says the opposite of what she feels (that she is glad he's leaving), and he reads it correctly and grins; he knows her too well."
     },
     {
       "beat": "note",
-      "brief": "Kiran steps out to the kitchen to make tea (she plans to come straight back). Theo, alone, writes a short unsigned-but-initialled note ('Roof. Eleven. There's something I should have said. \u2014T') and leaves it on the shared bench, then goes up to the roof."
+      "brief": "Kiran steps out to the kitchen to make tea (she plans to come straight back). Ran, alone, writes a short initialled note ('Roof. Eleven. Like before. There's something I should have said. —R') and leaves it on her bench, then goes up to the roof."
     },
     {
-      "beat": "misread",
-      "brief": "Mara, Kiran's labmate and friend, comes back to the lab for her charger, finds the note on the shared bench between her desk and Kiran's, picks it up and reads it, and decides it is meant for her. She wants to go up."
+      "beat": "find",
+      "brief": "Kiran comes back with her tea to an empty lab and the note on her tube rack. She picks it up and reads it. 'Like before': as children they met on the garage roof between their houses at eleven at night."
     },
     {
-      "beat": "gossip",
-      "brief": "Kiran comes back with her tea. Mara, giddy, tells her Theo likes her (Mara) and has asked her up to the roof. Kiran believes her friend; it lands hard, and she hides it."
-    },
-    {
-      "beat": "truth",
-      "brief": "Mara goes up to the roof. (Kiran stays at her bench, pretending to work.)"
-    },
-    {
-      "beat": "truth",
-      "brief": "On the roof, Mara asks Theo whether the note was for her. He answers, gently, that it was not; he tells her it was for Kiran."
-    },
-    {
-      "beat": "amends",
-      "brief": "Mara comes back down to the lab and tells Kiran the truth: the note was for her. Kiran decides she wants to go up."
+      "beat": "doubt",
+      "brief": "She reads it as nostalgia, a goodbye for old times' sake, and tells herself not to want more from it. She goes up anyway, because it is his last night."
     },
     {
       "beat": "climb",
-      "brief": "Kiran climbs the stairs to the roof, the note in her mind, the city below."
+      "brief": "Kiran climbs the stairs to the roof, the note in her pocket, the city below."
+    },
+    {
+      "beat": "confess",
+      "brief": "On the roof Ran tells her what he should have said fifteen years ago, before his family moved: he liked her then and he likes her now. The note was not about old times."
     },
     {
       "beat": "negotiate",
-      "brief": "On the roof Kiran asks Theo whether the note was for her; he answers that it was. He confides what he should have said earlier. She hints that she feels the same."
-    },
-    {
-      "beat": "negotiate",
-      "brief": "Theo asks, out loud and plainly, whether he can kiss her. Kiran says yes; he says yes too (consent on both sides, explicit). Kiran wants it."
+      "brief": "Ran asks, out loud and plainly, whether he can kiss her. Kiran says yes; he says yes too (consent on both sides, explicit). Kiran wants it."
     },
     {
       "beat": "kiss",
-      "brief": "The kiss: Kiran kisses Theo. Close on what she notices."
+      "brief": "The kiss: Kiran kisses Ran. Close on what she notices."
     }
   ]
 }

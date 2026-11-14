@@ -1,6 +1,6 @@
 {"events": [
-  {"e": "adopt theo at(theo,lab)", "at": 41, "phase": "main", "src": "text"},
-  {"e": "move theo lab", "at": 29, "phase": "main", "src": "text"},
-  {"e": "flirt theo kiran", "at": 98, "phase": "main", "src": "text"}
+  {"e": "adopt ran at(ran,lab)", "at": 41, "phase": "main", "src": "text"},
+  {"e": "move ran lab", "at": 29, "phase": "main", "src": "text"},
+  {"e": "flirt ran kiran", "at": 129, "phase": "main", "src": "text"}
  ],
- "claims": ["at theo lab", "at kiran lab"]}
+ "claims": ["at ran lab", "at kiran lab"]}

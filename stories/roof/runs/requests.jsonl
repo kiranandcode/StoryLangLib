@@ -1,0 +1,6 @@
+{"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794667671.9}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794667676.4}
+{"para": "03", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794667676.6}
+{"stage": "refine-check", "ok": true, "note": "", "t": 1794667681.7}
+{"stage": "prove", "ok": true, "note": "12/12; ", "t": 1794667685.8}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794667708.9}

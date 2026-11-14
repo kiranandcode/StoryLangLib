@@ -1,8 +1,8 @@
 {"events": [
   {"e": "intend kiran teaBreak", "at": 25, "phase": "main", "src": "text"},
   {"e": "move kiran kitchen", "at": 35, "phase": "main", "src": "text"},
-  {"e": "intend theo theNote", "at": 73, "phase": "main", "src": "text"},
-  {"e": "drop theo note", "at": 100, "phase": "main", "src": "text"},
-  {"e": "move theo roof", "at": 121, "phase": "main", "src": "text"}
+  {"e": "intend ran theNote", "at": 73, "phase": "main", "src": "text"},
+  {"e": "drop ran note", "at": 103, "phase": "main", "src": "text"},
+  {"e": "move ran roof", "at": 123, "phase": "main", "src": "text"}
  ],
- "claims": ["at kiran kitchen", "at theo roof", "true objAt(note,lab)"]}
+ "claims": ["at kiran kitchen", "at ran roof", "true objAt(note,lab)"]}

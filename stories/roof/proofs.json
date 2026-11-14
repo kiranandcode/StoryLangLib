@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 2.2,
+ "secs": 2.0,
  "theorems": {
   "story_valid": {
    "line": 39,
@@ -29,7 +29,7 @@
   },
   "p02_claim0": {
    "line": 49,
-   "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 1)) = true",
+   "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 3, true)).eval (run spec.start (story.upTo owner 1)) = true",
    "ok": true
   },
   "p03_valid": {
@@ -66,5 +66,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794544201.595547
+ "at": 1794667684.761952
 }

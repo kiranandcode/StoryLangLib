@@ -11,7 +11,7 @@ the story files no longer match the definitions below.
 namespace Stories.Roof
 open LangLib.World LangLib.Studio
 
-def spec : Spec := { chars := [{ id := "kiran", name := "Kiran", pron := "she", traits := [Trait.shy, Trait.romantic], values := [Value.curiosity, Value.desire, Value.safety, Value.pride] }, { id := "theo", name := "Theo", pron := "he", traits := [Trait.confident, Trait.honest], values := [Value.desire, Value.honesty, Value.pride] }, { id := "mara", name := "Mara", pron := "she", traits := [Trait.romantic, Trait.openMinded], values := [Value.curiosity, Value.loyalty, Value.desire] }], places := ["lab", "kitchen", "roof"], objects := ["note"], atoms := [{ id := "noteForKiran", label := "the note is for Kiran", truth := true, group := "noteFor" }, { id := "noteForMara", label := "the note is for Mara", truth := false, group := "noteFor" }, { id := "theoLikesKiran", label := "Theo likes Kiran", truth := true, group := "theoLikes" }, { id := "theoLikesMara", label := "Theo likes Mara", truth := false, group := "theoLikes" }, { id := "kiranLikesTheo", label := "Kiran likes Theo", truth := true, group := "" }, { id := "maraReadNote", label := "Mara has read the note", truth := true, group := "" }], lore := [([(Fact.atom 0, true)], Fact.atom 2, true), ([(Fact.atom 1, true)], Fact.atom 3, true), ([(Fact.holds 2 0, true)], Fact.atom 5, true)], plans := [{ id := "teaBreak", agent := 0, goal := (Fact.at_ 0 0, true), steps := [Ev.move 0 1, Ev.move 0 0] }, { id := "theNote", agent := 1, goal := (Fact.at_ 0 2, true), steps := [Ev.drop 1 0, Ev.move 1 2] }], startAt := [(0, 0)], startObjAt := [], startHeld := [(0, 1)], bonds := [(0, 2, Dim.affection, 2), (0, 2, Dim.trust, 2), (0, 1, Dim.attraction, 1), (0, 1, Dim.trust, 1), (2, 0, Dim.affection, 2), (2, 0, Dim.trust, 2), (2, 1, Dim.attraction, 1), (2, 1, Dim.trust, 1), (1, 0, Dim.attraction, 2), (1, 0, Dim.trust, 2), (1, 2, Dim.trust, 1)], knows := [(0, Fact.atom 4, true), (1, Fact.atom 2, true), (1, Fact.atom 0, true), (1, Fact.atom 1, false)], goals := [] }
+def spec : Spec := { chars := [{ id := "kiran", name := "Kiran", pron := "she", traits := [Trait.shy, Trait.romantic], values := [Value.curiosity, Value.desire, Value.safety, Value.pride] }, { id := "ran", name := "Ranulf", pron := "he", traits := [Trait.confident, Trait.honest, Trait.loyal], values := [Value.desire, Value.loyalty, Value.honesty, Value.pride] }], places := ["lab", "kitchen", "roof"], objects := ["note"], atoms := [{ id := "noteConfession", label := "the note is a confession", truth := true, group := "noteMeans" }, { id := "noteOldTimes", label := "the note is only for old times' sake", truth := false, group := "noteMeans" }, { id := "ranLikesKiran", label := "Ran likes Kiran", truth := true, group := "" }, { id := "kiranLikesRan", label := "Kiran likes Ran", truth := true, group := "" }], lore := [([(Fact.atom 0, true)], Fact.atom 2, true)], plans := [{ id := "teaBreak", agent := 0, goal := (Fact.at_ 0 0, true), steps := [Ev.move 0 1, Ev.move 0 0] }, { id := "theNote", agent := 1, goal := (Fact.at_ 0 2, true), steps := [Ev.drop 1 0, Ev.move 1 2] }], startAt := [(0, 0)], startObjAt := [], startHeld := [(0, 1)], bonds := [(0, 1, Dim.affection, 2), (0, 1, Dim.attraction, 1), (0, 1, Dim.trust, 2), (1, 0, Dim.affection, 2), (1, 0, Dim.attraction, 2), (1, 0, Dim.trust, 2)], knows := [(0, Fact.atom 3, true), (1, Fact.atom 2, true), (1, Fact.atom 0, true), (1, Fact.atom 1, false)], goals := [] }
 
 #guard specMatches (include_str "story.json") spec
 
@@ -20,7 +20,7 @@ def p01 : List Ev := [Ev.adopt 1 (Fact.at_ 1 0, true), Ev.move 1 0, Ev.flirt 1 0
 #guard eventsMatch spec (include_str "paragraphs/01.events.json") p01
 
 /-- paragraph 02 -/
-def p02 : List Ev := [Ev.sarcasm 0 1 (Fact.atom 4, true), Ev.notice 1 (Fact.atom 4, true) (Evid.inferred), Ev.flirt 1 0]
+def p02 : List Ev := [Ev.sarcasm 0 1 (Fact.atom 3, true), Ev.notice 1 (Fact.atom 3, true) (Evid.inferred), Ev.flirt 1 0]
 #guard eventsMatch spec (include_str "paragraphs/02.events.json") p02
 
 /-- paragraph 03 -/
@@ -39,28 +39,28 @@ def story : Timed (E spec) :=
 theorem story_valid : story.Valid spec.start := by decide +kernel
 
 theorem p01_valid : Valid spec.start (story.upTo owner 0) := by decide +kernel
-/-- at theo lab -/
+/-- at ran lab -/
 theorem p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true := by decide +kernel
 /-- at kiran lab -/
 theorem p01_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 0)) = true := by decide +kernel
 
 theorem p02_valid : Valid spec.start (story.upTo owner 1) := by decide +kernel
-/-- thinks theo kiranLikesTheo -/
-theorem p02_claim0 : (Claim.thinks 1 (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 1)) = true := by decide +kernel
+/-- thinks ran kiranLikesRan -/
+theorem p02_claim0 : (Claim.thinks 1 (Fact.atom 3, true)).eval (run spec.start (story.upTo owner 1)) = true := by decide +kernel
 
 theorem p03_valid : Valid spec.start (story.upTo owner 2) := by decide +kernel
 /-- at kiran kitchen -/
 theorem p03_claim0 : (Claim.holdsTrue (Fact.at_ 0 1, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
-/-- at theo roof -/
+/-- at ran roof -/
 theorem p03_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
 /-- true objAt(note,lab) -/
 theorem p03_claim2 : (Claim.holdsTrue (Fact.objAt 0 0, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
 
-def beats : Beats := { conds := ["lingering", "spark", "noteLeft", "misread", "kiranDoubts", "truthOut", "kiranKnows", "together", "negotiated", "kissed"], vocab := [{ id := "lingers", label := "Theo finds an excuse to stay", pre := [], add := [0], del := [], keys := [Ev.move 1 0] }, { id := "spark", label := "Banter that is not quite banter", pre := [0], add := [1], del := [], keys := [Ev.sarcasm 0 1 (Fact.atom 4, true)] }, { id := "note", label := "Theo leaves a note and goes up", pre := [1], add := [2], del := [], keys := [Ev.drop 1 0] }, { id := "misread", label := "Mara finds the note and reads it as hers", pre := [2], add := [3], del := [], keys := [Ev.notice 2 (Fact.atom 1, true) (Evid.inferred)] }, { id := "gossip", label := "Mara tells Kiran Theo has asked her up", pre := [3], add := [4], del := [], keys := [Ev.tell 2 0 (Fact.atom 3, true)] }, { id := "truth", label := "On the roof, Theo sets Mara straight", pre := [3], add := [5], del := [3], keys := [Ev.tell 1 2 (Fact.atom 0, true)] }, { id := "amends", label := "Mara comes down and tells Kiran", pre := [5, 4], add := [6], del := [4], keys := [Ev.tell 2 0 (Fact.atom 0, true)] }, { id := "climb", label := "Kiran goes up", pre := [6], add := [7], del := [], keys := [Ev.move 0 2] }, { id := "negotiate", label := "They ask, and answer, out loud", pre := [7], add := [8], del := [], keys := [Ev.askAct 1 0 (Act.kiss)] }, { id := "kiss", label := "The kiss", pre := [8], add := [9], del := [], keys := [Ev.act 0 1 (Act.kiss)] }], init := [] }
+def beats : Beats := { conds := ["lingering", "spark", "noteLeft", "found", "doubting", "together", "kiranKnows", "negotiated", "kissed"], vocab := [{ id := "lingers", label := "Ran finds an excuse to stay", pre := [], add := [0], del := [], keys := [Ev.move 1 0] }, { id := "spark", label := "Banter that is not quite banter", pre := [0], add := [1], del := [], keys := [Ev.sarcasm 0 1 (Fact.atom 3, true)] }, { id := "note", label := "Ran leaves a note and goes up", pre := [1], add := [2], del := [], keys := [Ev.drop 1 0] }, { id := "find", label := "Kiran comes back and finds the note", pre := [2], add := [3], del := [], keys := [Ev.take 0 0] }, { id := "doubt", label := "Kiran reads it as old times' sake", pre := [3], add := [4], del := [], keys := [Ev.notice 0 (Fact.atom 1, true) (Evid.assumed)] }, { id := "climb", label := "Kiran goes up anyway", pre := [3], add := [5], del := [], keys := [Ev.move 0 2] }, { id := "confess", label := "On the roof, Ran says what he should have said", pre := [5], add := [6], del := [4], keys := [Ev.tell 1 0 (Fact.atom 2, true)] }, { id := "negotiate", label := "They ask, and answer, out loud", pre := [6], add := [7], del := [], keys := [Ev.askAct 1 0 (Act.kiss)] }, { id := "kiss", label := "The kiss", pre := [7], add := [8], del := [], keys := [Ev.act 0 1 (Act.kiss)] }], init := [] }
 
-def beatStory : List (BeatEv beats) := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map (⟨·⟩)
+def beatStory : List (BeatEv beats) := [0, 1, 2, 3, 4, 5, 6, 7, 8].map (⟨·⟩)
 
-def plans : List Ev := [Ev.adopt 1 (Fact.at_ 1 0, true), Ev.move 1 0, Ev.flirt 1 0, Ev.sarcasm 0 1 (Fact.atom 4, true), Ev.notice 1 (Fact.atom 4, true) (Evid.inferred), Ev.flirt 1 0, Ev.intend 0 0, Ev.move 0 1, Ev.intend 1 1, Ev.drop 1 0, Ev.move 1 2]
+def plans : List Ev := [Ev.adopt 1 (Fact.at_ 1 0, true), Ev.move 1 0, Ev.flirt 1 0, Ev.sarcasm 0 1 (Fact.atom 3, true), Ev.notice 1 (Fact.atom 3, true) (Evid.inferred), Ev.flirt 1 0, Ev.intend 0 0, Ev.move 0 1, Ev.intend 1 1, Ev.drop 1 0, Ev.move 1 2]
 
 theorem beats_valid : Valid beats.start beatStory := by decide +kernel
 theorem plans_do_not_refine_beats : ¬ Refines beats.abs plans beatStory := by decide +kernel
