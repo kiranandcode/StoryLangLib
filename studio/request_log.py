@@ -22,7 +22,8 @@ STATUSES = ("open", "claimed", "working", "done", "declined")
 
 @contextlib.contextmanager
 def _locked():
-    LOG.touch(exist_ok=True)
+    # no touch(): a+ creates the file, and bumping the mtime on every read made
+    # the server's watcher push a change for each read, which clients re-read
     with open(LOG, "a+") as f:
         fcntl.flock(f, fcntl.LOCK_EX)
         try:
