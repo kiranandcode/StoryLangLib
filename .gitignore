@@ -5,3 +5,4 @@ eval/runs/
 eval/runs-v1/
 eval/*.log
 studio/web/tsconfig.tsbuildinfo
+stories/*/source/

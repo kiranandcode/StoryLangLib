@@ -17,8 +17,10 @@ import LangLib.World.Space
 import LangLib.World.Mind
 import LangLib.World.Social
 import LangLib.World.Magic
+import LangLib.World.Nen
 import LangLib.World.Examples.Office
 import LangLib.World.Examples.Mage
+import LangLib.World.Examples.Fight
 import LangLib.World.Examples.Gossip
 import LangLib.World.Lexicon
 import LangLib.World.Examples.OfficeText
