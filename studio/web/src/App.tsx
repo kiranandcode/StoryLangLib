@@ -139,7 +139,7 @@ export function App() {
   }, [report])
 
   const onContextMenu = (e: React.MouseEvent) => {
-    if (mode !== 'edit' || !report) return
+    if (mode === 'chill' || !report || report.error) return  // chill is for reading: the native menu
     e.preventDefault()
     const targets = targetsAt(e.target as HTMLElement)
     const sel = window.getSelection()
@@ -197,7 +197,7 @@ export function App() {
   const okThm = Object.values(proofs?.theorems ?? {}).filter(t => t.ok).length
 
   return (
-    <div className={`shell ${mode === 'edit' ? 'editing' : ''}`} onContextMenu={onContextMenu}>
+    <div className={`shell ${mode !== 'chill' ? 'editing' : ''}`} onContextMenu={onContextMenu}>
       <header className="topbar">
         <span className="title">StoryLangLib Studio</span>
         {stories.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
