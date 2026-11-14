@@ -1,5 +1,5 @@
 {
- "text_sha": "eecb9690dd33b8ab",
+ "text_sha": "a75c0336efbbef1e",
  "world_sha": "93e1f4f6024d558e",
  "events": [
   {
@@ -32,7 +32,7 @@
   },
   {
    "e": "move ran roof",
-   "at": 123,
+   "at": 122,
    "w": "took",
    "phase": "main",
    "src": "text"
