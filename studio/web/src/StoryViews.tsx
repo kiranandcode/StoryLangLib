@@ -32,7 +32,7 @@ export function StoryView({ report, current }: { report: Report; current: number
 
       <section>
         <h3>Cast</h3>
-        {report.characters.map(c => <div key={c.id} className="row">
+        {report.characters.map(c => <div key={c.id} className="row" data-target={`char:${c.id}`}>
           <b style={{ color: charColour(report, c.id) }}>{c.name}</b> <span className="dim">({c.pron})</span> · {c.traits.join(', ') || 'no traits'} · values {c.values.join(' > ')}
         </div>)}
       </section>
@@ -42,7 +42,7 @@ export function StoryView({ report, current }: { report: Report; current: number
         <table className="matrix">
           <thead><tr><th />{report.characters.map(c => <th key={c.id} style={{ color: charColour(report, c.id) }}>{c.name}</th>)}<th className="dim">true?</th></tr></thead>
           <tbody>{facts.map(f => (
-            <tr key={f.id}><td className="fl">{f.label}</td>
+            <tr key={f.id} data-target={`fact:${f.id}`}><td className="fl">{f.label}</td>
               {report.characters.map(c => {
                 const vs = views[c.id] ?? []
                 const yes = vs.some(l => l.lit === f.id), no = vs.some(l => l.lit === `!${f.id}`)
@@ -57,7 +57,7 @@ export function StoryView({ report, current }: { report: Report; current: number
         <h3>Bonds across the story</h3>
         <table className="bonds"><tbody>{pairs.flatMap(pair => dims.filter(d => series(pair, d).some(x => x > 0)).map(d => {
           const [a, b] = pair.split('>')
-          return <tr key={pair + d}><td><span style={{ color: charColour(report, a) }}>{charName(report, a)}</span>→<span style={{ color: charColour(report, b) }}>{charName(report, b)}</span></td>
+          return <tr key={pair + d} data-target={`bond:${pair}`}><td><span style={{ color: charColour(report, a) }}>{charName(report, a)}</span>→<span style={{ color: charColour(report, b) }}>{charName(report, b)}</span></td>
             <td className="dim">{d}</td><td><Spark values={series(pair, d)} colour={charColour(report, a)} /></td></tr>
         }))}</tbody></table>
         {at.consent.length > 0 && <><h4>Consent in force</h4>{at.consent.map((c, i) => <div key={i} className="row consent">✓ {c}</div>)}</>}

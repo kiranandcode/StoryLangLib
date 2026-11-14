@@ -4,7 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import type { StudioRequest } from './types'
 
-export interface Draft { kind: 'story' | 'tool'; para: string; quote: string }
+export interface Draft { kind: 'story' | 'tool'; para: string; quote: string; target?: string; about?: string; text?: string }
 
 const LABEL: Record<string, string> = {
   open: 'waiting', claimed: 'picked up', working: 'working', done: 'done', declined: 'declined',
@@ -19,7 +19,7 @@ export function Composer({ story, draft, onClose, onSent }: {
   story: string; draft: Draft; onClose: () => void; onSent: () => void
 }) {
   const [kind, setKind] = useState(draft.kind)
-  const [text, setText] = useState('')
+  const [text, setText] = useState(draft.text ?? '')
   const [quote, setQuote] = useState(draft.quote)
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
@@ -32,7 +32,7 @@ export function Composer({ story, draft, onClose, onSent }: {
     try {
       const r = await fetch('/api/requests', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind, text, story: kind === 'story' ? story : '', para: kind === 'story' ? draft.para : '', quote }),
+        body: JSON.stringify({ kind, text, story: kind === 'story' ? story : '', para: kind === 'story' ? draft.para : '', quote, target: kind === 'story' ? draft.target ?? '' : '' }),
       })
       if (!r.ok) throw new Error((await r.json()).detail ?? r.statusText)
       onSent(); onClose()
@@ -48,7 +48,7 @@ export function Composer({ story, draft, onClose, onSent }: {
             <button className={kind === 'story' ? 'on' : ''} onClick={() => setKind('story')}>Story</button>
             <button className={kind === 'tool' ? 'on' : ''} onClick={() => setKind('tool')}>Tool</button>
           </span>
-          <span className="dim">{kind === 'story' ? (draft.para ? `paragraph ${draft.para}` : 'the whole story') : 'the Studio or langlib'}</span>
+          <span className="dim">{kind === 'story' ? (draft.about ?? (draft.para ? `paragraph ${draft.para}` : 'the whole story')) : 'the Studio or langlib'}</span>
         </div>
         {kind === 'story' && quote && <blockquote className="req-quote">“{quote}” <button className="btn small" onClick={() => setQuote('')}>drop quote</button></blockquote>}
         <textarea ref={ta} value={text} onChange={e => setText(e.target.value)} rows={5}

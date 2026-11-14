@@ -93,13 +93,16 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
       }
       if (t.spk) { cls.push('quote'); style['--qc'] = entityColour(report, t.spk, doc.entities) }
       if (t.time) cls.push('time')
+      const tg: string[] = []
+      if (t.ent) tg.push(report.characters.some(c => c.id === t.ent) ? `char:${t.ent}` : report.places.includes(t.ent) ? `place:${t.ent}` : report.objects.includes(t.ent) ? `obj:${t.ent}` : '')
+      p.events.forEach((e, k) => { if (e.at === i) tg.push(`ev:${p.name}:${k}`) })
       const evs = evAt.get(i)
       if (evs) {
         cls.push('ev')
         const worst = evs.some(e => e.status === 'no') ? 'no' : evs.some(e => e.status === 'unknown') ? 'unknown' : 'yes'
         cls.push(worst)
       }
-      out.push(<span key={i} className={cls.join(' ')} style={style as React.CSSProperties} data-i={i}>{p.text.slice(start, end)}</span>)
+      out.push(<span key={i} className={cls.join(' ')} style={style as React.CSSProperties} data-i={i} data-target={tg.filter(Boolean).join(' ') || undefined}>{p.text.slice(start, end)}</span>)
       at = end
     })
     if (at < p.text.length) out.push(p.text.slice(at).replace(/\s+$/, ''))
@@ -133,7 +136,7 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
   if (current) cls.push('current')
   if (!p.text.trim()) cls.push('empty')
   return (
-    <p className={cls.join(' ')} data-para={index} onMouseOver={onOver}
+    <p className={cls.join(' ')} data-para={index} data-para-name={p.name} onMouseOver={onOver}
        onMouseLeave={() => { setHover(null); setHoverEnt(null) }}>
       {overview && (
         <span className="gutter">
@@ -146,9 +149,9 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
               onMouseLeave={() => setHover(null)}>{w.glyph}</span>))}
           {p.freshness?.status === 'stale' && <span className="mark bad" title={`reading is stale: ${p.freshness.why.join('; ')}`}>⟳</span>}
           {warn.length === 0 && p.text.trim() && <span className="mark ok" title={p.verdict}>·</span>}
-          {onRequest && <span className={`mark req-mark ${requests ? 'has' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => onRequest(index)}
+          {onRequest && requests ? <span className={`mark req-mark ${requests ? 'has' : ''}`} onMouseDown={e => e.preventDefault()} onClick={() => onRequest(index)}
             title={requests ? `${requests} open request${requests > 1 ? 's' : ''} on this paragraph; click to add another` : 'request a change to this paragraph (select text first to quote it)'}>
-            {requests ? `✎${requests}` : '✎'}</span>}
+            {`✎${requests}`}</span> : null}
         </span>
       )}
       {body ?? <span>({p.events.length} planned events, no prose yet: {p.events.map(e => e.gloss).join('; ')})</span>}

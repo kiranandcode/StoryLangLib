@@ -167,3 +167,47 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .req-checks { list-style: none; margin: 0; padding: 0; font-size: 11.5px; }
 .req-checks li.ok { color: var(--ok); }
 .req-checks li.bad { color: var(--bad); }
+
+/* edit mode: right-click menu and inspector */
+.shell.editing [data-target] { cursor: context-menu; }
+.shell.editing .lcard [data-target]:hover, .shell.editing .storyview [data-target]:hover { background: var(--hover); border-radius: 4px; }
+.ctx {
+  position: fixed; z-index: 90; list-style: none; margin: 0; padding: 5px; min-width: 220px; max-width: 280px;
+  background: var(--paper); color: var(--ink); border: 1px solid var(--rule-2); border-radius: 8px;
+  box-shadow: var(--shadow); font-size: 13px;
+}
+.ctx li { padding: 5px 10px; border-radius: 5px; cursor: pointer; overflow-wrap: anywhere; }
+.ctx li:hover { background: var(--paper-2); }
+.ctx li.dim { color: var(--ink-2); }
+.ctx .ctx-sep { height: 1px; padding: 0; margin: 4px 2px; background: var(--rule); cursor: default; }
+.inspector { padding: 8px 16px; display: flex; flex-direction: column; gap: 10px; }
+.inspector h3 { font-size: 15px; margin: 6px 0 0; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.inspector h3 .dim { font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
+.inspector h4 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); margin: 0 0 6px; font-weight: 600; }
+.inspector section { border-top: 1px solid var(--rule); padding-top: 8px; }
+.ins-row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin: 4px 0; }
+.ins-row > .k { width: 9em; flex: none; color: var(--ink-3); font-size: 11.5px; }
+.ins-row > :not(.k) { flex: 1; min-width: 0; }
+.ins-row input, .ins-row select, .inspector select {
+  font: inherit; color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule-2); border-radius: 5px; padding: 2px 6px;
+}
+.ins-row input { width: 100%; }
+.ins-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.ins-chips .chip { display: inline-flex; align-items: center; gap: 3px; background: var(--paper-2); }
+.ins-chips .chip.on { border-color: var(--ink-3); color: var(--ink); }
+.ins-chips .chip button { background: none; border: none; padding: 0 2px; cursor: pointer; color: var(--ink-3); }
+.ins-chips .chip.add { background: none; border-style: dashed; color: var(--ink-3); cursor: pointer; font-size: 11px; }
+.ins-chips .chip.add:hover { color: var(--ink); border-color: var(--ink-3); }
+.ins-list { margin: 0; padding-left: 16px; }
+.inspector .seg { display: inline-flex; }
+.inspector .seg button, .stepper button { background: transparent; border: 1px solid var(--rule-2); padding: 1px 9px; cursor: pointer; color: var(--ink-2); }
+.inspector .seg button:first-child { border-radius: 5px 0 0 5px; } .inspector .seg button:last-child { border-radius: 0 5px 5px 0; margin-left: -1px; }
+.inspector .seg button.on { background: var(--paper-2); color: var(--ink); border-color: var(--ink-3); }
+.stepper { display: inline-flex; align-items: center; gap: 6px; flex: none !important; }
+.stepper button { border-radius: 5px; padding: 0 7px; }
+.stepper b { min-width: 1.2em; text-align: center; }
+.ins-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ins-foot > div { flex-basis: 100%; font-size: 11.5px; }
+.ins-foot .btn { background: transparent; border: 1px solid var(--rule-2); border-radius: 6px; padding: 3px 12px; cursor: pointer; color: var(--ink-2); }
+.ins-foot .btn.primary { color: var(--paper); background: var(--accent); border-color: var(--accent); }
+.ins-foot .btn.primary:disabled { opacity: 0.45; cursor: default; }

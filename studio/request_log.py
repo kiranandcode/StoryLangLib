@@ -69,16 +69,21 @@ def all_requests() -> list[dict]:
         return sorted(_read(f).values(), key=lambda r: r["at"])
 
 
-def create(kind: str, text: str, story: str = "", para: str = "", quote: str = "") -> dict:
+def create(kind: str, text: str, story: str = "", para: str = "", quote: str = "",
+           target: str = "", status: str = "open", reply: str = "") -> dict:
     if kind not in ("story", "tool"):
         raise ValueError("kind must be story or tool")
     if not text.strip():
         raise ValueError("empty request")
     e = {"op": "new", "id": uuid.uuid4().hex[:8], "kind": kind, "story": story, "para": para,
-         "quote": quote[:2000], "text": text.strip()[:8000], "at": time.time()}
+         "quote": quote[:2000], "text": text.strip()[:8000], "target": target, "at": time.time()}
+    lines = [json.dumps(e)]
+    if status != "open":  # recorded already settled (an edit Kiran made herself): never claimable
+        lines.append(json.dumps({"op": "status", "id": e["id"], "status": status, "reply": reply, "by": "kiran", "at": e["at"]}))
     with _locked() as f:
-        _append(f, e)
-    return _fold([json.dumps(e)])[e["id"]]
+        for l in lines:
+            _append(f, json.loads(l))
+    return _fold(lines)[e["id"]]
 
 
 def get(rid: str) -> dict:

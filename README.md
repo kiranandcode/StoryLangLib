@@ -120,6 +120,15 @@ python3 studio/workflows.py refine-check    stories/roof     the paragraphs refi
 python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
 ```
 
+**Edit mode** (`e`): right-click a character, fact, bond, event or paragraph,
+in the prose or the side panel, to inspect it, adjust it directly (traits,
+ranked values, pronouns, start place, starting bonds, a fact's truth;
+`studio/spec_edit.py` writes `story.json` only after `langlib story` has read
+the edited copy, and logs the edit for the agent), or ask the agent to change
+it. Readings carry `text_sha` and per-event `w`, so a prose edit marks them
+stale (⟳) until they are re-derived; the agent's `reply` runs
+`paragraph-check` itself and records the results on the request.
+
 Kiran asks for changes from the Studio itself: **Request** in the top bar
 (or `r`, or ✎ in a paragraph's margin; selected prose is quoted) files a
 change to the story or to the tool in `studio/requests.jsonl`. An agent

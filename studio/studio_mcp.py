@@ -46,7 +46,7 @@ def send(obj):
 
 def describe(r: dict) -> dict:
     """The request plus where to look, so the agent can start at once."""
-    out = {k: r.get(k) for k in ("id", "kind", "story", "para", "quote", "text", "status")}
+    out = {k: r.get(k) for k in ("id", "kind", "story", "para", "quote", "text", "target", "status")}
     out["asked"] = time.strftime("%Y-%m-%d %H:%M", time.localtime(r["at"]))
     if r.get("kind") == "story" and r.get("story"):
         d = ROOT / "stories" / r["story"]

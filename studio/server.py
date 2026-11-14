@@ -24,6 +24,7 @@ from watchfiles import awatch
 import freshness
 import procs
 import request_log
+import spec_edit
 import proofs as lean
 from procs import LANGLIB, ROOT
 
@@ -230,7 +231,22 @@ async def new_request(body: dict = Body(...)):
     try:
         return await asyncio.to_thread(
             request_log.create, body.get("kind", "story"), body.get("text", ""),
-            body.get("story", ""), body.get("para", ""), body.get("quote", ""))
+            body.get("story", ""), body.get("para", ""), body.get("quote", ""), body.get("target", ""))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/api/vocab")
+async def vocab():
+    return spec_edit.vocab()
+
+
+@app.post("/api/story/{name}/edit")
+async def edit_story(name: str, body: dict = Body(...)):
+    if name not in story_dirs():
+        raise HTTPException(404, f"no story {name}")
+    try:
+        return await asyncio.to_thread(spec_edit.edit, name, body.get("target", ""), body.get("changes") or {})
     except ValueError as e:
         raise HTTPException(400, str(e))
 

@@ -108,7 +108,7 @@ function Card({ report, p, index, current, theorems, onSelect }: {
   const times = p.events.map(e => e.time).filter((t): t is [number, number] => !!t)
   const t0 = Math.min(...times.map(t => t[0])), t1 = Math.max(...times.map(t => t[1]))
   return (
-    <div className={`lcard ${current ? 'current' : ''} v-${p.verdict}`} data-card={index} onClick={() => onSelect(index)}>
+    <div className={`lcard ${current ? 'current' : ''} v-${p.verdict}`} data-card={index} data-para-name={p.name} onClick={() => onSelect(index)}>
       <div className="lc-head">
         <span className="pn">¶ {p.name}</span>
         {p.beat && <span className="beat">{p.beat}</span>}
@@ -127,7 +127,7 @@ function Card({ report, p, index, current, theorems, onSelect }: {
 
       {p.events.length > 0 && <Section title="events">
         <ul className="evs">{p.events.map((e, i) => (
-          <li key={i} className={`ev st-${e.status}`}>
+          <li key={i} className={`ev st-${e.status}`} data-target={`ev:${p.name}:${i}`}>
             <span className="st">{e.status === 'yes' ? '●' : e.status === 'unknown' ? '◐' : '✕'}</span>
             <span className="g">{e.gloss}{e.phase !== 'main' && <em className="phase"> {e.phase}</em>}</span>
             {e.unmotivated && <span className="flag" title={e.motive}>unmotivated</span>}
@@ -137,16 +137,16 @@ function Card({ report, p, index, current, theorems, onSelect }: {
       </Section>}
 
       {(d.moves.length > 0 || d.objects.length > 0) && <Section title="scene">
-        {d.moves.map((m, i) => <div key={i} className="row"><b style={{ color: charColour(report, m.who) }}>{charName(report, m.who)}</b> {m.assumed ? <>assumed in the <b>{m.to}</b></> : <>{m.from === 'offstage' ? 'enters' : `${m.from} →`} <b>{m.to}</b></>}</div>)}
+        {d.moves.map((m, i) => <div key={i} className="row"><b data-target={`char:${m.who}`} style={{ color: charColour(report, m.who) }}>{charName(report, m.who)}</b> {m.assumed ? <>assumed in the <b>{m.to}</b></> : <>{m.from === 'offstage' ? 'enters' : `${m.from} →`} <b>{m.to}</b></>}</div>)}
         {d.objects.map((o, i) => <div key={i} className="row">the {o.what}: {o.now.heldBy ? <>held by <b style={{ color: charColour(report, o.now.heldBy) }}>{charName(report, o.now.heldBy)}</b></> : <>in the <b>{o.now.place}</b></>}</div>)}
       </Section>}
 
       {(d.beliefs.some(b => !b.lit.startsWith('at(') || b.false) || d.nested.some(n => !n.lit.startsWith('at('))) && <Section title="beliefs">
         {d.beliefs.filter(b => !b.lit.startsWith('at(') || b.false).map((b, i) => {
           const key = `b${i}`
-          return <div key={key} className={`belief ${b.change} ${b.false ? 'false' : ''}`}>
+          return <div key={key} className={`belief ${b.change} ${b.false ? 'false' : ''}`} data-target={b.lit.includes('(') ? undefined : `fact:${b.lit.replace(/^!/, '')}`}>
             <button className="bl" onClick={e => { e.stopPropagation(); setOpen(o => ({ ...o, [key]: !o[key] })) }}>
-              <span className="who" style={{ color: charColour(report, b.who) }}>{charName(report, b.who)}</span>
+              <span className="who" data-target={`char:${b.who}`} style={{ color: charColour(report, b.who) }}>{charName(report, b.who)}</span>
               <span className="chg">{b.change === 'gained' ? '+' : '−'}</span>
               <span>{b.gloss}</span>
               {b.false && <span className="fb" title="false belief">false</span>}
@@ -159,14 +159,14 @@ function Card({ report, p, index, current, theorems, onSelect }: {
       </Section>}
 
       {(d.bonds.length > 0 || d.consentGiven.length > 0 || d.consentWithdrawn.length > 0) && <Section title="relationships & consent">
-        <div className="chips">{d.bonds.map((b, i) => <span key={i} className={`chip ${b.after > b.before ? 'up' : 'down'}`}>
+        <div className="chips">{d.bonds.map((b, i) => <span key={i} className={`chip ${b.after > b.before ? 'up' : 'down'}`} data-target={`bond:${b.from}>${b.to}`}>
           <span style={{ color: charColour(report, b.from) }}>{charName(report, b.from)}</span>→<span style={{ color: charColour(report, b.to) }}>{charName(report, b.to)}</span> {b.dim} {b.after > b.before ? '+' : '−'}{Math.abs(b.after - b.before)} <span className="dim">({b.after})</span></span>)}</div>
         {d.consentGiven.map((c, i) => <div key={i} className="row consent">✓ {c}</div>)}
         {d.consentWithdrawn.map((c, i) => <div key={i} className="row consent off">↺ {c} (withdrawn)</div>)}
       </Section>}
 
       {d.goals.length > 0 && <Section title="goals">
-        {d.goals.map((g, i) => <div key={i} className="row"><span style={{ color: charColour(report, g.who) }}>{charName(report, g.who)}</span> wants <Lit s={g.goal} /></div>)}
+        {d.goals.map((g, i) => <div key={i} className="row"><span data-target={`char:${g.who}`} style={{ color: charColour(report, g.who) }}>{charName(report, g.who)}</span> wants <Lit s={g.goal} /></div>)}
       </Section>}
 
       {p.claims.length > 0 && <Section title="claims">
@@ -228,7 +228,7 @@ export function LogicPanel({ report, current, onSelect, scrollRef }: {
         <Spine report={report} tops={tops} height={height} current={current} />
         <div className="startcard">
           <span className="pn">start</span>
-          {report.characters.map(c => <span key={c.id} className="who" style={{ color: charColour(report, c.id) }}>
+          {report.characters.map(c => <span key={c.id} className="who" data-target={`char:${c.id}`} style={{ color: charColour(report, c.id) }}>
             {c.name}: {report.startLine[c.id]?.place ?? 'offstage'}</span>)}
         </div>
         {report.paragraphs.map((p, i) => (
