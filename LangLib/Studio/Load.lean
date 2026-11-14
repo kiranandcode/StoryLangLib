@@ -226,21 +226,20 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
       if let some d := p.doc then
         let u := usesOf s d
         let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
-        let scene := sceneOf s.start es prev
-        let ok := s.settingOk scene u p.staging
         out := out ++ s!"def p{nm}uses : Uses := {lean (rs u)}\n"
         out := out ++ s!"#guard usesMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}uses\n"
         out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
-        out := out ++ s!"theorem p{nm}_setting : spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = {ok} := by decide +kernel\n"
+        -- claimed true whatever the verdict: a paragraph that breaks the setting fails its proof
+        out := out ++ s!"theorem p{nm}_setting : spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = true := by decide +kernel\n"
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
         out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)} := by decide +kernel\n"
     out := out ++ "\n"
   if s.hasSetting then
-    out := out ++ s!"theorem layout_{if s.layoutOk then "consistent" else "inconsistent"} : spec.layoutOk = {s.layoutOk} := by decide +kernel\n\n"
+    out := out ++ "theorem layout_consistent : spec.layoutOk = true := by decide +kernel\n\n"
   if let some B := l.beats then
     let ids := B.vocab.map (·.id)
     let coarse : List Nat := l.beatStory.filterMap ids.idxOf?
