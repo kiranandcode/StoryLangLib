@@ -1,7 +1,21 @@
 {
  "text_sha": "5900ac6e336088a6",
- "world_sha": "d217b7b22c990ac2",
+ "world_sha": "ba0ed29acb73af42",
  "events": [
+  {
+   "e": "become bookOpen",
+   "at": 20,
+   "w": "left",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "become !bookOpen",
+   "at": 32,
+   "w": "shut",
+   "phase": "main",
+   "src": "text"
+  },
   {
    "e": "adopt chrollo chrolloHidden",
    "at": 44,
@@ -48,6 +62,11 @@
    "c": "true chrolloHidden",
    "at": 39,
    "w": "slipped"
+  },
+  {
+   "c": "true bookOpen",
+   "at": 20,
+   "w": "left"
   }
  ],
  "judge": [

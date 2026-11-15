@@ -240,28 +240,42 @@ def Claim.atoms : Claim → List Nat
   | .unaware _ f => litAtoms (f, true)
   | _ => []
 
-/-- When the point-of-view character steps into an outdoor place (in the
-paragraph's events from `from_` on) while a weather state holds there, and the
-paragraph never mentions it: (place, weather atom). -/
-def weatherMisses (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : List (Nat × Nat) :=
+/-- Is atom `a` perceptible at place `p`? At its `about`'s place; weather with
+no place, at any outdoor place. -/
+def Spec.perceptibleAt (s : Spec) (a p : Nat) : Bool :=
+  match s.atoms[a]? with
+  | some at_ =>
+    at_.perceptible && match at_.about.bind s.spotPlace with
+      | some q => q == p
+      | none => at_.kind == "weather" && ((lookup s.placeInfo p).map (·.outdoor)).getD false
+  | none => false
+
+/-- Perceptible states the point-of-view character finds new on arriving
+somewhere (never seen there, or changed since she last saw them) in events
+`from_` on, that the paragraph does not mention: (place, atom). The story's
+first paragraph counts her opening place as an arrival. -/
+def perceptMisses (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : List (Nat × Nat) :=
   match s.pov with
   | none => []
   | some c =>
-    let outdoor (p : Nat) : Bool := ((lookup s.placeInfo p).map (·.outdoor)).getD false
-    let weather := (s.atoms.zipIdx.filter fun (a, _) => a.weather).map (·.2)
-    let (_, _, out) := es.foldl (fun (w, i, (acc : List (Nat × Nat))) e =>
+    let atoms := List.range s.atoms.length
+    let look (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Bool) :=
+      (atoms.filter (s.perceptibleAt · p)).foldl (fun acc a => (a, w.atomNow a) :: acc.filter (·.1 != a)) seen
+    let misses (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Nat) :=
+      (atoms.filter fun a => s.perceptibleAt a p && lookup seen a != some (w.atomNow a) && !mentioned.contains a).map (p, ·)
+    let p₀ := (w₀.loc ⟨c⟩).i
+    let first := if from_ == 0 && w₀.known.contains ⟨c⟩ then misses [] w₀ p₀ else []
+    let (_, _, _, out) := es.foldl (fun (w, i, seen, (acc : List (Nat × Nat))) e =>
       let w' := next w e
-      let p := (w'.loc ⟨c⟩).i
-      let miss : List (Nat × Nat) :=
-        if i < from_ || (w.loc ⟨c⟩).i == p || !outdoor p then [] else
-        weather.filterMap fun a =>
-          let here := match s.stateWhere a with | some q => q == p | none => true
-          if here && w'.atomNow a && !mentioned.contains a then some (p, a) else none
-      (w', i + 1, acc ++ miss)) (w₀, 0, [])
+      let p := (w.loc ⟨c⟩).i
+      let p' := (w'.loc ⟨c⟩).i
+      let seen := look seen w p
+      let miss := if i ≥ from_ && p' != p then misses seen w' p' else []
+      (w', i + 1, look seen w' p', acc ++ miss)) (w₀, 0, [], first)
     out
 
-def Spec.weatherOk (s : Spec) (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : Bool :=
-  (weatherMisses w₀ es from_ mentioned).isEmpty
+def Spec.perceptOk (s : Spec) (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : Bool :=
+  (perceptMisses w₀ es from_ mentioned).isEmpty
 
 /-- The fact ids a paragraph's events and claims (string or anchored) mention. -/
 def Para.mentioned (s : Spec) (p : Para) : List Nat :=
@@ -527,11 +541,11 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
           | some i, some w => if toks[i]? == some w then none else
             some s!"stale reading: staging '{n.fixedS st}' points at token {i} '{toks.getD i "?"}', not '{w}'"
           | _, _ => none
-        let weatherIs := (weatherMisses start (seq.map (·.2)) firstMine (p.mentioned s)).map fun (pl, a) =>
-          s!"{(s.chars[s.pov.getD 0]?.map (·.name)).getD "?"} steps out onto the {n.plS pl} while " ++
-          s!"'{s.stateLabel a}' holds there, and the paragraph never registers it: the prose must say so " ++
-          s!"(read it as a claim or event about {n.atoms.getD a "?"})"
-        Json.mkObj [("issues", Json.arr ((anchors ++ s.settingIssues scene u p.staging ++ weatherIs).map Json.str).toArray),
+        let perceivedIs := (perceptMisses start (seq.map (·.2)) firstMine (p.mentioned s)).map fun (pl, a) =>
+          s!"{(s.chars[s.pov.getD 0]?.map (·.name)).getD "?"} arrives at the {n.plS pl}, where " ++
+          s!"'{s.stateLabel a}' is new to her, and the paragraph never registers it: " ++
+          s!"the prose must say so (read it as a claim or event about {n.atoms.getD a "?"})"
+        Json.mkObj [("issues", Json.arr ((anchors ++ s.settingIssues scene u p.staging ++ perceivedIs).map Json.str).toArray),
           ("scene", Json.arr ((scene.map n.plS).map Json.str).toArray),
           ("uses", Json.arr (u.uses.map fun x => Json.mkObj [("at", x.at_), ("w", x.form),
             ("is", match x.target with

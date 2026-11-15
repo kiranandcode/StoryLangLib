@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 17.0,
+ "secs": 61.3,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -22,9 +22,9 @@
    "statement": "p01_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true",
    "ok": true
   },
-  "p01_weather": {
+  "p01_perceived": {
    "line": 198,
-   "statement": "p01_weather : spec.weatherOk spec.start (story.upTo owner 0) 0 [5, 4, 6] = true",
+   "statement": "p01_perceived : spec.perceptOk spec.start (story.upTo owner 0) 0 [5, 4, 6, 14, 15] = true",
    "ok": true
   },
   "p01_complete": {
@@ -42,9 +42,9 @@
    "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 4) p02uses p02staging = true",
    "ok": true
   },
-  "p02_weather": {
+  "p02_perceived": {
    "line": 202,
-   "statement": "p02_weather : spec.weatherOk spec.start (story.upTo owner 1) 4 [3] = true",
+   "statement": "p02_perceived : spec.perceptOk spec.start (story.upTo owner 1) 4 [3] = true",
    "ok": true
   },
   "p02_complete": {
@@ -62,14 +62,14 @@
    "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 7) p03uses p03staging = true",
    "ok": true
   },
-  "p03_weather": {
+  "p03_perceived": {
    "line": 206,
-   "statement": "p03_weather : spec.weatherOk spec.start (story.upTo owner 2) 7 [3] = true",
+   "statement": "p03_perceived : spec.perceptOk spec.start (story.upTo owner 2) 7 [18, 3, 16] = true",
    "ok": true
   },
   "p03_complete": {
    "line": 207,
-   "statement": "p03_complete : completeOk (\u27e8story.upTo owner 1, p03.zip [5, 35, 73, 103, 122]\u27e9 : ParaCtx spec) p03tree p03judges = true",
+   "statement": "p03_complete : completeOk (\u27e8story.upTo owner 1, p03.zip [5, 35, 73, 103, 121, 127]\u27e9 : ParaCtx spec) p03tree p03judges = true",
    "ok": true
   },
   "p04_valid": {
@@ -94,12 +94,12 @@
   },
   "p04_setting": {
    "line": 215,
-   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 12) p04uses p04staging = true",
+   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 13) p04uses p04staging = true",
    "ok": true
   },
-  "p04_weather": {
+  "p04_perceived": {
    "line": 216,
-   "statement": "p04_weather : spec.weatherOk spec.start (story.upTo owner 3) 12 [11, 6] = true",
+   "statement": "p04_perceived : spec.perceptOk spec.start (story.upTo owner 3) 13 [11, 17, 18, 22, 6] = true",
    "ok": true
   },
   "p04_complete": {
@@ -124,12 +124,12 @@
   },
   "p05_setting": {
    "line": 222,
-   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 17) p05uses p05staging = true",
+   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 18) p05uses p05staging = true",
    "ok": true
   },
-  "p05_weather": {
+  "p05_perceived": {
    "line": 223,
-   "statement": "p05_weather : spec.weatherOk spec.start (story.upTo owner 4) 17 [1, 6, 12, 13] = true",
+   "statement": "p05_perceived : spec.perceptOk spec.start (story.upTo owner 4) 18 [1, 6, 12, 13] = true",
    "ok": true
   },
   "p05_complete": {
@@ -159,12 +159,12 @@
   },
   "p06_setting": {
    "line": 231,
-   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 19) p06uses p06staging = true",
+   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 20) p06uses p06staging = true",
    "ok": true
   },
-  "p06_weather": {
+  "p06_perceived": {
    "line": 232,
-   "statement": "p06_weather : spec.weatherOk spec.start (story.upTo owner 5) 19 [3, 4] = true",
+   "statement": "p06_perceived : spec.perceptOk spec.start (story.upTo owner 5) 20 [19, 20, 21, 3, 4] = true",
    "ok": true
   },
   "p06_complete": {
@@ -194,12 +194,12 @@
   },
   "p07_setting": {
    "line": 240,
-   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 20) p07uses p07staging = true",
+   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 21) p07uses p07staging = true",
    "ok": true
   },
-  "p07_weather": {
+  "p07_perceived": {
    "line": 241,
-   "statement": "p07_weather : spec.weatherOk spec.start (story.upTo owner 6) 20 [1, 0, 2, 13] = true",
+   "statement": "p07_perceived : spec.perceptOk spec.start (story.upTo owner 6) 21 [1, 0, 2, 13] = true",
    "ok": true
   },
   "p07_complete": {
@@ -229,12 +229,12 @@
   },
   "p08_setting": {
    "line": 249,
-   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 23) p08uses p08staging = true",
+   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 24) p08uses p08staging = true",
    "ok": true
   },
-  "p08_weather": {
+  "p08_perceived": {
    "line": 250,
-   "statement": "p08_weather : spec.weatherOk spec.start (story.upTo owner 7) 23 [13] = true",
+   "statement": "p08_perceived : spec.perceptOk spec.start (story.upTo owner 7) 24 [13] = true",
    "ok": true
   },
   "p08_complete": {
@@ -259,12 +259,12 @@
   },
   "p09_setting": {
    "line": 256,
-   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 26) p09uses p09staging = true",
+   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 27) p09uses p09staging = true",
    "ok": true
   },
-  "p09_weather": {
+  "p09_perceived": {
    "line": 257,
-   "statement": "p09_weather : spec.weatherOk spec.start (story.upTo owner 8) 26 [4] = true",
+   "statement": "p09_perceived : spec.perceptOk spec.start (story.upTo owner 8) 27 [21, 4] = true",
    "ok": true
   },
   "p09_complete": {
@@ -296,5 +296,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794722029.677821
+ "at": 1794723232.48123
 }

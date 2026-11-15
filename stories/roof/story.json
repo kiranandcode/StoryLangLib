@@ -356,7 +356,8 @@
       "label": "it is raining",
       "truth": true,
       "state": true,
-      "weather": true
+      "kind": "weather",
+      "perceptible": true
     },
     {
       "id": "labEmptied",
@@ -429,6 +430,75 @@
       "who": [
         "kiran"
       ]
+    },
+    {
+      "id": "printersCooling",
+      "label": "the printers are cooling down for the night",
+      "truth": true,
+      "about": "printers",
+      "kind": "sound",
+      "perceptible": true
+    },
+    {
+      "id": "labDoorClicks",
+      "label": "the lab door clicks shut behind whoever comes in",
+      "truth": true,
+      "about": "labdoor",
+      "kind": "sound"
+    },
+    {
+      "id": "kettleQuick",
+      "label": "the kitchen kettle boils in a minute",
+      "truth": true,
+      "about": "kettle",
+      "kind": "condition"
+    },
+    {
+      "id": "rdeskBare",
+      "label": "the desk Ran borrowed is bare",
+      "truth": true,
+      "about": "rdesk",
+      "kind": "condition"
+    },
+    {
+      "id": "rchairIn",
+      "label": "the chair at Ran's desk is pushed in",
+      "truth": false,
+      "state": true,
+      "about": "rchair",
+      "kind": "condition"
+    },
+    {
+      "id": "stairwellStale",
+      "label": "the stairwell smells of dust and old coffee",
+      "truth": true,
+      "about": "stairs",
+      "kind": "smell"
+    },
+    {
+      "id": "roofDoorSticks",
+      "label": "the roof door sticks",
+      "truth": true,
+      "about": "roofdoor",
+      "kind": "condition"
+    },
+    {
+      "id": "cityLit",
+      "label": "the city below is lit",
+      "truth": true,
+      "about": "city",
+      "kind": "light",
+      "perceptible": true
+    },
+    {
+      "id": "talkedTillDawn",
+      "label": "as kids they talked on the garage roof until the sky went grey",
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ],
+      "kind": "light"
     }
   ],
   "lore": [
@@ -455,6 +525,7 @@
       "goal": "at(kiran,roof)",
       "steps": [
         "drop ran note",
+        "make ran rchairIn",
         "move ran roof"
       ]
     }

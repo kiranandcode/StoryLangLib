@@ -1,6 +1,6 @@
 {
- "text_sha": "a75c0336efbbef1e",
- "world_sha": "011bdc9b05d88125",
+ "text_sha": "2193f3a153ac036d",
+ "world_sha": "e7a75b65a7b7afc8",
  "events": [
   {
    "e": "intend kiran teaBreak",
@@ -31,8 +31,15 @@
    "src": "text"
   },
   {
+   "e": "make ran rchairIn",
+   "at": 121,
+   "w": "pushed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
    "e": "move ran roof",
-   "at": 122,
+   "at": 127,
    "w": "took",
    "phase": "main",
    "src": "text"
@@ -50,6 +57,11 @@
    "w": "stood"
   },
   {
+   "c": "true kettleQuick",
+   "at": 55,
+   "w": "needed"
+  },
+  {
    "c": "at kiran kitchen",
    "at": 55,
    "w": "needed"
@@ -65,8 +77,13 @@
    "w": "set"
   },
   {
+   "c": "true rchairIn",
+   "at": 121,
+   "w": "pushed"
+  },
+  {
    "c": "at ran roof",
-   "at": 122,
+   "at": 127,
    "w": "took"
   }
  ],
@@ -122,5 +139,6 @@
    "w": "miss",
    "kind": "hypothetical"
   }
- ]
+ ],
+ "staging": []
 }

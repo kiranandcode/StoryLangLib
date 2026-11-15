@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 8.6,
+ "secs": 13.0,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -24,7 +24,7 @@
   },
   "p01_complete": {
    "line": 171,
-   "statement": "p01_complete : completeOk (\u27e8[], p01.zip [9, 52, 20, 44]\u27e9 : ParaCtx spec) p01tree p01judges = true",
+   "statement": "p01_complete : completeOk (\u27e8[], p01.zip [9, 12, 52, 20, 44]\u27e9 : ParaCtx spec) p01tree p01judges = true",
    "ok": true
   },
   "p02_valid": {
@@ -34,12 +34,12 @@
   },
   "p02_setting": {
    "line": 173,
-   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 4) p02uses p02staging = true",
+   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 5) p02uses p02staging = true",
    "ok": true
   },
   "p02_complete": {
    "line": 174,
-   "statement": "p02_complete : completeOk (\u27e8story.upTo owner 0, p02.zip [31]\u27e9 : ParaCtx spec) p02tree p02judges = true",
+   "statement": "p02_complete : completeOk (\u27e8story.upTo owner 0, p02.zip [4, 31]\u27e9 : ParaCtx spec) p02tree p02judges = true",
    "ok": true
   },
   "p03_valid": {
@@ -49,7 +49,7 @@
   },
   "p03_setting": {
    "line": 176,
-   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 5) p03uses p03staging = true",
+   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 7) p03uses p03staging = true",
    "ok": true
   },
   "p03_complete": {
@@ -64,12 +64,12 @@
   },
   "p04_setting": {
    "line": 179,
-   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 10) p04uses p04staging = true",
+   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 12) p04uses p04staging = true",
    "ok": true
   },
   "p04_complete": {
    "line": 180,
-   "statement": "p04_complete : completeOk (\u27e8story.upTo owner 2, p04.zip [44, 44, 39, 39, 9]\u27e9 : ParaCtx spec) p04tree p04judges = true",
+   "statement": "p04_complete : completeOk (\u27e8story.upTo owner 2, p04.zip [20, 32, 44, 44, 39, 39, 9]\u27e9 : ParaCtx spec) p04tree p04judges = true",
    "ok": true
   },
   "p05_valid": {
@@ -79,7 +79,7 @@
   },
   "p05_setting": {
    "line": 182,
-   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 15) p05uses p05staging = true",
+   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 19) p05uses p05staging = true",
    "ok": true
   },
   "p05_complete": {
@@ -94,7 +94,7 @@
   },
   "p06_setting": {
    "line": 185,
-   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 21) p06uses p06staging = true",
+   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 25) p06uses p06staging = true",
    "ok": true
   },
   "p06_complete": {
@@ -109,7 +109,7 @@
   },
   "p07_setting": {
    "line": 188,
-   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 22) p07uses p07staging = true",
+   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 26) p07uses p07staging = true",
    "ok": true
   },
   "p07_complete": {
@@ -124,7 +124,7 @@
   },
   "p08_setting": {
    "line": 191,
-   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 25) p08uses p08staging = true",
+   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 29) p08uses p08staging = true",
    "ok": true
   },
   "p08_complete": {
@@ -139,7 +139,7 @@
   },
   "p09_setting": {
    "line": 194,
-   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 29) p09uses p09staging = true",
+   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 33) p09uses p09staging = true",
    "ok": true
   },
   "p09_complete": {
@@ -156,5 +156,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/hxh-chrollo-hisoka/Proofs.lean",
- "at": 1794719616.270276
+ "at": 1794723248.718973
 }

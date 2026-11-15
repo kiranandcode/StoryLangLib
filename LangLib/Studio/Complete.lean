@@ -70,6 +70,10 @@ structure Pred where
   parentLemma : String := ""
   /-- the clause's own words (its subject first; embedded clauses left out) -/
   text : String := ""
+  /-- its subject, when that is a thing of the setting (a fixture or scenery) -/
+  thing : Option Spot := none
+  /-- the kinds of fact its subject, object and obliques name ("weather", "light", "sound") -/
+  kinds : List String := []
   deriving DecidableEq, Repr
 
 /-- A connective: `rel` holds between the clause it introduces (`a`) and the
@@ -178,6 +182,17 @@ partial def headAt : Tree → Nat → Option Nat
     | none, some c => some ((headK.map (·.2)).getD c)
     | none, none => headK.bind fun (k, o) => headAt k o
 
+/-- Senses that name a kind of fact a clause must then be judged by. -/
+def factSenses : List String := ["weather", "light", "sound"]
+
+/-- The sense of a phrase's head noun. -/
+private partial def headSense : Tree → Option String
+  | .leaf w => if w.upos == .NOUN then w.sense else none
+  | .node i kids => i.sense <|> kids.findSome? fun k =>
+    match k with
+    | .leaf w => if w.role == some .head || w.role == some .conj then headSense k else none
+    | .node j _ => if j.role == some .head || j.role == some .conj then headSense k else none
+
 /-- Words of a node's direct children, outside any clause below it. -/
 private partial def shallowLeaves : Tree → List Word
   | .leaf w => [w]
@@ -192,6 +207,8 @@ structure TCtx where
   said : Bool := false
   /-- the words of the nearest subject above -/
   subjTxt : String := ""
+  /-- the nearest subject above, when it is a thing of the setting -/
+  subjThing : Option Spot := none
 
 /-- Roles of children that are clauses of their own (left out of a clause's words). -/
 def clauseRoles : List Role := [.advcl, .ccomp, .xcomp, .relcl, .acl, .conj, .parataxis, .appos, .csubj]
@@ -214,6 +231,15 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
     let subj := if info.cat == .S || info.cat == .SBAR || info.cat == .VP then
         ((kids.find? (roleIs · .nsubj)).bind refOf |>.bind (wid s R)) <|> ctx.subj
       else ctx.subj
+    let thingOf (k : Tree) : Option Spot := (refOf k).bind fun e => match s.names.spot? e with
+      | some (.thing t) => some (.thing t) | _ => none
+    let subjThing := if info.cat == .S || info.cat == .SBAR || info.cat == .VP then
+        match kids.find? (roleIs · .nsubj) with
+        | some k => thingOf k
+        | none => ctx.subjThing
+      -- a clause hanging off a noun phrase ("the printers ticking") is about that phrase
+      else if info.cat == .NP then thingOf t <|> ctx.subjThing
+      else ctx.subjThing
     let verb := placed.findSome? fun (k, o) => match k with
       | .leaf w => if w.upos == .VERB && w.role == some .head then some (o, w) else none
       | _ => none
@@ -233,6 +259,9 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
       let own := " ".intercalate (ownWords t)
       { p with
         text := if nsubjK.isSome || subjTxt.isEmpty then own else s!"{subjTxt} {own}",
+        thing := subjThing,
+        kinds := ((kids.filter fun k => roleIs k .nsubj || roleIs k .obj || roleIs k .iobj || roleIs k .obl).filterMap
+          headSense).filter factSenses.contains |>.eraseDups,
         args := (kids.filter fun k => roleIs k .obj || roleIs k .iobj || roleIs k .obl).filterMap
           (fun k => (refOf k).bind (wid s R)),
         neg := near.any fun w => negWords.contains (lower w),
@@ -240,8 +269,8 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
         quoted, said := ctx.said, parent := ctx.parent, parentLemma := ctx.parentLemma }
     let ctx' : TCtx := match me with
       | some p => { subj, parent := some p.at_, parentLemma := p.lemma, quoted, cond := p.modal,
-                    said := ctx.said || speechVerbs.contains p.lemma, subjTxt }
-      | none => { ctx with subj, quoted, subjTxt }
+                    said := ctx.said || speechVerbs.contains p.lemma, subjTxt, subjThing }
+      | none => { ctx with subj, quoted, subjTxt, subjThing }
     let hereAt := headAt t start
     -- connectives introduced by subordinate clauses, "so", and relating adverbs
     let links : List Link := placed.filterMap fun (k, o) =>
@@ -450,6 +479,34 @@ def ParaCtx.holds (c : ParaCtx s) (j : Judge) : Bool :=
 def Judge.reported (j : Judge) : Bool :=
   match j.kind with | .content _ | .speech | .hypothetical => true | _ => false
 
+/-- The fact ids a clause's judgements are about. -/
+def judgedAtoms (c : ParaCtx s) (here : List Judge) : List Nat :=
+  here.flatMap fun j => match j.kind with
+    | .event i => ((c.items[i]?).map (·.1.atoms)).getD []
+    | .claim cl => cl.atoms
+    | _ => []
+
+/-- A clause must be judged by facts about what it is about: a fact about its
+subject when that is a thing of the setting, and a fact of each kind (weather,
+light, sound) its nouns name. Reported clauses (speech, content, hypothetical)
+are exempt: they are a character's words, not the world's. -/
+def aboutIssues (c : ParaCtx s) (p : Pred) (here : List Judge) : List String :=
+  if here.isEmpty || here.all Judge.reported then [] else
+  let as := judgedAtoms c here
+  let n := s.names
+  -- a sound a character makes, read as their gesture, is the gesture
+  let gesture := (match p.subj with | some (.ch _) => true | _ => false) && here.any (·.kind == .act)
+  (match p.thing with
+    | some t =>
+      if as.any fun a => (s.atoms[a]?.bind (·.about)) == some t then [] else
+      [s!"is about {n.spotS t}, but none of its judgements is a fact about it: read it as a claim or event " ++
+        s!"about {n.spotS t} (a fact in story.json with \"about\": \"{n.spotS t}\")"]
+    | none => []) ++
+  (p.kinds.filterMap fun k =>
+    if as.any (fun a => (s.atoms[a]?.map (·.kind)) == some k) || (k == "sound" && gesture) then none else
+    some (s!"names {k}, but none of its judgements is a {k} fact: read it as a claim or event about one " ++
+      s!"(a fact in story.json with \"kind\": \"{k}\")"))
+
 /-- What is wrong with the paragraph's coverage, in words; empty when complete. -/
 def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List String) : List String :=
   let tok (t : Nat) : String := s!"'{toks.getD t "?"}' (token {t})"
@@ -479,6 +536,7 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
       let missing := worldRefs.filter (!ids.contains ·)
       (if worldJudged && !missing.isEmpty then
         [s!"the clause at {tok p.at_} is about {reprStr missing}, which its judgements do not mention"] else []) ++
+      ((aboutIssues c p here).map (s!"the clause at {tok p.at_} " ++ ·)) ++
       here.flatMap fun j =>
       match j.kind with
       | .event i =>
@@ -851,7 +909,11 @@ def clauseDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List S
   let agree := if !worldJudged || refs.isEmpty then [] else
     [leaf "mentions" (if missing.isEmpty then s!"about {", ".intercalate (refs.map (WId.show n))}, as its words are"
       else s!"its words are about {", ".intercalate (missing.map (WId.show n))}, which its judgements are not") missing.isEmpty]
-  let prems := here.map (judgeDeriv c f js toks p) ++ agree
+  let aboutIs := aboutIssues c p here
+  let about := if (p.thing.isNone && p.kinds.isEmpty) || here.isEmpty || here.all Judge.reported then [] else
+    [leaf "about" (if aboutIs.isEmpty then "judged by facts about what its words name" else " ".intercalate aboutIs)
+      aboutIs.isEmpty]
+  let prems := here.map (judgeDeriv c f js toks p) ++ agree ++ about
   .mk "clause" s!"«{p.text}»" (!here.isEmpty && prems.all (·.ok))
     (if here.isEmpty then [leaf "unjudged" "nothing in the world says what these words assert" false] else prems)
 

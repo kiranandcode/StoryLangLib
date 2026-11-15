@@ -1,7 +1,14 @@
 {
  "text_sha": "1318a5c6dd5f358f",
- "world_sha": "d217b7b22c990ac2",
+ "world_sha": "ba0ed29acb73af42",
  "events": [
+  {
+   "e": "become !bookOpen",
+   "at": 4,
+   "w": "gone",
+   "phase": "main",
+   "src": "text"
+  },
   {
    "e": "become judgeDead",
    "at": 31,
@@ -20,6 +27,11 @@
    "c": "at judge ring",
    "at": 31,
    "w": "threw"
+  },
+  {
+   "c": "true !bookOpen",
+   "at": 4,
+   "w": "gone"
   }
  ],
  "judge": [

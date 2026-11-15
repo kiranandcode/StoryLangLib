@@ -1,11 +1,18 @@
 {
  "text_sha": "04308be97ddbcbc4",
- "world_sha": "d217b7b22c990ac2",
+ "world_sha": "ba0ed29acb73af42",
  "events": [
   {
    "e": "become fightOn",
    "at": 9,
    "w": "began",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "become bookOpen",
+   "at": 12,
+   "w": "opened",
    "phase": "main",
    "src": "text"
   },

@@ -57,6 +57,15 @@ must follow from the layout. Atoms marked `state` change through `make` and
 `become` events. `Proofs.lean` proves each paragraph's setting verdict and the
 layout's consistency by `decide`.
 
+Facts must stay consistent with the prose in both directions. Every clause is
+judged by facts about what it is about: when its subject is a thing of the
+setting, a fact `about` that thing; when its nouns name weather, light or
+sound, a fact of that `kind`. And facts marked `perceptible` (at their thing's
+place; weather at any `outdoor` place) must be registered in the paragraph
+where the point-of-view character (`pov`) arrives and finds them new to her
+(never seen there, or changed since she last was). Both are in Lean
+(`Complete.lean`, `Report.lean`) and proved per paragraph.
+
 1. **Top-down (refinement).** The agent writes the plot as beats (a coarse
    story over a beat vocabulary), checks it; breaks each beat into paragraph
    plans (events), checks them; then writes each paragraph's prose and checks

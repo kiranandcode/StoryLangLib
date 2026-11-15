@@ -1,6 +1,6 @@
 {
  "text_sha": "fad4ca7034b2f12a",
- "world_sha": "011bdc9b05d88125",
+ "world_sha": "e7a75b65a7b7afc8",
  "events": [
   {
    "e": "adopt ran at(ran,lab)",
@@ -76,6 +76,21 @@
    "c": "at kiran lab",
    "at": 14,
    "w": "cooled"
+  },
+  {
+   "c": "true printersCooling",
+   "at": 11,
+   "w": "ticking"
+  },
+  {
+   "c": "true printersCooling",
+   "at": 14,
+   "w": "cooled"
+  },
+  {
+   "c": "true labDoorClicks",
+   "at": 19,
+   "w": "clicked"
   }
  ],
  "judge": [

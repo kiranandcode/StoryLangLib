@@ -1,6 +1,6 @@
 {
  "text_sha": "ced0fd529e8f75e5",
- "world_sha": "011bdc9b05d88125",
+ "world_sha": "e7a75b65a7b7afc8",
  "events": [
   {
    "e": "move kiran lab",
@@ -39,6 +39,21 @@
   }
  ],
  "claims": [
+  {
+   "c": "true rdeskBare",
+   "at": 16,
+   "w": "bare"
+  },
+  {
+   "c": "true rchairIn",
+   "at": 20,
+   "w": "pushed"
+  },
+  {
+   "c": "true talkedTillDawn",
+   "at": 104,
+   "w": "went"
+  },
   {
    "c": "at kiran lab",
    "at": 1,

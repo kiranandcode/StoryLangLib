@@ -74,8 +74,13 @@ structure AtomSpec where
   state : Bool := false
   /-- the place or thing the state is about (whoever changes it must be there) -/
   about : Option Spot := none
-  /-- weather: whoever the story follows must notice it on stepping outdoors -/
-  weather : Bool := false
+  /-- what sort of fact it is: "weather", "light", "sound", "condition", ... A
+  clause that names weather, light or sound must be judged by a fact of that kind. -/
+  kind : String := ""
+  /-- perceptible where it is (its `about`'s place; weather: any outdoor place):
+  when the point-of-view character arrives and finds it new to her, the
+  paragraph must register it -/
+  perceptible : Bool := false
   /-- the characters it is about (for holding the prose's clauses to it) -/
   who : List Nat := []
   deriving Repr, DecidableEq

@@ -284,6 +284,14 @@
    "who": [
     "chrollo"
    ]
+  },
+  {
+   "id": "bookOpen",
+   "label": "Chrollo's book is open",
+   "truth": false,
+   "state": true,
+   "about": "book",
+   "kind": "condition"
   }
  ],
  "start": {

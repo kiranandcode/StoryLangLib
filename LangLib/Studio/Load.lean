@@ -337,11 +337,11 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
           out := out ++ s!"theorem p{nm}_setting : {stmt} := by decide +kernel\n"
         if s.pov.isSome then
           let mentioned := p.mentioned s
-          let wst := s!"spec.weatherOk spec.start {up} {prev} {rs mentioned} = true"
-          if s.weatherOk s.start es prev mentioned then
-            bundled := bundled.push (s!"p{nm}_weather", wst, "")
+          let wst := s!"spec.perceptOk spec.start {up} {prev} {rs mentioned} = true"
+          if s.perceptOk s.start es prev mentioned then
+            bundled := bundled.push (s!"p{nm}_perceived", wst, "")
           else
-            out := out ++ s!"theorem p{nm}_weather : {wst} := by decide +kernel\n"
+            out := out ++ s!"theorem p{nm}_perceived : {wst} := by decide +kernel\n"
       if p.doc.isNone && p.plan.isSome then
         let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
         out := out ++ s!"def p{nm}setting : List Spot := {lean (rs p.planSetting)}\n"
