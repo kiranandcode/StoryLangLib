@@ -136,6 +136,12 @@ def speechVerbs : List String :=
 
 def negWords : List String := ["not", "n't", "never", "no", "nothing", "nobody", "none", "neither", "nor"]
 def modalWords : List String := ["would", "could", "might", "may", "should", "can", "must"]
+/-- Adverbs that hedge their clause as much as a modal does ("maybe they'll see"). -/
+def hedgeWords : List String := ["maybe", "perhaps", "probably", "possibly"]
+/-- Markers of a future not yet come about ("is it gonna hurt?", "they'll see"): such a
+clause asserts nothing that has happened, like a modal one. -/
+def futureWord (w : String) : Bool :=
+  ["will", "shall", "gonna"].contains w || w.endsWith "'ll" || w.endsWith "’ll"
 
 /-- What a subordinator says. -/
 def LinkRel.ofMarker : String → Option LinkRel
@@ -283,7 +289,9 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
         present := near.any (fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres")) ||
           (ctx.present && !near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.any (·.1 == "Tense")),
         genSubj := match nsubjK with | some k => (refOf k).isNone | none => ctx.genSubj,
-        modal := ctx.cond || near.any fun w => w.upos == .AUX && modalWords.contains (lower w),
+        modal := ctx.cond || near.any fun w =>
+          (w.upos == .AUX && modalWords.contains (lower w)) || (w.upos == .ADV && hedgeWords.contains (lower w)) ||
+          futureWord (lower w),
         quoted, said := ctx.said, parent := ctx.parent, parentLemma := ctx.parentLemma }
     let ctx' : TCtx := match me with
       | some p => { subj, parent := some p.at_, parentLemma := p.lemma, quoted, cond := p.modal,
@@ -620,7 +628,8 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
     let ja := judgesAt js l.a
     let jb := judgesAt js l.b
     if (ja ++ jb).any Judge.reported && l.rel != .condition then [] else
-    let pos (xs : List Judge) : Option Nat := (xs.map (Judge.pos c)).max?
+    -- a gesture (`act`) has no time of its own: only its token, which "X when Y" puts after Y
+    let pos (xs : List Judge) : Option Nat := ((xs.filter (·.kind != .act)).map (Judge.pos c)).max?
     let say (why : String) := [s!"'{l.word}' at {tok l.at_}: {why}"]
     match l.rel with
     | .after => match pos ja, pos jb with
@@ -968,7 +977,7 @@ def linkDeriv (c : ParaCtx s) (js : List Judge) (toks : List String) (l : Link) 
   if (ja ++ jb).any Judge.reported && l.rel != .condition then
     .mk "reported" concl true [leaf "inside a report" "said or thought by a character: their claim, not the world's" true]
   else
-  let pos (xs : List Judge) : Option Nat := (xs.map (Judge.pos c)).max?
+  let pos (xs : List Judge) : Option Nat := ((xs.filter (·.kind != .act)).map (Judge.pos c)).max?
   match l.rel with
   | .after | .before | .during =>
     match pos ja, pos jb with
