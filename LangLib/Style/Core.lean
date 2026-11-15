@@ -129,6 +129,8 @@ structure Sent where
   interior : Nat := 0
   /-- clauses with a character as subject that are not interiority (choreography) -/
   choreo : Nat := 0
+  /-- clauses outside quotes whose subject is the point-of-view character -/
+  povClauses : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-- Counts one tree contributes (merged bottom-up). -/
@@ -143,13 +145,15 @@ structure Acc where
   tags : List String := []
   interior : Nat := 0
   choreo : Nat := 0
+  povClauses : Nat := 0
   deriving Inhabited
 
 def Acc.add (a b : Acc) : Acc :=
   { prn := a.prn + b.prn, clauses := a.clauses + b.clauses, generics := a.generics + b.generics,
     likeSimiles := a.likeSimiles + b.likeSimiles, asIf := a.asIf + b.asIf, asAs := a.asAs + b.asAs,
     quoteWords := a.quoteWords + b.quoteWords, tags := a.tags ++ b.tags,
-    interior := a.interior + b.interior, choreo := a.choreo + b.choreo }
+    interior := a.interior + b.interior, choreo := a.choreo + b.choreo,
+    povClauses := a.povClauses + b.povClauses }
 
 /-- Who the story is about: its point-of-view character and its cast. -/
 structure Ctx where
@@ -198,11 +202,17 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
     let here : Acc :=
       if !isClause then {} else
       let lem := (verb.map lemmaOf).getD "be"
-      let interior := !quoted && subj == some cx.pov && interiorVerbs.contains lem
+      let reflexive := kids.any fun k => match k with
+        | .leaf w => w.role == some .obj && ["herself", "himself", "themselves", "myself"].contains (lower w.form)
+        | _ => false
+      -- a verb of mind, a state she is in ("she was annoyed"), or telling herself
+      let interior := !quoted && subj == some cx.pov &&
+        (interiorVerbs.contains lem || lem == "be" || (lem == "tell" && reflexive))
       { clauses := 1,
         generics := if !quoted && tns == some "Pres" && !charSubj then 1 else 0,
         interior := if interior then 1 else 0,
-        choreo := if !quoted && charSubj && !interior then 1 else 0 }
+        choreo := if !quoted && charSubj && !interior then 1 else 0,
+        povClauses := if !quoted && subj == some cx.pov then 1 else 0 }
     let prn : Acc := if info.cat == .PRN && !quoted then { prn := 1 } else {}
     let like : Acc := if info.cat == .PP && kids.any (fun k => match k with
         | .leaf w => w.role == some .case && lower w.form == "like" | _ => false) then { likeSimiles := 1 } else {}
@@ -269,7 +279,7 @@ def sentOf (cx : Ctx) (para : Nat) (t : Tree) : Sent :=
     anchors, footnote := footMark, wholeWithout := whole,
     clauses := a.clauses, generics := a.generics, likeSimiles := a.likeSimiles, asIf := a.asIf,
     asAs := a.asAs, concepts := conceptCount ls, quoteWords := a.quoteWords, tags := a.tags,
-    opener, interior := a.interior, choreo := a.choreo }
+    opener, interior := a.interior, choreo := a.choreo, povClauses := a.povClauses }
 
 /-- Read a paragraph's document. -/
 def sentsOfDoc (cx : Ctx) (para : Nat) (d : Doc) : List Sent :=
@@ -338,6 +348,7 @@ structure Features where
   openerKinds : Nat
   interior : Nat
   choreo : Nat
+  povClauses : Nat
   /-- narrator asides: generic clauses, parentheticals and footnotes -/
   asides : Nat
   footPaired : Bool
@@ -375,6 +386,7 @@ def Features.ofSents (ss : List Sent) : Features :=
     openerKinds := (distinct openers).length
     interior := sumBy (·.interior) ss
     choreo := sumBy (·.choreo) ss
+    povClauses := sumBy (·.povClauses) ss
     asides := generics + prn + footnotes
     footPaired := footnotesPaired ss
     footGeneric := footnotesGeneric ss }
@@ -383,7 +395,7 @@ def Features.ofSents (ss : List Sent) : Features :=
 inductive Feat where
   | paras | sents | words | clauses | depthSum | maxDepth | short | long | prn | anchors
   | footnotes | footnoteWords | generics | likeSimiles | asIf | asAs | similes | concepts
-  | quoteWords | tags | tagKinds | fancyTags | openers | openerKinds | interior | choreo | asides
+  | quoteWords | tags | tagKinds | fancyTags | openers | openerKinds | interior | choreo | povClauses | charClauses | asides
   deriving Repr, DecidableEq, Inhabited
 
 def Features.get (f : Features) : Feat → Nat
@@ -395,7 +407,8 @@ def Features.get (f : Features) : Feat → Nat
   | .similes => f.likeSimiles + f.asIf + f.asAs | .concepts => f.concepts
   | .quoteWords => f.quoteWords | .tags => f.tags | .tagKinds => f.tagKinds
   | .fancyTags => f.fancyTags | .openers => f.openers | .openerKinds => f.openerKinds
-  | .interior => f.interior | .choreo => f.choreo | .asides => f.asides
+  | .interior => f.interior | .choreo => f.choreo | .povClauses => f.povClauses
+  | .charClauses => f.interior + f.choreo | .asides => f.asides
 
 def Feat.name : Feat → String
   | .paras => "paras" | .sents => "sents" | .words => "words" | .clauses => "clauses"
@@ -405,12 +418,13 @@ def Feat.name : Feat → String
   | .asIf => "asIf" | .asAs => "asAs" | .similes => "similes" | .concepts => "concepts"
   | .quoteWords => "quoteWords" | .tags => "tags" | .tagKinds => "tagKinds"
   | .fancyTags => "fancyTags" | .openers => "openers" | .openerKinds => "openerKinds"
-  | .interior => "interior" | .choreo => "choreo" | .asides => "asides"
+  | .interior => "interior" | .choreo => "choreo" | .povClauses => "povClauses"
+  | .charClauses => "charClauses" | .asides => "asides"
 
 def Feat.all : List Feat :=
   [.paras, .sents, .words, .clauses, .depthSum, .maxDepth, .short, .long, .prn, .anchors,
    .footnotes, .footnoteWords, .generics, .likeSimiles, .asIf, .asAs, .similes, .concepts,
-   .quoteWords, .tags, .tagKinds, .fancyTags, .openers, .openerKinds, .interior, .choreo, .asides]
+   .quoteWords, .tags, .tagKinds, .fancyTags, .openers, .openerKinds, .interior, .choreo, .povClauses, .charClauses, .asides]
 
 /-! ## Rules and styles -/
 

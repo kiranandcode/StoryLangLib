@@ -7,7 +7,8 @@ def usage : String := "usage:
   langlib render <doc.json>                 print the text a document renders to
   langlib pretty <doc.json>                 print bracketed trees
   langlib story <dir>                       check a story directory, per paragraph (JSON report)
-  langlib story-lean <dir> <namespace>      print the story as a Lean file of theorems"
+  langlib story-lean <dir> <namespace>      print the story as a Lean file of theorems
+  langlib style <dir> [--pov id] [--lean name]  style features and verdicts (or the records as Lean)"
 
 def readDoc (p : String) : IO Doc := do
   match docOfString (← IO.FS.readFile p) with
@@ -59,5 +60,8 @@ def main : List String → IO UInt32
       pure 1
   | ["story-lean", dir, ns] => do
     IO.print (← LangLib.Studio.storyLean dir ns)
+    pure 0
+  | "style" :: dir :: opts => do
+    IO.println (← LangLib.Style.styleMain dir opts)
     pure 0
   | _ => do IO.eprintln usage; pure 64
