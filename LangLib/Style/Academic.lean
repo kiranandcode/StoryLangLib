@@ -29,8 +29,8 @@ The rules, over the whole excerpt in reading order:
   the paragraph mention;
 * **just in time**: an entity that is used again is used again within three
   sentences of its introduction;
-* **callbacks**: a mention of an entity after a gap of at least six sentences
-  and in a later paragraph;
+* **callbacks**: entities mentioned again after a gap of at least six
+  sentences, in a later paragraph (counted once per entity: a motif);
 * **question then answer**: a sentence that asks or sets up a question (ends
   in "?", or uses "wonder"/"question") is followed by a sentence that is not a
   question and shares an entity with it;
@@ -58,7 +58,7 @@ structure ASent where
   ents : List (String × Nat) := []
   /-- ends in "?" -/
   question : Bool := false
-  /-- asks or sets up a question ("?", "wonder", "question") -/
+  /-- asks or sets up a question ("?", "wonder", "question" but not "in question") -/
   asks : Bool := false
   dashes : Nat := 0
   colonSetups : Nat := 0
@@ -145,7 +145,8 @@ def asentOf (para : Nat) (t : Tree) : ASent :=
   { para, words := (ls.filter isWord).length, heading,
     subj := subj.bind (·.1), subjAt := (subj.map (·.2)).getD 0,
     ents := firstEach ms, question,
-    asks := question || forms.any (["wonder", "wonders", "question"].contains ·),
+    asks := question || forms.any (["wonder", "wonders"].contains ·) ||
+      (forms.zip (forms.drop 1)).any (fun (a, b) => b == "question" && a != "in"),
     dashes := (forms.filter (fun f => f == "—" || f == "--")).length,
     colonSetups := if heading then 0 else colonSetupsIn ls,
     antithesis := antithesisIn forms }
@@ -254,6 +255,7 @@ structure AFeatures where
   reused : Nat
   /-- of those, used again within three sentences of their introduction -/
   jit : Nat
+  /-- entities called back at least once -/
   callbacks : Nat
   asks : Nat
   answered : Nat
@@ -278,7 +280,7 @@ def AFeatures.ofSents (ss : List ASent) : AFeatures :=
     reused := reused.length,
     jit := (reused.filter fun p => match p with
       | a :: b :: _ => b.1 ≤ a.1 + 3 | _ => false).length,
-    callbacks := (poss.flatMap fun p => (gapsOf p).filter isCallback).length,
+    callbacks := (poss.filter fun p => (gapsOf p).any isCallback).length,
     asks := ans.length, answered := (ans.filter id).length,
     questions := (ss.filter (·.question)).length, rhetorical := rhetoricalIn ss,
     dashes := sumBy (·.dashes) ss, colonSetups := sumBy (·.colonSetups) ss,
