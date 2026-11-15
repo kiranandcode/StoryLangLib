@@ -28,6 +28,7 @@ import LangLib.World.Lexicon
 import LangLib.World.Examples.OfficeText
 import LangLib.World.Dialogue
 import LangLib.World.Goals
+import LangLib.World.Cause
 import LangLib.World.Examples.Date
 import LangLib.World.Story
 import LangLib.World.Derive

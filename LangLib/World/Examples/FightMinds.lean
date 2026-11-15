@@ -1,4 +1,5 @@
 import LangLib.World.Examples.FightSnaps
+import LangLib.World.Cause
 
 /-!
 # Chrollo against Hisoka: the whole fight, and who believes what
@@ -67,5 +68,22 @@ theorem no_whispers_to_the_dead :
 /-- info: some (10, "the listener cannot hear (dead, or no mind)") -/
 #guard_msgs in
 #eval firstFailure start (p1 ++ p2 ++ [mi (.whisper chrollo judge (nf (.usesBothHands sunMoon), true))]) 0
+
+/-! ## What caused the judge's death (`World/Cause.lean`)
+
+In paragraphs 1-2 the moves are: Black Voice opened (0), the antenna (1), the
+order (2), the bookmark on Black Voice (3), the book opened at Sun and Moon
+(4), the sun (5), the bookmark to Sun and Moon (6), the book shut (7), the
+moon (8), the blast (9). Causes are but-for: take the move out, and see
+whether the later one could still happen. -/
+
+/-- The moon set off the blast, and shutting the book is what freed the right
+hand for the moon. -/
+theorem the_moon_sets_off_the_blast :
+    enables start (p1 ++ p2) 8 9 = true ∧ enables start (p1 ++ p2) 7 8 = true := by decide +kernel
+
+/-- Black Voice is not a cause of the blast: without the antenna, the seals
+still meet. -/
+theorem black_voice_is_not_the_cause : enables start (p1 ++ p2) 1 9 = false := by decide +kernel
 
 end LangLib.World.Fight

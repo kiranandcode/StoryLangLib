@@ -288,7 +288,8 @@ def specOfJson (j : Json) : Except String Spec := do
             truth := (a.getObjValAs? Bool "truth").toOption.getD true,
             group := (str a "group").getD "",
             state := (a.getObjValAs? Bool "state").toOption.getD false,
-            about := ← (str a "about").mapM n0.spot } : AtomSpec)
+            about := ← (str a "about").mapM n0.spot,
+            who := ← (strs a "who").mapM n0.ch } : AtomSpec)
   let thing (place : Option Nat) (t : Json) : Except String ThingSpec := do
     let id ← need "fixture or scenery id" (str t "id")
     pure { id, what := (str t "what").getD "", place, owner := ← ((str t "owner" <|> str t "of").mapM n0.ch),

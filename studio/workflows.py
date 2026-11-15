@@ -119,6 +119,28 @@ to its token: after any prose edit or world change (story.json), `paragraph-chec
 reading stale until it is re-derived.
 """
 
+COMPLETE_RULES = """\
+This story is complete (story.json "complete": true): every part of the tree is a judgement from the
+world. Every clause (a verb heading its node, or a copula) needs at least one judgement anchored at its
+head word (the verb; for a copula, the predicate's head):
+- an event, with "at" on that word; the world things the clause's subject, object and obliques refer
+  to must be among those its judgements mention (an atom mentions the characters in its "who");
+- a claim, anchored: {"c": "true judgeDead", "at": 31, "w": "threw"}, true at that point (unanchored
+  claims are not allowed);
+- otherwise a "judge" entry {"at": n, "w": word, "kind": K}, K one of: content (with "lit": the clause is
+  the content of its parent clause's belief or speech, which must be judged with that literal), goal
+  (with "lit": a purpose clause; the agent of the event it serves must want it then), act (a gesture
+  whose subject is on stage), speech (quoted, or what a verb of saying says), hypothetical (modal or
+  conditional), external (with "e": a move checked elsewhere, e.g. a Nen move).
+A negated clause cannot assert an event unless the event's literal is negative.
+Connectives are read off the tree and checked: then/after/once/when (time order), before/until,
+while/meanwhile (same time), because/since/so (cause: with the cause taken out of the story the effect
+fails, the agent believed the reason, or the lore derives one fact from the other), to/in order to (the
+purpose clause is a goal), though/although (both hold), if/as if/unless (the clause is hypothetical).
+Adjectives on characters must be traits or carry "sense": "impression" in the annotation; other adverbs
+need a sense: impression, manner, degree, direction, place, time, order, aspect.
+"""
+
 CRAFT = """\
 Close third person, past tense, in Kiran's point of view (in scenes Kiran is not in, the point of view
 of whoever is there). Interiority over choreography: what she notices, wants, hesitates over. Specific
@@ -243,6 +265,9 @@ def objections(r: dict, k: int, check_claims: bool = True) -> list[str]:
     out += p["errors"]
     out += [f"setting: {x}" for x in (p.get("setting") or {}).get("issues", [])]
     out += [f"setting: {x}" for x in r.get("layout", [])]
+    comp = next((c for c in r.get("completeness", []) if c["name"] == f"{k:02}"), None)
+    if comp:
+        out += [f"completeness: {i}" for i in comp["issues"]]
     real = p.get("realisation") or {}
     if real and not real.get("realises", True):
         out.append("the paragraph does not realise its plan exactly: " +
@@ -370,7 +395,7 @@ def cmd_extract(a) -> int:
         "\n## Events of the earlier paragraphs (do not repeat them)\n" + ("\n".join(st.events_so_far(k)) or "(none)"),
         f"\n## Paragraph {k}\n" + st.f(k, "txt").read_text().strip(),
         "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
-        "\n## Rules\n" + READING_RULES,
+        "\n## Rules\n" + READING_RULES + (COMPLETE_RULES if st.spec.get("complete") else ""),
         f"\ntext_sha for this prose: {freshness.text_sha(st.f(k, 'txt').read_text())}",
         f"world_sha for this world: {freshness.world_sha(st.world_text())}",
     ]))

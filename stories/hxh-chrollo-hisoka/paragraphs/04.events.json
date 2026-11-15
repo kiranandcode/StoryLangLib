@@ -1,6 +1,6 @@
 {
  "text_sha": "5900ac6e336088a6",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "adopt chrollo chrolloHidden",
@@ -32,15 +32,59 @@
   },
   {
    "e": "notice hisoka !at(chrollo,ring) seen",
-   "at": 7,
-   "w": "was",
+   "at": 9,
+   "w": "there",
    "phase": "main",
    "src": "text"
   }
  ],
  "claims": [
-  "thinks hisoka !at(chrollo,ring)",
-  "true chrolloHidden"
+  {
+   "c": "thinks hisoka !at(chrollo,ring)",
+   "at": 9,
+   "w": "there"
+  },
+  {
+   "c": "true chrolloHidden",
+   "at": 39,
+   "w": "slipped"
+  }
+ ],
+ "judge": [
+  {
+   "at": 1,
+   "kind": "act",
+   "w": "closed"
+  },
+  {
+   "at": 20,
+   "kind": "external",
+   "e": "openBook chrollo convertHands",
+   "w": "left"
+  },
+  {
+   "at": 25,
+   "kind": "external",
+   "e": "use chrollo convertHands fan left",
+   "w": "taken"
+  },
+  {
+   "at": 32,
+   "kind": "external",
+   "e": "bookmark chrollo convertHands; closeBook chrollo",
+   "w": "shut"
+  },
+  {
+   "at": 44,
+   "kind": "goal",
+   "lit": "chrolloHidden",
+   "w": "hide"
+  },
+  {
+   "at": 47,
+   "kind": "act",
+   "w": "looked"
+  }
  ],
  "nen": [
   "openBook chrollo convertHands",

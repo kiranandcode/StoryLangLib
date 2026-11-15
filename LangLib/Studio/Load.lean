@@ -1,4 +1,4 @@
-import LangLib.Studio.Report
+import LangLib.Studio.Complete
 
 /-!
 # Story directories
@@ -27,6 +27,8 @@ structure Loaded where
   beatStory : List String
   lex : List FactLex
   paras : List Para
+  /-- the story asks that every clause, connective and modifier be judged -/
+  complete : Bool := false
 
 private def readJson (p : System.FilePath) : IO (Option Json) := do
   if !(← p.pathExists) then return none
@@ -118,14 +120,54 @@ def loadStory (dir : System.FilePath) : IO Loaded := do
           staging := staging ++ [f]
           stagingAt := stagingAt ++ [((it.getObjValAs? Nat "at").toOption, (it.getObjValAs? String "w").toOption)]
         | .error m => errors := errors ++ [s!"staging: {m}"]
-    let claims := (evJ.map (strs · "claims")).getD [] ++ (planJ.map (strs · "claims")).getD []
+    -- claims written as strings are about the end of the paragraph; anchored ones
+    -- ({"c": ..., "at": ...}) are judgements at their token (`Complete.lean`)
+    let claimStrs (j : Json) : List String := (arr j "claims").filterMap (·.getStr?.toOption)
+    let claims := (evJ.map claimStrs).getD [] ++ (planJ.map claimStrs).getD []
     let beat := planJ.bind fun pj => (pj.getObjValAs? String "beat").toOption
-    pure ({ name := nm, text, doc, plan, items, claims := claims.eraseDups, beat, errors, staging, stagingAt } : Para)
-  pure { spec, beats, beatStory, lex, paras }
+    pure ({ name := nm, text, doc, plan, items, claims := claims.eraseDups, beat, errors, staging, stagingAt,
+            reading := evJ } : Para)
+  pure { spec, beats, beatStory, lex, paras,
+         complete := (sj.getObjValAs? Bool "complete").toOption.getD false }
+
+/-- A paragraph's context for completeness: the story before it, and its events
+with their tokens. -/
+def paraCtx (s : Spec) (timed : Timed (E s)) (owner : List Nat) (k : Nat) (p : Para) : ParaCtx s :=
+  { prior := if k == 0 then [] else timed.upTo owner (k - 1),
+    items := p.items.map fun it => (it.ev, it.at_.getD 0) }
+
+/-- What keeps a paragraph from being complete, in words. -/
+def paraCompleteness (s : Spec) (c : ParaCtx s) (p : Para) : List String :=
+  match p.doc, p.reading with
+  | some d, some j =>
+    match judgesOf s j with
+    | .error e => [s!"judgements: {e}"]
+    | .ok js =>
+      (unanchoredClaims j).map (fun c =>
+        s!"the claim \"{c}\" has no anchor: write it as \{\"c\": ..., \"at\": token, \"w\": word}") ++
+      completeIssues c (treeFacts s d) js d.render
+  | none, _ => ["no annotation to judge"]
+  | _, none => ["no reading to judge"]
 
 def storyReport (dir : System.FilePath) : IO Json := do
   let l ← loadStory dir
-  pure (report l.spec l.beats l.beatStory l.lex l.paras)
+  let r := report l.spec l.beats l.beatStory l.lex l.paras
+  if !l.complete then return r
+  let s := l.spec
+  let (story, owner) := storyOf (s := s) l.paras
+  let some timed := story.solved | return r
+  let owner := owner.map (·.2)
+  let cs := l.paras.zipIdx.map fun (p, k) =>
+    let issues := paraCompleteness s (paraCtx s timed owner k p) p
+    let f := (p.doc.map (treeFacts s)).getD {}
+    let toks : List String := (p.doc.map (·.render)).getD []
+    Json.mkObj [("name", p.name), ("issues", Json.arr (issues.map Json.str).toArray),
+      ("clauses", Json.arr (f.preds.map fun c => Json.mkObj [("at", c.at_), ("w", Json.str (toks.getD c.at_ "")),
+        ("neg", c.neg), ("modal", c.modal), ("quoted", c.quoted),
+        ("parent", match c.parent with | some q => Json.num q | none => Json.null)]).toArray),
+      ("links", Json.arr (f.links.map fun l => Json.mkObj [("at", l.at_), ("word", l.word),
+        ("rel", reprStr l.rel |>.replace "LangLib.Studio.LinkRel." ""), ("a", l.a), ("b", l.b)]).toArray)]
+  pure (r.setObjVal! "completeness" (Json.arr cs.toArray))
 
 /-! ## The story as a Lean file -/
 
@@ -243,6 +285,20 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
           bundled := bundled.push (s!"p{nm}_setting", stmt, "")
         else
           out := out ++ s!"theorem p{nm}_setting : {stmt} := by decide +kernel\n"
+    if l.complete then
+      if let (some d, some j) := (p.doc, p.reading) then
+        if let .ok js := judgesOf s j then
+          let f := treeFacts s d
+          out := out ++ s!"def p{nm}tree : TreeFacts := {lean (rs f)}\n"
+          out := out ++ s!"#guard treeMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}tree\n"
+          out := out ++ s!"def p{nm}judges : List Judge := {lean (rs js)}\n"
+          out := out ++ s!"#guard judgesMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}judges\n"
+          let ats := p.items.map (·.at_.getD 0)
+          let prior := if k == 0 then "[]" else s!"story.upTo owner {k - 1}"
+          let stmt := s!"completeOk (⟨{prior}, p{nm}.zip {rs ats}⟩ : ParaCtx spec) p{nm}tree p{nm}judges = true"
+          let ok := (unanchoredClaims j).isEmpty && completeOk (paraCtx s timed owner k p) f js
+          if ok then bundled := bundled.push (s!"p{nm}_complete", stmt, "")
+          else out := out ++ s!"theorem p{nm}_complete : {stmt} := by decide +kernel\n"
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)

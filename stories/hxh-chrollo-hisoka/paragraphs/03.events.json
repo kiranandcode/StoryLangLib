@@ -1,6 +1,6 @@
 {
  "text_sha": "bf8c118c28c13f56",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "tell chrollo hisoka usesBoth",
@@ -32,15 +32,69 @@
   },
   {
    "e": "notice hisoka needsBoth inferred",
-   "at": 58,
-   "w": "conclusion",
+   "at": 55,
+   "w": "drew",
    "phase": "main",
    "src": "text"
   }
  ],
  "claims": [
-  "knows hisoka usesBoth",
-  "falseBelief hisoka needsBoth"
+  {
+   "c": "knows hisoka usesBoth",
+   "at": 17,
+   "w": "said"
+  },
+  {
+   "c": "falseBelief hisoka needsBoth",
+   "at": 55,
+   "w": "drew"
+  },
+  {
+   "c": "thinks hisoka needsBoth",
+   "at": 66,
+   "w": "had"
+  }
+ ],
+ "judge": [
+  {
+   "at": 1,
+   "kind": "act",
+   "w": "answered"
+  },
+  {
+   "at": 5,
+   "kind": "hypothetical",
+   "w": "had"
+  },
+  {
+   "at": 12,
+   "kind": "content",
+   "lit": "usesBoth",
+   "w": "used"
+  },
+  {
+   "at": 36,
+   "kind": "content",
+   "lit": "sealsStay",
+   "w": "exploded"
+  },
+  {
+   "at": 53,
+   "kind": "act",
+   "w": "listened"
+  },
+  {
+   "at": 61,
+   "kind": "content",
+   "lit": "needsBoth",
+   "w": "set"
+  },
+  {
+   "at": 68,
+   "kind": "content",
+   "lit": "needsBoth",
+   "w": "put"
+  }
  ],
  "nen": [
   "tell chrollo hisoka usesBothHands(sunMoon)",

@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 1.9,
+ "secs": 8.1,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -8,177 +8,147 @@
    "ok": true
   },
   "paragraphs": {
-   "line": 103,
+   "line": 139,
    "statement": "paragraphs :",
    "ok": true
   },
   "p01_valid": {
-   "line": 139,
+   "line": 169,
    "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
    "ok": true
   },
-  "p01_claim0": {
-   "line": 141,
-   "statement": "p01_claim0 : (Claim.knows 1 (Fact.atom 7, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
   "p01_setting": {
-   "line": 142,
+   "line": 170,
    "statement": "p01_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true",
    "ok": true
   },
+  "p01_complete": {
+   "line": 171,
+   "statement": "p01_complete : completeOk (\u27e8[], p01.zip [9, 52, 20, 44]\u27e9 : ParaCtx spec) p01tree p01judges = true",
+   "ok": true
+  },
   "p02_valid": {
-   "line": 143,
+   "line": 172,
    "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
    "ok": true
   },
-  "p02_claim0": {
-   "line": 145,
-   "statement": "p02_claim0 : (Claim.holdsTrue (Fact.atom 8, true)).eval (run spec.start (story.upTo owner 1)) = true",
+  "p02_setting": {
+   "line": 173,
+   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 4) p02uses p02staging = true",
    "ok": true
   },
-  "p02_setting": {
-   "line": 146,
-   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 2) p02uses p02staging = true",
+  "p02_complete": {
+   "line": 174,
+   "statement": "p02_complete : completeOk (\u27e8story.upTo owner 0, p02.zip [31]\u27e9 : ParaCtx spec) p02tree p02judges = true",
    "ok": true
   },
   "p03_valid": {
-   "line": 147,
+   "line": 175,
    "statement": "p03_valid : Valid spec.start (story.upTo owner 2)",
    "ok": true
   },
-  "p03_claim0": {
-   "line": 149,
-   "statement": "p03_claim0 : (Claim.knows 1 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 2)) = true",
-   "ok": true
-  },
-  "p03_claim1": {
-   "line": 151,
-   "statement": "p03_claim1 : (Claim.falseBelief 1 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 2)) = true",
-   "ok": true
-  },
   "p03_setting": {
-   "line": 152,
-   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 3) p03uses p03staging = true",
+   "line": 176,
+   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 5) p03uses p03staging = true",
+   "ok": true
+  },
+  "p03_complete": {
+   "line": 177,
+   "statement": "p03_complete : completeOk (\u27e8story.upTo owner 1, p03.zip [17, 33, 43, 47, 55]\u27e9 : ParaCtx spec) p03tree p03judges = true",
    "ok": true
   },
   "p04_valid": {
-   "line": 153,
+   "line": 178,
    "statement": "p04_valid : Valid spec.start (story.upTo owner 3)",
    "ok": true
   },
-  "p04_claim0": {
-   "line": 155,
-   "statement": "p04_claim0 : (Claim.thinks 1 (Fact.at_ 0 0, false)).eval (run spec.start (story.upTo owner 3)) = true",
-   "ok": true
-  },
-  "p04_claim1": {
-   "line": 157,
-   "statement": "p04_claim1 : (Claim.holdsTrue (Fact.atom 9, true)).eval (run spec.start (story.upTo owner 3)) = true",
-   "ok": true
-  },
   "p04_setting": {
-   "line": 158,
-   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 8) p04uses p04staging = true",
+   "line": 179,
+   "statement": "p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 10) p04uses p04staging = true",
+   "ok": true
+  },
+  "p04_complete": {
+   "line": 180,
+   "statement": "p04_complete : completeOk (\u27e8story.upTo owner 2, p04.zip [44, 44, 39, 39, 9]\u27e9 : ParaCtx spec) p04tree p04judges = true",
    "ok": true
   },
   "p05_valid": {
-   "line": 159,
+   "line": 181,
    "statement": "p05_valid : Valid spec.start (story.upTo owner 4)",
    "ok": true
   },
-  "p05_claim0": {
-   "line": 161,
-   "statement": "p05_claim0 : (Claim.knows 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 4)) = true",
+  "p05_setting": {
+   "line": 182,
+   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 15) p05uses p05staging = true",
    "ok": true
   },
-  "p05_setting": {
-   "line": 162,
-   "statement": "p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 13) p05uses p05staging = true",
+  "p05_complete": {
+   "line": 183,
+   "statement": "p05_complete : completeOk (\u27e8story.upTo owner 3, p05.zip [21, 21, 26, 42, 36, 53]\u27e9 : ParaCtx spec) p05tree p05judges = true",
    "ok": true
   },
   "p06_valid": {
-   "line": 163,
+   "line": 184,
    "statement": "p06_valid : Valid spec.start (story.upTo owner 5)",
    "ok": true
   },
-  "p06_claim0": {
-   "line": 165,
-   "statement": "p06_claim0 : (Claim.knows 0 (Fact.atom 6, true)).eval (run spec.start (story.upTo owner 5)) = true",
+  "p06_setting": {
+   "line": 185,
+   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 21) p06uses p06staging = true",
    "ok": true
   },
-  "p06_setting": {
-   "line": 166,
-   "statement": "p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 18) p06uses p06staging = true",
+  "p06_complete": {
+   "line": 186,
+   "statement": "p06_complete : completeOk (\u27e8story.upTo owner 4, p06.zip [50]\u27e9 : ParaCtx spec) p06tree p06judges = true",
    "ok": true
   },
   "p07_valid": {
-   "line": 167,
+   "line": 187,
    "statement": "p07_valid : Valid spec.start (story.upTo owner 6)",
    "ok": true
   },
-  "p07_claim0": {
-   "line": 169,
-   "statement": "p07_claim0 : (Claim.falseBelief 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 6)) = true",
-   "ok": true
-  },
-  "p07_claim1": {
-   "line": 171,
-   "statement": "p07_claim1 : (Claim.falseBelief 1 (Fact.atom 5, true)).eval (run spec.start (story.upTo owner 6)) = true",
-   "ok": true
-  },
   "p07_setting": {
-   "line": 172,
-   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 19) p07uses p07staging = true",
+   "line": 188,
+   "statement": "p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 22) p07uses p07staging = true",
+   "ok": true
+  },
+  "p07_complete": {
+   "line": 189,
+   "statement": "p07_complete : completeOk (\u27e8story.upTo owner 5, p07.zip [3, 8, 54]\u27e9 : ParaCtx spec) p07tree p07judges = true",
    "ok": true
   },
   "p08_valid": {
-   "line": 173,
+   "line": 190,
    "statement": "p08_valid : Valid spec.start (story.upTo owner 7)",
    "ok": true
   },
-  "p08_claim0": {
-   "line": 175,
-   "statement": "p08_claim0 : (Claim.thinks 1 (Fact.atom 5, false)).eval (run spec.start (story.upTo owner 7)) = true",
-   "ok": true
-  },
-  "p08_claim1": {
-   "line": 177,
-   "statement": "p08_claim1 : (Claim.knows 1 (Fact.atom 1, false)).eval (run spec.start (story.upTo owner 7)) = true",
-   "ok": true
-  },
-  "p08_claim2": {
-   "line": 179,
-   "statement": "p08_claim2 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 7)) = true",
-   "ok": true
-  },
   "p08_setting": {
-   "line": 180,
-   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 22) p08uses p08staging = true",
+   "line": 191,
+   "statement": "p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 25) p08uses p08staging = true",
+   "ok": true
+  },
+  "p08_complete": {
+   "line": 192,
+   "statement": "p08_complete : completeOk (\u27e8story.upTo owner 6, p08.zip [2, 33, 67, 76]\u27e9 : ParaCtx spec) p08tree p08judges = true",
    "ok": true
   },
   "p09_valid": {
-   "line": 181,
+   "line": 193,
    "statement": "p09_valid : Valid spec.start (story.upTo owner 8)",
    "ok": true
   },
-  "p09_claim0": {
-   "line": 183,
-   "statement": "p09_claim0 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 8)) = true",
-   "ok": true
-  },
-  "p09_claim1": {
-   "line": 185,
-   "statement": "p09_claim1 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 8)) = true",
-   "ok": true
-  },
   "p09_setting": {
-   "line": 186,
-   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 26) p09uses p09staging = true",
+   "line": 194,
+   "statement": "p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 29) p09uses p09staging = true",
+   "ok": true
+  },
+  "p09_complete": {
+   "line": 195,
+   "statement": "p09_complete : completeOk (\u27e8story.upTo owner 7, p09.zip [1, 1]\u27e9 : ParaCtx spec) p09tree p09judges = true",
    "ok": true
   },
   "layout_consistent": {
-   "line": 188,
+   "line": 197,
    "statement": "layout_consistent : spec.layoutOk = true",
    "ok": true
   }
@@ -186,5 +156,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/hxh-chrollo-hisoka/Proofs.lean",
- "at": 1794706133.670481
+ "at": 1794707896.0637288
 }

@@ -1,7 +1,14 @@
 {
  "text_sha": "04308be97ddbcbc4",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
+  {
+   "e": "become fightOn",
+   "at": 9,
+   "w": "began",
+   "phase": "main",
+   "src": "text"
+  },
   {
    "e": "adopt chrollo judgeHeld",
    "at": 52,
@@ -15,10 +22,57 @@
    "w": "drove",
    "phase": "main",
    "src": "text"
+  },
+  {
+   "e": "notice hisoka chrolloShield inferred",
+   "at": 44,
+   "w": "saw",
+   "phase": "main",
+   "src": "text"
   }
  ],
  "claims": [
-  "knows hisoka judgeHeld"
+  {
+   "c": "knows hisoka judgeHeld",
+   "at": 33,
+   "w": "turned"
+  }
+ ],
+ "judge": [
+  {
+   "at": 2,
+   "kind": "act",
+   "w": "dropped"
+  },
+  {
+   "at": 12,
+   "kind": "external",
+   "e": "openBook chrollo blackVoice",
+   "w": "opened"
+  },
+  {
+   "at": 20,
+   "kind": "external",
+   "e": "use chrollo blackVoice judge left",
+   "w": "drove"
+  },
+  {
+   "at": 41,
+   "kind": "act",
+   "w": "smiled"
+  },
+  {
+   "at": 52,
+   "kind": "content",
+   "lit": "chrolloShield",
+   "w": "hide"
+  },
+  {
+   "at": 57,
+   "kind": "content",
+   "lit": "chrolloShield",
+   "w": "wait"
+  }
  ],
  "nen": [
   "openBook chrollo blackVoice",

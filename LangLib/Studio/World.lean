@@ -74,6 +74,8 @@ structure AtomSpec where
   state : Bool := false
   /-- the place or thing the state is about (whoever changes it must be there) -/
   about : Option Spot := none
+  /-- the characters it is about (for holding the prose's clauses to it) -/
+  who : List Nat := []
   deriving Repr, DecidableEq
 
 structure PlanSpec where

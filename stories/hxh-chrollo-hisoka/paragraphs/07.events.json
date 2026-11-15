@@ -1,6 +1,6 @@
 {
  "text_sha": "000045343e2f816f",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "adopt chrollo !gfUp",
@@ -25,8 +25,63 @@
   }
  ],
  "claims": [
-  "falseBelief hisoka gfUp",
-  "falseBelief hisoka decoyIsChrollo"
+  {
+   "c": "true !gfUp",
+   "at": 11,
+   "w": "go"
+  },
+  {
+   "c": "true copiesStand",
+   "at": 15,
+   "w": "kept"
+  },
+  {
+   "c": "true sealsHold",
+   "at": 23,
+   "w": "held"
+  },
+  {
+   "c": "falseBelief hisoka gfUp",
+   "at": 29,
+   "w": "believed"
+  },
+  {
+   "c": "falseBelief hisoka decoyIsChrollo",
+   "at": 54,
+   "w": "sure"
+  }
+ ],
+ "judge": [
+  {
+   "at": 3,
+   "kind": "goal",
+   "lit": "!gfUp",
+   "w": "free"
+  },
+  {
+   "at": 33,
+   "kind": "content",
+   "lit": "gfUp",
+   "w": "up"
+  },
+  {
+   "at": 39,
+   "kind": "external",
+   "e": "order chrollo decoy",
+   "w": "came"
+  },
+  {
+   "at": 57,
+   "kind": "content",
+   "lit": "decoyIsChrollo",
+   "w": "Chrollo"
+  },
+  {
+   "at": 60,
+   "kind": "external",
+   "e": "strike hisoka decoy 3",
+   "w": "struck"
+  }
  ],
  "nen": [
   "openBook chrollo sunMoon",

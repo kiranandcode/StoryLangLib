@@ -1,11 +1,11 @@
 {
  "text_sha": "4c1ae3e3f499e205",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "notice hisoka !decoyIsChrollo seen",
-   "at": 9,
-   "w": "was",
+   "at": 2,
+   "w": "gave",
    "phase": "main",
    "src": "text"
   },
@@ -32,9 +32,67 @@
   }
  ],
  "claims": [
-  "thinks hisoka !decoyIsChrollo",
-  "knows hisoka !needsBoth",
-  "true hisokaMaimed"
+  {
+   "c": "thinks hisoka !decoyIsChrollo",
+   "at": 2,
+   "w": "gave"
+  },
+  {
+   "c": "true !decoyIsChrollo",
+   "at": 10,
+   "w": "a"
+  },
+  {
+   "c": "true decoyBlown",
+   "at": 26,
+   "w": "blew"
+  },
+  {
+   "c": "knows hisoka !needsBoth",
+   "at": 33,
+   "w": "understood"
+  },
+  {
+   "c": "true sealsOneHand",
+   "at": 40,
+   "w": "set"
+  },
+  {
+   "c": "true !needsBoth",
+   "at": 51,
+   "w": "needed"
+  },
+  {
+   "c": "true hisokaMaimed",
+   "at": 76,
+   "w": "took"
+  }
+ ],
+ "judge": [
+  {
+   "at": 12,
+   "kind": "external",
+   "e": "use chrollo convertHands decoy right",
+   "w": "wearing"
+  },
+  {
+   "at": 16,
+   "kind": "external",
+   "e": "use chrollo sunMoon decoy right",
+   "w": "sealed"
+  },
+  {
+   "at": 61,
+   "kind": "external",
+   "e": "charge chrollo",
+   "w": "packed"
+  },
+  {
+   "at": 67,
+   "kind": "external",
+   "e": "order chrollo",
+   "w": "set"
+  }
  ],
  "nen": [
   "strike hisoka c1 3",

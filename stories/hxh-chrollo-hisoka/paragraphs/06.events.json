@@ -1,6 +1,6 @@
 {
  "text_sha": "d1eaf4b37c45908d",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "notice chrollo gumOnHead seen",
@@ -11,7 +11,63 @@
   }
  ],
  "claims": [
-  "knows chrollo gumOnHead"
+  {
+   "c": "true chrolloHit",
+   "at": 37,
+   "w": "struck"
+  },
+  {
+   "c": "knows chrollo gumOnHead",
+   "at": 50,
+   "w": "seen"
+  },
+  {
+   "c": "true chrolloHidden",
+   "at": 64,
+   "w": "gone"
+  }
+ ],
+ "judge": [
+  {
+   "at": 1,
+   "kind": "external",
+   "e": "behead hisoka c2",
+   "w": "tore"
+  },
+  {
+   "at": 15,
+   "kind": "hypothetical",
+   "w": "see"
+  },
+  {
+   "at": 19,
+   "kind": "external",
+   "e": "use hisoka bungeeGum c2 left",
+   "w": "stuck"
+  },
+  {
+   "at": 26,
+   "kind": "external",
+   "e": "strike hisoka chrollo 2",
+   "w": "swung"
+  },
+  {
+   "at": 42,
+   "kind": "external",
+   "e": "tech chrollo gyo",
+   "w": "had"
+  },
+  {
+   "at": 55,
+   "kind": "external",
+   "e": "strike hisoka chrollo 2",
+   "w": "moved"
+  },
+  {
+   "at": 58,
+   "kind": "act",
+   "w": "rolled"
+  }
  ],
  "nen": [
   "behead hisoka c2",

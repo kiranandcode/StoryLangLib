@@ -1,17 +1,56 @@
 {
  "text_sha": "1318a5c6dd5f358f",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "become judgeDead",
-   "at": 38,
-   "w": "dead",
+   "at": 31,
+   "w": "threw",
    "phase": "main",
    "src": "text"
   }
  ],
  "claims": [
-  "true judgeDead"
+  {
+   "c": "true judgeDead",
+   "at": 31,
+   "w": "threw"
+  },
+  {
+   "c": "at judge ring",
+   "at": 31,
+   "w": "threw"
+  }
+ ],
+ "judge": [
+  {
+   "at": 4,
+   "kind": "external",
+   "e": "closeBook chrollo",
+   "w": "gone"
+  },
+  {
+   "at": 7,
+   "kind": "external",
+   "e": "use chrollo sunMoon judge left",
+   "w": "laid"
+  },
+  {
+   "at": 27,
+   "kind": "external",
+   "e": "detonate judge judge",
+   "w": "met"
+  },
+  {
+   "at": 41,
+   "kind": "act",
+   "w": "wiped"
+  },
+  {
+   "at": 49,
+   "kind": "speech",
+   "w": "is"
+  }
  ],
  "nen": [
   "bookmark chrollo blackVoice",

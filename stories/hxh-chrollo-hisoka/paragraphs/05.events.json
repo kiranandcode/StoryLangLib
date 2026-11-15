@@ -1,6 +1,6 @@
 {
  "text_sha": "afc7a851365a5da7",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "adopt chrollo gfUp",
@@ -13,6 +13,13 @@
    "e": "make chrollo gfUp",
    "at": 21,
    "w": "made",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt chrollo hisokaBroken",
+   "at": 26,
+   "w": "stamped",
    "phase": "main",
    "src": "text"
   },
@@ -39,7 +46,52 @@
   }
  ],
  "claims": [
-  "knows hisoka gfUp"
+  {
+   "c": "true copiesAttack",
+   "at": 2,
+   "w": "came"
+  },
+  {
+   "c": "true copiesPuppets",
+   "at": 10,
+   "w": "blink"
+  },
+  {
+   "c": "true copiesStand",
+   "at": 50,
+   "w": "stood"
+  },
+  {
+   "c": "knows hisoka gfUp",
+   "at": 53,
+   "w": "told"
+  }
+ ],
+ "judge": [
+  {
+   "at": 26,
+   "kind": "external",
+   "e": "use chrollo orderStamp c2 left",
+   "w": "stamped"
+  },
+  {
+   "at": 32,
+   "kind": "goal",
+   "lit": "hisokaBroken",
+   "w": "break"
+  },
+  {
+   "at": 42,
+   "kind": "goal",
+   "lit": "at(hisoka,stands)",
+   "w": "meet"
+  },
+  {
+   "at": 60,
+   "kind": "content",
+   "lit": "gfUp",
+   "w": "up"
+  }
  ],
  "nen": [
   "openBook chrollo galleryFake",

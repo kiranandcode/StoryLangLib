@@ -66,6 +66,8 @@ structure Para where
   /-- spatial relations the prose asserts, with the token each is anchored at -/
   staging : List Fixed := []
   stagingAt : List (Option Nat × Option String) := []
+  /-- the paragraph's events file as read (its judgements, for completeness) -/
+  reading : Option Json := none
 
 /-- How to read facts off complement clauses ("she thought Theo liked her"). -/
 structure FactLex where

@@ -1,6 +1,6 @@
 {
  "text_sha": "302a067f8f761de3",
- "world_sha": "34788e701c02c39e",
+ "world_sha": "d217b7b22c990ac2",
  "events": [
   {
    "e": "adopt hisoka at(hisoka,upper)",
@@ -18,8 +18,70 @@
   }
  ],
  "claims": [
-  "at hisoka upper",
-  "true hisokaMaimed"
+  {
+   "c": "at hisoka upper",
+   "at": 1,
+   "w": "fell"
+  },
+  {
+   "c": "true hisokaMaimed",
+   "at": 47,
+   "w": "laughed"
+  }
+ ],
+ "judge": [
+  {
+   "at": 19,
+   "kind": "external",
+   "e": "order chrollo",
+   "w": "gave"
+  },
+  {
+   "at": 26,
+   "kind": "speech",
+   "w": "climb"
+  },
+  {
+   "at": 28,
+   "kind": "speech",
+   "w": "find"
+  },
+  {
+   "at": 31,
+   "kind": "speech",
+   "w": "get"
+  },
+  {
+   "at": 35,
+   "kind": "speech",
+   "w": "blow"
+  },
+  {
+   "at": 38,
+   "kind": "external",
+   "e": "move copies upper",
+   "w": "came"
+  },
+  {
+   "at": 47,
+   "kind": "act",
+   "w": "laughed"
+  },
+  {
+   "at": 54,
+   "kind": "act",
+   "w": "wondered"
+  },
+  {
+   "at": 58,
+   "kind": "hypothetical",
+   "w": "where"
+  },
+  {
+   "at": 60,
+   "kind": "hypothetical",
+   "w": "died"
+  }
  ],
  "nen": [
   "move hisoka upper",

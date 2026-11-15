@@ -119,17 +119,26 @@
   {
    "id": "usesBoth",
    "label": "Sun and Moon is worked with both hands (a sun with the left, a moon with the right)",
-   "truth": true
+   "truth": true,
+   "who": [
+    "chrollo"
+   ]
   },
   {
    "id": "needsBoth",
    "label": "Sun and Moon needs both hands free at once",
-   "truth": false
+   "truth": false,
+   "who": [
+    "chrollo"
+   ]
   },
   {
    "id": "gfNeedsBoth",
    "label": "Gallery Fake needs both hands free",
-   "truth": true
+   "truth": true,
+   "who": [
+    "chrollo"
+   ]
   },
   {
    "id": "sealsStay",
@@ -144,42 +153,137 @@
   {
    "id": "decoyIsChrollo",
    "label": "the man Hisoka strikes is Chrollo",
-   "truth": false
+   "truth": false,
+   "who": [
+    "decoy",
+    "chrollo"
+   ]
   },
   {
    "id": "gumOnHead",
    "label": "Hisoka's gum is stuck to the puppet's head",
-   "truth": true
+   "truth": true,
+   "who": [
+    "hisoka"
+   ]
   },
   {
    "id": "judgeHeld",
    "label": "the judge is under Chrollo's control",
    "truth": false,
-   "state": true
+   "state": true,
+   "who": [
+    "judge",
+    "chrollo"
+   ]
   },
   {
    "id": "judgeDead",
    "label": "the judge is dead",
    "truth": false,
-   "state": true
+   "state": true,
+   "who": [
+    "judge"
+   ]
   },
   {
    "id": "chrolloHidden",
    "label": "Chrollo is hidden in the crowd",
    "truth": false,
-   "state": true
+   "state": true,
+   "who": [
+    "chrollo"
+   ]
   },
   {
    "id": "gfUp",
    "label": "Gallery Fake is active",
    "truth": false,
-   "state": true
+   "state": true,
+   "who": [
+    "chrollo"
+   ]
   },
   {
    "id": "hisokaMaimed",
    "label": "Hisoka has lost his left hand",
    "truth": false,
+   "state": true,
+   "who": [
+    "hisoka"
+   ]
+  },
+  {
+   "id": "fightOn",
+   "label": "the fight is on",
+   "truth": false,
    "state": true
+  },
+  {
+   "id": "chrolloShield",
+   "label": "Chrollo means to hide behind the judge and wait",
+   "truth": true,
+   "who": [
+    "chrollo",
+    "judge"
+   ]
+  },
+  {
+   "id": "copiesStand",
+   "label": "the copies are still standing",
+   "truth": true
+  },
+  {
+   "id": "sealsHold",
+   "label": "the seals hold the copies",
+   "truth": true
+  },
+  {
+   "id": "copiesAttack",
+   "label": "the copies come for Hisoka",
+   "truth": true,
+   "who": [
+    "hisoka"
+   ]
+  },
+  {
+   "id": "copiesPuppets",
+   "label": "the copies are puppets, without minds",
+   "truth": true
+  },
+  {
+   "id": "hisokaBroken",
+   "label": "Hisoka is broken",
+   "truth": false,
+   "who": [
+    "hisoka"
+   ]
+  },
+  {
+   "id": "chrolloHit",
+   "label": "the head strikes Chrollo",
+   "truth": true,
+   "who": [
+    "chrollo",
+    "hisoka"
+   ]
+  },
+  {
+   "id": "decoyBlown",
+   "label": "the decoy blows up in Hisoka's arms",
+   "truth": true,
+   "who": [
+    "decoy",
+    "hisoka"
+   ]
+  },
+  {
+   "id": "sealsOneHand",
+   "label": "each seal is set with one hand",
+   "truth": true,
+   "who": [
+    "chrollo"
+   ]
   }
  ],
  "start": {
@@ -239,6 +343,21 @@
   },
   {
    "brief": "Hisoka retreats to the upper floor. Chrollo orders the last copies up after him, to get close and blow. Cornered, Hisoka wonders whether this is where he dies."
+  }
+ ],
+ "complete": true,
+ "lore": [
+  {
+   "if": [
+    "sealsHold"
+   ],
+   "then": "copiesStand"
+  },
+  {
+   "if": [
+    "sealsOneHand"
+   ],
+   "then": "!needsBoth"
   }
  ]
 }
