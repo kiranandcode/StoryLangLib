@@ -272,9 +272,18 @@ declared by hand. `langlib house <dir>` reports them.
 | appositive-trailing cadence | an appositive, then a trailing adverbial clause |
 | dramatic terminal, summarising pivot, summary closer | a short last sentence that negates or asserts significance; a short sentence whose subject is a composite; a last sentence that adds no entity |
 | bare pivot, spurious contrast | a paragraph opening on a contrast connective without the last paragraph's entities; a contrast connective with no entity shared with the previous sentence |
+| bare relative clause (Kiran, 2026-11-15) | a noun phrase post-modified by a relative clause (`relcl`, or `acl` with a finite verb; "that", "which" or no relativiser) whose verb has nothing past its subject and the gap: no object, complement, purpose, PP or adverbial. It reads as the start of a description and drops it ("code that AI writes"). Extended clauses ("code that AI writes to kill puppies", "the tools we use every day"), clefts, existentials and quotations are exempt |
 
 Unsupported claims, antitheses and coined terms used before they are defined
 are the argument world's (`Argument.lean`).
+
+Non-restrictive relative clauses ("the containers library, which people
+use,") are counted (`bareAsides`) but not judged. Set off by a comma or
+bracket, such a clause asserts a second proposition about a noun the reader
+has already identified. It does not restrict the noun and so does not raise
+the expectation of a description that the restrictive clause leaves unpaid;
+when it is empty, the empty-aside rules (stacked asides, summary closers)
+are the ones that apply. None of the four texts has a bare one.
 
 | | Sisyphus | RustBelt | roof | roof-pratchett (01–06) |
 |:--|--:|--:|--:|--:|
@@ -286,11 +295,12 @@ are the argument world's (`Argument.lean`).
 | tricolons / throat-clearing / summarising pivots / summary closers | 0 / 0 / 0 / 2 | 1 / 1 / 2 / 1 | 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 |
 | initial conjunctions / buzz / intensifiers / American spellings | 1 / 1 / 2 / 0 | 2 / 4 / 9 / 11 | 0 / 0 / 2 / 0 | 0 / 0 / 0 / 0 |
 | spurious contrasts | 0 | 1 | 0 | 0 |
+| bare relative clauses (example) | 1 ("the cases when automation fails") | 1 ("The logic we chose") | 2 ("Something he should have said") | 2 ("the way he had") |
 | clarity fails | inanimate actors, point first, stacked asides | inanimate actors, stacked asides, non-sequiturs | inanimate actors, non-sequiturs | inanimate actors, non-sequiturs |
-| writelikeme fails | initial conjunction, buzz, intensifiers, summary closers | 9 rules (throat-clearing, tricolon, initial conjunctions, buzz, intensifiers, spelling, summarising pivots, summary closers, spurious contrast) | and-joins, intensifiers, summary closers | and-joins |
+| writelikeme fails | initial conjunction, buzz, intensifiers, summary closers, bare relative | 10 rules (throat-clearing, tricolon, initial conjunctions, buzz, intensifiers, spelling, summarising pivots, summary closers, spurious contrast, bare relative) | and-joins, intensifiers, summary closers, bare relatives | and-joins, bare relatives |
 
-Kiran's paper passes more of her own house rules than RustBelt does (four
-failures against nine), and the differences are the ones her notes predict:
+Kiran's paper passes more of her own house rules than RustBelt does (five
+failures against ten), and the differences are the ones her notes predict:
 RustBelt spells American ("behavior", "formalized"), clears its throat once
 ("let us begin by exploring what makes Rust's type system so unusual"),
 tricolons with semicolons once, and leans on intensifiers ("actually", nine

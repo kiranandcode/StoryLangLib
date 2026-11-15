@@ -46,8 +46,18 @@ summarising pivots (a short sentence whose subject is a composite),
 summary closers (a paragraph's last sentence adds no entity), bare pivot
 bridges (a paragraph opening on a contrast connective without restating the
 last paragraph), spurious contrasts (a contrast connective with nothing in
-the previous sentence to contrast), and non-sequitur stacks (neighbouring
-sentences sharing no entity and joined by no connective). Em-dashes, colon
+the previous sentence to contrast), non-sequitur stacks (neighbouring
+sentences sharing no entity and joined by no connective), and bare
+post-modifying relative clauses: a noun phrase restricted by a relative
+clause (`relcl`, or `acl` with a finite verb) whose verb has nothing past its
+subject and the gap ("code that AI writes", "papers people cite"), so the
+clause sets up a description and drops it. A clause with an object, a
+complement, a purpose, a PP or an adverbial is extended, not bare ("code that
+AI writes to kill puppies", "the tools we use every day"); clefts,
+existentials and quotations are exempt. Non-restrictive clauses ("X, which
+people use,") are counted apart and not judged: set off by a comma or bracket
+they assert a second proposition about a noun already identified, rather
+than restricting it and leaving the description unsaid. Em-dashes, colon
 setups, antitheses and rhetorical questions are in `Academic.lean`.
 -/
 
@@ -80,6 +90,10 @@ structure HSent where
   initialConj : Bool := false
   opensContrast : Bool := false
   trailingCadence : Bool := false
+  /-- restrictive relative clauses that stop at the noun ("code that AI writes") -/
+  bareRelatives : Nat := 0
+  /-- non-restrictive ones that are equally bare (counted, not judged) -/
+  bareAsides : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-! ## Reading one sentence -/
@@ -184,6 +198,68 @@ private partial def counts (lx : Lex) (kinds : List (String × EntityKind)) : Tr
         conjuncts := if conj > 0 then conj + 1 else 0 }
     below.add here
 
+/-- Roles that extend a relative clause past "noun + subject + verb": an object,
+a complement, a purpose or infinitive, a PP, an adverbial. -/
+def extensionRoles : List Role :=
+  [.obj, .iobj, .ccomp, .xcomp, .obl, .advcl, .advmod, .nmod, .csubj, .dep]
+
+/-- The dependents of a clause's verb: its kids and, down the chain of heads,
+theirs. `none` when the head is not a verb (a copular predicate: "which are a
+form of ..." describes, so it is not bare). -/
+private partial def clauseDeps : Tree → Option (List Tree)
+  | .leaf _ => none
+  | .node _ kids =>
+    let headNode := kids.find? fun k => match k with
+      | .node j _ => j.role == some .head | _ => false
+    let headLeaf := kids.find? fun k => match k with
+      | .leaf w => w.role == some .head | _ => false
+    match headLeaf, headNode with
+    | some (.leaf w), _ => if w.upos == .VERB then some kids else none
+    | _, some h =>
+      match h with
+      | .node j _ => if j.cat == .VP || j.cat == .S then (clauseDeps h).map (kids ++ ·) else none
+      | _ => none
+    | _, _ => none
+
+/-- A relative clause that only restricts its noun: its verb has nothing past
+its subject and the gap (the relative pronoun, if it is the object). -/
+private def bareClause (lx : Lex) (rc : Tree) : Bool :=
+  let first := (leavesOf rc).filter isWord |>.head?
+  let isRelPron (k : Tree) := match k with
+    | .leaf w => w.upos == .PRON && (lx.has w "that" || lx.has w "wh") &&
+        (some w.form == first.map (·.form))
+    | _ => false
+  match clauseDeps rc with
+  | none => false
+  | some deps => !deps.any fun k => !isRelPron k && ((roleOf k).map extensionRoles.contains).getD false
+
+private def finiteHead (t : Tree) : Bool := match t with
+  | .node _ kids => (kids.any fun k => match k with
+      | .leaf w => (w.upos == .VERB || w.upos == .AUX) && (w.feats.find? (·.1 == "VerbForm")).map (·.2) == some "Fin"
+      | _ => false) || match headVerb t with
+      | some w => (w.feats.find? (·.1 == "VerbForm")).map (·.2) == some "Fin"
+      | none => false
+  | _ => false
+
+/-- Bare relative clauses in noun phrases, outside quotations: (restrictive,
+non-restrictive). A relative is a `relcl`, or an `acl` with a finite verb; it
+is non-restrictive when set off by a comma or bracket. -/
+private partial def bareRelativesIn (lx : Lex) : Tree → Nat × Nat
+  | .leaf _ => (0, 0)
+  | .node i kids =>
+    if i.cat == .QUOTE then (0, 0) else
+    let arr := kids.toArray
+    let here := if i.cat != .NP then (0, 0) else
+      (List.range arr.size).foldl (fun (r, n) j =>
+        let k := arr[j]!
+        let rel := roleIs k .relcl || (roleIs k .acl && finiteHead k)
+        if !rel || !bareClause lx k then (r, n) else
+        let setOff := (j > 0 && match arr[j - 1]! with
+            | .leaf w => w.form == "," || w.form == "(" | _ => false) ||
+          (match k with | .node _ (.leaf w :: _) => w.upos == .PUNCT | _ => false)
+        if setOff then (r, n + 1) else (r + 1, n)) (0, 0)
+    kids.foldl (fun (a, b) k => let (c, d) := bareRelativesIn lx k; (a + c, b + d)) here
+
 /-- Semicolons outside parentheticals (citations separate their entries with them). -/
 private partial def clauseSemicolons : Tree → Nat
   | .leaf w => if w.form == ";" then 1 else 0
@@ -243,6 +319,9 @@ def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : T
     conjuncts := c.conjuncts,
     initialConj := ((ws.head?.map (·.upos == .CCONJ)).getD false),
     opensContrast := ((ws.head?.map fun w => lx.is w "contrast" || lx.is w "concession")).getD false,
+    -- clefts ("it is X that ...") and existentials ("there is X that ...") are exempt
+    bareRelatives := if rootKids.any (roleIs · .expl) then 0 else (bareRelativesIn lx t).1,
+    bareAsides := if rootKids.any (roleIs · .expl) then 0 else (bareRelativesIn lx t).2,
     trailingCadence := rootKids.any (roleIs · .appos) &&
       ((lastContent.map fun k => roleIs k .advcl || (roleIs k .obl && isClauseNode k)).getD false) }
 
@@ -292,6 +371,8 @@ structure HFeatures where
   barePivots : Nat
   spuriousContrasts : Nat
   nonSequiturs : Nat
+  bareRelatives : Nat
+  bareAsides : Nat
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatures :=
@@ -337,7 +418,8 @@ def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatur
     spuriousContrasts := (inPara.filter fun ((a, _), (b, hb)) => hb.opensContrast && !shares a b).length,
     nonSequiturs := (inPara.filter fun ((a, _), (b, hb)) =>
       !shares a b && !b.frame && !b.causal && !b.recalls && !hb.opensContrast &&
-      !(b.subj.map isComposite).getD false).length }
+      !(b.subj.map isComposite).getD false).length,
+    bareRelatives := sumH (·.bareRelatives) hs, bareAsides := sumH (·.bareAsides) hs }
 
 /-! ## Rules and styles -/
 
@@ -346,6 +428,7 @@ inductive HFeat where
   | slopEmphasis | throat | inflation | tricolons | pseudoClefts | itClefts | andJoins | tetracola
   | initialConj | buzz | intensifiers | usSpelling | trailingCadence | dramaticTerminal
   | summarisingPivots | summaryClosers | barePivots | spuriousContrasts | nonSequiturs
+  | bareRelatives | bareAsides
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.get (f : HFeatures) : HFeat → Nat
@@ -360,6 +443,7 @@ def HFeatures.get (f : HFeatures) : HFeat → Nat
   | .summarisingPivots => f.summarisingPivots | .summaryClosers => f.summaryClosers
   | .barePivots => f.barePivots | .spuriousContrasts => f.spuriousContrasts
   | .nonSequiturs => f.nonSequiturs
+  | .bareRelatives => f.bareRelatives | .bareAsides => f.bareAsides
 
 def HFeat.name : HFeat → String
   | .sents => "sents" | .clauses => "clauses" | .agentless => "agentless" | .passives => "passives"
@@ -373,12 +457,14 @@ def HFeat.name : HFeat → String
   | .summarisingPivots => "summarisingPivots" | .summaryClosers => "summaryClosers"
   | .barePivots => "barePivots" | .spuriousContrasts => "spuriousContrasts"
   | .nonSequiturs => "nonSequiturs"
+  | .bareRelatives => "bareRelatives" | .bareAsides => "bareAsides"
 
 def HFeat.all : List HFeat :=
   [.sents, .clauses, .agentless, .passives, .hiddenAction, .inanimate, .nounStacks, .buried, .stacked,
    .slopEmphasis, .throat, .inflation, .tricolons, .pseudoClefts, .itClefts, .andJoins, .tetracola,
    .initialConj, .buzz, .intensifiers, .usSpelling, .trailingCadence, .dramaticTerminal,
-   .summarisingPivots, .summaryClosers, .barePivots, .spuriousContrasts, .nonSequiturs]
+   .summarisingPivots, .summaryClosers, .barePivots, .spuriousContrasts, .nonSequiturs,
+   .bareRelatives, .bareAsides]
 
 inductive HRule where
   | atMost (f : HFeat) (n : Nat)
@@ -435,7 +521,8 @@ def writeLikeMe : HStyle where
     ("no summarising pivots", .atMost .summarisingPivots 0),
     ("no summary closers", .atMost .summaryClosers 0),
     ("no bare pivot bridges", .atMost .barePivots 0),
-    ("no spurious contrasts", .atMost .spuriousContrasts 0)]
+    ("no spurious contrasts", .atMost .spuriousContrasts 0),
+    ("no bare relative clauses", .atMost .bareRelatives 0)]
 
 def houseStyles : List HStyle := [clarity, writeLikeMe]
 
@@ -480,7 +567,9 @@ def hflagged (as : List ASent) (hs : List HSent) : Json :=
     ("intensifiers", Json.arr (pick (·.intensifiers > 0)).toArray),
     ("usSpelling", Json.arr (pick (·.usSpelling > 0)).toArray),
     ("trailingCadence", Json.arr (pick (·.trailingCadence)).toArray),
-    ("opensContrast", Json.arr (pick (·.opensContrast)).toArray)]
+    ("opensContrast", Json.arr (pick (·.opensContrast)).toArray),
+    ("bareRelatives", Json.arr (pick (·.bareRelatives > 0)).toArray),
+    ("bareAsides", Json.arr (pick (·.bareAsides > 0)).toArray)]
 
 def HFeatures.toJson (f : HFeatures) : Json :=
   Json.mkObj (HFeat.all.map fun x => (x.name, Lean.toJson (f.get x)))
@@ -519,6 +608,11 @@ theorem toy_house :
     writeLikeMe.failing (HFeatures.ofSents {} as hs) =
       ["no slop emphasis", "no sentence-initial conjunctions", "no dramatic terminal sentences",
        "no bare pivot bridges"] := by
+  decide +kernel
+/-- "Sisyphus repairs the code that AI writes." -/
+theorem toy_bare_relative :
+    writeLikeMe.failing (HFeatures.ofSents {} [{ para := 1, words := 7 }] [{ para := 1, words := 7, bareRelatives := 1 }]) =
+      ["no bare relative clauses"] := by
   decide +kernel
 end Toy
 
