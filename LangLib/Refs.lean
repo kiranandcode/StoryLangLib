@@ -8,7 +8,8 @@ Collects every mention (a word or constituent carrying `ref`) with its token
 position, then checks the reference layer:
 
 * every `ref`, `spk` and topic entity is declared;
-* a third-person pronoun agrees with its entity's pronoun series;
+* a third-person pronoun agrees with its entity's pronoun series (a generic
+  entity, a kind, or a group takes "it" or "they");
 * a third-person pronoun that is not an expletive has a referent.
 
 Each pronoun mention is classified by where its entity's full mentions are:
@@ -135,7 +136,11 @@ def Doc.checkRefs (d : Doc) : RefReport := Id.run do
       if let some got := thirdPersonSeries m.text then
         if let some ent := d.entities.find? (·.id == m.entity) then
           if let some want := ent.pron then
-            if got != want then
+            -- a kind ("a library ... its", "libraries ... their") or a group
+            -- ("the team ... it", "... they") takes either number
+            let either := (ent.generic || ent.kind == .group) &&
+              (got == .it || got == .they) && (want == .it || want == .they)
+            if got != want && !either then
               issues := issues.push (.disagreement m.pos m.text m.entity want)
   -- unresolved third-person pronouns
   let covered := (ms.filter (·.kind == .pronoun)).map (·.pos)

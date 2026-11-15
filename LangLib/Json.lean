@@ -72,7 +72,9 @@ def entityOfJson (path : String) (j : Json) : Except String Entity := do
   let some id := optStr j "id" | throw s!"{path}: entity needs id"
   let kind ← enumField path "kind" EntityKind.ofString? j
   let pron ← enumField path "pron" PronSeries.ofString? j
-  pure { id, name := (optStr j "name").getD id, kind := kind.getD .person, pron }
+  let generic := (j.getObjValAs? Bool "generic").toOption.getD false
+  let of := (j.getObjValAs? (List String) "of").toOption.getD []
+  pure { id, name := (optStr j "name").getD id, kind := kind.getD .person, pron, generic, of }
 
 def topicOfJson (path : String) (j : Json) : Except String Topic := do
   let some id := optStr j "id" | throw s!"{path}: topic needs id"
@@ -210,7 +212,9 @@ def Doc.toJson (d : Doc) : Json :=
     ("entities", Json.arr (d.entities.map fun e =>
       Json.mkObj ([("id", Json.str e.id), ("name", Json.str e.name),
                    ("kind", Json.str e.kind.name)] ++
-                  (e.pron.map fun p => [("pron", Json.str p.name)]).getD [])).toArray),
+                  (e.pron.map fun p => [("pron", Json.str p.name)]).getD [] ++
+                  (if e.generic then [("generic", Json.bool true)] else []) ++
+                  (if e.of.isEmpty then [] else [("of", Json.arr (e.of.map Json.str).toArray)]))).toArray),
     ("topics", Json.arr (d.topics.map fun t =>
       Json.mkObj [("id", t.id), ("label", t.label),
                   ("entities", Json.arr (t.entities.map Json.str).toArray)]).toArray),

@@ -167,6 +167,12 @@ structure Entity where
   name : String
   kind : EntityKind := .person
   pron : Option PronSeries := none
+  /-- a kind, not an individual ("a library ... its", "libraries ... their"):
+  generic reference takes singular or plural pronouns -/
+  generic : Bool := false
+  /-- an encapsulating entity ("this problem", "the combined power of X and Y")
+  built from earlier entities, or from a paragraph (`"para:5"`) -/
+  of : List String := []
   deriving Repr, Inhabited
 
 /-- A topic the text is about, linking the entities that make it up. -/
