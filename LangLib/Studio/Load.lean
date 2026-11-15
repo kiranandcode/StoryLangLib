@@ -192,7 +192,11 @@ def storyReport (dir : System.FilePath) : IO Json := do
       ("links", Json.arr (f.links.map fun l => Json.mkObj [("at", l.at_), ("word", l.word),
         ("rel", reprStr l.rel |>.replace "LangLib.Studio.LinkRel." ""), ("a", l.a), ("b", l.b)]).toArray),
       ("judges", Json.arr judgesJ.toArray),
-      ("trees", Json.arr (((p.doc.map (·.sentences)).getD []).map (·.tree.toJson)).toArray)]
+      ("trees", Json.arr (((p.doc.map (·.sentences)).getD []).map (·.tree.toJson)).toArray),
+      ("derivations", match p.doc, (p.reading.map (judgesOf s)) with
+        | some d, some (.ok js) => Json.arr ((derivations (paraCtx s timed owner k p) f js toks).map fun (a, dv) =>
+            Json.mkObj [("at", a), ("d", dv.toJson)]).toArray
+        | _, _ => Json.arr #[])]
   pure (r.setObjVal! "completeness" (Json.arr cs.toArray))
 
 /-! ## The story as a Lean file -/

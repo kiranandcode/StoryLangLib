@@ -609,3 +609,195 @@ def treeMatch (s : Spec) (str : String) (f : TreeFacts) : Bool :=
   | .error _ => false
 
 end LangLib.Studio
+
+/-! ## Derivations: why each verdict holds, as inference rules
+
+`derivations` restates the checks of `completeIssues` as proof trees: each
+clause, connective and modifier is a conclusion over the premises that
+justify it, under a named rule (EVENT, HOLDS, CONTENT, GOAL, AGREE, LORE,
+BUT-FOR, REASON, ORDER, ...). It uses the same predicates, so a premise marked
+failed is exactly what the checker objects to. The Studio draws them as
+Gentzen-style trees. -/
+
+namespace LangLib.Studio
+open Lean LangLib LangLib.World LangLib.Scene
+
+inductive Deriv where
+  | mk (rule concl : String) (ok : Bool) (prems : List Deriv)
+  deriving Repr, Inhabited
+
+partial def Deriv.toJson : Deriv → Json
+  | .mk rule concl ok prems => Json.mkObj [("rule", rule), ("concl", concl), ("ok", ok),
+      ("prems", Json.arr (prems.map Deriv.toJson).toArray)]
+
+def Deriv.ok : Deriv → Bool | .mk _ _ ok _ => ok
+
+def Names.claimS (n : Names) : Claim → String
+  | .thinks c l => s!"thinks {n.chS c} {n.litS l}"
+  | .knows c l => s!"knows {n.chS c} {n.litS l}"
+  | .falseBelief c l => s!"falseBelief {n.chS c} {n.litS l}"
+  | .unaware c f => s!"unaware {n.chS c} {n.factS f}"
+  | .thinksThinks c d l => s!"thinksThinks {n.chS c} {n.chS d} {n.litS l}"
+  | .holdsTrue l => s!"true {n.litS l}"
+  | .consented b a x => s!"consented {n.chS b} {n.chS a} {x.name}"
+  | .goal c l => s!"goal {n.chS c} {n.litS l}"
+  | .bond a b d _ v => s!"bond {n.chS a} {n.chS b} {d.name} {v}"
+
+variable {s : Spec}
+
+def WId.show (n : Names) : WId → String
+  | .ch i => n.chS i | .pl i => n.plS i | .ob i => n.obS i
+
+private def leaf (rule concl : String) (ok : Bool) : Deriv := .mk rule concl ok []
+
+/-- How a judgement is justified. -/
+def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List String)
+    (p : Pred) (j : Judge) : Deriv :=
+  let n := s.names
+  let w (t : Nat) := s!"‘{toks.getD t "?"}’"
+  match j.kind with
+  | .event i =>
+    match c.items[i]? with
+    | none => leaf "EVENT" s!"event {i}" false
+    | some (e, _) =>
+      let (es, k) := c.upToItem i
+      let allowed := okAt s.start es k
+      let negOk := !p.neg || (e.content.map (·.2)) == some false
+      .mk "EVENT" (n.evS e) (allowed && negOk)
+        ([leaf "VALID" s!"allowed where it stands: {s.evGloss e}" allowed] ++
+         (if p.neg then [leaf "NEG" "the clause is negated, so the event's literal must be negative" negOk] else []))
+  | .claim cl =>
+    let ok := cl.eval (c.stateAt (p.at_ + 1))
+    .mk "HOLDS" s!"⊨ {n.claimS cl}" ok [leaf "STATE" s!"in the state at {w p.at_}" true]
+  | .content l =>
+    let near : List Nat := p.parent.toList ++
+      (f.preds.filter (·.parent == some p.at_)).map (·.at_) ++
+      (f.links.filter (·.a == p.at_)).map (·.b) ++ (f.links.filter (·.b == p.at_)).map (·.a)
+    let src := near.findSome? fun q => (judgesAt js q).findSome? fun pj => match pj.kind with
+      | .event i => ((c.items[i]?).bind fun (e, _) => if e.content == some l then some s!"{w q}: {n.evS e}" else none)
+      | .claim cl => if cl.content == some l then some s!"{w q}: {n.claimS cl}" else none
+      | .content l' => if l' == l && q != p.at_ then some s!"{w q}: content {n.litS l'}" else none
+      | _ => none
+    .mk "CONTENT" s!"content: {n.litS l}" src.isSome
+      [leaf "SOURCE" (src.getD "no clause nearby believes or says it") src.isSome]
+  | .goal l =>
+    let gov := f.links.find? fun k => k.rel == .purpose && k.a == p.at_
+    match gov with
+    | none => .mk "GOAL" s!"goal: {n.litS l}" false [leaf "PURPOSE" "not a purpose clause" false]
+    | some k =>
+      let agentOk := (judgesAt js k.b).findSome? fun gj => match gj.kind with
+        | .event i => (c.items[i]?).bind fun (e, _) => e.agent.map fun ag =>
+            (n.chS ag, (goalsOf (run s.start (c.upToItem i).1) (⟨ag⟩ : Ch s)).contains (lit l))
+        | _ => none
+      match agentOk with
+      | some (ag, ok) => .mk "GOAL" s!"goal: {n.litS l}" ok
+          [leaf "PURPOSE" s!"the purpose of {w k.b}" true, leaf "WANTS" s!"{ag} wants {n.litS l} then" ok]
+      | none => .mk "GOAL" s!"goal: {n.litS l}" false [leaf "WANTS" s!"no one acts at {w k.b}" false]
+  | .act =>
+    match p.subj with
+    | some (.ch ch) =>
+      let ok := ((c.stateAt p.at_).loc ⟨ch⟩).i < s.places.length
+      .mk "ACT" "a gesture" ok [leaf "ON-STAGE" s!"{n.chS ch} is on stage" ok]
+    | _ => .mk "ACT" "a gesture" false [leaf "ON-STAGE" "the subject is not a character" false]
+  | .speech =>
+    let ok := p.quoted || p.said
+    .mk "SPEECH" "words said" ok [leaf (if p.quoted then "QUOTED" else "SAID")
+      (if p.quoted then "inside a quote" else s!"what ‘{p.parentLemma}’ says") ok]
+  | .hypothetical =>
+    .mk "HYPOTHETICAL" "not asserted" p.modal [leaf "MODAL" "under a modal or a condition" p.modal]
+  | .external ids =>
+    .mk "EXTERNAL" s!"a Nen move about {", ".intercalate (ids.map (WId.show n))}" true
+      [leaf "CHECKED" "proved in Fight.lean" true]
+
+/-- How a clause is judged: its judgements, and that they mention what it does. -/
+def clauseDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List String) (p : Pred) : Deriv :=
+  let n := s.names
+  let here := judgesAt js p.at_
+  let refs := p.subj.toList ++ p.args
+  let ids : List WId := here.flatMap fun j => match j.kind with
+    | .event i => ((c.items[i]?).map (Ev.wids s ·.1)).getD []
+    | .claim cl => Claim.wids s cl
+    | .external xs => xs
+    | _ => []
+  let worldJudged := here.any fun j => match j.kind with
+    | .event _ | .claim _ | .external _ => true | _ => false
+  let missing := refs.filter (!ids.contains ·)
+  let agree := if !worldJudged || refs.isEmpty then [] else
+    [leaf "AGREE" (if missing.isEmpty then s!"mentions {", ".intercalate (refs.map (WId.show n))}"
+      else s!"does not mention {", ".intercalate (missing.map (WId.show n))}") missing.isEmpty]
+  let prems := here.map (judgeDeriv c f js toks p) ++ agree
+  .mk "CLAUSE" s!"‘{toks.getD p.at_ "?"}’ is judged" (!here.isEmpty && prems.all (·.ok))
+    (if here.isEmpty then [leaf "NONE" "no judgement" false] else prems)
+
+/-- Why a connective holds (or not). -/
+def linkDeriv (c : ParaCtx s) (js : List Judge) (toks : List String) (l : Link) : Deriv :=
+  let n := s.names
+  let w (t : Nat) := s!"‘{toks.getD t "?"}’"
+  let ja := judgesAt js l.a
+  let jb := judgesAt js l.b
+  let concl := s!"‘{l.word}’: {w l.a} → {w l.b}"
+  if (ja ++ jb).any Judge.reported && l.rel != .condition then
+    .mk "REPORTED" concl true [leaf "IN-CONTENT" "inside reported speech or thought: the speaker's claim, not the world's" true]
+  else
+  let pos (xs : List Judge) : Option Nat := (xs.map (Judge.pos c)).max?
+  match l.rel with
+  | .after | .before | .during =>
+    match pos ja, pos jb with
+    | some a, some b =>
+      let ok := match l.rel with
+        | .after => a ≤ b | .before => b ≤ a | _ => a + 2 ≥ b && b + 2 ≥ a
+      .mk "ORDER" concl ok [leaf "AT" s!"{w l.a} at step {a / 2}" true, leaf "AT" s!"{w l.b} at step {b / 2}" true]
+    | _, _ => .mk "ORDER" concl true []
+  | .cause | .effect =>
+    -- the first way the model bears it out, if any
+    let ways : List Deriv := ja.flatMap fun a => jb.filterMap fun b =>
+      if !causes c a b then none else
+      match a.kind, b.kind with
+      | .claim ca, .claim cb =>
+        match ca.content, cb.content with
+        | some la, some lb => some (.mk "LORE" concl true
+            [leaf "HOLDS" s!"⊨ {n.claimS ca}" true, leaf "HOLDS" s!"⊨ {n.claimS cb}" true,
+             leaf "RULE" s!"{n.litS la} ⇒ {n.litS lb}" true])
+        | _, _ => none
+      | .event _, .event _ => some (.mk "BUT-FOR" concl true
+          [leaf "WITHOUT" s!"take out {w l.a}'s event, and {w l.b}'s is not possible or has no reason" true])
+      | .event _, _ => some (.mk "BUT-FOR" concl true
+          [leaf "WITHOUT" s!"take out {w l.a}'s event, and {w l.b} no longer holds" true])
+      | _, .event _ => some (.mk "REASON" concl true
+          [leaf "BELIEVES" s!"whoever acts at {w l.b} believes {w l.a}'s fact then" true])
+      | _, _ => none
+    match ways.head? with
+    | some d => d
+    | none => .mk "CAUSE" concl false [leaf "NOT-BORNE-OUT" "no lore, counterfactual or reason connects them" false]
+  | .purpose =>
+    let ok := ja.any fun j => match j.kind with | .goal _ => true | _ => false
+    .mk "PURPOSE" concl ok [leaf "GOAL" s!"{w l.a} is read as a goal" ok]
+  | .concession =>
+    let ok := (ja ++ jb).all (ParaCtx.holds c)
+    .mk "BOTH" concl ok [leaf "HOLDS" s!"{w l.a} holds" ok, leaf "HOLDS" s!"{w l.b} holds" ok]
+  | .condition =>
+    let ok := ja.any fun j => j.kind == .hypothetical
+    .mk "CONDITION" concl ok [leaf "HYPOTHETICAL" s!"{w l.a} is hypothetical" ok]
+
+def modDeriv (sp : Spec) (toks : List String) (m : Modifier) : Deriv :=
+  let isTrait := match m.of, Trait.ofString? m.word with
+    | some ch, some t => (sp.chars[ch]?.map fun (cs : CharSpec) => cs.traits.contains t).getD false
+    | _, _ => false
+  let concl := s!"‘{toks.getD m.at_ m.word}’ is accounted for"
+  match m.of with
+  | some ch =>
+    if isTrait then .mk "TRAIT" concl true [leaf "PERSONA" s!"{(sp.chars[ch]?.map CharSpec.name).getD "?"} is {m.word}" true]
+    else .mk "IMPRESSION" concl (m.sense == some "impression")
+      [leaf "SENSE" (if m.sense == some "impression" then "a point-of-view judgement" else "not a trait, and not marked impression")
+        (m.sense == some "impression")]
+  | none =>
+    let ok := (m.sense.map modSenses.contains).getD false
+    .mk "SENSE" concl ok [leaf "SENSE" (m.sense.getD "no sense") ok]
+
+/-- Every derivation of a paragraph, in token order. -/
+def derivations (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List String) : List (Nat × Deriv) :=
+  ((f.preds.map fun p => (p.at_, clauseDeriv c f js toks p)) ++
+   (f.links.filter (fun l => l.a != l.b)).map (fun l => (l.at_, linkDeriv c js toks l)) ++
+   f.mods.map fun m => (m.at_, modDeriv s toks m)).mergeSort (fun a b => a.1 ≤ b.1)
+
+end LangLib.Studio

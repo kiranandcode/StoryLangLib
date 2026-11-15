@@ -113,7 +113,11 @@ export interface Completeness {
   links: { at: number; word: string; rel: string; a: number; b: number }[]
   judges: { at: number; kind: string; text: string; gloss: string }[]
   trees?: TreeJ[]
+  derivations?: { at: number; d: Deriv }[]
 }
+
+/** Why a verdict holds: a conclusion over its premises under a named rule (Complete.lean `Deriv`). */
+export interface Deriv { rule: string; concl: string; ok: boolean; prems: Deriv[] }
 
 /** A sentence's tree as the annotation writes it: a node (`c`, `k`) or a leaf (`w`, `p`). */
 export interface TreeJ { c?: string; k?: TreeJ[]; w?: string; p?: string; r?: string; ref?: string; sense?: string; spk?: string }

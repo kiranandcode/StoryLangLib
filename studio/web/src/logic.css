@@ -298,3 +298,19 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .jconn.r-purpose { color: var(--c2); }
 .jconn.r-after, .jconn.r-before, .jconn.r-during { color: var(--proved); }
 .jconn.bad { color: var(--bad); font-weight: 600; }
+
+/* derivations as Gentzen-style proof trees */
+.jrules { display: flex; flex-direction: column; gap: 8px; padding: 2px 0 4px; }
+.jrule-wrap { overflow-x: auto; padding-bottom: 2px; }
+.inf { display: inline-flex; flex-direction: column; align-items: center; font-size: 11px; vertical-align: bottom; }
+.inf .prems { display: flex; gap: 16px; align-items: flex-end; }
+.inf .bar { display: flex; align-items: center; align-self: stretch; gap: 4px; margin: 1px 0; }
+.inf .bar .line { flex: 1; border-top: 1px solid var(--ink-2); min-width: 2em; }
+.inf .bar .rule { font-size: 8.5px; letter-spacing: 0.05em; color: var(--ink-3); white-space: nowrap;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+.inf .concl { white-space: nowrap; color: var(--ink); padding: 0 2px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10.5px; }
+.inf > .concl { }
+.inf.bad > .concl { color: var(--bad); font-weight: 600; }
+.inf.bad > .bar .line { border-top-color: var(--bad); }
+.inf.bad > .bar .rule { color: var(--bad); }
+.jrule-wrap > .inf > .concl { font-weight: 600; }
