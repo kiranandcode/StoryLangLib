@@ -223,7 +223,7 @@ class Story:
     def persona_text(self) -> str:
         s = self.spec
         out = [f"- {c['name']} ({c['pron']}): {', '.join(c['traits'])}; cares most about {', then '.join(c['values'])}."
-               for c in s["characters"]]
+               + (f"\n  {c['notes']}" if c.get("notes") else "") for c in s["characters"]]
         bonds = s.get("start", {}).get("bonds", {})
         out.append("Starting feelings (0 none, 2 strong): " + "; ".join(
             f"{k.replace('>', ' toward ')}: " + ", ".join(f"{d} {n}" for d, n in v.items()) for k, v in bonds.items()))

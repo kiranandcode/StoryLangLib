@@ -6,15 +6,19 @@
       "name": "Kiran",
       "pron": "she",
       "traits": [
-        "shy",
-        "romantic"
+        "brash",
+        "proud",
+        "confident",
+        "romantic",
+        "skeptical"
       ],
       "values": [
-        "curiosity",
         "desire",
+        "pride",
         "safety",
-        "pride"
-      ]
+        "curiosity"
+      ],
+      "notes": "Cocky and bratty: defends herself by being confrontational, cutely; loves teasing. Desperately wants to be loved but assumes the people she is into won't want her, so she reads no romantic intent into anything, though she can't stop hoping; she half-imagines romance in every close male friendship and never lets herself believe it. Trans; pretty, and hot. Transitioned in Singapore, where racism kept her out of housing; used to being looked at with disgust. Disowned when she came out; has supported herself since and is used to being abandoned. Very little life outside the lab, few friends; her work is everything. Career excellence is how she made people want her, so she is proud, independent, confident, arrogant as a researcher, and that pride costs her the vulnerability relationships need; in a relationship she wants to be taken care of, and bridging the two is hard for her. Yaps happily about her research ideas once she gets going. Little luck dating. (For the model, to justify what she does; not to be recited in the prose.)"
     },
     {
       "id": "ran",
@@ -42,7 +46,8 @@
         "lab"
       ],
       "attrs": {
-        "kind": "computer"
+        "kind": "computer",
+        "occupancy": "empty"
       },
       "fixtures": [
         {
@@ -219,6 +224,16 @@
           "count": 1
         }
       ]
+    },
+    {
+      "id": "garageRoof",
+      "kind": "the flat garage roof they climbed as kids",
+      "words": [
+        "roof"
+      ],
+      "attrs": {
+        "kind": "garage"
+      }
     }
   ],
   "objects": [
@@ -257,6 +272,14 @@
         "notebook"
       ],
       "owner": "ran",
+      "count": 1
+    },
+    {
+      "id": "torch",
+      "what": "the torch they passed between them as kids",
+      "words": [
+        "torch"
+      ],
       "count": 1
     }
   ],
@@ -332,6 +355,48 @@
         "kiran",
         "ran"
       ]
+    },
+    {
+      "id": "kiranTrans",
+      "label": "Kiran is trans",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "kiranDisowned",
+      "label": "Kiran's parents disowned her when she came out",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "kiranLabLife",
+      "label": "Kiran's life is her work; she has little outside the lab",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranMovedAway",
+      "label": "fifteen years ago Ran's family moved away and he left",
+      "truth": true,
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranLeftHer",
+      "label": "Ran has gone without a goodbye",
+      "truth": false,
+      "who": [
+        "ran",
+        "kiran"
+      ]
     }
   ],
   "lore": [
@@ -383,12 +448,20 @@
     },
     "knows": {
       "kiran": [
-        "kiranLikesRan"
+        "kiranLikesRan",
+        "kiranTrans",
+        "kiranDisowned",
+        "kiranLabLife",
+        "ranMovedAway",
+        "childhoodFriends"
       ],
       "ran": [
         "ranLikesKiran",
         "noteConfession",
-        "!noteOldTimes"
+        "!noteOldTimes",
+        "ranMovedAway",
+        "childhoodFriends",
+        "kiranTrans"
       ]
     }
   },

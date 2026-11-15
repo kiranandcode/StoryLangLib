@@ -1,0 +1,141 @@
+{
+ "text_sha": "662dbbad41efda90",
+ "world_sha": "5ad9e2277a08d034",
+ "events": [
+  {
+   "e": "move kiran lab",
+   "at": 1,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran ranLeftHer inferred",
+   "at": 37,
+   "w": "dropped",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran objAt(note,lab) seen",
+   "at": 50,
+   "w": "saw",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt kiran holds(kiran,note)",
+   "at": 61,
+   "w": "put",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "take kiran note",
+   "at": 66,
+   "w": "opened",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at kiran lab",
+   "at": 1,
+   "w": "came"
+  },
+  {
+   "c": "true !at(ran,lab)",
+   "at": 16,
+   "w": "bare"
+  },
+  {
+   "c": "true !at(ran,lab)",
+   "at": 20,
+   "w": "pushed"
+  },
+  {
+   "c": "falseBelief kiran ranLeftHer",
+   "at": 43,
+   "w": "gone"
+  },
+  {
+   "c": "falseBelief kiran ranLeftHer",
+   "at": 46,
+   "w": "did"
+  },
+  {
+   "c": "true objAt(note,lab)",
+   "at": 54,
+   "w": "folded"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 66,
+   "w": "opened"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 78,
+   "w": "the"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 84,
+   "w": "climb"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 54,
+   "w": "folded"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 82,
+   "w": "used"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 92,
+   "w": "twelve"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 94,
+   "w": "passing"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 100,
+   "w": "talking"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 104,
+   "w": "went"
+  },
+  {
+   "c": "unaware kiran at(ran,roof)",
+   "at": 108,
+   "w": "read"
+  }
+ ],
+ "judge": [
+  {
+   "at": 25,
+   "w": "stood",
+   "kind": "act"
+  },
+  {
+   "at": 26,
+   "w": "holding",
+   "kind": "act"
+  },
+  {
+   "at": 125,
+   "w": "change",
+   "kind": "hypothetical"
+  }
+ ],
+ "staging": []
+}

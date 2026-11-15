@@ -1,6 +1,8 @@
 {
  "events": [
   "move kiran lab",
+  "notice kiran ranLeftHer inferred",
+  "notice kiran objAt(note,lab) seen",
   "adopt kiran holds(kiran,note)",
   "take kiran note"
  ],
@@ -12,9 +14,12 @@
  "beat": "find",
  "setting": [
   "lab",
-  "kdesk",
-  "keyboard",
+  "rdesk",
+  "rchair",
   "mug",
-  "note"
+  "note",
+  "keyboard",
+  "garageRoof",
+  "torch"
  ]
 }

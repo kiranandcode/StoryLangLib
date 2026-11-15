@@ -1,5 +1,5 @@
 {
-  "persona": "provisional: Kiran's persona (shy, romantic; values curiosity > desire > safety > pride) is the agent's guess until Kiran sets it",
+  "persona": "set by Kiran (2026-11-15): brash, proud, confident, romantic, skeptical; values desire > pride > safety > curiosity; her history is in story.json (notes and atoms), for the model, not to be recited",
   "explicitness": "pending: until Kiran decides, prose stays at sensual-but-not-graphic and fades after the kiss",
   "pov": "close third person, past tense; Kiran's point of view throughout",
   "writer": "interactive Claude session (Opus 5.5), no headless model calls",
