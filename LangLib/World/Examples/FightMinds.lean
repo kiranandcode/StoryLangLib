@@ -58,4 +58,14 @@ theorem puppets_see_nothing :
     (HasMinds.beliefs ends judge).length = (HasMinds.beliefs (run start (p1 ++ p2.take 6)) judge).length := by
   rw [ends9]; decide +kernel
 
+/-- The dead neither talk nor hear: once the judge is dead, Chrollo cannot
+whisper to him. -/
+theorem no_whispers_to_the_dead :
+    ¬ Valid start (p1 ++ p2 ++ [mi (.whisper chrollo judge (nf (.usesBothHands sunMoon), true))]) := by
+  decide +kernel
+
+/-- info: some (10, "the listener cannot hear (dead, or no mind)") -/
+#guard_msgs in
+#eval firstFailure start (p1 ++ p2 ++ [mi (.whisper chrollo judge (nf (.usesBothHands sunMoon), true))]) 0
+
 end LangLib.World.Fight

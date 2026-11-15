@@ -379,11 +379,26 @@ def witness [Cast C] [Perceives W C] (w : W) (p : P) (φs : List Φ) : W :=
       ((present.filter (· != x)).foldl (fun w y => learnWith false w x (.bel y (.atom φ)) .seen)
         (learn w x (.atom φ) .seen))) w) w
 
-def mindOk3 (w : W) : MindEv C Φ → Tri
-  | .tell c d l | .whisper c d l => (together3 w c d).and (Tri.ofBool ((view w c).contains l))
-  | .lie c d l => (together3 w c d).and (Tri.ofBool (!(view w c).contains l))
-  | .notice _ l e => Tri.ofBool (!e.perceptual || truthLit w l)
-  | .realise c l => Tri.ofBool (truthLit w l && (closure (view w c)).contains l)
+/-- Speech needs a speaker and a listener who can perceive (the dead neither
+talk nor hear); noticing and realising need a mind that can. -/
+def mindOk3 [Perceives W C] (w : W) : MindEv C Φ → Tri
+  | .tell c d l | .whisper c d l =>
+    if !Perceives.perceives w c || !Perceives.perceives w d then .no else
+    (together3 w c d).and (Tri.ofBool ((view w c).contains l))
+  | .lie c d l =>
+    if !Perceives.perceives w c || !Perceives.perceives w d then .no else
+    (together3 w c d).and (Tri.ofBool (!(view w c).contains l))
+  | .notice c l e => Tri.ofBool (Perceives.perceives w c && (!e.perceptual || truthLit w l))
+  | .realise c l => Tri.ofBool (Perceives.perceives w c && truthLit w l && (closure (view w c)).contains l)
+
+/-- Who in a mind event cannot perceive, said as a reason. -/
+def mindDead [Perceives W C] (w : W) : MindEv C Φ → Option String
+  | .tell c d _ | .whisper c d _ | .lie c d _ =>
+    if !Perceives.perceives w c then some "the speaker cannot speak (dead, or no mind)"
+    else if !Perceives.perceives w d then some "the listener cannot hear (dead, or no mind)"
+    else none
+  | .notice c _ _ | .realise c _ =>
+    if !Perceives.perceives w c then some "they cannot perceive (dead, or no mind)" else none
 
 instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
   ok3 := mindOk3
@@ -399,7 +414,7 @@ instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
       learn (learn w d (ofLit l) (.told c)) c (.bel d (ofLit l)) .self
     | .notice c l e => learn w c (ofLit l) e
     | .realise c l => learn w c (ofLit l) .inferred
-  why w
+  why w e := (mindDead w e).getD (match e with
     | .tell c d _ | .whisper c d _ =>
       if together3 w c d == .unknown then "assumes they were together"
       else if loc w c != loc w d then "they are not together" else "the speaker does not think that"
@@ -408,7 +423,7 @@ instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
                     else "the speaker thinks it is true, so it is not a lie"
     | .notice _ _ _ => "a perception must be of something true"
     | .realise _ l => if !truthLit w l then "the text says they know it, but it is false"
-                      else "they have no way to know that"
+                      else "they have no way to know that")
 
 /-! ## Explanations -/
 
