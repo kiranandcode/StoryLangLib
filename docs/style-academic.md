@@ -105,12 +105,12 @@ antitheses, contrasts and deferred obligations.
 
 | | Sisyphus | RustBelt |
 |:--|--:|--:|
-| moves | 100 | 140 |
-| claims on the authors' word | 8 | 14 |
-| reasoned claims (`infer`) / supported by accepted reasons | 2 / 0 | 6 / 1 |
-| hedges / answered in the excerpt | 2 / 1 | 2 / 2 |
-| antitheses / contrasts | 0 / 0 | 2 / 3 |
-| obligations deferred past the excerpt | 12 | 7 |
+| moves | 102 | 151 |
+| claims on the authors' word | 9 | 13 |
+| reasoned claims (`infer`) / supported by granted reasons | 5 / 3 | 15 / 10 |
+| hedges / answered in the excerpt | 2 / 1 | 6 / 5 |
+| antitheses / contrasts | 0 / 0 | 1 / 4 |
+| obligations deferred past the excerpt | 12 | 8 |
 
 Reading the reasons honestly cost Sisyphus two supports. In the first reading
 I had filed "verified software libraries are a sweet spot for proof repair"
@@ -134,19 +134,20 @@ their private `Paper.lean`, for the stories in
 | | Sisyphus | RustBelt |
 |:--|--:|--:|
 | sentences / words | 75 / 2255 | 115 / 3323 |
-| subjects given | 47/50 (94%) | 69/81 (85%) |
-| new entities after the subject | 45/53 (85%) | 58/73 (79%) |
-| first sentence summarises | 18/18 | 27/29 |
+| subjects given (of which bridged / announced) | 49/50 (98%) (1 / 1) | 78/81 (96%) (9 / 0) |
+| new entities after the subject | 18/21 (86%) | 15/21 (71%) |
+| first sentence summarises | 18/18 | 28/29 |
 | just in time (incl. promised) | 31/54 (57%) | 35/55 (64%) |
-| first reuse within 1 / 2–3 / 4–6 / > 6 sentences | 20 / 9 / 6 / 19 | 26 / 8 / 6 / 15 |
-| introductions that were promised | 3 | 5 |
-| callbacks / motifs | 34 / 6 | 36 / 12 |
+| introductions the argument uses in their paragraph or the next / never | 35 / 39 | 39 / 67 |
+| callbacks / deliberate (demonstrative, quoted or recalled) / motifs | 34 / 1 / 6 | 36 / 8 / 12 |
 | questions set up / answered | 1 / 1 | 3 / 3 |
 | em-dashes: defining / dramatic | 11 / 0 | 11 / 0 |
-| colons: defining / dramatic | 5 / 2 | 8 / 4 |
-| not-X-but-Y candidates / antitheses | 0 / 0 | 4 / 2 |
+| colons: defining / dramatic | 6 / 1 | 12 / 0 |
+| not-X-but-Y candidates / antitheses | 0 / 0 | 4 / 1 |
+| fronted subjects / short paragraph closers | 21 / 0 | 37 / 5 |
 | Kiran's principles | holds | holds |
-| LLM-ism free | fails: dramatic colons | fails: dramatic colons, not-X-but-Y |
+| LLM-ism free | fails: dramatic colons | fails: not-X-but-Y |
+| annotated, grounded (every hedge, denial and stated reason read, every reading on a marked sentence) | hold | hold |
 | no em-dashes (literal) | fails | fails |
 | Pratchett (Core) | fails: footnotes, similes, Concepts | same |
 | roof (Core) | fails: parentheticals, generalisations, interiority, Concepts, dialogue | same |
@@ -217,71 +218,105 @@ On the LLM-isms both papers use about the same number of em-dashes, all
 defining. The difference is in colons (2 dramatic against 4) and in
 antitheses (none against 2).
 
-## What each gap now covers, and what still escapes
+## What escaped, and what now handles it
 
-1. **Composite reference.** Entities may be built `of` earlier entities or a
-   paragraph, and a composite whose parts are given is itself given. "the
-   combined power of deductive machine-assisted reasoning and proof
-   automation" is now a given subject. *Escapes:* cataphoric composites ("Such
-   changes may involve: (1) ...", whose parts follow) still count as new, and
-   the annotator decides what a composite is made of.
-2. **Summaries at a more general level.** The first sentence summarises when
-   one of its entities covers, through the is-a lore, as many sentences as the
-   paragraph's most-mentioned entity. Sisyphus's paragraphs on alignment and
-   proof-driven testing now pass (18 of 18). *Escapes:* the lore is declared
-   by hand, and a summary that paraphrases without naming a covering entity
-   (RustBelt's "Our core contribution is then to develop an extensible
-   soundness proof for λRust.") still fails.
-3. **Splitting by pronoun number.** `generic` entities and groups take "it"
-   or "they"; the split ids (a library function, a shared reference) are
-   merged back. The agreement check stays for individuals. *Escapes:* an
-   instance of a kind ("a mutable reference" in one example) is still its own
-   entity, by design.
-4. **Motif against recurrence.** A motif needs a departure and a return at
-   marked points; plain recurrence is a callback. *Escapes:* in short
-   paragraphs first and last sentences are not distinctive, so they are not
-   marks there; and whether the return is deliberate, a callback the reader is
-   meant to notice, is not in the tree.
-5. **Dramatic against defining colons and dashes.** Classified by what
-   follows and whether a complete clause precedes. *Escapes:* a clause that
-   elaborates a noun on the left ("is a simple one: If ownership ... then none
-   of them can be used to directly mutate it") counts as dramatic.
-   Kiran's own list bans colon setups that elaborate too, so `noDashes` and the
-   colon counts both stay reported.
-6. **Contrast against antithesis.** Decided in the argument world by whether
-   the denied proposition was ever put forward. *Escapes:* a pre-emptive
-   rebuttal of an objection the reader is likely to have ("cannot easily be
-   contained by blessing a fixed set of standard libraries") counts as an
-   antithesis unless the lore lists the objection.
-7. **Implicit questions.** `hedge` is an argument move, answered by a later
-   deliver or evaluate. *Escapes:* finding the hedge is my reading of the
-   text; nothing in the tree marks "At least, that is the hope." as one.
-8. **Need.** Just in time now credits promised introductions and reports the
-   first-reuse gaps by bucket. *Escapes:* whether the reused term was *needed*
-   (did the reasoning use it, or just mention it) is not measured.
-9. **Reasoned claims.** `infer` supports a claim when its stated reasons are
-   accepted. *Escapes:* reasons that are definitions or stipulations, not
-   claims, cannot support anything, and the reader's background is not a
-   premise.
-10. **Rhythm and register.** Measured as above. *Escapes:* the register
-    lexicon tags words, not uses ("sweet spot" is two neutral words), and
-    sentence length is only one dimension of rhythm (clause order, stress and
-    the shape of a paragraph's last sentence are not modelled).
-11. **Core's generics and similes on papers.** A "like" phrase attached to a
-    noun gives examples, not a simile, and in a paper a present-tense clause
-    about a specific entity reports rather than generalises. Papers still
-    generalise about kinds (116 and 196 such clauses), so Core's roof style
-    fails them on generalisations, correctly. *Escapes:* the two similes left
-    in RustBelt are "like" phrases attached to verbs that still give examples.
+The second round left eleven things the rules could not see. Each now has a
+mechanism in the model, the parsing or the annotation.
 
-The roof stories fail `annotated` because their trees have no verb forms;
-their rhythm and register numbers do not depend on those marks.
+| what escaped | what handles it now |
+|:--|:--|
+| cataphoric composites ("Such changes may involve: (1) ...") | a subject that is a composite whose parts the same sentence lists after it is *announced*: acceptable, counted apart |
+| summaries that paraphrase | the paragraph's argument: the point read at its first sentence is what at least half its other moves are about or use. RustBelt's "Our core contribution is then to develop an extensible soundness proof for λRust." now passes (and the is-a lore was missing that the semantic model is part of that proof) |
+| an instance of a kind is its own entity | *bridging*: a subject that is a part, instance or kind-member of something mentioned is given (1 in Sisyphus, 9 in RustBelt) |
+| whether a return is deliberate | a *deliberate* callback returns with a demonstrative determiner ("this problem", declared `demonstrative` in the lexicon), inside quotation marks, or in a sentence with a callback connective |
+| a clause after a colon that spells out a term on the left | the annotation marks it `appos` with a ref to that term, and the rule checks the ref is mentioned on the left ("The question remains: How can we verify ...?", "is a simple one: If ownership ..."). Only Sisyphus's "a sweet spot for proof repair: it is not uncommon ..." remains dramatic |
+| pre-emptive rebuttals | the paper declares lore rules (objections the reader raises unprompted); a proposition the reader can derive counts as put forward, so rebutting it is a contrast. RustBelt's "cannot easily be contained by blessing a fixed set of standard libraries" now follows from "the libraries use unsafe code" |
+| spotting a hedge was my reading | stance markers (`hedge`: "hope", "seems", "at least ,") mark sentences in the tree, and the `grounded` style requires every marked sentence to carry a `hedge` move at that sentence and every `hedge` move to sit on a marked or question sentence. The same two-way check holds for not-X-but-Y and `deny`, and one-way for cause connectives and `infer` |
+| whether a term was needed | an introduced entity is *needed* when an argument move uses it in its paragraph or the next; entities the argument never uses are counted |
+| reasons that are definitions or background | `infer` grants a reason that is an accepted claim, a definition or background. RustBelt's "because it offers an interpretation of what types mean" now supports the claim that the semantic approach is more powerful |
+| register tags words, not uses | multiword entries ("sweet spot", "holy grail", "badge of honor" informal; ", so long as" with no relation) and part-of-speech keys (`lemma/UPOS`) |
+| rhythm is only length | fronted subjects (three words or more before the subject) and short paragraph closers |
+| the remaining "like" similes | in a paper, a "like" phrase whose object is a tracked entity ("like C++, Rust supports ...") is a literal comparison |
+
+What still escapes: the declared parts (lexicon classes, lore, argument
+readings) are mine or a subagent's, and the checks only test that they are
+consistent with the trees, not that they are right; bare "so" is too ambiguous
+to tag, so only ", so" and "so ," count as cause; and the motif and need rules
+depend on how finely the argument's terms match the entities.
+
+## House style: `/writelikeme` and the clarity check
+
+`LangLib/Style/House.lean` states Kiran's writing rules (`/writelikeme`, the
+LLM-isms list and its clarity reference, after Williams and Bizup's
+characters-and-actions test) as decidable rules over the same trees, with
+word classes declared in `lexicon.json` (`cls`: `nominal`, `animate`,
+`light`, `be`, `agent`, `significance`, `intensifier`, `buzz`, `us`, `ing`,
+`wh`, `that`, `throat`, `inflation`). Subagents tagged the open classes
+(nominal, animate, buzz, American spelling, -ing forms); the closed ones are
+declared by hand. `langlib house <dir>` reports them.
+
+| rule | definition |
+|:--|:--|
+| agentless passives (*hidden characters*) | a `be` auxiliary and a participle head (not an `ing` form) with no `by` phrase; at most one clause in ten |
+| hidden actions | a subject whose head noun is `nominal` with a `light` verb or a copula ("the implementations ... make widespread use of unsafe operations") |
+| inanimate actors | an `object` or `abstract` entity as the subject of an active `animate` verb ("a closed-world method, which assumes ...") |
+| noun stacks | three nouns in a row in a phrase that names no tracked entity |
+| point first | the subject starts twelve or more words in |
+| stacked asides | a sentence of 35 words or more with a parenthetical and a relative clause |
+| non-sequitur stacks | neighbouring sentences sharing no entity, joined by no connective |
+| slop emphasis, throat-clearing, understated inflation | a short sentence with a `significance` word; a `throat` expression; an `inflation` expression in a copular sentence |
+| tricolon with semicolons | two or more semicolons outside parentheticals |
+| deferred assertion, emphatic cleft | a copular sentence with a `wh` free relative; expletive "it", a copula and a `that` clause |
+| observation-and-response join, tetracolon | "and" before a clause with its own subject; four coordinated clauses |
+| initial conjunction, buzz, intensifiers, British spelling | by word class |
+| appositive-trailing cadence | an appositive, then a trailing adverbial clause |
+| dramatic terminal, summarising pivot, summary closer | a short last sentence that negates or asserts significance; a short sentence whose subject is a composite; a last sentence that adds no entity |
+| bare pivot, spurious contrast | a paragraph opening on a contrast connective without the last paragraph's entities; a contrast connective with no entity shared with the previous sentence |
+
+Unsupported claims, antitheses and coined terms used before they are defined
+are the argument world's (`Argument.lean`).
+
+| | Sisyphus | RustBelt | roof | roof-pratchett (01–06) |
+|:--|--:|--:|--:|--:|
+| agentless passives / clauses | 21 / 251 | 31 / 411 | n/a | n/a |
+| hidden actions / inanimate actors | 0 / 3 | 1 / 7 | 0 / 2 | 0 / 1 |
+| noun stacks / buried subjects / stacked asides | 1 / 9 / 8 | 6 / 2 / 16 | 0 / 0 / 0 | 0 / 0 / 0 |
+| non-sequitur stacks | 4 | 14 | 30 | 24 |
+| and-joins | 3 | 3 | 11 | 8 |
+| tricolons / throat-clearing / summarising pivots / summary closers | 0 / 0 / 0 / 2 | 1 / 1 / 2 / 1 | 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 |
+| initial conjunctions / buzz / intensifiers / American spellings | 1 / 1 / 2 / 0 | 2 / 4 / 9 / 11 | 0 / 0 / 2 / 0 | 0 / 0 / 0 / 0 |
+| spurious contrasts | 0 | 1 | 0 | 0 |
+| clarity fails | inanimate actors, point first, stacked asides | inanimate actors, stacked asides, non-sequiturs | inanimate actors, non-sequiturs | inanimate actors, non-sequiturs |
+| writelikeme fails | initial conjunction, buzz, intensifiers, summary closers | 9 rules (throat-clearing, tricolon, initial conjunctions, buzz, intensifiers, spelling, summarising pivots, summary closers, spurious contrast) | and-joins, intensifiers, summary closers | and-joins |
+
+Kiran's paper passes more of her own house rules than RustBelt does (four
+failures against nine), and the differences are the ones her notes predict:
+RustBelt spells American ("behavior", "formalized"), clears its throat once
+("let us begin by exploring what makes Rust's type system so unusual"),
+tricolons with semicolons once, and leans on intensifiers ("actually", nine
+times). Sisyphus's failures are a sentence-initial "But", "Crucially", two
+intensifiers ("truly", "really") and two paragraphs whose last sentence adds
+nothing new. On clarity Sisyphus buries its subject more often (9 against 2:
+"Given this setup (the spec is fixed) and the recent advances in automated
+deductive verification ..., the reader might wonder"); RustBelt stacks more
+asides (16 against 8). The stories fail the non-sequitur rule heavily, which
+is the right answer for a rule about argumentative prose: narration links
+sentences by time and place, not by shared entities. Their passives are not
+measured, because their trees carry no verb forms.
+
+What escapes the house rules: whether a passive is a deliberate emphasis
+(the clarity note allows it), whether a "real" or "actually" earns its place,
+and every rule whose word class a tagger misjudged (the classes are declared,
+not inferred). Tone, the "punchy" register Kiran asks for and the choice of
+what to leave out are not formalised.
+
 
 ## Reproducing
 
 ```
 langlib check    stories/private-papers/<p>/paragraphs/NN.txt NN.json   # each paragraph
 langlib academic stories/private-papers/<p>                               # features, flags, verdicts
+langlib house    stories/private-papers/<p>                               # house style and clarity
 python3 stories/private-papers/tools/argument_prove.py stories/private-papers/<p> <Name>   # Argument.lean
 python3 stories/private-papers/tools/style_prove.py    stories/private-papers/<p> <Name>   # Paper.lean, proved
 python3 stories/private-papers/tools/sent.py stories/private-papers/<p> 12:1               # a flagged sentence
