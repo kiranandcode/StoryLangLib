@@ -177,9 +177,13 @@ def Fact.supersedes (s : Spec) : Fact → Fact → Bool
   | .objAt o _, .objAt o' _ | .objAt o _, .holds _ o' | .holds _ o, .holds _ o'
   | .holds _ o, .objAt o' _ => o == o'
   | .atom i, .atom j =>
-    i != j && match s.atoms[i]?, s.atoms[j]? with
-      | some a, some b => a.group != "" && a.group == b.group
-      | _, _ => false
+    -- one lookup decides for the many atoms in no group (this runs inside every
+    -- consistency check of every view)
+    i != j && match s.atoms[i]? with
+      | some a => a.group != "" && match s.atoms[j]? with
+        | some b => a.group == b.group
+        | none => false
+      | none => false
   | _, _ => false
 
 def Fact.fluent (s : Spec) : Fact → Bool

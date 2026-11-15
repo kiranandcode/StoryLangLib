@@ -196,6 +196,49 @@ theorem admit_consistent (ls : List (BLit Φ))
     consistent (closure (admit ls)) = true :=
   admit_consistent_from ls [] h
 
+/-! Without lore, `closure` changes nothing, and a literal need only be checked
+against what has been kept (which is consistent already): `admitPlain`, proved
+equal to `admit`, takes quadratic time where `admit` takes cubic. -/
+
+theorem closure_of_nil (h : Lore.rules (Φ := Φ) = []) (ls : List (BLit Φ)) : closure ls = ls := by
+  simp only [closure, h, List.length_nil, Nat.zero_add]
+  rfl
+
+theorem consistent_snoc (kept : List (BLit Φ)) (l : BLit Φ) (hk : consistent kept = true) :
+    consistent (kept ++ [l]) = (!clash l l && kept.all fun y => !clash l y && !clash y l) := by
+  have hk' : ∀ x ∈ kept, ∀ y ∈ kept, clash x y = false := by
+    simpa [consistent, List.all_eq_true] using hk
+  unfold consistent
+  apply Bool.eq_iff_iff.mpr
+  simp only [List.all_append, List.all_cons, List.all_nil, Bool.and_true, Bool.and_eq_true,
+    List.all_eq_true, Bool.not_eq_true']
+  constructor
+  · rintro ⟨h1, h2, h3⟩
+    exact ⟨h3, fun y hy => ⟨h2 y hy, (h1 y hy).2⟩⟩
+  · rintro ⟨h3, h2⟩
+    exact ⟨fun x hx => ⟨hk' x hx, (h2 x hx).2⟩, fun y hy => (h2 y hy).1, h3⟩
+
+def admitPlain (ls : List (BLit Φ)) : List (BLit Φ) :=
+  ls.foldl (fun kept l => if !clash l l && kept.all (fun y => !clash l y && !clash y l)
+    then kept ++ [l] else kept) []
+
+theorem admit_eq_admitPlain (h : Lore.rules (Φ := Φ) = []) (ls : List (BLit Φ)) :
+    admit ls = admitPlain ls := by
+  unfold admit admitPlain
+  simp only [closure_of_nil h]
+  suffices ∀ kept, consistent kept = true →
+      ls.foldl (fun kept l => if consistent (kept ++ [l]) then kept ++ [l] else kept) kept =
+      ls.foldl (fun kept l => if !clash l l && kept.all (fun y => !clash l y && !clash y l)
+        then kept ++ [l] else kept) kept from this [] rfl
+  induction ls with
+  | nil => intro _ _; rfl
+  | cons l ls ih =>
+    intro kept hk
+    simp only [List.foldl_cons, consistent_snoc kept l hk]
+    split
+    · exact ih _ (by rw [consistent_snoc kept l hk]; assumption)
+    · exact ih _ hk
+
 private def isFluent (h : Held C Φ) : Bool :=
   match litOf h.b with | some l => Fluent.fluent l.1 | none => false
 
@@ -244,6 +287,7 @@ change it. With no lore rules nothing is settled, so the per-time views are not
 built; with nothing settled the view is `now`, which is not admitted twice
 (`view_eq_viewSpec`). -/
 def view (w : W) (c : C) : List (BLit Φ) :=
+  if (Lore.rules (Φ := Φ)).isEmpty then admitPlain (lits (beliefs w c)) else
   let base := lits (beliefs w c)
   let now := closure (admit base)
   let times := ((beliefs w c).map (·.about)).eraseDups
@@ -254,17 +298,22 @@ def view (w : W) (c : C) : List (BLit Φ) :=
   if settled.isEmpty then now else closure (admit (settled ++ base))
 
 theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
-  unfold view viewSpec
-  simp only
-  split
-  · rename_i h
-    have hr := List.isEmpty_iff.mp h
-    have hn : ∀ ts : List Nat,
-        (ts.flatMap fun t => List.filter (fun _ => false) (viewAt w c t)) = [] := by
+  by_cases hr : Lore.rules (Φ := Φ) = []
+  · have he : (Lore.rules (Φ := Φ)).isEmpty = true := List.isEmpty_iff.mpr hr
+    have hz : ∀ ts : List Nat, (ts.flatMap fun t => (viewAt w c t).filter fun _ => false) = [] := by
       intro ts; induction ts <;> simp_all
-    simp [hr, hn]
-  · split
-    · rename_i _ h
+    unfold view viewSpec
+    simp only [if_true, hr, List.any_nil, Bool.and_false, hz]
+    simp only [List.isEmpty_nil, ite_true, List.eraseDups_nil, List.nil_append]
+    rw [closure_of_nil hr, admit_eq_admitPlain hr]
+  · have he : (Lore.rules (Φ := Φ)).isEmpty = false := by
+      cases h : (Lore.rules (Φ := Φ)).isEmpty
+      · rfl
+      · exact absurd (List.isEmpty_iff.mp h) hr
+    unfold view viewSpec
+    simp only [he, Bool.false_eq_true, ite_false]
+    split
+    · rename_i h
       rw [List.isEmpty_iff.mp h]; rfl
     · rfl
 

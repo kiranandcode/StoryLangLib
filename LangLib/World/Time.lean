@@ -204,7 +204,36 @@ def solveDiffs (points : Nat) (ds : List Diff) : Option (List Int) :=
     | n + 1, x => let x' := relax ds x; if x' == x then some x else go n x'
   go (points + 1) (List.replicate points 0)
 
+/-! The compiled solver (`solveFast`, which `solve` is implemented by) does the
+same search on arrays, and starts each feasibility check from the previous
+choice's least solution rather than from zero: adding constraints only raises
+the least solution, so Bellman–Ford reaches the same fixpoint in the same bound,
+and the search makes the same choices. Long stories (hundreds of events) need
+it: the list version is cubic in the number of events per check. -/
+
+private def relaxA (ds : Array Diff) (x : Array Int) : Array Int :=
+  ds.foldl (fun x (a, b, w) =>
+    let cand := x.getD a 0 + w
+    if cand > x.getD b 0 then x.setIfInBounds b cand else x) x
+
+private def solveFrom (points : Nat) (ds : Array Diff) (x₀ : Array Int) : Option (Array Int) :=
+  let rec go : Nat → Array Int → Option (Array Int)
+    | 0, x => if relaxA ds x == x then some x else none
+    | n + 1, x => let x' := relaxA ds x; if x' == x then some x else go n x'
+  go (points + 1) x₀
+
+def solveFast (n : Nat) (cs : List Constraint) (ms : List Metric := []) : Option Timeline :=
+  let base := ((List.range n).map (fun i => (S i, E i, (1 : Int))) ++ ms.flatMap Metric.diffs).toArray
+  let rec search : List Constraint → Array Diff → Array Int → Option (Array Int)
+    | [], ds, x => solveFrom (2 * n) ds x
+    | c :: rest, ds, x => c.rels.findSome? fun r =>
+        let ds' := ds ++ (r.diffs c.i c.j).toArray
+        (solveFrom (2 * n) ds' x).bind fun x' => search rest ds' x'
+  (search cs base (Array.replicate (2 * n) 0)).map fun x =>
+    (List.range n).map fun i => ⟨(x.getD (S i) 0).toNat, (x.getD (E i) 0).toNat⟩
+
 /-- A timeline for `n` events meeting `cs` and `ms`, if the search finds one. -/
+@[implemented_by solveFast]
 def solve (n : Nat) (cs : List Constraint) (ms : List Metric := []) : Option Timeline :=
   let base := (List.range n).map (fun i => (S i, E i, (1 : Int))) ++ ms.flatMap Metric.diffs
   let rec search : List Constraint → List Diff → Option (List Int)

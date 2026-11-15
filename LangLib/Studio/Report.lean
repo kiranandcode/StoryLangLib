@@ -274,6 +274,32 @@ def perceptMisses (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List
       (w', i + 1, look seen w' p', acc ++ miss)) (w₀, 0, [], first)
     out
 
+/-- `perceptMisses` given the states after each event (`after[i]` follows event
+`i` from `w₀`), so a caller that has walked the story already need not run it again. -/
+def perceptMissesOn (w₀ : W s) (after : List (W s)) (from_ : Nat) (mentioned : List Nat) : List (Nat × Nat) :=
+  match s.pov with
+  | none => []
+  | some c =>
+    let atoms := List.range s.atoms.length
+    let look (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Bool) :=
+      (atoms.filter (s.perceptibleAt · p)).foldl (fun acc a => (a, w.atomNow a) :: acc.filter (·.1 != a)) seen
+    let misses (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Nat) :=
+      (atoms.filter fun a => s.perceptibleAt a p && lookup seen a != some (w.atomNow a) && !mentioned.contains a).map (p, ·)
+    let p₀ := (w₀.loc ⟨c⟩).i
+    let first := if from_ == 0 && w₀.known.contains ⟨c⟩ then misses [] w₀ p₀ else []
+    let (_, _, _, out) := after.foldl (fun (w, i, seen, (acc : List (Nat × Nat))) w' =>
+      let p := (w.loc ⟨c⟩).i
+      let p' := (w'.loc ⟨c⟩).i
+      let seen := look seen w p
+      let miss := if i ≥ from_ && p' != p then misses seen w' p' else []
+      (w', i + 1, look seen w' p', acc ++ miss)) (w₀, 0, [], first)
+    out
+
+/-- `sceneOf`, given the states before each event and the state after the last. -/
+def sceneOn (before : List (W s)) (last : W s) (from_ : Nat) : List Nat :=
+  let at_ (w : W s) : List Nat := w.known.map fun c => (w.loc c).i
+  (((before.drop from_).flatMap at_) ++ at_ last).eraseDups
+
 def Spec.perceptOk (s : Spec) (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : Bool :=
   (perceptMisses w₀ es from_ mentioned).isEmpty
 
@@ -496,13 +522,23 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
   let mut storyline : Array Json := #[]
   -- told index of each paragraph's first item
   let offsets := (ps.foldl (fun (acc, o) p => (acc ++ [o], o + p.items.length)) ([], 0)).1
+  -- the whole story walked once: a paragraph whose events so far are a prefix of
+  -- it (no flashback reaches back past it) reads its steps, state and motives
+  -- off this walk instead of walking from the start again
+  let fullSeq : List (Nat × E s) := order.filterMap fun i => (story.told[i]?).map (i, ·)
+  let (fullSteps, fullW) : List (Step s) × W s := walk start fullSeq
+  let fullMot := motives (S := E s) (E := A s) start (fullSeq.map (·.2)) 0
   for ((p : Para), (k : Nat)) in ps.zipIdx do
     let seq := (order.filter fun i => paraOf i ≤ k).filterMap fun i => (story.told[i]?).map (i, ·)
-    let (steps, w) : List (Step s) × W s := walk start seq
+    let isPrefix := seq.map (·.1) == (fullSeq.take seq.length).map (·.1)
+    let (steps, w) : List (Step s) × W s :=
+      if isPrefix then (fullSteps.take seq.length, ((fullSteps[seq.length]?).map (·.before)).getD fullW)
+      else walk start seq
     let off := offsets.getD k 0
     let mine := steps.filter fun st => paraOf st.i == k
     let earlierChanged := steps.filter fun st => paraOf st.i < k && st.status != .yes
-    let mot := motives (S := E s) (E := A s) start (seq.map (·.2)) 0
+    let mot := if isPrefix then fullMot.filter (·.1 < seq.length)
+      else motives (S := E s) (E := A s) start (seq.map (·.2)) 0
     let unmot := (mot.filterMap fun (j, m) => match m with
       | .none _ => (seq[j]?).map (·.1) | _ => none)
     let evs := p.items.zipIdx.map fun ((it : Item), (j : Nat)) =>
@@ -533,7 +569,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
     let settingJ : Json := match p.doc with
       | some d =>
         if !s.hasSetting then Json.null else
-        let scene := sceneOf start (seq.map (·.2)) firstMine
+        let scene := sceneOn (steps.map (·.before)) w firstMine
         let u := usesOf s d
         let toks := d.render
         let anchors := (p.staging.zip p.stagingAt).filterMap fun (st, at_, w) =>
@@ -541,7 +577,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
           | some i, some w => if toks[i]? == some w then none else
             some s!"stale reading: staging '{n.fixedS st}' points at token {i} '{toks.getD i "?"}', not '{w}'"
           | _, _ => none
-        let perceivedIs := (perceptMisses start (seq.map (·.2)) firstMine (p.mentioned s)).map fun (pl, a) =>
+        let perceivedIs := (perceptMissesOn start ((steps.drop 1).map (·.before) ++ [w]) firstMine (p.mentioned s)).map fun (pl, a) =>
           s!"{(s.chars[s.pov.getD 0]?.map (·.name)).getD "?"} arrives at the {n.plS pl}, where " ++
           s!"'{s.stateLabel a}' is new to her, and the paragraph never registers it: " ++
           s!"the prose must say so (read it as a claim or event about {n.atoms.getD a "?"})"
@@ -552,7 +588,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
               | .spot y => n.spotS y | .char c => n.chS c | .other e _ => e)]).toArray)]
       | none =>
         if !s.hasSetting || p.plan.isNone then Json.null else
-        let scene := sceneOf start (seq.map (·.2)) firstMine
+        let scene := sceneOn (steps.map (·.before)) w firstMine
         Json.mkObj [("issues", Json.arr ((s.planSettingIssues scene p.planSetting p.staging).map Json.str).toArray),
           ("scene", Json.arr ((scene.map n.plS).map Json.str).toArray),
           ("uses", Json.arr (p.planSetting.map fun x => Json.mkObj [("is", n.spotS x)]).toArray)]
