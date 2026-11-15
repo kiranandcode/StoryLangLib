@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 8.1,
+ "secs": 7.5,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -156,5 +156,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/hxh-chrollo-hisoka/Proofs.lean",
- "at": 1794707896.0637288
+ "at": 1794711532.61702
 }

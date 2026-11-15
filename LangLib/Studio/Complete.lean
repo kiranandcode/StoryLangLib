@@ -801,3 +801,137 @@ def derivations (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List S
    f.mods.map fun m => (m.at_, modDeriv s toks m)).mergeSort (fun a b => a.1 ≤ b.1)
 
 end LangLib.Studio
+
+/-! ## The story as an argument graph
+
+Nodes are the facts the story asserts (claims that something is true, what is
+seen), the beliefs it gives its characters (belief claims, what they are told
+or notice) and what is said. Support edges: told (a saying supports the
+hearer's belief), seen (a fact supports the seer's belief), a connective
+("because", "so") between the clauses' facts or beliefs, a lore rule between
+facts. Attack edges (Dung): the fact that contradicts a false belief attacks
+it, and a later belief revises (attacks) an earlier one it contradicts. Facts
+are unattacked, so the grounded labelling is: facts in, what they attack out,
+the rest in. -/
+
+namespace LangLib.Studio
+open Lean LangLib LangLib.World
+
+structure ANode where
+  id : String
+  kind : String          -- fact | belief | said
+  who : String := ""     -- the believer or speaker
+  lit : String
+  gloss : String
+  para : String
+  status : String := "in"
+  note : String := ""
+  deriving Inhabited
+
+structure AEdge where
+  src : String
+  tgt : String
+  kind : String          -- support | attack
+  why : String
+  deriving Inhabited
+
+/-- One paragraph's material: its name, context, tree facts, judgements and tokens. -/
+abbrev ParaData (s : Spec) := String × ParaCtx s × TreeFacts × List Judge × List String
+
+def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge := Id.run do
+  let n := s.names
+  let mut nodes : Array ANode := #[]
+  let mut edges : Array AEdge := #[]
+  let flip (l : Fact × Bool) : Fact × Bool := (l.1, !l.2)
+  let factId (l : Fact × Bool) := s!"F:{n.litS l}"
+  let belId (c : Nat) (l : Fact × Bool) := s!"B:{n.chS c}:{n.litS l}"
+  let fact (l : Fact × Bool) (para status note : String) : ANode :=
+    ANode.mk (factId l) "fact" "" (n.litS l) (s.litGloss l) para status note
+  let belief (c : Nat) (l : Fact × Bool) (para status : String) : ANode :=
+    ANode.mk (belId c l) "belief" (n.chS c) (n.litS l) (s.litGloss l) para status ""
+  let add (nodes : Array ANode) (x : ANode) : Array ANode :=
+    if nodes.any (·.id == x.id) then nodes else nodes.push x
+  for (name, c, f, js, toks) in ps do
+    let w (t : Nat) := s!"‘{toks.getD t "?"}’"
+    -- truth where the judgement stands: after its event in story order, or at its token
+    let inOut (j : Judge) (l : Fact × Bool) : String :=
+      let st := match j.kind with
+        | .event i => run s.start (c.upToItem i).1
+        -- a claim's fact: true or false by the end of its paragraph, in story order (prose may
+        -- tell a move after the belief it explains)
+        | _ => run s.start (c.prior ++ c.items.map fun (x : Ev × Nat) => Ev.toE s x.1)
+      if truthLit st (lit (s := s) l) then "in" else "out"
+    -- the node a judgement stands for, if any
+    let nodeOf (j : Judge) : Option ANode :=
+      match j.kind with
+      | .claim (.holdsTrue l) => some (fact l name (inOut j l) "")
+      | .claim (.thinks ch l) | .claim (.knows ch l) | .claim (.falseBelief ch l) =>
+        some (belief ch l name (inOut j l))
+      | .event i => (c.items[i]?).bind fun (e, _) => match e with
+        | .tell _ d l | .whisper _ d l | .lie _ d l => some (belief d l name (inOut j l))
+        | .notice ch l _ | .realise ch l => some (belief ch l name (inOut j l))
+        | _ => none
+      | _ => none
+    for j in js do
+      -- a node seen again takes its status there: a belief true when formed can turn false
+      if let some x := nodeOf j then
+        nodes := match nodes.findIdx? (·.id == x.id) with
+          | some k =>
+            if nodes[k]!.status == x.status then nodes else
+            let note := s!"{if x.status == "out" then "false" else "true"} from ¶ {name}"
+            nodes.set! k { nodes[k]! with status := x.status, note }
+          | none => nodes.push x
+      -- what supports a belief: being told, seeing
+      if let .event i := j.kind then
+        if let some (e, _) := c.items[i]? then
+          match e with
+          | .tell sp d l | .whisper sp d l | .lie sp d l =>
+            let note := match e with | .lie .. => "a lie" | _ => ""
+            let said := ANode.mk s!"S:{n.chS sp}:{n.litS l}" "said" (n.chS sp) (n.litS l) (s.litGloss l) name "in" note
+            nodes := add nodes said
+            edges := edges.push ⟨said.id, belId d l, "support", "told"⟩
+          | .notice ch l ev =>
+            if (ev == .seen || ev == .sensed) && inOut j l == "in" then
+              nodes := add nodes (fact l name "in" "")
+              edges := edges.push ⟨factId l, belId ch l, "support", "seen"⟩
+          | _ => pure ()
+    -- connectives the model bears out: support between the clauses' nodes
+    for l in f.links do
+      if l.rel == .cause || l.rel == .effect then
+        for a in judgesAt js l.a do
+          for b in judgesAt js l.b do
+            match nodeOf a, nodeOf b with
+            | some na, some nb =>
+              if causes c a b then
+                edges := edges.push ⟨na.id, nb.id, "support", s!"‘{l.word}’ ({w l.a} → {w l.b})"⟩
+            | _, _ => pure ()
+  -- lore rules between facts in the graph
+  for r in Lore.rules (Φ := SFact s) do
+    let hd : Fact × Bool := (r.head.1.f, r.head.2)
+    for b in r.body do
+      let bd : Fact × Bool := (b.1.f, b.2)
+      if nodes.any (·.id == factId bd) && nodes.any (·.id == factId hd) then
+        edges := edges.push ⟨factId bd, factId hd, "support", "lore"⟩
+  -- attacks: the world against false beliefs, later beliefs against earlier ones
+  let order (p : String) : Nat := ((ps.map (·.1)).idxOf? p).getD 0
+  for x in nodes do
+    if x.kind == "belief" && x.status == "out" then
+      if let .ok l := n.lit x.lit then
+        nodes := add nodes (fact (flip l) x.para "in" "the world")
+        edges := edges.push ⟨factId (flip l), x.id, "attack", "the world says otherwise"⟩
+  for x in nodes do
+    for y in nodes do
+      if x.kind == "belief" && y.kind == "belief" && x.who == y.who && order y.para > order x.para then
+        if let (.ok lx, .ok ly) := (n.lit x.lit, n.lit y.lit) then
+          if lx.1 == ly.1 && lx.2 != ly.2 then
+            edges := edges.push ⟨y.id, x.id, "attack", s!"revised in ¶ {y.para}"⟩
+  return (nodes.toList, edges.toList)
+
+def argumentJson (g : List ANode × List AEdge) : Json :=
+  Json.mkObj [
+    ("nodes", Json.arr (g.1.map fun x => Json.mkObj [("id", x.id), ("kind", x.kind), ("who", x.who), ("lit", x.lit),
+      ("gloss", x.gloss), ("para", x.para), ("status", x.status), ("note", x.note)]).toArray),
+    ("edges", Json.arr (g.2.map fun e => Json.mkObj [("src", e.src), ("tgt", e.tgt), ("kind", e.kind),
+      ("why", e.why)]).toArray)]
+
+end LangLib.Studio

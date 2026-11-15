@@ -120,8 +120,7 @@ reading stale until it is re-derived.
 """
 
 COMPLETE_RULES = """\
-This story is complete (story.json "complete": true): every part of the tree is a judgement from the
-world. Every clause (a verb heading its node, or a copula) needs at least one judgement anchored at its
+Every story must be complete: every part of the tree is a judgement from the world. Every clause (a verb heading its node, or a copula) needs at least one judgement anchored at its
 head word (the verb; for a copula, the predicate's head):
 - an event, with "at" on that word; the world things the clause's subject, object and obliques refer
   to must be among those its judgements mention (an atom mentions the characters in its "who");
@@ -395,7 +394,7 @@ def cmd_extract(a) -> int:
         "\n## Events of the earlier paragraphs (do not repeat them)\n" + ("\n".join(st.events_so_far(k)) or "(none)"),
         f"\n## Paragraph {k}\n" + st.f(k, "txt").read_text().strip(),
         "\n## Its tokens\n" + " ".join(f"{i}:{t}" for i, t in enumerate(toks)),
-        "\n## Rules\n" + READING_RULES + (COMPLETE_RULES if st.spec.get("complete") else ""),
+        "\n## Rules\n" + READING_RULES + COMPLETE_RULES,
         f"\ntext_sha for this prose: {freshness.text_sha(st.f(k, 'txt').read_text())}",
         f"world_sha for this world: {freshness.world_sha(st.world_text())}",
     ]))

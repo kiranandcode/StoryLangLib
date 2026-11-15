@@ -116,6 +116,13 @@ export interface Completeness {
   derivations?: { at: number; d: Deriv }[]
 }
 
+/** The story as an argument graph (Complete.lean `argumentGraph`): facts, beliefs, sayings;
+ *  support and attack edges; grounded labelling (in / out). */
+export interface Argument {
+  nodes: { id: string; kind: 'fact' | 'belief' | 'said'; who: string; lit: string; gloss: string; para: string; status: 'in' | 'out'; note: string }[]
+  edges: { src: string; tgt: string; kind: 'support' | 'attack'; why: string }[]
+}
+
 /** Why a verdict holds: a conclusion over its premises under a named rule (Complete.lean `Deriv`). */
 export interface Deriv { rule: string; concl: string; ok: boolean; prems: Deriv[] }
 
@@ -164,6 +171,7 @@ export interface Report {
   verdict: { valid: boolean; plausible: boolean; assumptions: number; failure: { i: number; why: string } | null }
   beats: Beats | null
   completeness?: Completeness[]
+  argument?: Argument
   proofs: Proofs
   meta?: Record<string, unknown>
   summary?: Record<string, unknown>
