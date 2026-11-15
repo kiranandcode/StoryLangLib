@@ -23,6 +23,11 @@ does the same for the rest of the tree, closed-world:
     is a character on stage;
   - `speech`: words said, in a quote or as what a verb of saying says;
   - `hypothetical`: under a modal or a condition ("could", "if", "as if");
+  - `generic`: the narrator's generalisation ("People did.", "Kettles know"):
+    a clause in the present tense (its verb, copula or auxiliary marked
+    `"Tense": "Pres"`), outside speech, whose subject is neither a character
+    nor a thing of the setting; it says how the world tends to go, not what
+    happens in it;
   - `external`: a move checked in another file (the fight's Nen moves), whose
     world ids include the clause's.
   A negated clause cannot assert an event, unless the event's literal is itself
@@ -72,6 +77,8 @@ structure Pred where
   text : String := ""
   /-- its subject, when that is a thing of the setting (a fixture or scenery) -/
   thing : Option Spot := none
+  /-- its verb, copula or auxiliary is marked present tense -/
+  present : Bool := false
   /-- the kinds of fact its subject, object and obliques name ("weather", "light", "sound") -/
   kinds : List String := []
   deriving DecidableEq, Repr
@@ -108,6 +115,8 @@ inductive JKind where
   | content (l : Fact × Bool)
   | goal (l : Fact × Bool)
   | act | speech | hypothetical
+  /-- the narrator's generalisation, in the present tense -/
+  | generic
   | external (ids : List WId)
   deriving DecidableEq, Repr
 
@@ -265,6 +274,7 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
         args := (kids.filter fun k => roleIs k .obj || roleIs k .iobj || roleIs k .obl).filterMap
           (fun k => (refOf k).bind (wid s R)),
         neg := near.any fun w => negWords.contains (lower w),
+        present := near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres"),
         modal := ctx.cond || near.any fun w => w.upos == .AUX && modalWords.contains (lower w),
         quoted, said := ctx.said, parent := ctx.parent, parentLemma := ctx.parentLemma }
     let ctx' : TCtx := match me with
@@ -477,7 +487,7 @@ def ParaCtx.holds (c : ParaCtx s) (j : Judge) : Bool :=
 
 /-- A judgement of reported or imagined content: not a claim about the world. -/
 def Judge.reported (j : Judge) : Bool :=
-  match j.kind with | .content _ | .speech | .hypothetical => true | _ => false
+  match j.kind with | .content _ | .speech | .hypothetical | .generic => true | _ => false
 
 /-- The fact ids a clause's judgements are about. -/
 def judgedAtoms (c : ParaCtx s) (here : List Judge) : List Nat :=
@@ -522,7 +532,7 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
     let here := judgesAt js p.at_
     if here.isEmpty then
       [s!"the clause at {tok p.at_} has no judgement: read it as an event, a claim, or say what it is " ++
-        "(content, goal, act, speech, hypothetical)"]
+        "(content, goal, act, speech, hypothetical, generic)"]
     else
       let worldRefs := p.subj.toList ++ p.args
       -- the world things the clause mentions must be among those its judgements mention
@@ -584,6 +594,12 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
       | .hypothetical =>
         if p.modal then [] else
         [s!"the clause at {tok p.at_} is read as hypothetical, but nothing in it is modal or conditional"]
+      | .generic =>
+        if !p.present then [s!"the clause at {tok p.at_} is read as generic, but it is not in the present tense"]
+        else if p.quoted || p.said then [s!"the clause at {tok p.at_} is read as generic, but it is speech"]
+        else if (match p.subj with | some (.ch _) => true | _ => false) || p.thing.isSome then
+          [s!"the clause at {tok p.at_} is read as generic, but its subject is in the story: judge it by the world"]
+        else []
       | .external _ => []
   let perLink := f.links.flatMap fun l =>
     let ja := judgesAt js l.a
@@ -675,8 +691,9 @@ def judgesOf (s : Spec) (j : Json) : Except String (List Judge) := do
       | "act" => pure .act
       | "speech" => pure .speech
       | "hypothetical" => pure .hypothetical
+      | "generic" => pure .generic
       | "external" => pure (.external (n.wids ((x.getObjValAs? String "e").toOption.getD "")))
-      | _ => throw s!"unknown judgement kind \"{kind}\" (content, goal, act, speech, hypothetical, external)"
+      | _ => throw s!"unknown judgement kind \"{kind}\" (content, goal, act, speech, hypothetical, generic, external)"
     pure ({ at_ := a, kind := k } : Judge)
   pure (evs ++ claims ++ other)
 
@@ -889,6 +906,12 @@ def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List St
       [leaf (if p.quoted then "quoted" else "said") (if p.quoted then "inside a quote" else s!"what ‘{p.parentLemma}’ says") ok]
   | .hypothetical =>
     .mk "hypothetical" "not asserted" p.modal [leaf "modal" "under a modal or a condition" p.modal]
+  | .generic =>
+    let charSubj := match p.subj with | some (.ch _) => true | _ => false
+    let ok := p.present && !p.quoted && !p.said && !charSubj && p.thing.isNone
+    .mk "generic" "the narrator's generalisation, not an event" ok
+      [leaf "present" "in the present tense" p.present,
+       leaf "narrator" "outside speech, about no one in the story" (ok || !p.present)]
   | .external ids =>
     .mk "Nen move" s!"a move about {", ".intercalate (ids.map (WId.show n))}" true
       [leaf "proved" "checked move by move in LangLib/World/Examples/Fight.lean" true]

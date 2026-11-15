@@ -130,7 +130,10 @@ head word (the verb; for a copula, the predicate's head):
   the content of its parent clause's belief or speech, which must be judged with that literal), goal
   (with "lit": a purpose clause; the agent of the event it serves must want it then), act (a gesture
   whose subject is on stage), speech (quoted, or what a verb of saying says), hypothetical (modal or
-  conditional), external (with "e": a move checked elsewhere, e.g. a Nen move).
+  conditional), generic (the narrator's generalisation: present tense, its verb/copula/aux marked
+  "f": {"Tense": "Pres"} in the annotation, outside speech, subject neither a character nor a thing
+  of the setting: "People did." no, "People do." yes), external (with "e": a move checked elsewhere,
+  e.g. a Nen move).
 A negated clause cannot assert an event unless the event's literal is negative.
 Connectives are read off the tree and checked: then/after/once/when (time order), before/until,
 while/meanwhile (same time), because/since/so (cause: with the cause taken out of the story the effect
