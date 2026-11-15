@@ -235,11 +235,12 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
             | _ => false
           let phrase := " ".intercalate (marks.map fun (x, _) => match x with
             | .leaf w => lower w | _ => "")
-          -- "since" (and "as") marked `"sense": "time"` is temporal, not causal ("since he was nine")
+          -- "since" marked `"sense": "time"` is temporal, not causal ("since he was nine"); a
+          -- temporal "as" already reads as at the same time, and stays so
           let temporal := marks.any fun (x, _) => match x with
             | .leaf w => w.sense == some "time" | _ => false
           let rel := (LinkRel.ofMarker phrase).map fun r =>
-            if temporal && (r == .cause || r == .during) then LinkRel.after else r
+            if temporal && r == .cause then LinkRel.after else r
           match rel, marks.head?, headAt k o, hereAt with
           | some r, some (_, mo), some a, some b => some { at_ := mo, word := phrase, rel := r, a, b }
           | _, _, _, _ => none
