@@ -1,0 +1,115 @@
+{
+ "text_sha": "88c683a7c33214ec",
+ "world_sha": "0364d195ae4a9f9b",
+ "events": [
+  {
+   "e": "notice kiran noteOldTimes assumed",
+   "at": 34,
+   "w": "a",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt kiran at(kiran,roof)",
+   "at": 98,
+   "w": "told",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "holds kiran note",
+   "at": 34,
+   "w": "a"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 13,
+   "w": "Knowing"
+  },
+  {
+   "c": "knows kiran ranLeaving",
+   "at": 48,
+   "w": "left"
+  },
+  {
+   "c": "true kiranLikesRan",
+   "at": 77,
+   "w": "done"
+  },
+  {
+   "c": "knows kiran ranLeaving",
+   "at": 86,
+   "w": "his"
+  },
+  {
+   "c": "goal kiran at(kiran,roof)",
+   "at": 98,
+   "w": "told"
+  }
+ ],
+ "judge": [
+  {
+   "at": 4,
+   "w": "said",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 7,
+   "w": "snorted",
+   "kind": "act"
+  },
+  {
+   "at": 19,
+   "w": "that",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 22,
+   "w": "let",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 24,
+   "w": "win",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 30,
+   "w": "twelve",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 55,
+   "w": "going",
+   "kind": "act"
+  },
+  {
+   "at": 57,
+   "w": "stand",
+   "kind": "act"
+  },
+  {
+   "at": 64,
+   "w": "building",
+   "kind": "act"
+  },
+  {
+   "at": 91,
+   "w": "folded",
+   "kind": "act"
+  },
+  {
+   "at": 103,
+   "w": "going",
+   "kind": "speech"
+  },
+  {
+   "at": 109,
+   "w": "rude",
+   "kind": "hypothetical"
+  }
+ ],
+ "staging": []
+}

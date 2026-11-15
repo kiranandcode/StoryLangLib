@@ -1,0 +1,118 @@
+{
+ "text_sha": "4217d35df7f0482e",
+ "world_sha": "0364d195ae4a9f9b",
+ "events": [
+  {
+   "e": "move kiran roof",
+   "at": 11,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "goal kiran at(kiran,roof)",
+   "at": 2,
+   "w": "smelled"
+  },
+  {
+   "c": "at ran roof",
+   "at": 22,
+   "w": "had"
+  },
+  {
+   "c": "true kiranLikesRan",
+   "at": 47,
+   "w": "cared"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 54,
+   "w": "stuck"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 59,
+   "w": "did"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 68,
+   "w": "came"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 74,
+   "w": "opened"
+  },
+  {
+   "c": "at ran roof",
+   "at": 91,
+   "w": "by"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 11,
+   "w": "took"
+  },
+  {
+   "c": "at ran roof",
+   "at": 11,
+   "w": "took"
+  }
+ ],
+ "judge": [
+  {
+   "at": 25,
+   "w": "made",
+   "kind": "act"
+  },
+  {
+   "at": 27,
+   "w": "slow",
+   "kind": "act"
+  },
+  {
+   "at": 37,
+   "w": "going",
+   "kind": "act"
+  },
+  {
+   "at": 39,
+   "w": "arrive",
+   "kind": "act"
+  },
+  {
+   "at": 44,
+   "w": "looking",
+   "kind": "act"
+  },
+  {
+   "at": 62,
+   "w": "shouldered",
+   "kind": "act"
+  },
+  {
+   "at": 103,
+   "w": "turned",
+   "kind": "act"
+  },
+  {
+   "at": 106,
+   "w": "heard",
+   "kind": "act"
+  },
+  {
+   "at": 114,
+   "w": "look",
+   "kind": "act"
+  },
+  {
+   "at": 117,
+   "w": "see",
+   "kind": "act"
+  }
+ ],
+ "staging": []
+}

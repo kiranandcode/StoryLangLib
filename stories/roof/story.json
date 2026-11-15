@@ -69,7 +69,10 @@
           "words": [
             "desk"
           ],
-          "count": 1
+          "count": 1,
+          "attrs": {
+            "state": "bare"
+          }
         },
         {
           "id": "rchair",
@@ -173,7 +176,8 @@
           "what": "the stairs up to the roof",
           "words": [
             "stair",
-            "stairs"
+            "stairs",
+            "stairwell"
           ]
         }
       ]
@@ -220,6 +224,14 @@
           "what": "the city below, seen from the roof",
           "words": [
             "city"
+          ],
+          "count": 1
+        },
+        {
+          "id": "roofdoor",
+          "what": "the door at the top of the stairs, which sticks",
+          "words": [
+            "door"
           ],
           "count": 1
         }
@@ -276,8 +288,9 @@
     },
     {
       "id": "torch",
-      "what": "the torch they passed between them as kids",
+      "what": "the flashlight they passed between them as kids",
       "words": [
+        "flashlight",
         "torch"
       ],
       "count": 1
@@ -397,6 +410,14 @@
         "ran",
         "kiran"
       ]
+    },
+    {
+      "id": "ranLeaving",
+      "label": "Ran leaves tomorrow",
+      "truth": true,
+      "who": [
+        "ran"
+      ]
     }
   ],
   "lore": [
@@ -453,7 +474,8 @@
         "kiranDisowned",
         "kiranLabLife",
         "ranMovedAway",
-        "childhoodFriends"
+        "childhoodFriends",
+        "ranLeaving"
       ],
       "ran": [
         "ranLikesKiran",
@@ -461,7 +483,8 @@
         "!noteOldTimes",
         "ranMovedAway",
         "childhoodFriends",
-        "kiranTrans"
+        "kiranTrans",
+        "ranLeaving"
       ]
     }
   },

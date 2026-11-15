@@ -9,8 +9,9 @@
  "beat": "climb",
  "setting": [
   "stairs",
+  "roofdoor",
   "roof",
   "city",
-  "note"
+  "ledge"
  ]
 }
