@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 12.2,
+ "secs": 17.0,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -296,5 +296,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794721895.175733
+ "at": 1794722029.677821
 }
