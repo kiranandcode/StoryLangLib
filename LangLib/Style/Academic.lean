@@ -185,6 +185,14 @@ private partial def quotedIn (lx : Lex) : Tree → List String
         if inside || around then some e else none
     here ++ kids.flatMap (quotedIn lx)
 
+/-- A clause has its own subject: `nsubj`, `csubj` or expletive, down the chain of heads. -/
+private partial def hasSubj : Tree → Bool
+  | .leaf _ => false
+  | .node _ kids => kids.any (fun k => roleIs k .nsubj || roleIs k .csubj || roleIs k .expl) ||
+    kids.any fun k => match k with
+      | .node i _ => i.role == some .head && hasSubj k
+      | _ => false
+
 private def isColon (w : Word) : Bool := w.form == ":"
 private def isDash (w : Word) : Bool := w.form == "—" || w.form == "--"
 
@@ -218,7 +226,7 @@ private partial def punctClasses : Tree → PCount
       if dash && openDash then (acc, false) else
       if !colon && !dash then (acc, openDash) else
       let left := (List.range i).map (arr[·]!)
-      let complete := left.any (roleIs · .nsubj) &&
+      let complete := left.any (fun t => roleIs t .nsubj || roleIs t .csubj || roleIs t .expl) &&
         left.any fun t => roleIs t .head || roleIs t .cop || roleIs t .root
       let next := ((List.range arr.size).filter (· > i)).map (arr[·]!) |>.find? fun t =>
         !((roleOf t).map skipRoles.contains).getD false
@@ -229,7 +237,7 @@ private partial def punctClasses : Tree → PCount
           -- not a participial adjunct ("...—granting push access")
           let clause := ((roleOf t).map clauseRoles.contains).getD false ||
             (roleOf t == none && match t with | .node j _ => j.cat == .S | _ => false)
-          if clause then (if complete && (mainSubj t 0).isSome then 1 else 0)
+          if clause then (if complete && hasSubj t then 1 else 0)
           else if ((roleOf t).map definingRoles.contains).getD false then 0
           else match t with
             | .node j _ => if j.cat == .NP || j.cat == .PP then 0 else 2
