@@ -1,0 +1,195 @@
+{
+ "text_sha": "4f6406b34af1ab75",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "adopt kiran did(kiran,ran,kiss)",
+   "at": 5,
+   "w": "closed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "act kiran ran kiss",
+   "at": 45,
+   "w": "kissed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 25,
+   "w": "talking"
+  },
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 45,
+   "w": "kissed"
+  },
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 50,
+   "w": "warm"
+  },
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 52,
+   "w": "tasted"
+  },
+  {
+   "c": "true raining",
+   "at": 52,
+   "w": "tasted"
+  },
+  {
+   "c": "true cityLit",
+   "at": 142,
+   "w": "went"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 142,
+   "w": "went"
+  },
+  {
+   "c": "at ran roof",
+   "at": 142,
+   "w": "went"
+  },
+  {
+   "c": "true cityLit",
+   "at": 149,
+   "w": "lit"
+  },
+  {
+   "c": "true cityLit",
+   "at": 154,
+   "w": "look"
+  },
+  {
+   "c": "true cityLit",
+   "at": 159,
+   "w": "decent"
+  }
+ ],
+ "judge": [
+  {
+   "at": 2,
+   "w": "the",
+   "kind": "act"
+  },
+  {
+   "at": 12,
+   "w": "waited",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 15,
+   "w": "talk",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 38,
+   "w": "took",
+   "kind": "act"
+  },
+  {
+   "at": 60,
+   "w": "made",
+   "kind": "act"
+  },
+  {
+   "at": 74,
+   "w": "opened",
+   "kind": "generic"
+  },
+  {
+   "at": 77,
+   "w": "expecting",
+   "kind": "generic"
+  },
+  {
+   "at": 81,
+   "w": "found",
+   "kind": "generic"
+  },
+  {
+   "at": 87,
+   "w": "held",
+   "kind": "act"
+  },
+  {
+   "at": 94,
+   "w": "planning",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 99,
+   "w": "go",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 106,
+   "w": "pulled",
+   "kind": "act"
+  },
+  {
+   "at": 109,
+   "w": "breathe",
+   "kind": "act"
+  },
+  {
+   "at": 112,
+   "w": "kept",
+   "kind": "act"
+  },
+  {
+   "at": 127,
+   "w": "reach",
+   "kind": "act"
+  },
+  {
+   "at": 133,
+   "w": "let",
+   "kind": "act"
+  },
+  {
+   "at": 135,
+   "w": "hold",
+   "kind": "act"
+  },
+  {
+   "at": 170,
+   "w": "talked",
+   "kind": "generic"
+  },
+  {
+   "at": 180,
+   "w": "sell",
+   "kind": "generic"
+  },
+  {
+   "at": 185,
+   "w": "smaller",
+   "kind": "generic"
+  },
+  {
+   "at": 190,
+   "w": "asks",
+   "kind": "generic"
+  },
+  {
+   "at": 193,
+   "w": "says",
+   "kind": "generic"
+  },
+  {
+   "at": 198,
+   "w": "mean",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}

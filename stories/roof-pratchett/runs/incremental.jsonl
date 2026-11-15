@@ -4,3 +4,8 @@
 {"para": "04", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794750054.1}
 {"para": "05", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794750128.1}
 {"para": "06", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794750135.3}
+{"para": "07", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794750171.5}
+{"para": "08", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794750238.2}
+{"para": "09", "stage": "paragraph-check", "ok": false, "annotation": true, "verdict": "valid", "note": "completeness: the clause at 'says' (token 193) is read as generic, but it is speech | completeness: the clause at 'mean' (token 198) is read as generic, but it is speech", "t": 1794751061.9}
+{"para": "09", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794753092.5}
+{"stage": "prove", "ok": true, "note": "58/58; ", "t": 1794754819.4}

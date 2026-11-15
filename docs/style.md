@@ -193,6 +193,12 @@ the rewrites:
   main clause. That would have made every simile's relative clause ("a lift
   that knows the way") a claim about a character. The fix is the generic
   subject described above.
+* **A reading that over-read the prose.** In the last footnote, "somebody
+  asks, somebody says yes, and both mean every word" was first annotated
+  with the second and third clauses as conjuncts *under* "asks". The checker
+  then took them to be what is asked, which is speech, so they could not be
+  generic. The prose was right; the reading was wrong. Re-read as three
+  parallel clauses in a coordination, they pass.
 * **No judgement for a generalisation.** This one was not a prose problem. The
   checker's closed world had no place for a narrator who comments, so it
   needed a new judgement kind.
