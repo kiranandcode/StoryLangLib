@@ -1080,3 +1080,56 @@ def argumentJson (g : List ANode × List AEdge) : Json :=
       ("why", e.why)]).toArray)]
 
 end LangLib.Studio
+
+/-! ## Where each clause is in the text
+
+For drawing: each clause (by its head token) with the tokens of its own words,
+subject first, the clauses inside it left out (as `Pred.text`). Report only;
+the proofs do not depend on it. -/
+
+namespace LangLib.Studio
+open LangLib
+
+private def isClauseNode (t : Tree) : Bool := match t with
+  | .node ki _ => ki.cat == .S || ki.cat == .SBAR || (ki.role.map clauseRoles.contains).getD false
+  | .leaf _ => false
+
+/-- Token positions of a node's own words (as `ownWords`). -/
+partial def ownIdx : Tree → Nat → List Nat
+  | .leaf w, p => if w.upos == .PUNCT then [] else [p]
+  | .node _ kids, start =>
+    let offs := (kids.foldl (fun (acc, p) k => (acc ++ [p], p + k.render.length)) (([] : List Nat), start)).1
+    (kids.zip offs).flatMap fun (k, o) => if isClauseNode k then [] else ownIdx k o
+
+/-- (head token, tokens) for every clause of a tree. -/
+partial def spansIn (subjIdx : List Nat) : Tree → Nat → List (Nat × List Nat)
+  | .leaf _, _ => []
+  | t@(.node _ kids), start =>
+    let offs := (kids.foldl (fun (acc, p) k => (acc ++ [p], p + k.render.length)) (([] : List Nat), start)).1
+    let placed := kids.zip offs
+    let isHead (k : Tree) := match k with | .leaf w => w.role == some .head | .node i _ => i.role == some .head
+    let verb := placed.findSome? fun (k, o) => match k with
+      | .leaf w => if w.upos == .VERB && w.role == some .head then some o else none
+      | _ => none
+    let cop := placed.findSome? fun (k, o) => match k with
+      | .leaf w => if w.role == some .cop then some o else none
+      | .node i _ => if i.role == some .cop then some o else none
+    let at_ : Option Nat := match verb, cop with
+      | some o, _ => some o
+      | none, some c => some (((placed.find? fun (k, _) => isHead k).map (·.2)).getD c)
+      | none, none => none
+    let nsubj := placed.find? fun (k, _) => match k with
+      | .leaf w => w.role == some .nsubj | .node i _ => i.role == some .nsubj
+    let subjIdx := match nsubj with | some (k, o) => ownIdx k o | none => subjIdx
+    let here := match at_ with
+      | some a =>
+        let own := ownIdx t start
+        [(a, ((if nsubj.isSome then [] else subjIdx) ++ own).eraseDups.mergeSort (· ≤ ·))]
+      | none => []
+    here ++ placed.flatMap fun (k, o) => spansIn subjIdx k o
+
+def clauseSpans (d : Doc) : List (Nat × List Nat) :=
+  (d.sentences.foldl (fun (acc, p) sn => (acc ++ spansIn [] sn.tree p, p + sn.tree.render.length))
+    (([] : List (Nat × List Nat)), 0)).1
+
+end LangLib.Studio

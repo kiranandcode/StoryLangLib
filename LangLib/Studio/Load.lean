@@ -192,6 +192,8 @@ def storyReport (dir : System.FilePath) : IO Json := do
           pure (one a kind text gloss))
     Json.mkObj [("name", p.name), ("issues", Json.arr (issues.map Json.str).toArray),
       ("clauses", Json.arr (f.preds.map fun c => Json.mkObj [("at", c.at_), ("w", Json.str (toks.getD c.at_ "")),
+        ("span", Json.arr ((((p.doc.map clauseSpans).getD []).find? (·.1 == c.at_)).map (·.2) |>.getD [c.at_]
+          |>.map (fun (i : Nat) => Json.num i) |>.toArray)),
         ("neg", c.neg), ("modal", c.modal), ("quoted", c.quoted),
         ("parent", match c.parent with | some q => Json.num q | none => Json.null)]).toArray),
       ("links", Json.arr (f.links.map fun l => Json.mkObj [("at", l.at_), ("word", l.word),

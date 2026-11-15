@@ -22,13 +22,24 @@ export function LinkLines() {
       const src = cur.getBoundingClientRect()
       const out: Line[] = []
       let up = 0, down = 0, minX = Infinity
-      for (const e of found) {
+      // one line per run of adjacent words (a phrase), to the end of its first visual line
+      const els = [...found].sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1)
+      const runs: Element[][] = []
+      for (const e of els) {
         e.classList.add('linked'); lit.push(e)
-        const r = e.getBoundingClientRect()
-        if (r.bottom < 0) { up++; continue }
-        if (r.top > window.innerHeight) { down++; continue }
-        minX = Math.min(minX, r.right)
-        if (out.length < 40) out.push({ x1: src.left, y1: src.top + Math.min(src.height / 2, 11), x2: r.right + 2, y2: r.top + r.height / 2 })
+        const last = runs[runs.length - 1]?.slice(-1)[0]
+        const i = Number((e as HTMLElement).dataset?.i), j = Number((last as HTMLElement | undefined)?.dataset?.i)
+        if (last && last.parentElement === e.parentElement && Number.isFinite(i) && i === j + 1) runs[runs.length - 1].push(e)
+        else runs.push([e])
+      }
+      for (const run of runs) {
+        const r0 = run[0].getBoundingClientRect()
+        if (r0.bottom < 0) { up++; continue }
+        if (r0.top > window.innerHeight) { down++; continue }
+        const sameLine = run.map(e => e.getBoundingClientRect()).filter(r => Math.abs(r.top - r0.top) < 4)
+        const right = Math.max(...sameLine.map(r => r.right))
+        minX = Math.min(minX, right)
+        if (out.length < 40) out.push({ x1: src.left, y1: src.top + Math.min(src.height / 2, 11), x2: right + 2, y2: r0.top + r0.height / 2 })
       }
       setLines(out)
       setOffscreen({ up, down, x: Number.isFinite(minX) ? minX : window.innerWidth * 0.4 })

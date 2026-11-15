@@ -73,6 +73,17 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
     return m
   }, [p])
   const judged = useMemo(() => { const c = compOf(report, p.name); return c ? byToken(c) : null }, [report, p.name])
+  // every word of a clause carries the clause's key and the keys of the events read at it, so
+  // hovering a judgement or an event in the side panel lights up the whole phrase
+  const spanKeys = useMemo(() => {
+    const m = new Map<number, string[]>()
+    const c = compOf(report, p.name)
+    for (const cl of c?.clauses ?? []) {
+      const keys = [`tok:${p.name}:${cl.at}`, ...p.events.flatMap((e, k) => e.at === cl.at ? [`ev:${p.name}:${k}`] : [])]
+      for (const t of cl.span ?? [cl.at]) m.set(t, [...(m.get(t) ?? []), ...keys])
+    }
+    return m
+  }, [report, p])
   const warn = warningsOf(p)
   const speakers = doc ? [...new Set(doc.tokens.map(t => t.spk).filter((s): s is string => !!s && s !== '?'))] : []
 
@@ -105,17 +116,15 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
         cls.push(worst)
       }
       const jt = judged?.get(i)
-      if (jt?.clause) {
-        cls.push('jc', jt.bad || jt.judges.length === 0 ? 'jbad' : `jk-${jt.judges[0].kind}`)
-        tg.push(`tok:${p.name}:${i}`)
-      }
+      if (jt?.clause) cls.push('jc', jt.bad || jt.judges.length === 0 ? 'jbad' : `jk-${jt.judges[0].kind}`)
+      for (const k of spanKeys.get(i) ?? []) if (!tg.includes(k)) tg.push(k)
       if (jt?.link) { cls.push('jlinkw', jt.link.ok ? 'jok' : 'jbad'); tg.push(`tok:${p.name}:${i}`) }
       out.push(<span key={i} className={cls.join(' ')} style={style as React.CSSProperties} data-i={i} data-target={tg.filter(Boolean).join(' ') || undefined}>{p.text.slice(start, end)}</span>)
       at = end
     })
     if (at < p.text.length) out.push(p.text.slice(at).replace(/\s+$/, ''))
     return out
-  }, [p, doc, evAt, hoverEnt, report, judged])
+  }, [p, doc, evAt, hoverEnt, report, judged, spanKeys])
 
   const onOver = (ev: React.MouseEvent) => {
     if (!overview || !doc) return

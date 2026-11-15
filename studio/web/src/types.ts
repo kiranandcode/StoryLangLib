@@ -109,7 +109,7 @@ export interface Paragraph {
 export interface Completeness {
   name: string
   issues: string[]
-  clauses: { at: number; w: string; neg: boolean; modal: boolean; quoted: boolean; parent: number | null }[]
+  clauses: { at: number; w: string; span?: number[]; neg: boolean; modal: boolean; quoted: boolean; parent: number | null }[]
   links: { at: number; word: string; rel: string; a: number; b: number }[]
   judges: { at: number; kind: string; text: string; gloss: string }[]
   trees?: TreeJ[]
