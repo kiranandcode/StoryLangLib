@@ -23,14 +23,14 @@ outright (radical) belief. A claim is *supported* when the reader holds it
 radically (`accepted`), so `Mind.explain` says why each claim stands.
 
 **Validity** (`Domain.ok`, so `Valid start moves` is decidable): every term a
-move uses is lore, already defined, or promised and not yet delivered (no use
-before definition); a promise points forward; a delivery pays off an open
+move uses is lore, already defined, promised and not yet delivered, or a claim
+already made (no use before definition); a promise points forward; a delivery pays off an open
 promise; sections only go forward.
 
 **Coherence at the end** (`gaps`): every claim is supported or its support is
 promised to a section outside the excerpt; every promise inside the excerpt is
 delivered; every listed contribution is delivered (or deferred) and was
-motivated. `Coherent start moves := Valid start moves ∧ gaps (run start moves) = []`.
+motivated (it, or a term it builds on, was motivated). `Coherent start moves := Valid start moves ∧ gapsOf (run start moves) = []`.
 -/
 
 namespace LangLib.World.Argument
@@ -78,6 +78,8 @@ structure Pending (T : Type) where
   t : T
   sec : Nat
   contribution : Bool := false
+  /-- the terms a contribution builds on -/
+  uses : List T := []
   deriving DecidableEq, Repr
 
 /-- The state of an argument: the reader's evidence base and the paper's
@@ -87,7 +89,7 @@ structure AW (T : Type) where
   pending : List (Pending T) := []
   delivered : List T := []
   claims : List T := []
-  contributions : List T := []
+  contributions : List (T × List T) := []
   /-- the section the argument is in -/
   sec : Nat := 0
   /-- the sections the excerpt covers; obligations aimed elsewhere are deferred -/
@@ -133,9 +135,11 @@ def start (lore : List T) (excerpt : List Nat) : AW T :=
 
 def isPending (w : AW T) (t : T) : Bool := w.pending.any (·.t == t)
 
-/-- `t` may be used: lore, defined, or promised and still open. -/
+/-- `t` may be used: lore, defined, promised and still open, or a claim or
+concession the reader has heard (whether or not they accept it). -/
 def usable (w : AW T) (t : T) : Bool :=
-  believes w Voice.reader (.atom (AFact.known t)) || isPending w t
+  believes w Voice.reader (.atom (AFact.known t)) || isPending w t ||
+    believes w Voice.reader (.atom (AFact.holds t)) || believes w Voice.reader (.neg (AFact.holds t))
 
 /-- The reader holds `k` outright (not just on the authors' word). -/
 def accepted (w : AW T) (k : T) : Bool :=
@@ -170,9 +174,9 @@ def argStep (w : AW T) : Move T → AW T
   | .«example» k _ => hear w (.holds k, true) .inferred
   | .contrast _ _ _ => w
   | .promise t s _ => hear { w with pending := w.pending ++ [{ t, sec := s }] } (.promised t, true) (.told .author)
-  | .contribute k s _ =>
-    hear { w with pending := w.pending ++ [{ t := k, sec := s, contribution := true }],
-                  contributions := w.contributions ++ [k] } (.promised k, true) (.told .author)
+  | .contribute k s u =>
+    hear { w with pending := w.pending ++ [{ t := k, sec := s, contribution := true, uses := u }],
+                  contributions := w.contributions ++ [(k, u)] } (.promised k, true) (.told .author)
   | .deliver t _ =>
     hear { w with pending := w.pending.filter (·.t != t), delivered := w.delivered ++ [t] }
       (.known t, true) (.told .author)
@@ -202,22 +206,35 @@ instance : Domain (AW T) (Move T) where
 /-- Obligations aimed outside the excerpt (or at no section) are deferred. -/
 def deferred (w : AW T) (p : Pending T) : Bool := p.sec == 0 || !w.excerpt.contains p.sec
 
-/-- What is left unpaid at the end. -/
-def gaps (w : AW T) : List String :=
+/-- What can be left unpaid at the end. -/
+inductive Gap (T : Type) where
+  | unsupported (k : T)
+  | unpaid (t : T) (sec : Nat)
+  | unmotivated (k : T)
+  deriving DecidableEq, Repr
+
+/-- What is left unpaid at the end (structured, so the kernel can decide it). -/
+def gapsOf (w : AW T) : List (Gap T) :=
   (w.claims.eraseDups.filterMap fun k =>
     if accepted w k || w.pending.any (fun p => p.t == k && deferred w p) then none
-    else some s!"claim {short k} is unsupported") ++
-  (w.pending.filterMap fun p =>
-    if deferred w p then none else some s!"promise of {short p.t} (section {p.sec}) is never delivered") ++
-  (w.contributions.filterMap fun k =>
-    if wasMotivated w k then none else some s!"contribution {short k} was never motivated")
+    else some (.unsupported k)) ++
+  (w.pending.filterMap fun p => if deferred w p then none else some (.unpaid p.t p.sec)) ++
+  (w.contributions.filterMap fun (k, u) =>
+    if (k :: u).any (wasMotivated w) then none else some (.unmotivated k))
+
+def Gap.show : Gap T → String
+  | .unsupported k => s!"claim {short k} is unsupported"
+  | .unpaid t s => s!"promise of {short t} (section {s}) is never delivered"
+  | .unmotivated k => s!"contribution {short k} was never motivated"
+
+def gaps (w : AW T) : List String := (gapsOf w).map Gap.show
 
 /-- Promises and contributions left for the rest of the paper. -/
 def deferredList (w : AW T) : List (T × Nat) :=
   (w.pending.filter (deferred w)).map fun p => (p.t, p.sec)
 
 /-- Valid move by move, and nothing left unpaid at the end. -/
-def Coherent (w : AW T) (ms : List (Move T)) : Prop := Valid w ms ∧ gaps (run w ms) = []
+def Coherent (w : AW T) (ms : List (Move T)) : Prop := Valid w ms ∧ gapsOf (run w ms) = []
 
 instance (w : AW T) (ms : List (Move T)) : Decidable (Coherent w ms) := by
   unfold Coherent; infer_instance
@@ -242,7 +259,7 @@ theorem good_coherent : Coherent w0 good := by decide +kernel
 theorem early_use : ¬ Valid w0 ([heading 1, claim .works [.tool]] : List (Move Tm)) := by decide +kernel
 /-- The authors' word alone does not support a claim. -/
 theorem bare_claim :
-    gaps (run w0 ([heading 1, define .tool [], claim .works [.tool]] : List (Move Tm))) ≠ [] := by
+    gapsOf (run w0 ([heading 1, define .tool [], claim .works [.tool]] : List (Move Tm))) = [.unsupported .works] := by
   decide +kernel
 end Toy
 
