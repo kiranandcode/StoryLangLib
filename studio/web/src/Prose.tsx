@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import type { Paragraph, Report, Token, EventRow } from './types'
-import { byToken, compOf, KIND_LABEL } from './Judgements'
+import { byToken, compOf, derivationAt, JudgementCard, KIND_LABEL } from './Judgements'
 
 export interface Hover { x: number; y: number; body: React.ReactNode }
 
@@ -136,6 +136,13 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
       <div key={e.e} className="row"><span className="k">{e.lex ? 'read by the lexicon' : 'event'}</span> {e.gloss ?? e.e}<br /><code>{e.e}</code>{e.status && e.status !== 'yes' ? <> · <b>{e.status}</b></> : null}{e.why ? <div>{e.why}</div> : null}</div>)
     if (t.time) rows.push(<div key="time" className="row"><span className="k">time word</span></div>)
     const jt = judged?.get(i)
+    const jd = derivationAt(compOf(report, p.name), i)
+    if (jd) {
+      // the judgement next to the words that produced it (Alectryon); nothing else on a clause head
+      const r = el.getBoundingClientRect()
+      setHover({ x: r.left, y: r.bottom + 6, body: <JudgementCard d={jd} para={p.name} compact /> })
+      return
+    }
     if (jt?.clause) {
       rows.push(<div key="jc" className="row"><span className="k">clause</span> {jt.judges.length === 0 ? <b className="bad">no judgement</b> : null}</div>)
       for (const [k, j] of jt.judges.entries()) rows.push(

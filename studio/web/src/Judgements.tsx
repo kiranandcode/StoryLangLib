@@ -209,13 +209,53 @@ export function Derivation({ d }: { d: Deriv }) {
   )
 }
 
+/** A premise and what it rests on: one line, deeper levels collapsed until asked for. */
+function Why({ d, depth, openTo = 1 }: { d: Deriv; depth: number; openTo?: number }) {
+  const [open, setOpen] = useState(depth < openTo)
+  return (
+    <div className={`jwhy ${d.ok ? '' : 'bad'}`}>
+      <div className="jwl" onClick={e => { e.stopPropagation(); setOpen(!open) }}>
+        <span className="jtag">{d.rule}</span>
+        <span className="jtext">{d.concl}</span>
+        {d.prems.length > 0 && <span className="jmore">{open ? '▾' : `▸ ${d.prems.length}`}</span>}
+      </div>
+      {open && d.prems.length > 0 && <div className="jsub">{d.prems.map((p, k) => <Why key={k} d={p} depth={depth + 1} openTo={openTo} />)}</div>}
+    </div>
+  )
+}
+
+/** One judgement: Γ¶ ⊢ «the words» ⟹ what they mean, each with its evidence (Fitch-style, linear);
+ *  or the same derivation as a proof tree. */
+export function JudgementCard({ d, para, compact }: { d: Deriv; para: string; compact?: boolean }) {
+  const [tree, setTree] = useState(false)
+  const isClause = d.rule === 'clause'
+  return (
+    <div className={`jcard ${d.ok ? 'ok' : 'bad'} ${compact ? 'compact' : ''}`}>
+      <div className="jhead">
+        {isClause && <span className="gamma">Γ<sub>¶{para}</sub> ⊢</span>}
+        <span className="jwords">{isClause ? d.concl : <><span className="jtag">{d.rule}</span> {d.concl}</>}</span>
+        <span className="jverdict">{d.ok ? '✓' : '✗'}</span>
+        {!compact && <button className="jtreebtn" onClick={e => { e.stopPropagation(); setTree(!tree) }}
+          title="show as a proof tree">{tree ? 'lines' : 'tree'}</button>}
+      </div>
+      {tree ? <div className="jrule-wrap"><Derivation d={d} /></div> :
+        <div className="jbody">{d.prems.map((p, k) => <Why key={k} d={p} depth={isClause ? 0 : 1} openTo={compact ? 2 : 1} />)}</div>}
+    </div>
+  )
+}
+
 function Rules({ c }: { c: Completeness }) {
   return <div className="jrules">{(c.derivations ?? []).map((x, k) =>
-    <div key={k} className="jrule-wrap"><Derivation d={x.d} /></div>)}</div>
+    <JudgementCard key={k} d={x.d} para={c.name} />)}</div>
+}
+
+/** The judgement for a token of a paragraph, if it heads a clause or is a connective. */
+export function derivationAt(c: Completeness | undefined, at: number): Deriv | undefined {
+  return c?.derivations?.find(x => x.at === at && (x.d.rule === 'clause' || x.d.concl.startsWith('‘')))?.d
 }
 
 export function JudgementSection({ c }: { report: Report; c: Completeness }) {
-  const [view, setView] = useState<'tree' | 'rules' | 'list'>('tree')
+  const [view, setView] = useState<'tree' | 'judgements' | 'list'>('judgements')
   const bad = badTokens(c)
   const clauses = [...c.clauses].sort((x, y) => x.at - y.at)
   return (
@@ -224,10 +264,10 @@ export function JudgementSection({ c }: { report: Report; c: Completeness }) {
         {c.issues.length ? `${c.issues.length} objection${c.issues.length > 1 ? 's' : ''}` : `complete: ${clauses.length} clauses, each judged by the world`}
       </div>
       <div className="jview">
-        {(['tree', 'rules', 'list'] as const).map(v => <button key={v} className={view === v ? 'on' : ''}
+        {(['tree', 'judgements', 'list'] as const).map(v => <button key={v} className={view === v ? 'on' : ''}
           onClick={e => { e.stopPropagation(); setView(v) }}>{v}</button>)}
       </div>
-      {view === 'tree' && c.trees ? <Trees c={c} /> : view === 'rules' ? <Rules c={c} /> : <><Arcs c={c} />
+      {view === 'tree' && c.trees ? <Trees c={c} /> : view === 'judgements' ? <Rules c={c} /> : <><Arcs c={c} />
       <ul className="jlist">{clauses.map(cl => {
         const js = c.judges.filter(j => j.at === cl.at)
         return (
@@ -248,7 +288,7 @@ export function JudgementSection({ c }: { report: Report; c: Completeness }) {
  *  connectives with their verdicts, and the objections; no prose, no trees. */
 export function JudgementsView({ report, onSelect }: { report: Report; onSelect: (i: number) => void }) {
   const [only, setOnly] = useState<string | null>(null)
-  const [as, setAs] = useState<'list' | 'rules'>('list')
+  const [as, setAs] = useState<'list' | 'judgements'>('judgements')
   const comps = report.completeness ?? []
   const all = comps.flatMap(c => c.judges)
   const kinds = [...new Set(all.map(j => j.kind))]
@@ -261,7 +301,7 @@ export function JudgementsView({ report, onSelect }: { report: Report; onSelect:
         {issues ? `${issues} objection${issues > 1 ? 's' : ''}` : 'complete'} · {clauses} clauses · {all.length} judgements · {links.length} connectives checked
       </div>
       <div className="jview">
-        {(['list', 'rules'] as const).map(v => <button key={v} className={as === v ? 'on' : ''} onClick={() => setAs(v)}>{v}</button>)}
+        {(['judgements', 'list'] as const).map(v => <button key={v} className={as === v ? 'on' : ''} onClick={() => setAs(v)}>{v}</button>)}
       </div>
       <div className="jfilter">
         <button className={only === null ? 'on' : ''} onClick={() => setOnly(null)}>all</button>
@@ -293,14 +333,14 @@ export function JudgementsView({ report, onSelect }: { report: Report; onSelect:
         const shown = rows.sort((a, b) => a.at - b.at).filter(r =>
           only === null || (only === 'bad' ? r.bad : r.kinds.includes(only)))
         if (!shown.length && !(only === 'bad' && c.issues.length)) return null
-        if (as === 'rules') {
+        if (as === 'judgements') {
           const ds = (c.derivations ?? []).filter(x => only === null ||
             (only === 'bad' ? !x.d.ok : only === 'link' ? c.links.some(l => l.at === x.at && l.a !== l.b)
               : c.judges.some(j => j.at === x.at && j.kind === only)))
           if (!ds.length) return null
           return <div key={c.name} className="jpara" onClick={() => onSelect(pi)}>
             <div className="jpn">¶ {c.name}</div>
-            <div className="jrules">{ds.map((x, k) => <div key={k} className="jrule-wrap"><Derivation d={x.d} /></div>)}</div>
+            <div className="jrules">{ds.map((x, k) => <JudgementCard key={k} d={x.d} para={c.name} />)}</div>
           </div>
         }
         return <div key={c.name} className="jpara" onClick={() => onSelect(pi)}>

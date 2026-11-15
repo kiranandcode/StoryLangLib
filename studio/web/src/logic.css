@@ -338,3 +338,27 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .arg .argsup-head { fill: var(--ink-3); }
 .arg .argatt-head { stroke: var(--bad); stroke-width: 2.4; fill: none; }
 .argkey { font-size: 11px; }
+
+/* judgement cards: Γ¶ ⊢ «words», then what they mean and why (Fitch-style lines) */
+.jcard { border: 1px solid var(--rule); border-radius: 7px; padding: 4px 7px 5px; background: var(--paper); margin: 0 0 6px; }
+.jcard.bad { border-color: color-mix(in srgb, var(--bad) 55%, var(--rule)); }
+.jcard .jhead { display: flex; align-items: baseline; gap: 6px; }
+.jcard .gamma { color: var(--ink-3); font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; white-space: nowrap; }
+.jcard .gamma sub { font-size: 8px; }
+.jcard .jwords { flex: 1; font-family: var(--serif, Georgia, serif); font-size: 12.5px; color: var(--ink); }
+.jcard .jverdict { color: var(--ok); font-weight: 700; }
+.jcard.bad .jverdict { color: var(--bad); }
+.jcard .jtreebtn { font-size: 9.5px; border: 1px solid var(--rule-2); background: none; border-radius: 6px; color: var(--ink-3); cursor: pointer; padding: 0 5px; }
+.jcard .jbody { margin-top: 2px; }
+.jwhy { margin-left: 0; }
+.jwhy .jwl { display: flex; align-items: baseline; gap: 6px; cursor: pointer; padding: 1px 0; }
+.jwhy .jsub { margin-left: 12px; padding-left: 8px; border-left: 1px solid var(--rule-2); }
+.jtag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); white-space: nowrap;
+  font-family: ui-monospace, Menlo, monospace; min-width: 5.2em; }
+.jwhy .jtext { flex: 1; font-size: 11.5px; color: var(--ink-2); }
+.jwhy > .jwl > .jtext { color: var(--ink); }
+.jwhy .jsub .jtext { color: var(--ink-2); }
+.jwhy.bad > .jwl .jtext, .jwhy.bad > .jwl .jtag { color: var(--bad); }
+.jwhy .jmore { font-size: 10px; color: var(--ink-3); }
+.jcard.compact { border: none; padding: 0; margin: 0; background: none; max-width: 420px; }
+.card-pop .jcard.compact .jwords { font-size: 12px; }
