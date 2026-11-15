@@ -62,7 +62,8 @@ reasons letter by letter.
   (`Reason.text`, `ReasonText` for a story's own), so users see the same words
   and the kernel compares constructors (511f973).
 
-Result: all 736 theorems proved in 540 s. A step now costs about 2 s per event,
+Result: all 736 theorems proved in 540 s; with each paragraph's checks bundled
+into one conjunction from its checkpoint (7085da6), 831/831 in 334 s. A step now costs about 2 s per event,
 almost all of it in the consistency and staleness scans of `view` that every
 witnessed event triggers; carrying views in the state is the next cut.
 
