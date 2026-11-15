@@ -318,6 +318,15 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     let cPrev := if k == 0 then "spec.start" else s!"c{prevName}"
     let sPrev := if k == 0 then "[]" else s!"s{prevName}"
     let w' := run w chunk
+    -- the paragraph's checks, proved together so the kernel runs its events once:
+    -- (name, statement, doc); a check that may fail stands alone and fails by name
+    let mut bundle : Array (String × String × String) := #[]
+    let mut alone := ""
+    let mut tail := ""
+    let check (name stmt doc : String) (ok : Bool) (bundle : Array (String × String × String)) (alone : String) :
+        Array (String × String × String) × String :=
+      if ok then (bundle.push (name, stmt, doc), alone)
+      else (bundle, alone ++ s!"theorem {name} : {stmt} := by decide +kernel\n")
     prefix_ := if k == 0 then s!"chunk{nm}" else s!"({prefix_} ++ chunk{nm})"
     out := out ++ s!"def chunk{nm} : List (E spec) := {lean (rs chunk)}\n"
     if chunk.isEmpty then
@@ -325,21 +334,22 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
       out := out ++ s!"theorem p{nm}_step : run {cPrev} chunk{nm} = c{nm} := rfl\n"
     else
       out := out ++ s!"def c{nm} : W spec := {lean (rs w')}\n"
-      out := out ++ s!"theorem p{nm}_step : run {cPrev} chunk{nm} = c{nm} := by decide +kernel\n"
-    out := out ++ s!"theorem p{nm}_here : {pred} {cPrev} chunk{nm} := by decide +kernel\n"
+      bundle := bundle.push (s!"p{nm}_step", s!"run {cPrev} chunk{nm} = c{nm}", "")
+    (bundle, alone) := check s!"p{nm}_here" s!"{pred} {cPrev} chunk{nm}" ""
+      (if pred == "Valid" then validB w chunk else plausibleB w chunk) bundle alone
     if whole == "Plausible" then
-      out := out ++ s!"theorem p{nm}_assumes : assumedAt {cPrev} chunk{nm} 0 = {rs (assumedAt w chunk 0)} := by decide +kernel\n"
+      bundle := bundle.push (s!"p{nm}_assumes", s!"assumedAt {cPrev} chunk{nm} 0 = {rs (assumedAt w chunk 0)}", "")
     if k == 0 then
-      out := out ++ s!"theorem p{nm}_{pred.decapitalize} : {pred} spec.start {prefix_} := p{nm}_here\n"
-      out := out ++ s!"theorem p{nm}_run : run spec.start {prefix_} = c{nm} := p{nm}_step\n"
+      tail := tail ++ s!"theorem p{nm}_{pred.decapitalize} : {pred} spec.start {prefix_} := p{nm}_here\n"
+      tail := tail ++ s!"theorem p{nm}_run : run spec.start {prefix_} = c{nm} := p{nm}_step\n"
     else
-      out := out ++ s!"theorem p{nm}_{pred.decapitalize} : {pred} spec.start {prefix_} :=\n  " ++
+      tail := tail ++ s!"theorem p{nm}_{pred.decapitalize} : {pred} spec.start {prefix_} :=\n  " ++
         s!"{pred}.chain p{prevName}_{pred.decapitalize} p{prevName}_run p{nm}_here\n"
-      out := out ++ s!"theorem p{nm}_run : run spec.start {prefix_} = c{nm} := run_chain p{prevName}_run p{nm}_step\n"
+      tail := tail ++ s!"theorem p{nm}_run : run spec.start {prefix_} = c{nm} := run_chain p{prevName}_run p{nm}_step\n"
     for (c, j) in p.claims.zipIdx do
       match n.claim c with
       | .ok cl =>
-        out := out ++ s!"/-- {c} -/\ntheorem p{nm}_claim{j} : ({lean (rs cl)}).eval c{nm} = {cl.eval w'} := by decide +kernel\n"
+        bundle := bundle.push (s!"p{nm}_claim{j}", s!"({lean (rs cl)}).eval c{nm} = {cl.eval w'}", c)
       | .error _ => pure ()
     if s.hasSetting then
       if let some d := p.doc then
@@ -349,11 +359,13 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
         out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
-        out := out ++ s!"theorem p{nm}_setting : spec.settingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}uses p{nm}staging = true := by decide +kernel\n"
+        (bundle, alone) := check s!"p{nm}_setting" s!"spec.settingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}uses p{nm}staging = true" ""
+          (s.settingOk (sceneOf w chunk 0) u p.staging) bundle alone
         if s.pov.isSome then
-          let (_, seen') := perceptFrom w seen (k == 0) chunk (p.mentioned s)
+          let (miss, seen') := perceptFrom w seen (k == 0) chunk (p.mentioned s)
           out := out ++ s!"def s{nm} : List (Nat × Bool) := {rs seen'}\n"
-          out := out ++ s!"theorem p{nm}_perceived : perceptFrom {cPrev} {sPrev} {k == 0} chunk{nm} {rs (p.mentioned s)} = ([], s{nm}) := by decide +kernel\n"
+          (bundle, alone) := check s!"p{nm}_perceived" s!"perceptFrom {cPrev} {sPrev} {k == 0} chunk{nm} {rs (p.mentioned s)} = ([], s{nm})" ""
+            miss.isEmpty bundle alone
           seen := seen'
       if p.doc.isNone && p.plan.isSome then
         out := out ++ s!"def p{nm}setting : List Spot := {lean (rs p.planSetting)}\n"
@@ -361,12 +373,13 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
         out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}staging\n"
-        out := out ++ s!"theorem p{nm}_setting : spec.planSettingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}setting p{nm}staging = true := by decide +kernel\n"
+        (bundle, alone) := check s!"p{nm}_setting" s!"spec.planSettingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}setting p{nm}staging = true" ""
+          (s.planSettingOk (sceneOf w chunk 0) p.planSetting p.staging) bundle alone
     if s.pov.isSome && !(s.hasSetting && p.doc.isSome) then
       -- keep the point of view's memory flowing through paragraphs without a perception check
       let (_, seen') := perceptFrom w seen (k == 0) chunk (p.mentioned s)
       out := out ++ s!"def s{nm} : List (Nat × Bool) := {rs seen'}\n"
-      out := out ++ s!"theorem p{nm}_seen : (perceptFrom {cPrev} {sPrev} {k == 0} chunk{nm} {rs (p.mentioned s)}).2 = s{nm} := by decide +kernel\n"
+      bundle := bundle.push (s!"p{nm}_seen", s!"(perceptFrom {cPrev} {sPrev} {k == 0} chunk{nm} {rs (p.mentioned s)}).2 = s{nm}", "")
       seen := seen'
     if let (some d, some j) := (p.doc, p.reading) then
       if let .ok js := judgesOf s j then
@@ -376,12 +389,22 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
         out := out ++ s!"def p{nm}judges : List Judge := {lean (rs js)}\n"
         out := out ++ s!"#guard judgesMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}judges\n"
         let ats := p.items.map (·.at_.getD 0)
-        out := out ++ s!"theorem p{nm}_complete : completeOk (\{ prior := [], items := p{nm}.zip {rs ats}, base := {cPrev} } : ParaCtx spec) p{nm}tree p{nm}judges = true := by decide +kernel\n"
+        (bundle, alone) := check s!"p{nm}_complete" s!"completeOk (\{ prior := [], items := p{nm}.zip {rs ats}, base := {cPrev} } : ParaCtx spec) p{nm}tree p{nm}judges = true" ""
+          (completeOk ({ prior := [], items := p.items.map (fun it => (it.ev, it.at_.getD 0)), base := w } : ParaCtx s) f js)
+          bundle alone
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
-        out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)} := by decide +kernel\n"
-    out := out ++ "\n"
+        bundle := bundle.push (s!"p{nm}_realises", s!"{if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)}", "")
+    if !bundle.isEmpty then
+      out := out ++ s!"/-- Paragraph {nm}'s checks, proved together (the kernel runs its events once). -/\n" ++
+        s!"theorem p{nm}_checks :\n    " ++ " ∧\n    ".intercalate (bundle.toList.map fun (_, st, _) => s!"({st})") ++
+        " := by\n  decide +kernel\n"
+      for ((name, st, doc), i) in bundle.toList.zipIdx do
+        let proj := String.join (List.replicate i ".2") ++ (if i + 1 == bundle.size then "" else ".1")
+        if doc != "" then out := out ++ s!"/-- {doc} -/\n"
+        out := out ++ s!"theorem {name} : {st} := p{nm}_checks{proj}\n"
+    out := out ++ alone ++ tail ++ "\n"
     w := w'
     prevName := nm
   out := out ++ s!"theorem story_chrono : story.chrono = {prefix_} := by decide +kernel\n"
