@@ -1,5 +1,5 @@
-import React from 'react'
-import type { Completeness, Report } from './types'
+import React, { useState } from 'react'
+import type { Completeness, Report, TreeJ } from './types'
 
 /** Completeness in the Studio: each clause of a paragraph with the judgements that tie it to the
  *  world, the connectives between clauses with their verdict, and what the checker objects to. */
@@ -88,7 +88,117 @@ function Arcs({ c }: { c: Completeness }) {
   )
 }
 
+
+/** One sentence as a tree: nodes above, words at the bottom, and under every clause head the
+ *  judgements that tie it to the world; connectives as arcs below them. */
+function SentenceTree({ c, tree, start }: { c: Completeness; tree: TreeJ; start: number }) {
+  const bad = badTokens(c)
+  const CH = 6.4, LV = 22, PAD = 8
+  type Leaf = { x: number; w: string; p: string; i: number; ref?: string; sense?: string }
+  type Node = { x: number; lvl: number; label: string; kids: { x: number; lvl: number }[] }
+  const leaves: Leaf[] = [], nodes: Node[] = []
+  let x = PAD, i = start
+  const level = (t: TreeJ): number => t.w !== undefined ? 0 : 1 + Math.max(...(t.k ?? []).map(level))
+  const lay = (t: TreeJ): { x: number; lvl: number } => {
+    if (t.w !== undefined) {
+      const w = Math.max(t.w.length * CH * 1.25, 26) + 6
+      const cx = x + w / 2
+      x += w
+      leaves.push({ x: cx, w: t.w, p: t.p ?? '', i: i++, ref: t.ref, sense: t.sense })
+      return { x: cx, lvl: 0 }
+    }
+    const kids = (t.k ?? []).map(lay)
+    const cx = kids.reduce((a, k) => a + k.x, 0) / Math.max(1, kids.length)
+    const lvl = level(t)
+    nodes.push({ x: cx, lvl, label: (t.c ?? '') + (t.ref ? `→${t.ref}` : ''), kids })
+    return { x: cx, lvl }
+  }
+  lay(tree)
+  const width = x + PAD
+  const top = Math.max(1, ...nodes.map(n => n.lvl)) * LV + 10
+  const wordY = top + 4
+  const yOf = (lvl: number) => top - lvl * LV
+  // judgements under clause heads, stacked so boxes on a level do not overlap
+  const own = (t: number) => c.judges.filter(j => j.at === t)
+  const boxes: { x: number; y: number; w: number; kind: string; text: string; tip: string; i: number }[] = []
+  const levels: [number, number][][] = []
+  const J0 = wordY + 30, JH = 17
+  for (const l of leaves) {
+    const isClause = c.clauses.some(cl => cl.at === l.i)
+    const js = own(l.i)
+    const items = js.length ? js : isClause ? [{ kind: 'missing', text: 'no judgement', gloss: 'no judgement', at: l.i }] : []
+    let d = 0
+    for (const j of items) {
+      const label = `${KIND_LABEL[j.kind] ?? j.kind}: ${j.kind === 'event' || j.kind === 'claim' || j.kind === 'external' ? j.text : j.gloss}`
+      const w = label.length * 5.6 + 10
+      const lo = l.x - w / 2 - 3, hi = l.x + w / 2 + 3
+      while (d < levels.length && levels[d].some(([a, b]) => !(hi < a || lo > b))) d++
+      if (d === levels.length) levels.push([])
+      levels[d].push([lo, hi])
+      boxes.push({ x: l.x, y: J0 + d * JH, w, kind: j.kind, text: label, tip: j.gloss, i: l.i })
+      d++
+    }
+  }
+  const jBottom = J0 + Math.max(0, levels.length - 1) * JH + 10
+  const toks = new Set(leaves.map(l => l.i))
+  const links = c.links.filter(l => l.a !== l.b && toks.has(l.a) && toks.has(l.b))
+  const xOf = (t: number) => leaves.find(l => l.i === t)?.x ?? 0
+  const sag = (l: { a: number; b: number }) => 10 + Math.abs(xOf(l.a) - xOf(l.b)) * 0.12
+  const height = jBottom + (links.length ? Math.max(...links.map(sag)) + 20 : 6)
+  const minX = Math.min(...leaves.map(l => l.x)), maxX = Math.max(...leaves.map(l => l.x))
+  const right = Math.max(width, ...boxes.map(b => b.x + b.w / 2 + 4))
+  const left = Math.min(0, ...boxes.map(b => b.x - b.w / 2 - 4))
+  void minX; void maxX
+  return (
+    <svg className="jtree" width={right - left} height={height} viewBox={`${left} 0 ${right - left} ${height}`}>
+      {nodes.map((n, k) => <g key={k}>
+        {n.kids.map((kd, m) => <line key={m} x1={n.x} y1={yOf(n.lvl) + 4} x2={kd.x} y2={kd.lvl === 0 ? wordY - 11 : yOf(kd.lvl) - 6} className="edge" />)}
+        <text x={n.x} y={yOf(n.lvl)} textAnchor="middle" className="nlabel">{n.label}</text>
+      </g>)}
+      {leaves.map(l => {
+        const isClause = c.clauses.some(cl => cl.at === l.i)
+        const js = own(l.i)
+        const kind = js[0]?.kind
+        const link = c.links.find(k => k.at === l.i && k.a !== k.b)
+        const cls = ['word', isClause ? 'clause' : '', isClause && (bad.has(l.i) || !js.length) ? 'bad' : '',
+          isClause && kind ? `k-${kind}` : '', link ? (bad.has(l.i) ? 'conn bad' : 'conn') : ''].join(' ')
+        return <g key={l.i} data-target={isClause ? `tok:${c.name}:${l.i}` : undefined}>
+          <text x={l.x} y={wordY} textAnchor="middle" className={cls}>{l.w}</text>
+          <text x={l.x} y={wordY + 11} textAnchor="middle" className={`pos ${l.sense && (l.p === 'ADV' || l.p === 'ADJ') ? 'sense' : ''}`}>
+            {l.p}{l.sense && (l.p === 'ADV' || l.p === 'ADJ') ? `·${l.sense}` : ''}</text>
+        </g>
+      })}
+      {boxes.map((b, k) => <g key={k} className={`jbox k-${b.kind} ${bad.has(b.i) ? 'bad' : ''}`}>
+        {boxes.findIndex(o => o.i === b.i) === k && <line x1={b.x} y1={wordY + 15} x2={b.x} y2={b.y - 6} className="stem" />}
+        <rect x={b.x - b.w / 2} y={b.y - 6} width={b.w} height={13} rx={4} />
+        <text x={b.x} y={b.y + 3.5} textAnchor="middle">{b.text}</text>
+        <title>{b.tip}</title>
+      </g>)}
+      {links.map((l, k) => {
+        const xa = xOf(l.a), xb = xOf(l.b), ok = !bad.has(l.at), h = sag(l)
+        return <g key={k} className={`jlink r-${l.rel} ${ok ? 'ok' : 'bad'}`}>
+          <path d={`M ${xa} ${jBottom} Q ${(xa + xb) / 2} ${jBottom + 2 * h} ${xb} ${jBottom}`} markerEnd="url(#jarrow2)" />
+          <text x={(xa + xb) / 2} y={jBottom + h + 13} textAnchor="middle">‘{l.word}’ {REL_LABEL[l.rel] ?? l.rel} {ok ? '✓' : '✗'}</text>
+        </g>
+      })}
+      <defs><marker id="jarrow2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" className="jarrowhead" /></marker></defs>
+    </svg>
+  )
+}
+
+function Trees({ c }: { c: Completeness }) {
+  const count = (t: TreeJ): number => t.w !== undefined ? 1 : (t.k ?? []).reduce((a, k) => a + count(k), 0)
+  let start = 0
+  return <div className="jtrees">{(c.trees ?? []).map((t, k) => {
+    const s = start
+    start += count(t)
+    return <div key={k} className="jtree-wrap"><SentenceTree c={c} tree={t} start={s} /></div>
+  })}</div>
+}
+
 export function JudgementSection({ c }: { report: Report; c: Completeness }) {
+  const [view, setView] = useState<'tree' | 'list'>('tree')
   const bad = badTokens(c)
   const clauses = [...c.clauses].sort((x, y) => x.at - y.at)
   return (
@@ -96,7 +206,11 @@ export function JudgementSection({ c }: { report: Report; c: Completeness }) {
       <div className={`row ${c.issues.length ? 'bad' : 'ok'}`}>
         {c.issues.length ? `${c.issues.length} objection${c.issues.length > 1 ? 's' : ''}` : `complete: ${clauses.length} clauses, each judged by the world`}
       </div>
-      <Arcs c={c} />
+      <div className="jview">
+        {(['tree', 'list'] as const).map(v => <button key={v} className={view === v ? 'on' : ''}
+          onClick={e => { e.stopPropagation(); setView(v) }}>{v}</button>)}
+      </div>
+      {view === 'tree' && c.trees ? <Trees c={c} /> : <><Arcs c={c} />
       <ul className="jlist">{clauses.map(cl => {
         const js = c.judges.filter(j => j.at === cl.at)
         return (
@@ -107,7 +221,7 @@ export function JudgementSection({ c }: { report: Report; c: Completeness }) {
             {js.map((j, k) => <span key={k} className={`jchip k-${j.kind}`} title={j.text}>
               <i>{KIND_LABEL[j.kind] ?? j.kind}</i> {j.kind === 'event' || j.kind === 'content' || j.kind === 'goal' ? j.gloss : j.text}</span>)}
           </li>)
-      })}</ul>
+      })}</ul></>}
       {c.issues.map((i, k) => <div key={k} className="row bad jissue">✗ {i}</div>)}
     </div>
   )

@@ -191,7 +191,8 @@ def storyReport (dir : System.FilePath) : IO Json := do
         ("parent", match c.parent with | some q => Json.num q | none => Json.null)]).toArray),
       ("links", Json.arr (f.links.map fun l => Json.mkObj [("at", l.at_), ("word", l.word),
         ("rel", reprStr l.rel |>.replace "LangLib.Studio.LinkRel." ""), ("a", l.a), ("b", l.b)]).toArray),
-      ("judges", Json.arr judgesJ.toArray)]
+      ("judges", Json.arr judgesJ.toArray),
+      ("trees", Json.arr (((p.doc.map (·.sentences)).getD []).map (·.tree.toJson)).toArray)]
   pure (r.setObjVal! "completeness" (Json.arr cs.toArray))
 
 /-! ## The story as a Lean file -/
