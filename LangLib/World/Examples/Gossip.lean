@@ -86,8 +86,10 @@ instance : Clock W := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 
 instance : TopicTrust W Ch Fact where
   topical w c d l := match c, d, l.1 with
-    | kiran, mara, .secret _ => if w.wary then some ("not to be trusted about secrets", -5) else none
+    | kiran, mara, .secret _ => if w.wary then some (.custom 0, -5) else none
     | _, _, _ => none
+
+instance : ReasonText Fact := ⟨["not to be trusted about secrets"]⟩
 
 instance : Credence W Ch Fact := socialCredence
 

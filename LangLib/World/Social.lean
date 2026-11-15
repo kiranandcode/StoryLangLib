@@ -162,28 +162,28 @@ already trust). Being caught out costs the speaker a point of trust. -/
 /-- Trust that depends on what a claim is about ("I trust her about people,
 not about money"); supplied by a story, none by default. -/
 class TopicTrust (W C Φ : Type) where
-  topical : W → C → C → BLit Φ → Option (String × Int)
+  topical : W → C → C → BLit Φ → Option (Reason × Int)
 
 instance (priority := low) {W C Φ : Type} : TopicTrust W C Φ := ⟨fun _ _ _ _ => none⟩
 
 /-- Named adjustments: trust and tension with the speaker, topic, and persona. -/
 def bondReasons {Φ : Type} [TopicTrust W C Φ] (w : W) (c : C) (e : Evid C) (l : BLit Φ) :
-    List (String × Int) :=
-  let fromBond : List (String × Int) := match e.speaker with
+    List (Reason × Int) :=
+  let fromBond : List (Reason × Int) := match e.speaker with
     | some d =>
-      (if bond w c d .trust ≥ 2 then [("trusts the speaker", 1)] else []) ++
-      (if bond w c d .trust == 0 then [("does not trust the speaker", -1)] else []) ++
-      (if bond w c d .tension ≥ 2 then [("tension with the speaker", -1)] else []) ++
+      (if bond w c d .trust ≥ 2 then [(.trustsSpeaker, 1)] else []) ++
+      (if bond w c d .trust == 0 then [(.distrustsSpeaker, -1)] else []) ++
+      (if bond w c d .tension ≥ 2 then [(.tensionWithSpeaker, -1)] else []) ++
       (TopicTrust.topical w c d l).toList
     | none => []
-  let fromPersona : List (String × Int) :=
+  let fromPersona : List (Reason × Int) :=
     if !e.testimony then [] else
-    (if has w c .gullible then [("gullible", 1)] else []) ++
-    (if has w c .openMinded then [("open-minded", 1)] else []) ++
-    (if has w c .skeptical then [("skeptical", -1)] else []) ++
+    (if has w c .gullible then [(.gullible, 1)] else []) ++
+    (if has w c .openMinded then [(.openMinded, 1)] else []) ++
+    (if has w c .skeptical then [(.skeptical, -1)] else []) ++
     (match e.speaker with
-     | some d => if has w c .paranoid && bond w c d .trust < 2 then [("paranoid", -2)] else []
-     | none => if has w c .paranoid then [("paranoid", -2)] else [])
+     | some d => if has w c .paranoid && bond w c d .trust < 2 then [(.paranoid, -2)] else []
+     | none => if has w c .paranoid then [(.paranoid, -2)] else [])
   fromBond ++ fromPersona
 
 /-- Credence for a world with bonds and personas. -/

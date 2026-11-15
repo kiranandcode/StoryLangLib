@@ -59,6 +59,47 @@ inductive Evid (C : Type) where
 inductive Upgrade | hard | radical | conservative | note
   deriving DecidableEq, Repr
 
+/-- The kinds of evidence, without who said it (for naming a prior). -/
+inductive EvidKind | self | seen | sensed | inferred | assumed | told | relayed | rumour
+  deriving DecidableEq, Repr
+
+def Evid.kind {C : Type} : Evid C → EvidKind
+  | .self => .self | .seen => .seen | .sensed => .sensed | .inferred => .inferred
+  | .assumed => .assumed | .told _ => .told | .relayed _ => .relayed | .rumour => .rumour
+
+/-- Why a piece of evidence got the strength it did. Stored and compared as a
+constructor, which the kernel decides in one step (words compared letter by
+letter were the costliest part of comparing two states); `Reason.text` gives
+the words, so reports and explanations read as before. `custom i` is a story's
+or a module's own reason, worded by entry `i` of its `ReasonText`. -/
+inductive Reason where
+  | prior (k : EvidKind)
+  | trustsSpeaker | distrustsSpeaker | tensionWithSpeaker
+  | gullible | openMinded | skeptical | paranoid
+  | custom (i : Nat)
+  deriving DecidableEq, Repr
+
+/-- The words for a story's or module's own reasons (`Reason.custom i`), by fact type. -/
+class ReasonText (Φ : Type) where
+  texts : List String
+
+instance (priority := low) {Φ : Type} : ReasonText Φ := ⟨[]⟩
+
+def EvidKind.text : EvidKind → String
+  | .self => "own knowledge" | .seen => "seeing" | .sensed => "sensing" | .inferred => "inference"
+  | .assumed => "assumption" | .told => "being told" | .relayed => "second-hand report"
+  | .rumour => "rumour"
+
+/-- A reason in words. -/
+def Reason.text (Φ : Type) [ReasonText Φ] : Reason → String
+  | .prior k => s!"prior for {k.text}"
+  | .trustsSpeaker => "trusts the speaker"
+  | .distrustsSpeaker => "does not trust the speaker"
+  | .tensionWithSpeaker => "tension with the speaker"
+  | .gullible => "gullible" | .openMinded => "open-minded"
+  | .skeptical => "skeptical" | .paranoid => "paranoid"
+  | .custom i => (ReasonText.texts (Φ := Φ))[i]?.getD s!"reason {i}"
+
 structure Held (C Φ : Type) where
   b : Belief C Φ
   src : Evid C
@@ -72,7 +113,7 @@ structure Held (C Φ : Type) where
   /-- story time the information is about -/
   about : Nat := 0
   /-- why it got its strength: the prior and each adjustment, named -/
-  reasons : List (String × Int) := []
+  reasons : List (Reason × Int) := []
   deriving DecidableEq, Repr
 
 class HasMinds (W : Type) (C Φ : outParam Type) where
@@ -86,7 +127,7 @@ abbrev BLit (Φ : Type) := Φ × Bool
 class Credence (W C Φ : Type) where
   /-- named adjustments to the prior strength of evidence `e` for hearer `c`,
   given what it is about (so trust can depend on the topic) -/
-  reasons : W → C → Evid C → BLit Φ → List (String × Int)
+  reasons : W → C → Evid C → BLit Φ → List (Reason × Int)
   /-- strength at which `c` accepts information outright -/
   acceptAt : W → C → Int
   /-- `c` takes accepted information conservatively -/
@@ -361,12 +402,8 @@ def mindsConsistent [Cast C] (w : W) : Bool := Cast.all.all (mindConsistent w)
 /-! ## Learning -/
 
 /-- The prior for the evidence, then each named adjustment. -/
-def reasonsFor (w : W) (c : C) (e : Evid C) (l : BLit Φ) : List (String × Int) :=
-  (s!"prior for {reprEvid e}", e.prior) :: Credence.reasons w c e l
-where reprEvid : Evid C → String
-  | .self => "own knowledge" | .seen => "seeing" | .sensed => "sensing" | .inferred => "inference"
-  | .assumed => "assumption" | .told _ => "being told" | .relayed _ => "second-hand report"
-  | .rumour => "rumour"
+def reasonsFor (w : W) (c : C) (e : Evid C) (l : BLit Φ) : List (Reason × Int) :=
+  (.prior e.kind, e.prior) :: Credence.reasons w c e l
 
 def strength (w : W) (c : C) (e : Evid C) (l : BLit Φ) : Int :=
   ((reasonsFor w c e l).map (·.2)).sum
@@ -383,7 +420,7 @@ def attitude (w : W) (c : C) (e : Evid C) (l : BLit Φ) : Upgrade :=
 private def stampOf (hs : List (Held C Φ)) : Nat := hs.foldl (fun m h => max m h.stamp) 0 + 1
 
 private def insert (w : W) (hs : List (Held C Φ)) (b : Belief C Φ) (e : Evid C) (u : Upgrade)
-    (rank : Nat) (rs : List (String × Int)) : List (Held C Φ) :=
+    (rank : Nat) (rs : List (Reason × Int)) : List (Held C Φ) :=
   hs ++ [{ b, src := e, rank, stamp := stampOf hs, up := u,
            heard := Clock.now w, about := Clock.now w, reasons := rs }]
 
@@ -413,7 +450,9 @@ def learnWith (check : Bool) (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W 
     | some d, some l => if !h.caught && h.up != .note && v.any (clash l) then some (h, d) else none
     | _, _ => none
   let w := setBeliefs w c ((beliefs w c).map fun h =>
-    if liars.any (·.1 == h) then { h with caught := true } else h)
+    -- stamps are unique within a base, so comparing them finds the same items
+    -- as comparing whole items, without comparing everything they carry
+    if liars.any (·.1.stamp == h.stamp) then { h with caught := true } else h)
   liars.foldl (fun w (_, d) => Credence.onBetrayal (Φ := Φ) w c d) w
 
 def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W := learnWith true w c b e
@@ -494,7 +533,7 @@ def explain (w : W) (c : C) (l : BLit Φ) : List String :=
   (beliefs w c).filterMap fun h => do
     let l' ← litOf h.b
     if l'.1 != l.1 then none else
-    let rs := ", ".intercalate (h.reasons.map fun (r, n) => s!"{r} {if n ≥ 0 then "+" else ""}{n}")
+    let rs := ", ".intercalate (h.reasons.map fun (r, n) => s!"{r.text Φ} {if n ≥ 0 then "+" else ""}{n}")
     let s := (h.reasons.map (·.2)).sum
     let status :=
       if h.up == .note then "only noted"

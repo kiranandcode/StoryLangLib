@@ -363,7 +363,7 @@ def explainJ (s : Spec) (w : W s) (c : Ch s) (l : SFact s × Bool) : List Json :
         | none => "not believed"
     let src := s.names.evidS (Evid.ofCh h.src)
     return Json.mkObj [("lit", s.names.litS (unlit l')), ("src", src),
-      ("reasons", Json.arr (h.reasons.map fun (r, n) => Json.arr #[Json.str r, toJson (n : Int)]).toArray),
+      ("reasons", Json.arr (h.reasons.map fun (r, n) => Json.arr #[Json.str (r.text (SFact s)), toJson (n : Int)]).toArray),
       ("strength", toJson ((h.reasons.map (·.2)).sum : Int)), ("attitude", reprStr h.up |>.replace "LangLib.World.Upgrade." ""),
       ("status", status), ("caught", h.caught)]
 

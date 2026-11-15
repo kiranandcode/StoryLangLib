@@ -130,16 +130,19 @@ the reader was given grounds to hold them. -/
 instance : Truth (AW T) (AFact T) := ⟨fun _ _ => true⟩
 instance : Clock (AW T) := ⟨AW.now, fun w => { w with now := w.now + 1 }⟩
 
+/-- The words for the reader's reasons (`Reason.custom i`). -/
+instance : ReasonText (AFact T) := ⟨["a definition is a stipulation", "a promise is about the text itself", "a motivation asks only for attention", "the authors rule it out", "published prior work", "measured", "the reader works the example through", "background the reader brings"]⟩
+
 /-- How the reader weighs each voice. -/
 instance argCredence : Credence (AW T) Voice (AFact T) where
   reasons _ _ e l := match e, l with
-    | .told .author, (.known _, true) => [("a definition is a stipulation", 1)]
-    | .told .author, (.promised _, true) => [("a promise is about the text itself", 1)]
-    | .told .author, (.motivated _, true) => [("a motivation asks only for attention", 1)]
-    | .told .author, (_, false) => [("the authors rule it out", 1)]
-    | .relayed .prior, _ => [("published prior work", 2)]
-    | .told .data, _ => [("measured", 2)]
-    | .inferred, _ => [("the reader works the example through", 1)]
+    | .told .author, (.known _, true) => [(.custom 0, 1)]
+    | .told .author, (.promised _, true) => [(.custom 1, 1)]
+    | .told .author, (.motivated _, true) => [(.custom 2, 1)]
+    | .told .author, (_, false) => [(.custom 3, 1)]
+    | .relayed .prior, _ => [(.custom 4, 2)]
+    | .told .data, _ => [(.custom 5, 2)]
+    | .inferred, _ => [(.custom 6, 1)]
     | _, _ => []
   acceptAt _ _ := 4
   stubborn _ _ := false
@@ -152,7 +155,7 @@ def start (lore : List T) (excerpt : List Nat) : AW T :=
   { excerpt,
     base := (lore.zip (List.range lore.length)).map fun (t, i) =>
       { b := .atom (.known t), src := .self, rank := 10, stamp := i + 1, up := .hard,
-        reasons := [("background the reader brings", 6)] } }
+        reasons := [(.custom 7, 6)] } }
 
 def isPending (w : AW T) (t : T) : Bool := w.pending.any (·.t == t)
 
