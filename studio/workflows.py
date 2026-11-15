@@ -536,6 +536,27 @@ def cmd_prove(a) -> int:
     return verdict_out(problems if pr["status"] != "ok" else [], "ok: every theorem proved")
 
 
+def cmd_ext_prove(a) -> int:
+    """Ties, care and identity (story.json "ext", NN.events.json "ext"): the
+    report's issues, then Ext.lean generated and checked by `decide +kernel`."""
+    r = langlib("ext", str(a.story), timeout=300)
+    try:
+        rep = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        return verdict_out([f"langlib ext failed: {(r.stderr or r.stdout)[-1000:]}"], "")
+    issues = [f"{p['name']}: {i}" for p in rep["paragraphs"] for i in p["issues"]]
+    g = langlib("ext", str(a.story), "--lean", proofs.namespace(a.story.name) + "Ext", timeout=300)
+    lean_file = a.story / "Ext.lean"
+    lean_file.write_text(g.stdout)
+    res = procs.run(proofs.lean_argv(lean_file), timeout=proofs.LEAN_TIMEOUT)
+    thms = [l.split()[1] for l in g.stdout.splitlines() if l.startswith("theorem ")]
+    print(f"ext: {'valid' if rep['valid'] else 'not valid'}; Ext.lean: {len(thms)} theorems "
+          f"{'proved' if res.returncode == 0 else 'NOT proved'} in {res.secs}s ({', '.join(thms)})")
+    log(a.story, a.log, stage="ext-prove", ok=rep["valid"] and res.returncode == 0, note=" | ".join(issues)[:1000])
+    errs = [] if res.returncode == 0 else [f"Ext.lean: {(res.stdout + res.stderr)[-1500:]}"]
+    return verdict_out(issues + errs, "ok: ties, care and identity valid; every reference known to its referrer")
+
+
 def cmd_log(a) -> int:
     log(a.story, a.workflow, stage=a.stage, para=a.para or "", ok=a.ok, note=a.note or "")
     return 0
@@ -606,6 +627,7 @@ def main() -> int:
     story_cmd("refine-check", cmd_refine_check, help="paragraphs refine the beat story")
     story_cmd("prove", cmd_prove, help="regenerate and check Proofs.lean").add_argument(
         "--local", action="store_true", help="prove here even if the Studio is running")
+    story_cmd("ext-prove", cmd_ext_prove, help="ties, care and identity (story.json \"ext\"): check and prove Ext.lean")
     story_cmd("summary", cmd_summary, help="summarise a workflow's run log").add_argument("workflow")
     lp = story_cmd("log", cmd_log, help="append a step to runs/WORKFLOW.jsonl")
     lp.add_argument("workflow")
