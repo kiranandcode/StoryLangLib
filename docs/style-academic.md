@@ -8,233 +8,281 @@ Automated Proof Repair for Verified Libraries* (Sisyphus), and Jung, Jourdan,
 Krebbers and Dreyer's POPL 2018 paper, *RustBelt: Securing the Foundations of
 the Rust Programming Language*, chosen from the PLDB corpus because it is
 widely held up as a model of PL writing. Below, "Dreyer" is shorthand for its
-four authors.
+four authors. Rhythm and register are also compared with the two versions of
+the roof story.
 
-The code is `LangLib/Style/Academic.lean` (the rules) and
-`LangLib/World/Argument.lean` (the argument as a story, below). The papers'
-texts and annotations live in `stories/private-papers/{sisyphus,rustbelt}/`,
-which git ignores; only numbers and quotes of at most a sentence appear here.
+The code is `LangLib/Style/Academic.lean` (the rules),
+`LangLib/World/Argument.lean` (the argument as a story) and two small additive
+changes to `LangLib/Style/Core.lean`. The papers' texts and annotations live
+in `stories/private-papers/{sisyphus,rustbelt}/`, which git ignores; only
+numbers and quotes of at most a sentence appear here.
 
 ## The texts
 
 For each paper we took the abstract, the introduction and one technical
 section: Sisyphus §2 up to the first paragraph of §2.1.1 (the to_array
-example, 31 paragraphs in all), and RustBelt §2.2, Mutable References (33
+example, 31 paragraphs), and RustBelt §2.2, Mutable References (33
 paragraphs). Displayed code was dropped; inline maths was written in ASCII
-(`p'`, `phi = {P} {Q}`). Eight annotator subagents encoded every paragraph in
-the `eval/prompt.md` format against a shared per-paper glossary of entity ids,
-so that "proof repair" in the abstract and in §1 are one entity. All 64
-annotations are accepted by `langlib check` (tokens match, every pronoun
-resolves).
+(`p'`, `phi = {P} {Q}`). Subagents encoded every paragraph in the
+`eval/prompt.md` format against a per-paper glossary of entity ids, then
+revised every paragraph to carry the marks the rules below read. All 64
+annotations are accepted by `langlib check`.
+
+## What the rules read
+
+Nothing is read off raw strings. Where the trees did not carry what a rule
+needs, the information is declared and checked.
+
+| mark | where | checked by |
+|:--|:--|:--|
+| `generic: true` on an entity: a kind, not an individual | the annotation | `langlib check`: a kind (or a group) takes "it" or "they" |
+| `of: [ids or "para:N"]` on an entity: a composite ("such changes", "this problem") | the annotation | `langlib academic`: every part is a known entity |
+| `VerbForm` on every verb, `Tense` on every finite one | the annotation | the `annotated` style |
+| what follows a colon or dash is its next sibling, with a role (`appos`, an argument or list role, or a clause role) | the annotation | the `annotated` style: none unclassified |
+| a register (formal, informal, technical, neutral) for every content word | `lexicon.json` | the `annotated` style: none untagged |
+| a discourse relation for closed-class forms (contrast, concession, cause, callback, neg, focus, question, quote) | `lexicon.json` | |
+| is-a and part-of pairs over entities, and section starts | `discourse.json` | `langlib academic`: every id is a known entity |
+| what each paragraph promises | `NN.argument.json` | the argument world |
+
+The lexicons were tagged by subagents (1305 content keys across the four
+texts) and the discourse relations by hand. The is-a lore and the argument
+readings are mine.
 
 ## The rules
 
-`asentOf` reads each sentence tree once into a record: the entities it
-mentions with the word index of each first mention, the entity of the main
-clause's subject (`nsubj`, followed down the chain of heads) and where it
-starts, whether the sentence is a run-in heading (a `FRAG` root), and counts
-of em-dashes, colon setups and antitheses. Every feature below is structural
-recursion over the list of records, so `langlib academic <dir> --lean <name>`
-prints records that a theorem file restates and the kernel judges.
+`asentOf` reads each sentence tree once into a record; every feature is
+structural recursion over the records and the declared lore, so
+`langlib academic <dir> --lean <name>` prints records that a theorem file
+restates and the kernel judges.
 
-| rule | definition over the records | Kiran's style requires |
+| rule | definition | Kiran's style requires |
 |:--|:--|:--|
-| old to new, subjects | a sentence's subject is the authors, the reader, or an entity already mentioned | ≥ 3/4 of tracked subjects |
+| old to new, subjects | a sentence's subject is the authors, the reader, an entity already mentioned, or a composite whose parts are | ≥ 3/4 of tracked subjects |
 | old to new, new late | an entity a sentence introduces starts after its subject | ≥ 2/3 of new entities |
-| first sentence summarises | in a paragraph of two or more sentences, the first non-heading sentence mentions an entity no other entity outnumbers (counting sentences) | ≥ 2/3 of such paragraphs |
-| just in time | an entity used again is used again within three sentences of its introduction | ≥ 1/2 of reused entities |
-| callbacks | an entity mentioned again after at least six sentences, in a later paragraph (counted once per entity) | ≥ 1 per 4 paragraphs |
-| question, then answer | a sentence ending in "?" or using "wonder" or "question" (not "in question") is answered by the next sentence or the first sentence of the next paragraph: one that is not a question and shares an entity with it | none unanswered |
+| first sentence summarises | the first sentence names an entity that covers (is, or subsumes through the is-a lore) at least as many of the paragraph's sentences as its most-mentioned entity | ≥ 2/3 of paragraphs of two or more sentences |
+| just in time | an introduced entity is used again within three sentences, or was promised; gaps are also bucketed | ≥ 1/2 of reused entities |
+| motifs | an entity leaves and comes back (≥ 6 sentences, a later paragraph), and both the departure and the return are at marked points: a section's first sentence, the first or last sentence of a paragraph of three or more, a sentence with a contrast, concession or callback connective, inside quotation marks | ≥ 1 per 8 paragraphs |
+| question, then answer | a sentence ending in "?" or with a question word (not inside a PP: "the program in question") is answered by the next sentence or the first sentence of the next paragraph | none unanswered |
 
-The LLM-ism rules (`llmismFree`) allow none of each.
+The LLM-ism rules (`llmismFree`):
 
-| LLM-ism | how it shows in the tree |
+| LLM-ism | definition |
 |:--|:--|
-| em-dashes | a `—` or `--` leaf |
-| colons as setup | a `:` followed by more words, not by a list marker (`(`, `•`, a number), not part of `::`, not in a heading |
-| "not X but Y" | a negation (`not`, `never`, `no`, `-n't`; not "not only") followed in the same sentence by `but`, `rather`, `instead` or `;` |
-| rhetorical questions | a "?" sentence the question rule leaves unanswered |
+| dramatic dash or colon | the constituent after it is a clause with its own subject (`nsubj`, `csubj` or expletive), after a complete clause. Otherwise the mark is *defining* (it elaborates or names something on the left, introduces a list or a display, or labels a run-in heading) and is allowed |
+| "not X but Y" | the tree gives a candidate (a `neg` form, not before `focus` "only", followed by a contrast or concession connective); the argument world decides: an *antithesis* if the denied proposition was never claimed, cited, ruled out or held by the reader, a *contrast* if it was. Only antitheses count |
+| rhetorical question | a "?" the question rule leaves unanswered |
 
-The thresholds are judgement calls, like the Pratchett style's. They say
-where a rule bites, not what Kiran's writing measures; the measurements
-follow.
+`noDashes` keeps Kiran's literal rule (no em-dashes at all), and `annotated`
+requires the marks above. The thresholds are judgement calls.
 
-## Measurements
-
-Both `Style.lean` files prove each paper's feature record, and every style's
-list of failing rules, by `decide +kernel`.
-
-| | Sisyphus (Kiran) | RustBelt (Dreyer et al.) |
-|:--|--:|--:|
-| sentences / words | 75 / 2255 | 115 / 3323 |
-| words per sentence | 30.1 | 28.9 |
-| sentences of ≥ 25 words | 63% | 58% |
-| parentheticals per sentence | 0.37 | 0.53 |
-| sentences opening with a connective | 13% (10 kinds) | 27% (22 kinds) |
-| subjects given | 45/50 (90%) | 60/75 (80%) |
-| new entities after the subject | 47/57 (82%) | 60/78 (77%) |
-| first sentence summarises | 16/18 (89%) | 26/29 (90%) |
-| reused just in time | 29/54 (54%) | 35/56 (63%) |
-| entities called back | 34 | 36 |
-| questions set up / answered | 1 / 1 | 3 / 3 |
-| literal "?" questions | 0 | 1 |
-| em-dashes (sentences with one) | 15 (11) | 17 (11) |
-| colon setups | 3 | 7 |
-| "not X but Y" | 0 | 3 |
-| Kiran's principles | holds | holds |
-| LLM-ism free | fails: em-dashes, colon setups | fails: em-dashes, colon setups, not-X-but-Y |
-| Pratchett (Core) | fails: footnotes, generics, similes | fails: footnotes, generics, similes |
-| roof (Core) | fails: parentheticals, interiority, Concepts, dialogue | same four |
-
-Some of the sentences behind the numbers:
-
-- Sisyphus's one question is a setup the next sentence answers: "the reader
-  might wonder if it might be simpler to just prove the new version of a
-  library function correct from scratch", then "The reason why this is not so
-  straightforward is because of the main bane of fully-automated verification".
-- RustBelt's literal question is answered a paragraph later, which is why the
-  rule looks at the next paragraph's first sentence: "The question remains:
-  How can we verify that Rust's extensible approach makes any sense?"
-- A colon setup in each: "Our approach is mostly-automated: the verification
-  conditions for the invariants are discharged using domain-specific
-  automation." and "At the heart of the Rust type system is an idea that has
-  emerged in recent years as a unifying concept connecting both academic and
-  mainstream language design: ownership."
-- RustBelt's antitheses include "The idea is that v is not moved to push, but
-  instead borrowed", a definitional contrast rather than a flourish.
-- Paragraph openers with new subjects in RustBelt: "Systems programming
-  languages like C and C++ give programmers low-level control over resource
-  management at the expense of safety, whereas most other modern languages
-  give programmers safe, high-level abstractions at the expense of control."
-  and "At least, that is the hope."
+Rhythm and register are measured, not judged: per-paragraph sentence-length
+jumps, short-after-long *punches* (≤ 12 words right after ≥ 25), runs of three
+or more long sentences, the overall variance, and the share of content words
+in each register.
 
 ## The argument
 
 `LangLib/World/Argument.lean` reads a paper as a story whose plot is its
 argument. The characters are four voices (the reader, the authors, the prior
-work they cite, the data their evaluation measured); the lore is the
-background the reader brings; the events are the moves claim, cite, define,
-motivate, example, contrast, promise, deliver, contribute, concede and
-evaluate. Each move adds to the reader's evidence base through `Mind.learn`,
-with its evidential source, and `argCredence` weighs the voices. The authors'
-bare word on a claim (strength 3) falls short of acceptance (4); a citation,
-a worked example or a measurement lifts it to an outright belief. Validity is
-no use of a term before it is lore, defined, promised or claimed, forward
-promises and paid-off deliveries. `gapsOf` lists what the excerpt leaves
-unpaid: claims on the authors' word alone, promises inside the excerpt never
-delivered, contributions never motivated.
+work they cite, the data their evaluation measured), the lore is the
+reader's background, and the events are rhetorical moves. Each move adds to
+the reader's evidence base through `Mind.learn`, with its evidential source.
+The authors' bare word on a claim (strength 3) falls short of acceptance (4);
+a citation, a worked example or a measurement lifts it to an outright belief.
 
-I read each paragraph into moves myself (`argument.py`, written out as
-`NN.argument.json` and `Argument.lean` beside each paper, rather than into
-`story.json`, since the Studio's world has no argument module). Both
-arguments are valid move by move, by `decide +kernel`.
+Three moves were added for this round. `deny k` is an antithesis when nobody
+put `k` forward, and a contrast when someone did. `hedge k` leaves the reader
+an open question about `k`, answered by a later `deliver` or `evaluate`
+(otherwise a gap, or deferred past the excerpt). `infer k premises` makes a
+claim with stated reasons ("because", "so", "therefore"); the reader accepts
+it outright when every premise is already accepted, and otherwise it rests on
+the authors' word.
+
+Validity is still no use of a term before it is lore, defined, promised or
+claimed, plus forward promises and paid-off deliveries. Both readings are
+valid by `decide +kernel`. Each paper's `Paper.lean` proves the exact gaps,
+antitheses, contrasts and deferred obligations.
 
 | | Sisyphus | RustBelt |
 |:--|--:|--:|
-| moves | 96 | 129 |
-| claims on the authors' word | 4 | 10 |
-| promises and contributions deferred past the excerpt | 11 (§3, §4, §5, §6) | 8 (§3 to §7, §9) |
-| contributions never motivated | 0 | 0 |
+| moves | 100 | 140 |
+| claims on the authors' word | 8 | 14 |
+| reasoned claims (`infer`) / supported by accepted reasons | 2 / 0 | 6 / 1 |
+| hedges / answered in the excerpt | 2 / 1 | 2 / 2 |
+| antitheses / contrasts | 0 / 0 | 2 / 3 |
+| obligations deferred past the excerpt | 12 | 7 |
 
-Sisyphus's unsupported claims are the abstract's cost claim, the
-"to the best of our knowledge" gap in implementation changes, the size of the
-invariant search space, and that dynamic analysis addresses both challenges.
-RustBelt's ten are the reasoned steps of its introduction (C++'s type system
-is "too weak", designs are "too restrictive or too expressive", unsafe code
-"cannot simply be swept aside", the semantic approach is more powerful). Kiran
-backs her introduction with citations and one worked example (the
-Array.iter refactoring); RustBelt makes more claims (35 against 22) and
-argues more of them in prose.
+Reading the reasons honestly cost Sisyphus two supports. In the first reading
+I had filed "verified software libraries are a sweet spot for proof repair"
+and "we heuristically infer the mapping" as supported by examples. They are
+reasoned, and their premises ("library functions are expected to preserve
+their API", "p' should still compute the same or similar concrete values")
+rest on the authors' word, so the conclusions do too. RustBelt's "the problem
+cannot easily be contained" is now supported: its reason, that libraries use
+unsafe code widely, was backed by an example two paragraphs earlier.
 
-Both papers use their central formalism before defining it, and rely on the
-reader's background to carry it. Each `lore_needed_*` theorem proves that
-removing a term from the lore makes the argument invalid: Separation Logic is
-used in Sisyphus's paragraph 14 and defined in §2.1.1, and ownership is used in
-RustBelt's abstract and defined in §1.1.
+Both papers still use their central formalism before defining it and rely on
+the reader's background to cover it (Separation Logic in Sisyphus, ownership
+in RustBelt); the `lore_needed_*` theorems prove it.
+
+## Measurements
+
+Every number in this table is proved by `decide +kernel`: for the papers in
+their private `Paper.lean`, for the stories in
+`LangLib/Style/AcademicTheorems.lean`.
+
+| | Sisyphus | RustBelt |
+|:--|--:|--:|
+| sentences / words | 75 / 2255 | 115 / 3323 |
+| subjects given | 47/50 (94%) | 69/81 (85%) |
+| new entities after the subject | 45/53 (85%) | 58/73 (79%) |
+| first sentence summarises | 18/18 | 27/29 |
+| just in time (incl. promised) | 31/54 (57%) | 35/55 (64%) |
+| first reuse within 1 / 2–3 / 4–6 / > 6 sentences | 20 / 9 / 6 / 19 | 26 / 8 / 6 / 15 |
+| introductions that were promised | 3 | 5 |
+| callbacks / motifs | 34 / 6 | 36 / 12 |
+| questions set up / answered | 1 / 1 | 3 / 3 |
+| em-dashes: defining / dramatic | 11 / 0 | 11 / 0 |
+| colons: defining / dramatic | 5 / 2 | 8 / 4 |
+| not-X-but-Y candidates / antitheses | 0 / 0 | 4 / 2 |
+| Kiran's principles | holds | holds |
+| LLM-ism free | fails: dramatic colons | fails: dramatic colons, not-X-but-Y |
+| no em-dashes (literal) | fails | fails |
+| Pratchett (Core) | fails: footnotes, similes, Concepts | same |
+| roof (Core) | fails: parentheticals, generalisations, interiority, Concepts, dialogue | same |
+
+### Rhythm and register across four texts
+
+| | Sisyphus | RustBelt | roof | roof-pratchett (01–06) |
+|:--|--:|--:|--:|--:|
+| words per sentence (mean, sd) | 32.7, 13.7 | 29.5, 15.1 | 13.3, 8.6 | 15.8, 9.9 |
+| coefficient of variation | 0.42 | 0.51 | 0.65 | 0.63 |
+| mean jump between neighbours | 14.1 | 15.6 | 9.3 | 11.9 |
+| punches (short after long) | 0 | 4 | 0 | 3 |
+| runs of ≥ 3 long sentences (longest) | 4 (4) | 9 (5) | 0 (2) | 0 (2) |
+| register: technical / formal / informal / neutral (% of content words) | 44.9 / 4.3 / 1.1 / 49.7 | 42.8 / 5.2 / 1.2 / 50.8 | 1.5 / 0.3 / 3.4 / 94.8 | 0.8 / 0.3 / 2.4 / 96.6 |
+
+The papers write long and steady: about a third of each paper's content
+words are technical, and runs of long sentences are common. The stories write
+short and varied, in a neutral register with a little informal colour.
+Dreyer's lengths vary more than Kiran's (0.51 against 0.42), and he lands
+four short sentences after long ones, each naming or settling what the long
+one built ("The logic we chose, Iris, is ideally suited to this purpose.";
+"Mutable references are always unique pointers."). Sisyphus has none. Its
+sentence-length rhythm is even, and its "punchy" openings are punchy in
+content, not in length: the opening sentence of the introduction runs to 30
+words. Between the two roofs the clearest difference on this measure is the
+punches (3 in six paragraphs of Pratchett's, none in nine of the plain one).
+
+Some of the sentences behind the numbers:
+
+- Sisyphus's dramatic colons: "Our approach is mostly-automated: the
+  verification conditions for the invariants are discharged using
+  domain-specific automation." and "... a sweet spot for proof repair: it is
+  not uncommon for library functions to undergo changes in their bodies ...".
+  Its dashes all define ("in sync—the problem known as proof repair").
+- RustBelt's antitheses deny what nobody proposed: "we will therefore not
+  present all these challenges and their solutions in full technical detail
+  ... Rather, we aim to highlight the following key challenges", and "the
+  problem cannot easily be contained by blessing a fixed set of standard
+  libraries". Its contrasts deny what the reader holds: "The idea is that v is
+  not moved to push, but instead borrowed" (the reader knows ownership
+  transfer from §2.1).
+- RustBelt's hedge "At least, that is the hope." is answered within the
+  excerpt by the Coq proofs of the fundamental theorem and adequacy; its "The
+  question remains: How can we verify that Rust's extensible approach makes
+  any sense?" is answered by the next paragraph's first sentence.
 
 ## Where Kiran and Dreyer differ
 
-Kiran's sentences start from what the reader holds more often (90% of
-subjects given against 80%). Six of RustBelt's fifteen new subjects open a
-paragraph: Dreyer often starts a paragraph by placing a new frame in front of
-the reader ("Systems programming languages like C and C++ ...", "At the heart
-of the Rust type system is an idea ...") and then ties it back, where Kiran's
-paragraphs start from the last paragraph's entity.
+Kiran's sentences start from what the reader holds more often (94% of
+subjects given against 85%), and her new entities come after the subject
+more often (85% against 79%). Dreyer often opens a paragraph by placing a new
+frame in front of the reader: four of RustBelt's twelve new subjects open a
+paragraph, against one of Sisyphus's three.
 
-Dreyer steers with connectives and stance (27% of sentences open with one, in
-22 kinds, led by "However", "Unfortunately" and "Moreover", with "Luckily" and "Nevertheless"); Kiran steers
-with structure (run-in headings such as "Problem Statement.", enumerated
-classes (1) to (3), named challenges C1 and C2) and opens only 13% of
-sentences with a connective.
+Dreyer has twice as many motifs (12 against 6). His safety, control,
+ownership and extensibility leave and return at paragraph openers and
+contrastive sentences; Kiran's are proof repair, her challenge labels C1 and
+C2, and the old program and new proof.
 
-Dreyer asks more questions and answers all of them, once across a paragraph
-break; Kiran sets up one, in the third person ("the reader might wonder"), and
-answers it in the next sentence.
+Dreyer argues in prose: six reasoned claims, five denials, two antitheses.
+Kiran argues with citations and one worked example, uses no denials, and
+leaves fewer claims on her own word (8 against 14).
 
-Kiran introduces technical terms earlier than she uses them: the abstract
-names dynamic program alignment and proof-driven testing seventeen
-paragraphs before §1 explains them. That is consistent with its lower
-just-in-time score (54% against RustBelt's 63%), though the score counts every
-entity, not only these.
+Kiran introduces more terms early and pays them off late (19 entities first
+reused more than six sentences on, against 15).
 
-On the LLM-isms both papers are em-dash heavy (15 and 17). Kiran's 2023
-paper breaks two of her own current rules (em-dashes, colon setups) and never
-uses "not X but Y"; RustBelt uses all three.
+On the LLM-isms both papers use about the same number of em-dashes, all
+defining. The difference is in colons (2 dramatic against 4) and in
+antitheses (none against 2).
 
-Against the formal styles from `Style/Core.lean`, both papers fail the
-Pratchett and roof styles on the same rules, which is the right answer: those
-styles describe fiction (footnotes, similes, interiority, dialogue), and the
-academic rules are what separates the two papers.
+## What each gap now covers, and what still escapes
 
-## What the formalism misses
+1. **Composite reference.** Entities may be built `of` earlier entities or a
+   paragraph, and a composite whose parts are given is itself given. "the
+   combined power of deductive machine-assisted reasoning and proof
+   automation" is now a given subject. *Escapes:* cataphoric composites ("Such
+   changes may involve: (1) ...", whose parts follow) still count as new, and
+   the annotator decides what a composite is made of.
+2. **Summaries at a more general level.** The first sentence summarises when
+   one of its entities covers, through the is-a lore, as many sentences as the
+   paragraph's most-mentioned entity. Sisyphus's paragraphs on alignment and
+   proof-driven testing now pass (18 of 18). *Escapes:* the lore is declared
+   by hand, and a summary that paraphrases without naming a covering entity
+   (RustBelt's "Our core contribution is then to develop an extensible
+   soundness proof for λRust.") still fails.
+3. **Splitting by pronoun number.** `generic` entities and groups take "it"
+   or "they"; the split ids (a library function, a shared reference) are
+   merged back. The agreement check stays for individuals. *Escapes:* an
+   instance of a kind ("a mutable reference" in one example) is still its own
+   entity, by design.
+4. **Motif against recurrence.** A motif needs a departure and a return at
+   marked points; plain recurrence is a callback. *Escapes:* in short
+   paragraphs first and last sentences are not distinctive, so they are not
+   marks there; and whether the return is deliberate, a callback the reader is
+   meant to notice, is not in the tree.
+5. **Dramatic against defining colons and dashes.** Classified by what
+   follows and whether a complete clause precedes. *Escapes:* a clause that
+   elaborates a noun on the left ("is a simple one: If ownership ... then none
+   of them can be used to directly mutate it") counts as dramatic.
+   Kiran's own list bans colon setups that elaborate too, so `noDashes` and the
+   colon counts both stay reported.
+6. **Contrast against antithesis.** Decided in the argument world by whether
+   the denied proposition was ever put forward. *Escapes:* a pre-emptive
+   rebuttal of an objection the reader is likely to have ("cannot easily be
+   contained by blessing a fixed set of standard libraries") counts as an
+   antithesis unless the lore lists the objection.
+7. **Implicit questions.** `hedge` is an argument move, answered by a later
+   deliver or evaluate. *Escapes:* finding the hedge is my reading of the
+   text; nothing in the tree marks "At least, that is the hope." as one.
+8. **Need.** Just in time now credits promised introductions and reports the
+   first-reuse gaps by bucket. *Escapes:* whether the reused term was *needed*
+   (did the reasoning use it, or just mention it) is not measured.
+9. **Reasoned claims.** `infer` supports a claim when its stated reasons are
+   accepted. *Escapes:* reasons that are definitions or stipulations, not
+   claims, cannot support anything, and the reader's background is not a
+   premise.
+10. **Rhythm and register.** Measured as above. *Escapes:* the register
+    lexicon tags words, not uses ("sweet spot" is two neutral words), and
+    sentence length is only one dimension of rhythm (clause order, stress and
+    the shape of a paragraph's last sentence are not modelled).
+11. **Core's generics and similes on papers.** A "like" phrase attached to a
+    noun gives examples, not a simile, and in a paper a present-tense clause
+    about a specific entity reports rather than generalises. Papers still
+    generalise about kinds (116 and 196 such clauses), so Core's roof style
+    fails them on generalisations, correctly. *Escapes:* the two similes left
+    in RustBelt are "like" phrases attached to verbs that still give examples.
 
-- **Composite reference.** "the combined power of deductive machine-assisted
-  reasoning and proof automation" (Sisyphus §1) sums up the previous
-  paragraph's (a) and (b), exactly the old-to-new bridge Kiran asks for. Entity
-  ids are atomic, so the subject counts as new.
-- **Summary by a more general term.** "To address C1, we use a trace-based
-  program alignment technique." is a topic sentence, but the rest of its
-  paragraph talks about programs, inputs and values, so the most-mentioned
-  entity is not one it names. Paragraphs 19 and 20 of Sisyphus are flagged for
-  this reason.
-- **Entities split by number.** The checker's pronoun agreement made
-  annotators split "libraries" from a singular "library function" (and
-  "shared references" from "a shared reference"), which adds false new subjects
-  and hides callbacks.
-- **Whether a callback is a motif.** The rule counts recurrence after a gap.
-  It cannot tell Kiran's deliberate return to "knowledge about old invariants"
-  from a term that simply keeps coming up.
-- **Whether a colon or dash is dramatic.** "is a simple one: If ownership of
-  an object ... is shared" defines; "Our approach is mostly-automated: ..." is
-  closer to a flourish. Both count. The same goes for em-dashes that introduce
-  a definition ("the problem known as proof repair").
-- **Antithesis against contrast.** "not moved to push, but instead borrowed" is
-  the paper's point, not a rhetorical pivot.
-- **Questions without question words.** "At least, that is the hope." turns
-  the reader's expectation without a "?" or "wonder"; "let us begin by
-  exploring what makes Rust's type system so unusual" sets up a question the
-  rule cannot see.
-- **Need.** "Just in time" is approximated by re-mention within three
-  sentences. Whether the information was needed for what follows is a fact
-  about the argument, not the trees.
-- **Punch, rhythm, register.** Sentence length and depth are measured, but the
-  punchy opening sentence, the playful rhythm and the conversational word
-  choice inside formal syntax are not formalised.
-- **The argument's support is coarse.** A reasoned claim ("because ...") counts
-  as the authors' word, absence claims ("to the best of our knowledge") cannot
-  be cited, truth is not judged, and the verdict depends on the lore I chose
-  for the reader (the `lore_needed_*` theorems show which choices carry
-  weight).
-- **Annotation detail.** Core's generics need `Tense` features the annotators
-  did not add (both papers score 0), and its "like" similes fire on
-  exemplification ("languages like C and C++", nine times in RustBelt).
+The roof stories fail `annotated` because their trees have no verb forms;
+their rhythm and register numbers do not depend on those marks.
 
 ## Reproducing
 
 ```
-langlib check   stories/private-papers/<p>/paragraphs/NN.txt NN.json   # each paragraph
-langlib academic stories/private-papers/<p>                             # features, flags, verdicts
-python3 stories/private-papers/tools/style_prove.py    stories/private-papers/<p> <Name>   # Style.lean, proved
-python3 stories/private-papers/tools/argument_prove.py stories/private-papers/<p> <Name>   # Argument.lean, proved
-python3 stories/private-papers/tools/sent.py stories/private-papers/<p> 12:1             # a flagged sentence
+langlib check    stories/private-papers/<p>/paragraphs/NN.txt NN.json   # each paragraph
+langlib academic stories/private-papers/<p>                               # features, flags, verdicts
+python3 stories/private-papers/tools/argument_prove.py stories/private-papers/<p> <Name>   # Argument.lean
+python3 stories/private-papers/tools/style_prove.py    stories/private-papers/<p> <Name>   # Paper.lean, proved
+python3 stories/private-papers/tools/sent.py stories/private-papers/<p> 12:1               # a flagged sentence
 ```
