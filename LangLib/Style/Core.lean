@@ -225,7 +225,12 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
     let prn : Acc := if info.cat == .PRN && !quoted then { prn := 1 } else {}
     -- a "like" phrase attached to a noun ("languages like C and C++") gives
     -- examples; only one attached to a verb or clause compares
-    let like : Acc := if info.cat == .PP && info.role != some .nmod && kids.any (fun k => match k with
+    -- in a paper, "like" with a tracked entity ("like C++, Rust supports ...")
+    -- compares two things the text is about: a literal comparison, not an image
+    let literal := cx.paper && kids.any fun k => match k with
+      | .node j _ => j.ref.isSome
+      | .leaf w => w.ref.isSome && w.role == some .head
+    let like : Acc := if info.cat == .PP && info.role != some .nmod && !literal && kids.any (fun k => match k with
         | .leaf w => w.role == some .case && lower w.form == "like" | _ => false) then { likeSimiles := 1 } else {}
     let marks := " ".intercalate (kids.filterMap fun k => match k with
       | .leaf w => if w.role == some .mark || w.role == some .fixed then some (lower w.form) else none

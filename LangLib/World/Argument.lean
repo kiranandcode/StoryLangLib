@@ -14,7 +14,10 @@ read what plain claims miss: `deny` (an antithesis when nobody put the denied
 proposition forward, a contrast when someone did), `hedge` (a stance that
 leaves the reader an open question, answered by a later `deliver` or
 `evaluate`), and `infer` (a claim with stated reasons, supported when every
-reason is accepted).
+reason is granted: an accepted claim, a definition or background). A
+proposition counts as put forward when the reader holds it, its negation, or
+derives it through the paper's lore rules (an objection the reader would
+raise), so rebutting it is a contrast, not an antithesis.
 
 **The reader's mind.** Everything the reader comes to hold goes into their
 evidence base through `Mind.learn`, with its source: a definition, a claim, a
@@ -115,7 +118,7 @@ structure AW (T : Type) where
   now : Nat := 0
   deriving Repr
 
-variable {T : Type} [DecidableEq T]
+variable {T : Type} [DecidableEq T] [Lore (AFact T)]
 
 instance : HasMinds (AW T) Voice (AFact T) where
   beliefs w c := if c == .reader then w.base else []
@@ -163,11 +166,20 @@ def usable (w : AW T) (t : T) : Bool :=
 def accepted (w : AW T) (k : T) : Bool :=
   w.base.any fun h => h.b == .atom (.holds k) && (h.up == .radical || h.up == .hard)
 
+/-- What the reader holds, as literals (not what they only noted). -/
+def heldLits (w : AW T) : List (AFact T × Bool) :=
+  w.base.filterMap fun h => if h.up == .note then none else litOf h.b
+
+/-- A premise the reader can grant: an accepted claim, or a term they know
+(a definition, a stipulation, their background). -/
+def granted (w : AW T) (k : T) : Bool :=
+  accepted w k || believes w Voice.reader (.atom (AFact.known k))
+
 /-- `k` was put forward: claimed, cited, exemplified, ruled out, or held by
 the reader (as a belief, either way, or as background) before. -/
 def putForward (w : AW T) (k : T) : Bool :=
   believes w Voice.reader (.atom (AFact.holds k)) || believes w Voice.reader (.neg (AFact.holds k)) ||
-    believes w Voice.reader (.atom (AFact.known k))
+    believes w Voice.reader (.atom (AFact.known k)) || (closure (heldLits w)).contains (AFact.holds k, true)
 
 def wasMotivated (w : AW T) (k : T) : Bool := believes w Voice.reader (.atom (AFact.motivated k))
 
@@ -215,7 +227,7 @@ def argStep (w : AW T) : Move T → AW T
     hear { w with pending := w.pending ++ [{ t := k, sec := s, hedge := true }] } (.promised k, true) (.told .author)
   | .infer k ps _ =>
     hear { w with claims := w.claims ++ [k] } (.holds k, true)
-      (if ps.all (accepted w) then .inferred else .told .author)
+      (if ps.all (granted w) then .inferred else .told .author)
   | .heading n => { w with sec := n }
 
 variable [Repr T]

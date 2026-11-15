@@ -2,6 +2,15 @@
 "\"": {
 "rel": "quote"
 },
+", so": {
+"rel": "cause"
+},
+", so long as": {
+"rel": ""
+},
+"; for": {
+"rel": "cause"
+},
 "accumulate": {
 "reg": "neutral"
 },
@@ -689,6 +698,12 @@
 "snort": {
 "reg": "informal"
 },
+"so ,": {
+"rel": "cause"
+},
+"so long as": {
+"rel": ""
+},
 "soaked": {
 "reg": "neutral"
 },
@@ -738,7 +753,8 @@
 "reg": "informal"
 },
 "such": {
-"reg": "formal"
+"reg": "formal",
+"rel": "demonstrative"
 },
 "summer": {
 "reg": "neutral"
@@ -776,6 +792,9 @@
 "tell": {
 "reg": "neutral"
 },
+"that": {
+"rel": "demonstrative"
+},
 "then": {
 "reg": "neutral"
 },
@@ -790,6 +809,12 @@
 },
 "third": {
 "reg": "neutral"
+},
+"this": {
+"rel": "demonstrative"
+},
+"those": {
+"rel": "demonstrative"
 },
 "though": {
 "rel": "concession"

@@ -71,13 +71,19 @@ structure Lex where
   reg : List (String × String) := []
   /-- discourse relation per lower-cased closed-class form -/
   rel : List (String × String) := []
+  /-- multiword expressions (lower-cased forms), with a register and a relation
+  ("" for none) that override their words' ("sweet spot", "at least") -/
+  mwe : List (List String × String × String) := []
 
 private def lower (s : String) : String := s.toLower
 private def isWord (w : Word) : Bool := w.upos != .PUNCT && w.upos != .SYM
 private def isContent (w : Word) : Bool :=
   w.upos == .NOUN || w.upos == .VERB || w.upos == .ADJ || w.upos == .ADV
 
-def Lex.regOf (lx : Lex) (w : Word) : Option String := lx.reg.lookup (lower (w.lemma.getD w.form))
+/-- A register by `lemma/UPOS` first (one sense per part of speech), then by lemma. -/
+def Lex.regOf (lx : Lex) (w : Word) : Option String :=
+  let k := lower (w.lemma.getD w.form)
+  lx.reg.lookup s!"{k}/{w.upos.name}" <|> lx.reg.lookup k
 def Lex.relOf (lx : Lex) (w : Word) : Option String := lx.rel.lookup (lower w.form)
 def Lex.is (lx : Lex) (w : Word) (r : String) : Bool := lx.relOf w == some r
 
@@ -118,6 +124,18 @@ structure ASent where
   untagged : Nat := 0
   /-- verbs without a `VerbForm`, or finite without a `Tense` -/
   untensed : Nat := 0
+  /-- carries a hedge or stance marker ("At least", "hope", "seems") -/
+  hedged : Bool := false
+  /-- carries a cause connective ("because", "therefore", "thus") -/
+  causal : Bool := false
+  /-- carries a callback connective ("again", "above", "as explained") -/
+  recalls : Bool := false
+  /-- entities mentioned with a demonstrative determiner ("this problem") -/
+  demonstrated : List String := []
+  /-- something substantial (three words or more) comes before the subject -/
+  fronted : Bool := false
+  /-- carries a negation -/
+  negated : Bool := false
   deriving Repr, DecidableEq, Inhabited
 
 private def roleIs (t : Tree) (r : Role) : Bool := match t with
@@ -237,7 +255,13 @@ private partial def punctClasses : Tree → PCount
           -- not a participial adjunct ("...—granting push access")
           let clause := ((roleOf t).map clauseRoles.contains).getD false ||
             (roleOf t == none && match t with | .node j _ => j.cat == .S | _ => false)
-          if clause then (if complete && hasSubj t then 1 else 0)
+          let leftIds := left.flatMap fun x => (mentions x 0).1.map (·.1)
+          -- a clause in apposition spells out a term on the left ("The question
+          -- remains: How can we ...?"): defining, if its ref names that term
+          let apposClause := roleOf t == some .appos &&
+            (hasSubj t || match t with | .node j _ => j.cat == .S || j.cat == .SBAR | _ => false)
+          if apposClause then (if ((refOf t).map leftIds.contains).getD false then 0 else 2)
+          else if clause then (if complete && hasSubj t then 1 else 0)
           else if ((roleOf t).map definingRoles.contains).getD false then 0
           else match t with
             | .node j _ => if j.cat == .NP || j.cat == .PP then 0 else 2
@@ -266,6 +290,31 @@ private partial def questionWords (lx : Lex) : Tree → Nat
 
 private def feat (w : Word) (k : String) : Option String := (w.feats.find? (·.1 == k)).map (·.2)
 
+/-- Per leaf, the register and relation after multiword expressions override. -/
+def overlay (lx : Lex) (ws : List Word) : List (Option String × Option String) :=
+  let forms := (ws.map (lower ·.form)).toArray
+  let base := (ws.map fun w => (lx.regOf w, lx.relOf w)).toArray
+  let hit (i : Nat) : Option (Nat × String × String) := lx.mwe.findSome? fun (ks, rg, rl) =>
+    if ks.length ≥ 2 && (ks.zipIdx.all fun (k, j) => forms[i + j]? == some k) then some (ks.length, rg, rl) else none
+  ((List.range forms.size).foldl (fun (out, skip) i =>
+    if skip > 0 then (out, skip - 1) else
+    match hit i with
+    | some (n, rg, rl) =>
+      -- an expression with no register of its own keeps its words' registers
+      (out ++ ((List.range n).map fun j =>
+        ((if rg == "" then (base[i + j]?.bind (·.1)) else some rg), (if rl == "" then none else some rl))), n - 1)
+    | none => (out ++ [base[i]!], 0)) (([] : List (Option String × Option String)), 0)).1
+
+/-- Entities mentioned by a phrase with a demonstrative determiner. -/
+private partial def demonstratedIn (lx : Lex) : Tree → List String
+  | .leaf _ => []
+  | .node i kids =>
+    let here := match i.ref with
+      | some e => if kids.any (fun k => match k with
+          | .leaf w => w.role == some .det && lx.is w "demonstrative" | _ => false) then [e] else []
+      | none => []
+    here ++ kids.flatMap (demonstratedIn lx)
+
 def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
   let ls := leavesOf t
   let heading : Bool := match t with | .node i _ => i.cat == .FRAG | .leaf _ => true
@@ -275,19 +324,24 @@ def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
   let (cd, cdr, dd, ddr, un) := punctClasses t
   -- in a run-in heading ("Challenge #1: ...") a colon labels what follows
   let (cd, un) := if heading then (cd + un, 0) else (cd, un)
-  let content := ls.filter isContent
-  let regCount (r : String) := (content.filter (lx.regOf · == some r)).length
+  let ov := overlay lx ls
+  let content := (ls.zip ov).filter (isContent ·.1)
+  let regCount (r : String) := (content.filter (·.2.1 == some r)).length
+  let hasRel (r : String) := ov.any (·.2 == some r)
   let verbs := ls.filter fun w => w.upos == .VERB || w.upos == .AUX
   { para, words := (ls.filter isWord).length, heading,
     subj := subj.bind (·.1), subjAt := (subj.map (·.2)).getD 0,
     ents := firstEach ms, quoted := quotedIn lx t,
-    frame := ls.any fun w => lx.is w "contrast" || lx.is w "concession" || lx.is w "callback",
+    frame := hasRel "contrast" || hasRel "concession" || hasRel "callback",
     question, asks := question || questionWords lx t > 0,
     colonsDef := cd, colonsDram := cdr, dashesDef := dd, dashesDram := ddr, unclassified := un,
     negTurns := negTurnsIn lx ls,
     formal := regCount "formal", informal := regCount "informal",
     technical := regCount "technical", neutral := regCount "neutral",
-    untagged := (content.filter (lx.regOf · |>.isNone)).length,
+    untagged := (content.filter (·.2.1.isNone)).length,
+    hedged := hasRel "hedge", causal := hasRel "cause", recalls := hasRel "callback",
+    demonstrated := demonstratedIn lx t,
+    fronted := subj.isSome && (subj.map (·.2)).getD 0 ≥ 3, negated := hasRel "neg",
     untensed := (verbs.filter fun w => match feat w "VerbForm" with
       | none => true
       | some "Fin" => (feat w "Tense").isNone
@@ -307,6 +361,9 @@ structure ALore where
   sectionStarts : List Nat := []
   /-- (entity, paragraph) promised in the argument reading -/
   promised : List (String × Nat) := []
+  /-- the argument reading's moves: (paragraph, sentence in it or 0, kind, term,
+  terms it uses including premises) -/
+  moves : List (Nat × Nat × String × String × List String) := []
   deriving Repr, DecidableEq, Inhabited
 
 /-! ## Features (structural, kernel-friendly) -/
@@ -334,7 +391,20 @@ structure Flow where
   oldSubj : Nat := 0
   newEnts : Nat := 0
   newLate : Nat := 0
+  /-- subjects given by bridging: a part or kind of something mentioned ("the tail" after "a sequence") -/
+  bridged : Nat := 0
+  /-- subjects that announce what the same sentence then lists ("Such changes may involve: (1) ...") -/
+  announced : Nat := 0
   deriving Repr, DecidableEq
+
+/-- `e` is a detail (part, instance) of something already mentioned. -/
+def bridgedBy (lo : ALore) (seen : List String) (e : String) : Bool :=
+  seen.any fun g => g != e && under' lo e g
+
+/-- `e` is a composite whose parts the sentence names after its subject. -/
+def announcedIn (lo : ALore) (s : ASent) (e : String) : Bool :=
+  lo.comps.any fun (c, ps, _) => c == e && !ps.isEmpty &&
+    ps.all fun x => s.ents.any fun (y, i) => y == x && i > s.subjAt
 
 def flowFrom (lo : ALore) : List String → List ASent → Flow
   | _, [] => {}
@@ -344,11 +414,16 @@ def flowFrom (lo : ALore) : List String → List ASent → Flow
     match s.subj with
     | none => r
     | some e =>
-      let news := s.ents.filter fun (x, _) => !isGiven lo seen s.para x
+      let news := s.ents.filter fun (x, _) => !isGiven lo seen s.para x && !bridgedBy lo seen x
+      let old := isGiven lo seen s.para e
+      let br := !old && bridgedBy lo seen e
+      let an := !old && !br && announcedIn lo s e
       { tracked := r.tracked + 1,
-        oldSubj := r.oldSubj + (if isGiven lo seen s.para e then 1 else 0),
+        oldSubj := r.oldSubj + (if old || br || an then 1 else 0),
         newEnts := r.newEnts + news.length,
-        newLate := r.newLate + (news.filter (·.2 > s.subjAt)).length }
+        newLate := r.newLate + (news.filter (·.2 > s.subjAt)).length,
+        bridged := r.bridged + (if br then 1 else 0),
+        announced := r.announced + (if an then 1 else 0) }
 
 def groupParas : List ASent → List (List ASent)
   | [] => []
@@ -369,6 +444,20 @@ def distinct : List String → List String
   | [] => []
   | x :: xs => let r := distinct xs; if r.contains x then r else x :: r
 
+/-- The paragraph's argument is about its first move's point: at least half
+of its other moves are about that term or use it (a summary that paraphrases
+instead of naming the details' common entity). -/
+def argSummarises (lo : ALore) (para : Nat) : Bool :=
+  let ms := lo.moves.filter fun (p, _, k, _, _) => p == para && k != "heading"
+  -- the point is the move read at the first sentence, else the first move
+  let point := (ms.find? fun (_, i, _, _, _) => i == 1) <|> ms.head?
+  match point with
+  | none => false
+  | some m =>
+    let t := m.2.2.2.1
+    let rest := ms.filter (· != m)
+    !rest.isEmpty && 2 * (rest.filter fun (_, _, _, t', us) => t' == t || us.contains t).length ≥ rest.length
+
 /-- The first sentence names an entity covering at least as many sentences as
 the paragraph's most-mentioned entity. -/
 def summarises (lo : ALore) (ps : List ASent) : Bool :=
@@ -378,7 +467,9 @@ def summarises (lo : ALore) (ps : List ASent) : Bool :=
   | first :: _ =>
     let es := (distinct (body.flatMap names)).filter (!given.contains ·)
     let top := es.foldl (fun m e => max m (countMentions e body)) 0
-    (names first).any fun f => !given.contains f && cover lo f body ≥ top
+    ((names first).any fun f => !given.contains f && cover lo f body ≥ top) ||
+    argSummarises lo first.para
+
 
 def multi (ps : List ASent) : Bool := (ps.filter (!·.heading)).length ≥ 2
 
@@ -514,7 +605,41 @@ structure AFeatures where
   neutral : Nat
   untagged : Nat
   untensed : Nat
+  bridged : Nat
+  announced : Nat
+  /-- callbacks whose return is signalled: a demonstrative, quotation marks, a callback connective -/
+  deliberate : Nat
+  /-- introduced entities the argument uses in the paragraph of introduction or the next -/
+  neededIntro : Nat
+  /-- entities the argument never uses -/
+  unusedIntro : Nat
+  hedgedSents : Nat
+  /-- hedged sentences without a `hedge` reading, and `hedge` readings on unhedged sentences -/
+  unreadHedges : Nat
+  ungroundedHedges : Nat
+  /-- not-X-but-Y candidates without a `deny` reading, and `deny` readings on sentences without a negation -/
+  unreadDenials : Nat
+  ungroundedDenials : Nat
+  /-- sentences with a cause connective without an `infer` reading, and `infer` readings without one -/
+  unreadReasons : Nat
+  ungroundedReasons : Nat
+  frontings : Nat
+  /-- paragraphs of two or more sentences ending on a short one -/
+  shortClosers : Nat
   deriving Repr, DecidableEq, Inhabited
+
+/-- Sentence `i` (1-based) of paragraph `p`. -/
+def sentAt (ss : List ASent) (idxs : List (Nat × Nat)) (p i : Nat) : Option ASent :=
+  ((ss.zip idxs).find? fun (_, (q, j)) => q == p && j == i).map (·.1)
+
+/-- The argument reads sentence `(p, i)` with a move of one of `kinds`. -/
+def readAs (lo : ALore) (kinds : List String) (p i : Nat) : Bool :=
+  lo.moves.any fun (q, j, k, _, _) => q == p && j == i && kinds.contains k
+
+/-- Readings of kind `k` whose sentence lacks the mark `has`. -/
+def ungrounded (lo : ALore) (ss : List ASent) (idxs : List (Nat × Nat)) (k : String) (has : ASent → Bool) : Nat :=
+  (lo.moves.filter fun (p, i, k', _, _) => k' == k &&
+    !((sentAt ss idxs p i).map has).getD false).length
 
 def AFeatures.ofSents (lo : ALore) (ss : List ASent) : AFeatures :=
   let fl := flowFrom lo [] ss
@@ -529,6 +654,16 @@ def AFeatures.ofSents (lo : ALore) (ss : List ASent) : AFeatures :=
     | a :: _ => lo.promised.any fun (x, n) => x == e && n ≤ a.2
     | [] => false
   let ans := answeredAt ss
+  let idxs := ps.flatMap fun p => p.zipIdx.map fun (s, i) => (s.para, i + 1)
+  let tagged := ss.zip idxs
+  let unread (has : ASent → Bool) (kinds : List String) : Nat :=
+    (tagged.filter fun (s, (p, i)) => has s && !readAs lo kinds p i).length
+  let deliberateAt (e : String) (i : Nat) : Bool := match ss[i]? with
+    | some s => s.demonstrated.contains e || s.quoted.contains e || s.recalls
+    | none => false
+  let usedIn (e : String) (p : Nat) : Bool := lo.moves.any fun (q, _, _, t, us) =>
+    (q == p || q == p + 1) && (t == e || us.contains e)
+  let usedAnywhere (e : String) : Bool := lo.moves.any fun (_, _, _, t, us) => t == e || us.contains e
   let lens := ps.map bodyLens
   let bl := lens.flatMap id
   let js := lens.map jumps
@@ -559,7 +694,20 @@ def AFeatures.ofSents (lo : ALore) (ss : List ASent) : AFeatures :=
     longRuns := (rs.map (·.1)).foldl (· + ·) 0, longestRun := (rs.map (·.2)).foldl max 0,
     formal := sumBy (·.formal) ss, informal := sumBy (·.informal) ss,
     technical := sumBy (·.technical) ss, neutral := sumBy (·.neutral) ss,
-    untagged := sumBy (·.untagged) ss, untensed := sumBy (·.untensed) ss }
+    untagged := sumBy (·.untagged) ss, untensed := sumBy (·.untensed) ss,
+    bridged := fl.bridged, announced := fl.announced,
+    deliberate := (poss.filter fun (e, p) => (gapsOf p).any fun q => isCallback q && deliberateAt e q.2.1).length,
+    neededIntro := (poss.filter fun (e, p) => match p with | a :: _ => usedIn e a.2 | [] => false).length,
+    unusedIntro := (es.filter (!usedAnywhere ·)).length,
+    hedgedSents := (ss.filter (·.hedged)).length,
+    unreadHedges := unread (·.hedged) ["hedge"],
+    ungroundedHedges := ungrounded lo ss idxs "hedge" (fun s => s.hedged || s.asks),
+    unreadDenials := unread (·.negTurns > 0) ["deny"],
+    ungroundedDenials := ungrounded lo ss idxs "deny" (·.negated),
+    unreadReasons := unread (·.causal) ["infer"],
+    ungroundedReasons := ungrounded lo ss idxs "infer" (·.causal),
+    frontings := (ss.filter fun s => s.fronted && !s.heading).length,
+    shortClosers := (lens.filter fun l => l.length ≥ 2 && ((l.getLast?.map isShort).getD false)).length }
 
 inductive AFeat where
   | sents | words | paras | multiParas | firstSum | tracked | oldSubj | newEnts | newLate
@@ -568,6 +716,9 @@ inductive AFeat where
   | colonsDef | colonsDram | dashesDef | dashesDram | dashes | unclassified | negTurns | antithesis
   | bodySents | lenSum | lenSq | jumpSum | jumpPairs | punches | longRuns | longestRun
   | formal | informal | technical | neutral | untagged | untensed | contentWords
+  | bridged | announced | deliberate | neededIntro | unusedIntro | hedgedSents
+  | unreadHedges | ungroundedHedges | unreadDenials | ungroundedDenials | unreadReasons | ungroundedReasons
+  | frontings | shortClosers
   deriving Repr, DecidableEq, Inhabited
 
 def AFeatures.get (f : AFeatures) : AFeat → Nat
@@ -587,6 +738,20 @@ def AFeatures.get (f : AFeatures) : AFeat → Nat
   | .formal => f.formal | .informal => f.informal | .technical => f.technical
   | .neutral => f.neutral | .untagged => f.untagged | .untensed => f.untensed
   | .contentWords => f.formal + f.informal + f.technical + f.neutral + f.untagged
+  | .bridged => f.bridged
+  | .announced => f.announced
+  | .deliberate => f.deliberate
+  | .neededIntro => f.neededIntro
+  | .unusedIntro => f.unusedIntro
+  | .hedgedSents => f.hedgedSents
+  | .unreadHedges => f.unreadHedges
+  | .ungroundedHedges => f.ungroundedHedges
+  | .unreadDenials => f.unreadDenials
+  | .ungroundedDenials => f.ungroundedDenials
+  | .unreadReasons => f.unreadReasons
+  | .ungroundedReasons => f.ungroundedReasons
+  | .frontings => f.frontings
+  | .shortClosers => f.shortClosers
 
 def AFeat.name : AFeat → String
   | .sents => "sents" | .words => "words" | .paras => "paras" | .multiParas => "multiParas"
@@ -605,6 +770,20 @@ def AFeat.name : AFeat → String
   | .formal => "formal" | .informal => "informal" | .technical => "technical"
   | .neutral => "neutral" | .untagged => "untagged" | .untensed => "untensed"
   | .contentWords => "contentWords"
+  | .bridged => "bridged"
+  | .announced => "announced"
+  | .deliberate => "deliberate"
+  | .neededIntro => "neededIntro"
+  | .unusedIntro => "unusedIntro"
+  | .hedgedSents => "hedgedSents"
+  | .unreadHedges => "unreadHedges"
+  | .ungroundedHedges => "ungroundedHedges"
+  | .unreadDenials => "unreadDenials"
+  | .ungroundedDenials => "ungroundedDenials"
+  | .unreadReasons => "unreadReasons"
+  | .ungroundedReasons => "ungroundedReasons"
+  | .frontings => "frontings"
+  | .shortClosers => "shortClosers"
 
 def AFeat.all : List AFeat :=
   [.sents, .words, .paras, .multiParas, .firstSum, .tracked, .oldSubj, .newEnts, .newLate,
@@ -612,7 +791,8 @@ def AFeat.all : List AFeat :=
    .asks, .answered, .unanswered, .questions, .rhetorical,
    .colonsDef, .colonsDram, .dashesDef, .dashesDram, .dashes, .unclassified, .negTurns, .antithesis,
    .bodySents, .lenSum, .lenSq, .jumpSum, .jumpPairs, .punches, .longRuns, .longestRun,
-   .formal, .informal, .technical, .neutral, .untagged, .untensed, .contentWords]
+   .formal, .informal, .technical, .neutral, .untagged, .untensed, .contentWords,
+   .bridged, .announced, .deliberate, .neededIntro, .unusedIntro, .hedgedSents, .unreadHedges, .ungroundedHedges, .unreadDenials, .ungroundedDenials, .unreadReasons, .ungroundedReasons, .frontings, .shortClosers]
 
 /-! ## Rules and styles -/
 
@@ -680,7 +860,19 @@ def annotated : AStyle where
     ("every colon and dash classified", .atMost .unclassified 0),
     ("every content word has a register", .atMost .untagged 0)]
 
-def academicStyles : List AStyle := [kiran, llmismFree, noDashes, annotated]
+/-- The argument reading is grounded in the text both ways: every hedge,
+not-X-but-Y and stated reason the trees mark is read as a move, and every
+hedge or denial read sits on a sentence that marks it. -/
+def grounded : AStyle where
+  name := "grounded"
+  rules := [
+    ("hedges read", .atMost .unreadHedges 0),
+    ("hedge readings grounded", .atMost .ungroundedHedges 0),
+    ("denials read", .atMost .unreadDenials 0),
+    ("denial readings grounded", .atMost .ungroundedDenials 0),
+    ("reasons read", .atMost .unreadReasons 0)]
+
+def academicStyles : List AStyle := [kiran, llmismFree, noDashes, annotated, grounded]
 
 /-! ## `langlib academic <dir>` -/
 
@@ -700,13 +892,20 @@ def loadLex (dir : String) : IO Lex := do
   let some (.obj kvs) ← readJson? s!"{dir}/lexicon.json" | pure {}
   let mut reg := #[]
   let mut rel := #[]
+  let mut mwe := #[]
   for (k, v) in kvs.toList do
-    match v with
-    | .str r => reg := reg.push (k, r)
-    | j =>
-      if let .ok r := j.getObjValAs? String "reg" then reg := reg.push (k, r)
-      if let .ok r := j.getObjValAs? String "rel" then rel := rel.push (k, r)
-  pure { reg := reg.toList, rel := rel.toList }
+    let rg := match v with
+      | .str r => r
+      | j => (j.getObjValAs? String "reg").toOption.getD ""
+    let rl := (v.getObjValAs? String "rel").toOption.getD ""
+    if k.contains ' ' then
+      mwe := mwe.push ((k.splitOn " ").filter (· != ""), rg, rl)
+    else
+      if rg != "" then reg := reg.push (k, rg)
+      if rl != "" then rel := rel.push (k, rl)
+  -- longer expressions first, so ", so long as" wins over ", so"
+  pure { reg := reg.toList, rel := rel.toList,
+         mwe := mwe.toList.mergeSort fun a b => a.1.length ≥ b.1.length }
 
 def loadAll (dir : String) : IO (List ASent × ALore × List String) := do
   let lx ← loadLex dir
@@ -714,6 +913,7 @@ def loadAll (dir : String) : IO (List ASent × ALore × List String) := do
   let mut out : List ASent := []
   let mut comps : List (String × List String × Nat) := []
   let mut promised : List (String × Nat) := []
+  let mut moves : List (Nat × Nat × String × String × List String) := []
   let mut known : List String := []
   for n in names.mergeSort (· ≤ ·) do
     let para := (String.ofList (n.toList.take 2)).toNat!
@@ -732,6 +932,11 @@ def loadAll (dir : String) : IO (List ASent × ALore × List String) := do
       if let .ok (.arr ms) := j.getObjVal? "moves" then
         for m in ms do
           let mv := (m.getObjValAs? String "move").toOption.getD ""
+          let strs (k : String) : List String := (m.getObjValAs? (List String) k).toOption.getD []
+          let term := (m.getObjValAs? String "t").toOption.getD ((m.getObjValAs? String "a").toOption.getD "")
+          let uses := strs "uses" ++ strs "premises" ++ ((m.getObjValAs? String "b").toOption.map ([·])).getD []
+          let si := (m.getObjValAs? Nat "s").toOption.getD 0
+          moves := moves ++ [(para, si, mv, term, uses)]
           if mv == "promise" || mv == "contribute" || mv == "hedge" then
             if let .ok t := m.getObjValAs? String "t" then promised := promised ++ [(t, para)]
   let mut parts : List (String × String) := comps.flatMap fun (c, ps, _) => ps.map (·, c)
@@ -751,7 +956,7 @@ def loadAll (dir : String) : IO (List ASent × ALore × List String) := do
   for (c, ps, _) in comps do
     for p in ps do
       if !known.contains p then problems := problems ++ [s!"composite {c} is of unknown entity {p}"]
-  pure (out, { parts, comps, sectionStarts := starts, promised }, problems)
+  pure (out, { parts, comps, sectionStarts := starts, promised, moves }, problems)
 
 /-- Where each rule bites, sentence by sentence (paragraph, index in paragraph). -/
 def flagged (lo : ALore) (ss : List ASent) : Json :=
@@ -779,7 +984,10 @@ def flagged (lo : ALore) (ss : List ASent) : Json :=
     ("unclassified", Json.arr (pick (·.unclassified > 0)).toArray),
     ("negTurns", Json.arr (pick (·.negTurns > 0)).toArray),
     ("questions", Json.arr (pick (·.asks)).toArray),
-    ("untensed", Json.arr (pick (·.untensed > 0)).toArray)]
+    ("untensed", Json.arr (pick (·.untensed > 0)).toArray),
+    ("hedged", Json.arr (pick (·.hedged)).toArray),
+    ("causal", Json.arr (pick (·.causal)).toArray),
+    ("negated", Json.arr (pick (·.negated)).toArray)]
 
 def AFeatures.toJson (f : AFeatures) : Json :=
   Json.mkObj (AFeat.all.map fun x => (x.name, Lean.toJson (f.get x)))
