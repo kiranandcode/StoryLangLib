@@ -32,8 +32,9 @@ The rules, over the whole excerpt in reading order:
 * **callbacks**: entities mentioned again after a gap of at least six
   sentences, in a later paragraph (counted once per entity: a motif);
 * **question then answer**: a sentence that asks or sets up a question (ends
-  in "?", or uses "wonder"/"question") is followed by a sentence that is not a
-  question and shares an entity with it;
+  in "?", or uses "wonder"/"question") is answered by the next sentence or by
+  the first sentence of the next paragraph: one that is not a question and
+  shares an entity with it;
 * **LLM-isms**: em-dashes, colons as setup (a colon followed by more words,
   not a list, not "::", not a heading), "not X but Y" (a negation, not "not
   only", followed in the same sentence by "but", "rather", "instead" or ";"),
@@ -221,21 +222,29 @@ def gapsOf : List (Nat × Nat) → List ((Nat × Nat) × (Nat × Nat))
 
 def isCallback (p : (Nat × Nat) × (Nat × Nat)) : Bool := p.2.1 ≥ p.1.1 + 6 && p.2.2 != p.1.2
 
-/-- A sentence that asks is answered by the next one: not a question, and sharing an entity. -/
+/-- `t` answers `s`: it is not itself a question, and shares an entity with it. -/
+def answers (s t : ASent) : Bool :=
+  !t.question && (names s).any fun e => !given.contains e && (names t).contains e
+
+/-- The first sentence of the paragraph after paragraph `p`. -/
+def nextParaFirst (p : Nat) : List ASent → Option ASent
+  | [] => none
+  | t :: ts => if t.para != p then some t else nextParaFirst p ts
+
+/-- Answered by the next sentence, or by the first sentence of the next paragraph. -/
+def answeredBy (s : ASent) (rest : List ASent) : Bool :=
+  (match rest with | t :: _ => answers s t | [] => false) ||
+  (match nextParaFirst s.para rest with | some t => answers s t | none => false)
+
+/-- For each sentence that asks or sets up a question, whether it is answered. -/
 def answeredAt : List ASent → List Bool
   | [] => []
-  | [s] => if s.asks then [false] else []
-  | s :: t :: rest =>
-    (if s.asks then
-      [!t.question && (names s).any fun e => !given.contains e && (names t).contains e]
-     else []) ++ answeredAt (t :: rest)
+  | s :: rest => (if s.asks then [answeredBy s rest] else []) ++ answeredAt rest
 
+/-- Questions ("?") left unanswered. -/
 def rhetoricalIn : List ASent → Nat
   | [] => 0
-  | [s] => if s.question then 1 else 0
-  | s :: t :: rest =>
-    (if s.question && !(!t.question && (names s).any fun e => !given.contains e && (names t).contains e)
-     then 1 else 0) + rhetoricalIn (t :: rest)
+  | s :: rest => (if s.question && !answeredBy s rest then 1 else 0) + rhetoricalIn rest
 
 def sumBy (f : ASent → Nat) : List ASent → Nat
   | [] => 0
