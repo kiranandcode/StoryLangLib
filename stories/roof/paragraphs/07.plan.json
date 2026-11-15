@@ -1,5 +1,6 @@
 {
  "events": [
+  "tell ran kiran !noteOldTimes",
   "tell ran kiran noteConfession",
   "tell ran kiran ranLikesKiran"
  ],
@@ -10,7 +11,7 @@
  "beat": "confess",
  "setting": [
   "roof",
-  "ledge",
-  "city"
+  "city",
+  "torch"
  ]
 }

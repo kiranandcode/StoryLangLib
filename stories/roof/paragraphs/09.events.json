@@ -1,0 +1,125 @@
+{
+ "text_sha": "60bcd5cdf5b271ed",
+ "world_sha": "c3c7750dd11313b2",
+ "events": [
+  {
+   "e": "adopt kiran did(kiran,ran,kiss)",
+   "at": 5,
+   "w": "closed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "act kiran ran kiss",
+   "at": 29,
+   "w": "kissed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 29,
+   "w": "kissed"
+  },
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 34,
+   "w": "warm"
+  },
+  {
+   "c": "true did(kiran,ran,kiss)",
+   "at": 36,
+   "w": "tasted"
+  },
+  {
+   "c": "true raining",
+   "at": 36,
+   "w": "tasted"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 110,
+   "w": "went"
+  },
+  {
+   "c": "at ran roof",
+   "at": 110,
+   "w": "went"
+  }
+ ],
+ "judge": [
+  {
+   "at": 2,
+   "w": "the",
+   "kind": "act"
+  },
+  {
+   "at": 12,
+   "w": "waited",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 15,
+   "w": "talk",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 22,
+   "w": "took",
+   "kind": "act"
+  },
+  {
+   "at": 44,
+   "w": "made",
+   "kind": "act"
+  },
+  {
+   "at": 54,
+   "w": "held",
+   "kind": "act"
+  },
+  {
+   "at": 61,
+   "w": "planning",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 66,
+   "w": "go",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 73,
+   "w": "pulled",
+   "kind": "act"
+  },
+  {
+   "at": 76,
+   "w": "breathe",
+   "kind": "act"
+  },
+  {
+   "at": 79,
+   "w": "kept",
+   "kind": "act"
+  },
+  {
+   "at": 94,
+   "w": "reach",
+   "kind": "act"
+  },
+  {
+   "at": 100,
+   "w": "let",
+   "kind": "act"
+  },
+  {
+   "at": 102,
+   "w": "hold",
+   "kind": "act"
+  }
+ ],
+ "staging": []
+}

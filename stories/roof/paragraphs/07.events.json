@@ -1,0 +1,137 @@
+{
+ "text_sha": "b63fcda6155dab60",
+ "world_sha": "c3c7750dd11313b2",
+ "events": [
+  {
+   "e": "tell ran kiran !noteOldTimes",
+   "at": 31,
+   "w": "old",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell ran kiran noteConfession",
+   "at": 57,
+   "w": "liked",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell ran kiran ranLikesKiran",
+   "at": 57,
+   "w": "liked",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 90,
+   "w": "come"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 124,
+   "w": "braced"
+  },
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 129,
+   "w": "know"
+  },
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 132,
+   "w": "do"
+  },
+  {
+   "c": "thinks kiran noteConfession",
+   "at": 82,
+   "w": "waited"
+  }
+ ],
+ "judge": [
+  {
+   "at": 4,
+   "w": "about",
+   "kind": "speech"
+  },
+  {
+   "at": 10,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 14,
+   "w": "want",
+   "kind": "speech"
+  },
+  {
+   "at": 20,
+   "w": "laughed",
+   "kind": "act"
+  },
+  {
+   "at": 25,
+   "w": "didn't",
+   "kind": "act"
+  },
+  {
+   "at": 39,
+   "w": "said",
+   "kind": "speech"
+  },
+  {
+   "at": 44,
+   "w": "moved",
+   "kind": "speech"
+  },
+  {
+   "at": 49,
+   "w": "fourteen",
+   "kind": "speech"
+  },
+  {
+   "at": 54,
+   "w": "didn't",
+   "kind": "speech"
+  },
+  {
+   "at": 61,
+   "w": "liked",
+   "kind": "speech"
+  },
+  {
+   "at": 68,
+   "w": "think",
+   "kind": "speech"
+  },
+  {
+   "at": 70,
+   "w": "liked",
+   "kind": "speech"
+  },
+  {
+   "at": 78,
+   "w": "embarrassing",
+   "kind": "speech"
+  },
+  {
+   "at": 94,
+   "w": "stood",
+   "kind": "act"
+  },
+  {
+   "at": 102,
+   "w": "looking",
+   "kind": "act"
+  },
+  {
+   "at": 109,
+   "w": "the",
+   "kind": "hypothetical"
+  }
+ ],
+ "staging": []
+}
