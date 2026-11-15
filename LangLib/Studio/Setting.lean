@@ -187,7 +187,8 @@ def Spec.spotAttrs (s : Spec) : Spot → List (String × String)
 
 def Spec.spotOwner (s : Spec) : Spot → Option Nat
   | .thing t => (s.things[t]?).bind (·.owner)
-  | _ => none
+  | .place p => (lookup s.placeInfo p).bind (·.owner)
+  | .obj _ => none
 
 def Spec.spotCount (s : Spec) : Spot → Option Nat
   | .thing t => (s.things[t]?).bind (·.count)

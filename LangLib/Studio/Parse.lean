@@ -299,11 +299,13 @@ def specOfJson (j : Json) : Except String Spec := do
            count := (t.getObjValAs? Nat "count").toOption, words := lower (strs t "words"), attrs := attrsOf t }
   let fixtures ← ((arr j "places").zipIdx).flatMapM fun (p, i) => (arr p "fixtures").mapM (thing (some i))
   let scenery ← (arr j "scenery").mapM (thing none)
-  let placeInfo := ((arr j "places").zipIdx).filterMap fun (p, i) =>
-    if (str p "kind").isNone && (arr p "fixtures").isEmpty && (strs p "words").isEmpty then none
-    else some (i, ({ kind := (str p "kind").getD "", desc := (str p "desc").getD "",
-                     words := lower (strs p "words"), attrs := attrsOf p,
-                     outdoor := (p.getObjValAs? Bool "outdoor").toOption.getD false } : PlaceInfo))
+  let placeInfo ← ((arr j "places").zipIdx).filterMapM fun (p, i) => do
+    let owner ← (str p "owner").mapM n0.ch
+    if (str p "kind").isNone && (arr p "fixtures").isEmpty && (strs p "words").isEmpty then pure none
+    else pure (some (i, ({ kind := (str p "kind").getD "", desc := (str p "desc").getD "",
+                           words := lower (strs p "words"), attrs := attrsOf p,
+                           outdoor := (p.getObjValAs? Bool "outdoor").toOption.getD false,
+                           owner } : PlaceInfo)))
   let objWords := ((arr j "objects").zipIdx).filterMap fun (o, i) =>
     let ws := lower (strs o "words"); if ws.isEmpty then none else some (i, ws)
   let layout ← (strs j "layout").mapM n0.fixed

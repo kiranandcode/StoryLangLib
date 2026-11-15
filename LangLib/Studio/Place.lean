@@ -81,6 +81,8 @@ structure PlaceInfo where
   attrs : List (String × String) := []
   /-- open to the weather -/
   outdoor : Bool := false
+  /-- whose place it is ("his yard", "her flat"), by character index -/
+  owner : Option Nat := none
   deriving Repr, DecidableEq
 
 end LangLib.Studio
