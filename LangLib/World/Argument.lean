@@ -9,7 +9,12 @@ and the data their evaluation measured. The lore is what the reader brings
 (background terms they already know). The events are rhetorical moves
 (`Move`): claim, cite, define, motivate, example, contrast, promise (a forward
 reference), deliver (its payoff), concede, evaluate, and the listing of a
-contribution, which is a promise the paper makes about itself.
+contribution, which is a promise the paper makes about itself. Three moves
+read what plain claims miss: `deny` (an antithesis when nobody put the denied
+proposition forward, a contrast when someone did), `hedge` (a stance that
+leaves the reader an open question, answered by a later `deliver` or
+`evaluate`), and `infer` (a claim with stated reasons, supported when every
+reason is accepted).
 
 **The reader's mind.** Everything the reader comes to hold goes into their
 evidence base through `Mind.learn`, with its source: a definition, a claim, a
@@ -69,6 +74,15 @@ inductive Move (T : Type) where
   | deliver (t : T) (uses : List T)
   /-- the authors admit that `k` does not hold (a limitation) -/
   | concede (k : T) (uses : List T)
+  /-- the authors deny `k` to set up what replaces it ("not X; Y"): an
+  antithesis when nobody put `k` forward, a contrast when someone did -/
+  | deny (k : T) (uses : List T)
+  /-- a hedge or stance that leaves the reader with an open question about `k`
+  ("At least, that is the hope."), answered by a later `deliver` or `evaluate`
+  of `k`, in section `sec` (0: later, unspecified) -/
+  | hedge (k : T) (sec : Nat) (uses : List T)
+  /-- claim `k`, giving `premises` as its reasons ("because", "so", "therefore") -/
+  | infer (k : T) (premises : List T) (uses : List T)
   | evaluate (k : T) (uses : List T)
   /-- a section heading: the argument is now in section `n` -/
   | heading (n : Nat)
@@ -78,6 +92,8 @@ structure Pending (T : Type) where
   t : T
   sec : Nat
   contribution : Bool := false
+  /-- an open question from a hedge -/
+  hedge : Bool := false
   /-- the terms a contribution builds on -/
   uses : List T := []
   deriving DecidableEq, Repr
@@ -90,6 +106,8 @@ structure AW (T : Type) where
   delivered : List T := []
   claims : List T := []
   contributions : List (T × List T) := []
+  /-- each denial, and whether it denied something nobody put forward -/
+  denials : List (T × Bool) := []
   /-- the section the argument is in -/
   sec : Nat := 0
   /-- the sections the excerpt covers; obligations aimed elsewhere are deferred -/
@@ -115,7 +133,7 @@ instance argCredence : Credence (AW T) Voice (AFact T) where
     | .told .author, (.known _, true) => [("a definition is a stipulation", 1)]
     | .told .author, (.promised _, true) => [("a promise is about the text itself", 1)]
     | .told .author, (.motivated _, true) => [("a motivation asks only for attention", 1)]
-    | .told .author, (_, false) => [("an admission against interest", 1)]
+    | .told .author, (_, false) => [("the authors rule it out", 1)]
     | .relayed .prior, _ => [("published prior work", 2)]
     | .told .data, _ => [("measured", 2)]
     | .inferred, _ => [("the reader works the example through", 1)]
@@ -145,11 +163,18 @@ def usable (w : AW T) (t : T) : Bool :=
 def accepted (w : AW T) (k : T) : Bool :=
   w.base.any fun h => h.b == .atom (.holds k) && (h.up == .radical || h.up == .hard)
 
+/-- `k` was put forward: claimed, cited, exemplified or held by the reader
+(as a belief or as background) before. -/
+def putForward (w : AW T) (k : T) : Bool :=
+  believes w Voice.reader (.atom (AFact.holds k)) || believes w Voice.reader (.atom (AFact.known k))
+
 def wasMotivated (w : AW T) (k : T) : Bool := believes w Voice.reader (.atom (AFact.motivated k))
 
 def Move.uses : Move T → List T
   | .claim _ u | .cite _ u | .define _ u | .motivate _ u | .«example» _ u | .contrast _ _ u
-  | .promise _ _ u | .contribute _ _ u | .deliver _ u | .concede _ u | .evaluate _ u => u
+  | .promise _ _ u | .contribute _ _ u | .deliver _ u | .concede _ u | .evaluate _ u
+  | .deny _ u | .hedge _ _ u => u
+  | .infer _ ps u => ps ++ u
   | .heading _ => []
 
 /-- Terms the move needs beyond its `uses`. -/
@@ -161,7 +186,7 @@ def hear (w : AW T) (l : AFact T × Bool) (e : Evid Voice) : AW T := learn w Voi
 
 def argOk (w : AW T) (m : Move T) : Bool :=
   m.needs.all (usable w) && match m with
-    | .promise _ s _ | .contribute _ s _ => s == 0 || s > w.sec
+    | .promise _ s _ | .contribute _ s _ | .hedge _ s _ => s == 0 || s > w.sec
     | .deliver t _ => isPending w t
     | .heading n => n ≥ w.sec
     | _ => true
@@ -181,7 +206,15 @@ def argStep (w : AW T) : Move T → AW T
     hear { w with pending := w.pending.filter (·.t != t), delivered := w.delivered ++ [t] }
       (.known t, true) (.told .author)
   | .concede k _ => hear w (.holds k, false) (.told .author)
-  | .evaluate k _ => hear w (.holds k, true) (.told .data)
+  | .evaluate k _ =>
+    hear { w with pending := w.pending.filter (·.t != k) } (.holds k, true) (.told .data)
+  | .deny k _ =>
+    hear { w with denials := w.denials ++ [(k, !putForward w k)] } (.holds k, false) (.told .author)
+  | .hedge k s _ =>
+    hear { w with pending := w.pending ++ [{ t := k, sec := s, hedge := true }] } (.promised k, true) (.told .author)
+  | .infer k ps _ =>
+    hear { w with claims := w.claims ++ [k] } (.holds k, true)
+      (if ps.all (accepted w) then .inferred else .told .author)
   | .heading n => { w with sec := n }
 
 variable [Repr T]
@@ -211,6 +244,8 @@ inductive Gap (T : Type) where
   | unsupported (k : T)
   | unpaid (t : T) (sec : Nat)
   | unmotivated (k : T)
+  /-- a hedge inside the excerpt never answered -/
+  | unanswered (k : T)
   deriving DecidableEq, Repr
 
 /-- What is left unpaid at the end (structured, so the kernel can decide it). -/
@@ -218,7 +253,8 @@ def gapsOf (w : AW T) : List (Gap T) :=
   (w.claims.eraseDups.filterMap fun k =>
     if accepted w k || w.pending.any (fun p => p.t == k && deferred w p) then none
     else some (.unsupported k)) ++
-  (w.pending.filterMap fun p => if deferred w p then none else some (.unpaid p.t p.sec)) ++
+  (w.pending.filterMap fun p =>
+    if deferred w p then none else some (if p.hedge then .unanswered p.t else .unpaid p.t p.sec)) ++
   (w.contributions.filterMap fun (k, u) =>
     if (k :: u).any (wasMotivated w) then none else some (.unmotivated k))
 
@@ -226,12 +262,20 @@ def Gap.show : Gap T → String
   | .unsupported k => s!"claim {short k} is unsupported"
   | .unpaid t s => s!"promise of {short t} (section {s}) is never delivered"
   | .unmotivated k => s!"contribution {short k} was never motivated"
+  | .unanswered k => s!"hedge on {short k} is never answered"
 
 def gaps (w : AW T) : List String := (gapsOf w).map Gap.show
 
 /-- Promises and contributions left for the rest of the paper. -/
 def deferredList (w : AW T) : List (T × Nat) :=
   (w.pending.filter (deferred w)).map fun p => (p.t, p.sec)
+
+/-- Denials of what nobody put forward: antitheses ("not X; Y" with no X). -/
+def antitheses (w : AW T) : List T := (w.denials.filter (·.2)).map (·.1)
+/-- Denials of what was put forward: contrasts. -/
+def contrasts (w : AW T) : List T := (w.denials.filter (!·.2)).map (·.1)
+/-- Hedges answered so far, and those still open. -/
+def openHedges (w : AW T) : List T := (w.pending.filter (·.hedge)).map (·.t)
 
 /-- Valid move by move, and nothing left unpaid at the end. -/
 def Coherent (w : AW T) (ms : List (Move T)) : Prop := Valid w ms ∧ gapsOf (run w ms) = []
@@ -253,6 +297,15 @@ def good : List (Move Tm) :=
   [ heading 1, define .repair [.coq], motivate .tool [.repair], contribute .tool 2 [.repair],
     claim .works [.tool], promise .invariants 3 [], heading 2, deliver .tool [.invariants],
     «example» .works [.tool] ]
+
+/-- "not X; Y" with no X before is an antithesis; a hedge is answered by evaluation;
+a claim inferred from accepted claims is supported. -/
+def moreMoves : List (Move Tm) :=
+  [ heading 1, define .tool [], deny .works [.tool], claim .repair [.tool], «example» .repair [],
+    infer .invariants [.repair] [], hedge .tool 0 [], evaluate .tool [], deny .repair [] ]
+theorem more_antitheses : antitheses (run w0 moreMoves) = [.works] := by decide +kernel
+theorem more_contrasts : contrasts (run w0 moreMoves) = [.repair] := by decide +kernel
+theorem more_gaps : gapsOf (run w0 moreMoves) = [] := by decide +kernel
 
 theorem good_coherent : Coherent w0 good := by decide +kernel
 /-- Using a term before it is defined or promised. -/
