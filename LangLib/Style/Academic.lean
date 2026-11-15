@@ -41,14 +41,16 @@ The rules, over the excerpt in reading order:
   the paragraph's sentences as its most-mentioned entity;
 * **just in time**: an introduced entity is used again within three sentences,
   or was promised; the gaps are also bucketed;
-* **motifs**: an entity that recurs at structurally marked points (a
-  paragraph's first or last sentence, a section's first paragraph, a sentence
-  with a contrast or callback connective, inside quotation marks) at least six
-  sentences and a paragraph apart; plain recurrence counts only as a callback;
+* **motifs**: an entity that leaves and comes back (at least six sentences
+  and a paragraph later) where both the departure and the return are at
+  structurally marked points (a section's first sentence, the first or last
+  sentence of a paragraph of three or more, a sentence with a contrast or
+  callback connective, inside quotation marks); plain recurrence is only a
+  callback;
 * **question then answer**: a sentence ending in "?" or with a `question`
   word is answered by the next sentence or the first of the next paragraph;
 * **colons and dashes**: *defining* when what follows elaborates the left,
-  *dramatic* when a clause follows a complete clause; the LLM-ism rule counts
+  *dramatic* when a clause with its own subject follows a complete clause; the LLM-ism rule counts
   only the dramatic ones;
 * **antithesis**: a negation followed by a contrast connective is a
   candidate; whether it is an antithesis (denying what nobody put forward) is
@@ -223,9 +225,11 @@ private partial def punctClasses : Tree → PCount
       let cls : Nat := match next with
         | none => 0   -- introduces a display (code, a figure): defining
         | some t =>
+          -- a reveal is a clause with its own subject ("...: it is not uncommon"),
+          -- not a participial adjunct ("...—granting push access")
           let clause := ((roleOf t).map clauseRoles.contains).getD false ||
             (roleOf t == none && match t with | .node j _ => j.cat == .S | _ => false)
-          if clause then (if complete then 1 else 0)
+          if clause then (if complete && (mainSubj t 0).isSome then 1 else 0)
           else if ((roleOf t).map definingRoles.contains).getD false then 0
           else match t with
             | .node j _ => if j.cat == .NP || j.cat == .PP then 0 else 2
@@ -246,6 +250,12 @@ private partial def negTurnsIn (lx : Lex) : List Word → Nat
     if neg && turn then 1 + negTurnsIn lx (rest.dropWhile fun v => !(lx.is v "contrast" || lx.is v "concession"))
     else negTurnsIn lx rest
 
+/-- Question words that set up a question: not inside a prepositional phrase
+("the program in question"). -/
+private partial def questionWords (lx : Lex) : Tree → Nat
+  | .leaf w => if lx.is w "question" then 1 else 0
+  | .node i kids => if i.cat == .PP then 0 else kids.foldl (fun n k => n + questionWords lx k) 0
+
 private def feat (w : Word) (k : String) : Option String := (w.feats.find? (·.1 == k)).map (·.2)
 
 def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
@@ -254,7 +264,9 @@ def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
   let (ms, _) := mentions t 0
   let subj := mainSubj t 0
   let question := (ls.filter (·.upos == .PUNCT)).getLast?.map (·.form == "?") |>.getD false
-  let (cd, cdr, dd, ddr, un) := if heading then ((0, 0, 0, 0, 0) : PCount) else punctClasses t
+  let (cd, cdr, dd, ddr, un) := punctClasses t
+  -- in a run-in heading ("Challenge #1: ...") a colon labels what follows
+  let (cd, un) := if heading then (cd + un, 0) else (cd, un)
   let content := ls.filter isContent
   let regCount (r : String) := (content.filter (lx.regOf · == some r)).length
   let verbs := ls.filter fun w => w.upos == .VERB || w.upos == .AUX
@@ -262,7 +274,7 @@ def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
     subj := subj.bind (·.1), subjAt := (subj.map (·.2)).getD 0,
     ents := firstEach ms, quoted := quotedIn lx t,
     frame := ls.any fun w => lx.is w "contrast" || lx.is w "concession" || lx.is w "callback",
-    question, asks := question || ls.any (lx.is · "question"),
+    question, asks := question || questionWords lx t > 0,
     colonsDef := cd, colonsDram := cdr, dashesDef := dd, dashesDram := ddr, unclassified := un,
     negTurns := negTurnsIn lx ls,
     formal := regCount "formal", informal := regCount "informal",
@@ -372,16 +384,26 @@ def gapsOf : List (Nat × Nat) → List ((Nat × Nat) × (Nat × Nat))
 
 def isCallback (p : (Nat × Nat) × (Nat × Nat)) : Bool := p.2.1 ≥ p.1.1 + 6 && p.2.2 != p.1.2
 
-/-- Marked sentences of a paragraph: its first body sentence, its last, every
-sentence of a section's first paragraph, and every framed sentence. -/
+/-- Marked sentences of a paragraph: a section's first sentence; in a
+paragraph of at least three body sentences (where first and last are
+distinct from the middle), its first body sentence and its last; and every
+sentence with a contrast, concession or callback connective. -/
 def paraMarks (lo : ALore) (ps : List ASent) : List Bool :=
   let first := (ps.findIdx? (!·.heading)).getD 0
-  ps.zipIdx.map fun (s, i) => i == first || i + 1 == ps.length || lo.sectionStarts.contains s.para || s.frame
+  let long := (ps.filter (!·.heading)).length ≥ 3
+  ps.zipIdx.map fun (s, i) =>
+    (i == first && lo.sectionStarts.contains s.para) ||
+    (long && (i == first || i + 1 == ps.length)) || s.frame
 
-/-- Positions where `e` is mentioned at a marked point (or in quotation marks). -/
-def markedPositions (e : String) (marks : List Bool) (ss : List ASent) : List (Nat × Nat) :=
-  ((ss.zip marks).zipIdx.filter fun ((s, m), _) => (names s).contains e && (m || s.quoted.contains e)).map
-    fun ((s, _), i) => (i, s.para)
+/-- `e` is at a marked point in sentence `i`: a marked sentence, or inside quotation marks. -/
+def markedAt (e : String) (marks : List Bool) (ss : List ASent) (i : Nat) : Bool :=
+  marks.getD i false || ((ss[i]?.map (·.quoted.contains e)).getD false)
+
+/-- A motif: `e` leaves and returns after a gap, and both the departure and the
+return are at marked points. -/
+def isMotif (e : String) (marks : List Bool) (ss : List ASent) : Bool :=
+  (gapsOf (positions e ss)).any fun p =>
+    isCallback p && markedAt e marks ss p.1.1 && markedAt e marks ss p.2.1
 
 /-- A question is answered by `t`: not itself a question, sharing an entity. -/
 def answers (s t : ASent) : Bool :=
@@ -516,7 +538,7 @@ def AFeatures.ofSents (lo : ALore) (ss : List ASent) : AFeatures :=
     gapFar := (reused.filter fun (_, p) => firstGap p > 6).length,
     single := (poss.filter (·.2.length ≤ 1)).length,
     callbacks := (poss.filter fun (_, p) => (gapsOf p).any isCallback).length,
-    motifs := (es.filter fun e => (gapsOf (markedPositions e marks ss)).any isCallback).length,
+    motifs := (es.filter fun e => isMotif e marks ss).length,
     asks := ans.length, answered := (ans.filter id).length,
     questions := (ss.filter (·.question)).length, rhetorical := rhetoricalIn ss,
     colonsDef := sumBy (·.colonsDef) ss, colonsDram := sumBy (·.colonsDram) ss,
@@ -736,7 +758,7 @@ def flagged (lo : ALore) (ss : List ASent) : Json :=
     toJson ((p.head?.map (·.para)).getD 0)
   let marks := (groupParas ss).flatMap (paraMarks lo)
   let es := (distinct (ss.flatMap names)).filter (!given.contains ·)
-  let motifs := es.filter fun e => (gapsOf (markedPositions e marks ss)).any isCallback
+  let motifs := es.filter fun e => isMotif e marks ss
   let pick (p : ASent → Bool) := (idx.filter fun (s, _) => p s).map fun (s, i) => at_ s i
   Json.mkObj [
     ("newSubjects", Json.arr newSubj.toArray),
