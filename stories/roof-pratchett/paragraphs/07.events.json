@@ -1,0 +1,172 @@
+{
+ "text_sha": "09a0da8834815414",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "tell ran kiran !noteOldTimes",
+   "at": 31,
+   "w": "old",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell ran kiran noteConfession",
+   "at": 57,
+   "w": "liked",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell ran kiran ranLikesKiran",
+   "at": 57,
+   "w": "liked",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "thinks kiran noteConfession",
+   "at": 82,
+   "w": "waited"
+  },
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 111,
+   "w": "come"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 145,
+   "w": "braced"
+  },
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 150,
+   "w": "know"
+  },
+  {
+   "c": "thinks kiran ranLikesKiran",
+   "at": 153,
+   "w": "do"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 162,
+   "w": "butt"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 170,
+   "w": "nine"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 175,
+   "w": "learned"
+  }
+ ],
+ "judge": [
+  {
+   "at": 4,
+   "w": "about",
+   "kind": "speech"
+  },
+  {
+   "at": 10,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 14,
+   "w": "want",
+   "kind": "speech"
+  },
+  {
+   "at": 20,
+   "w": "laughed",
+   "kind": "act"
+  },
+  {
+   "at": 25,
+   "w": "didn't",
+   "kind": "act"
+  },
+  {
+   "at": 39,
+   "w": "said",
+   "kind": "speech"
+  },
+  {
+   "at": 44,
+   "w": "moved",
+   "kind": "speech"
+  },
+  {
+   "at": 49,
+   "w": "fourteen",
+   "kind": "speech"
+  },
+  {
+   "at": 54,
+   "w": "didn't",
+   "kind": "speech"
+  },
+  {
+   "at": 61,
+   "w": "liked",
+   "kind": "speech"
+  },
+  {
+   "at": 68,
+   "w": "think",
+   "kind": "speech"
+  },
+  {
+   "at": 70,
+   "w": "liked",
+   "kind": "speech"
+  },
+  {
+   "at": 78,
+   "w": "embarrassing",
+   "kind": "speech"
+  },
+  {
+   "at": 88,
+   "w": "is",
+   "kind": "generic"
+  },
+  {
+   "at": 96,
+   "w": "built",
+   "kind": "generic"
+  },
+  {
+   "at": 115,
+   "w": "stood",
+   "kind": "act"
+  },
+  {
+   "at": 123,
+   "w": "looking",
+   "kind": "act"
+  },
+  {
+   "at": 130,
+   "w": "the",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 177,
+   "w": "laugh",
+   "kind": "act"
+  },
+  {
+   "at": 182,
+   "w": "saves",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}

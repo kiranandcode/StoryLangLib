@@ -1,0 +1,132 @@
+{
+ "text_sha": "5794feb1d7e2a9da",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "askAct ran kiran kiss",
+   "at": 10,
+   "w": "kiss",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "agree kiran ran kiss",
+   "at": 80,
+   "w": "say",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "agree ran kiran kiss",
+   "at": 115,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 17,
+   "w": "asked"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 92,
+   "w": "herself"
+  },
+  {
+   "c": "consented kiran ran kiss",
+   "at": 80,
+   "w": "say"
+  },
+  {
+   "c": "consented ran kiran kiss",
+   "at": 115,
+   "w": "said"
+  }
+ ],
+ "judge": [
+  {
+   "at": 5,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 24,
+   "w": "a",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 36,
+   "w": "treat",
+   "kind": "generic"
+  },
+  {
+   "at": 45,
+   "w": "signed",
+   "kind": "generic"
+  },
+  {
+   "at": 55,
+   "w": "made",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 60,
+   "w": "had",
+   "kind": "act"
+  },
+  {
+   "at": 67,
+   "w": "taking",
+   "kind": "act"
+  },
+  {
+   "at": 71,
+   "w": "get",
+   "kind": "act"
+  },
+  {
+   "at": 78,
+   "w": "heard",
+   "kind": "act"
+  },
+  {
+   "at": 102,
+   "w": "doing",
+   "kind": "speech"
+  },
+  {
+   "at": 131,
+   "w": "part",
+   "kind": "generic"
+  },
+  {
+   "at": 136,
+   "w": "part",
+   "kind": "generic"
+  },
+  {
+   "at": 140,
+   "w": "find",
+   "kind": "generic"
+  },
+  {
+   "at": 148,
+   "w": "story",
+   "kind": "generic"
+  },
+  {
+   "at": 157,
+   "w": "thing",
+   "kind": "generic"
+  },
+  {
+   "at": 160,
+   "w": "happen",
+   "kind": "hypothetical"
+  }
+ ],
+ "staging": []
+}
