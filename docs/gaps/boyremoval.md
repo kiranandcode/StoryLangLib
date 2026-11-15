@@ -6,7 +6,9 @@ first time with a dom/sub dynamic). The text and its annotation live in the
 gitignored `stories/private-ao3-boyremoval/`; nothing here quotes more than a
 few words of it, and nothing explicit.
 
-The chapter was read twice: at the Studio's grain (the five coarse acts of
+All 43 paragraphs are annotated, accepted by `langlib check`, read into
+events, claims and judgements, and pass `paragraph-check`, `plan-check` and
+`refine-check`. The chapter was read twice: at the Studio's grain (the five coarse acts of
 `World/Social.lean`, where every act passed), and at the grain of the new
 `World/Consent.lean` and `World/Relationship.lean`, where the same chapter is
 plausible but not valid, and the kernel names the eleven acts that rest on
@@ -217,6 +219,79 @@ read by `Cause` as a cause; reactions without a fact ("WHAT???") can only be
 `act`; involuntary bodily states (arousal in the car) are state atoms with no
 agent, which is right, but nothing connects them to the consent model (forced
 proximity producing arousal is not an act by anyone).
+
+## 16. Turns without a verb
+
+**Failed.** Much of the consent in the scene is in fragments: a murmured
+yes, a stammered yes, a check-in with the copula dropped, "You alright?". The
+completeness check hangs every judgement on a clause head, so the annotation
+had to tag the fragment's word as a verb to give the `agree` or `answer` a
+place. One check-in (with no verb and no copula) could carry no Studio event
+at all; it lives only in the consent reading.
+
+**Generalisation (proposed).** Dialogue turns as judgement sites: an answer,
+backchannel or elliptical question (`FRAG`/`INTJ` inside a quote) can carry
+`answer`, `agree` and check-in events, resolved against the open question.
+
+## 17. Feelings and bodies have no state, and bodies don't act
+
+**Failed.** Embarrassment, dread, fear of pain, arousal (hers; only his is an
+atom), pleasure, overload, climax and exhaustion were all judged `act` or
+stood in for by `true remyLikesRobin`. Clauses whose subject is a body part
+or a sensation (legs shaking, a kiss that makes her whimper, a finger that
+moves, a smell that makes her feral) were refused as gestures because their
+subject is not a character; annotators re-pointed the subject at its owner or
+called the clause generic.
+
+**Generalisation (proposed).** An `Affect` fluent per character (`feel c k`,
+`k` from a small closed set, with a body-part subject resolving to its owner
+through `partOf`), observable only to its owner unless shown. Tie it to
+`Consent` as a law: no affect is a grant (arousal in the car, pleasure in the
+scene), exactly as `wish_grants` does for desire.
+
+## 18. What didn't happen
+
+**Failed, partly fixed.** The checker read only modal auxiliaries as
+non-asserting, so feared, planned, anticipated and counterfactual clauses
+("maybe they'll see me", "is it gonna hurt?", ready to fight, a wish to
+apologise, what she had planned to say) had to be called gestures. Fixed in
+`Complete.lean`: hedging adverbs and future markers now make a clause
+non-asserted. Still open: irrealis predicates (ready to, wish, plan to,
+suspect), and a self-addressed rhetorical question, which passed only as a
+"generalisation".
+
+## 19. Groups and "we"
+
+**Failed.** "We" includes the narrator and a shifting group; "everyone" and
+"the drunkards" are the same people; one unnamed member speaks for them; the
+group learns a fact in a flashback. None of this has an entity, so
+annotators referred "we" to the narrator and replaced the group's knowledge
+with a location claim. See 8 for the proposed `Group` module.
+
+## 20. The checker on a long story
+
+**Failed, fixed.** On 43 annotated paragraphs `langlib story` took over four
+minutes, because every judgement re-ran the story from its start, minds
+included; every `paragraph-check` hit the 120 s limit. `ParaCtx` now carries
+the state the paragraph opens in (the report takes under two minutes) and
+`workflows.py` allows 900 s. Three more checker fixes came out of this text,
+each general: a modifier inside the subject no longer negates the clause
+("the not so sober men"); a gesture has no time of its own in "X when Y"; an
+evidential "because" (under "clearly", "apparently") asks that both clauses
+hold, as "though" does. The remaining cost is belief views in claim checks and
+the timeline's insertion sort.
+
+## Smaller ones
+
+* Fused copulas ("I'm", "it's", "they're") are one token, so the subject
+  leaves the subject slot and a dropped-copula clause can't head anything.
+* Things owned jointly (their clothes), or owned by whoever is speaking, can't
+  be declared: a thing has at most one owner.
+* "Chime in" isn't a speech verb; neither is a look that says sorry.
+* A guess between two explanations ("either I hid it well or he's oblivious")
+  has no belief form; neither does hiding one's own attraction.
+* Undressing someone should make "the first to see" true by rule; there is no
+  lore over events, only over facts.
 
 ## Overlap with other modules
 
