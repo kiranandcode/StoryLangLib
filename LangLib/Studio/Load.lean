@@ -204,23 +204,29 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     | "Valid" => "theorem story_valid : story.Valid spec.start := by decide +kernel\n\n"
     | "Plausible" => "theorem story_plausible : story.Plausible spec.start := by decide +kernel\n\n"
     | _ => "theorem story_fails : ¬ story.Plausible spec.start := by decide +kernel\n\n"
+  -- Verdicts the report has computed (true by construction) go into one theorem:
+  -- the paragraphs' runs share prefixes, which the kernel then reduces once, so
+  -- checking is linear in the story rather than quadratic. Each is restated under
+  -- its own name. A claim that may be false (the setting) stands alone, so it fails
+  -- on its own.
+  let mut bundled : Array (String × String × String) := #[]  -- (name, statement, doc)
   for (p, k) in l.paras.zipIdx do
     let es := timed.upTo owner k
     let nm := p.name
     let up := s!"(story.upTo owner {k})"
     if validB s.start es then
-      out := out ++ s!"theorem p{nm}_valid : Valid spec.start {up} := by decide +kernel\n"
+      bundled := bundled.push (s!"p{nm}_valid", s!"Valid spec.start {up}", "")
     else if plausibleB s.start es then
-      out := out ++ s!"theorem p{nm}_plausible : Plausible spec.start {up} := by decide +kernel\n"
-      out := out ++ s!"theorem p{nm}_assumes : assumedAt spec.start {up} 0 = {rs (assumedAt s.start es 0)} := by decide +kernel\n"
+      bundled := bundled.push (s!"p{nm}_plausible", s!"Plausible spec.start {up}", "")
+      bundled := bundled.push (s!"p{nm}_assumes", s!"assumedAt spec.start {up} 0 = {rs (assumedAt s.start es 0)}", "")
     else
-      out := out ++ s!"theorem p{nm}_fails : ¬ Plausible spec.start {up} := by decide +kernel\n"
+      bundled := bundled.push (s!"p{nm}_fails", s!"¬ Plausible spec.start {up}", "")
     let w := run s.start es
     for (c, j) in p.claims.zipIdx do
       match n.claim c with
       | .ok cl =>
         let b := cl.eval w
-        out := out ++ s!"/-- {c} -/\ntheorem p{nm}_claim{j} : ({lean (rs cl)}).eval (run spec.start {up}) = {b} := by decide +kernel\n"
+        bundled := bundled.push (s!"p{nm}_claim{j}", s!"({lean (rs cl)}).eval (run spec.start {up}) = {b}", c)
       | .error _ => pure ()
     if s.hasSetting then
       if let some d := p.doc then
@@ -232,11 +238,24 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
         -- claimed true whatever the verdict: a paragraph that breaks the setting fails its proof
-        out := out ++ s!"theorem p{nm}_setting : spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = true := by decide +kernel\n"
+        let stmt := s!"spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = true"
+        if s.settingOk (sceneOf s.start es prev) u p.staging then
+          bundled := bundled.push (s!"p{nm}_setting", stmt, "")
+        else
+          out := out ++ s!"theorem p{nm}_setting : {stmt} := by decide +kernel\n"
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
-        out := out ++ s!"theorem p{nm}_realises : {if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)} := by decide +kernel\n"
+        bundled := bundled.push (s!"p{nm}_realises", s!"{if r then "" else "¬ "}Refines some p{nm} {lean (rs plan)}", "")
+    out := out ++ "\n"
+  if !bundled.isEmpty then
+    out := out ++ "/-- Every paragraph's verdicts, checked together (see `storyLean`); each is\n" ++
+      "restated below under its own name. -/\ntheorem paragraphs :\n    " ++
+      " ∧\n    ".intercalate (bundled.toList.map fun (_, st, _) => s!"({st})") ++ " := by\n  decide +kernel\n\n"
+    for ((name, st, doc), i) in bundled.toList.zipIdx do
+      let proj := String.join (List.replicate i ".2") ++ (if i + 1 == bundled.size then "" else ".1")
+      if doc != "" then out := out ++ s!"/-- {doc} -/\n"
+      out := out ++ s!"theorem {name} : {st} := by exact paragraphs{proj}\n"
     out := out ++ "\n"
   if s.hasSetting then
     out := out ++ "theorem layout_consistent : spec.layoutOk = true := by decide +kernel\n\n"

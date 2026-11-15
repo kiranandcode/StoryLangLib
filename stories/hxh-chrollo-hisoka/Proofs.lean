@@ -62,89 +62,128 @@ def story : Timed (E spec) :=
 
 theorem story_valid : story.Valid spec.start := by decide +kernel
 
-theorem p01_valid : Valid spec.start (story.upTo owner 0) := by decide +kernel
-/-- knows hisoka judgeHeld -/
-theorem p01_claim0 : (Claim.knows 1 (Fact.atom 7, true)).eval (run spec.start (story.upTo owner 0)) = true := by decide +kernel
 def p01uses : Uses := { uses := [{ at_ := 1, form := "judge", head := "judge", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 11, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 14, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := some (Target.char 0), num := none, plural := false, quoted := false }, { at_ := 22, form := "antenna", head := "antenna", target := Target.spot (Spot.thing 2), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 25, form := "judge's", head := "judge's", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 32, form := "judge", head := "judge", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 35, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 40, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 50, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 55, form := "man", head := "man", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 4, form := "arm", sense := some "body", quoted := false }, { at_ := 8, form := "fight", sense := some "event", quoted := false }, { at_ := 18, form := "hand", sense := some "body", quoted := false }, { at_ := 26, form := "neck", sense := some "body", quoted := false }, { at_ := 29, form := "left", sense := some "body", quoted := false }, { at_ := 38, form := "eyes", sense := some "body", quoted := false }, { at_ := 46, form := "plan", sense := some "abstract", quoted := false }, { at_ := 60, form := "opening", sense := some "abstract", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/01.json") p01uses
 def p01staging : List Fixed := []
-theorem p01_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true := by decide +kernel
 
-theorem p02_valid : Valid spec.start (story.upTo owner 1) := by decide +kernel
-/-- true judgeDead -/
-theorem p02_claim0 : (Claim.holdsTrue (Fact.atom 8, true)).eval (run spec.start (story.upTo owner 1)) = true := by decide +kernel
 def p02uses : Uses := { uses := [{ at_ := 2, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 6, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 13, form := "judge's", head := "judge's", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 33, form := "judge", head := "judge", target := Target.char 2, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 36, form := "ring", head := "ring", target := Target.spot (Spot.place 0), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 40, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 51, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := some (Target.char 0), num := none, plural := false, quoted := true }], bare := [{ at_ := 10, form := "palm", sense := some "body", quoted := false }, { at_ := 14, form := "hand", sense := some "body", quoted := false }, { at_ := 18, form := "palm", sense := some "body", quoted := false }, { at_ := 21, form := "back", sense := some "body", quoted := false }, { at_ := 26, form := "marks", sense := some "abstract", quoted := false }, { at_ := 30, form := "blast", sense := some "event", quoted := false }, { at_ := 42, form := "blood", sense := some "substance", quoted := false }, { at_ := 45, form := "cheek", sense := some "body", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/02.json") p02uses
 def p02staging : List Fixed := []
-theorem p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 2) p02uses p02staging = true := by decide +kernel
 
-theorem p03_valid : Valid spec.start (story.upTo owner 2) := by decide +kernel
-/-- knows hisoka usesBoth -/
-theorem p03_claim0 : (Claim.knows 1 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
-/-- falseBelief hisoka needsBoth -/
-theorem p03_claim1 : (Claim.falseBelief 1 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 2)) = true := by decide +kernel
 def p03uses : Uses := { uses := [{ at_ := 0, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 9, form := "Sun", head := "sun", target := Target.other "sunMoon" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 11, form := "Moon", head := "moon", target := Target.other "sunMoon" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 32, form := "seals", head := "seal", target := Target.other "seals" "abstract", mods := [], owner := none, num := none, plural := true, quoted := false }, { at_ := 45, form := "Gallery", head := "gallery", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 46, form := "Fake", head := "fake", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 52, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 65, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 70, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 7, form := "night", sense := some "time", quoted := false }, { at_ := 14, form := "hands", sense := some "body", quoted := false }, { at_ := 20, form := "sun", sense := some "abstract", quoted := false }, { at_ := 23, form := "left", sense := some "body", quoted := false }, { at_ := 26, form := "moon", sense := some "abstract", quoted := false }, { at_ := 29, form := "right", sense := some "body", quoted := false }, { at_ := 41, form := "owner", sense := some "person", quoted := false }, { at_ := 49, form := "hands", sense := some "body", quoted := false }, { at_ := 58, form := "conclusion", sense := some "abstract", quoted := false }, { at_ := 63, form := "seal", sense := some "abstract", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/03.json") p03uses
 def p03staging : List Fixed := []
-theorem p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 3) p03uses p03staging = true := by decide +kernel
 
-theorem p04_valid : Valid spec.start (story.upTo owner 3) := by decide +kernel
-/-- thinks hisoka !at(chrollo,ring) -/
-theorem p04_claim0 : (Claim.thinks 1 (Fact.at_ 0 0, false)).eval (run spec.start (story.upTo owner 3)) = true := by decide +kernel
-/-- true chrolloHidden -/
-theorem p04_claim1 : (Claim.holdsTrue (Fact.atom 9, true)).eval (run spec.start (story.upTo owner 3)) = true := by decide +kernel
 def p04uses : Uses := { uses := [{ at_ := 0, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 6, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 19, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 27, form := "spectator's", head := "spectator's", target := Target.char 3, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 34, form := "book", head := "book", target := Target.spot (Spot.thing 0), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 37, form := "bookmark", head := "bookmark", target := Target.spot (Spot.thing 1), mods := [], owner := some (Target.char 0), num := none, plural := false, quoted := false }, { at_ := 42, form := "stands", head := "stands", target := Target.spot (Spot.place 1), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 46, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 3, form := "distance", sense := some "abstract", quoted := false }, { at_ := 14, form := "hand", sense := some "body", quoted := false }, { at_ := 28, form := "face", sense := some "body", quoted := false }, { at_ := 51, form := "wall", sense := some "figurative", quoted := false }, { at_ := 53, form := "strangers", sense := some "person", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/04.json") p04uses
 def p04staging : List Fixed := []
-theorem p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 8) p04uses p04staging = true := by decide +kernel
 
-theorem p05_valid : Valid spec.start (story.upTo owner 4) := by decide +kernel
-/-- knows hisoka gfUp -/
-theorem p05_claim0 : (Claim.knows 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 4)) = true := by decide +kernel
 def p05uses : Uses := { uses := [{ at_ := 1, form := "crowd", head := "crowd", target := Target.other "crowd" "group", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 16, form := "copies", head := "copy", target := Target.other "copies" "group", mods := [], owner := none, num := none, plural := true, quoted := false }, { at_ := 19, form := "spectator", head := "spectator", target := Target.char 3, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 23, form := "Gallery", head := "gallery", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 24, form := "Fake", head := "fake", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 33, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 40, form := "stands", head := "stands", target := Target.spot (Spot.place 1), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 56, form := "Gallery", head := "gallery", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 57, form := "Fake", head := "fake", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 49, form := "copies", head := "copy", target := Target.other "copies" "group", mods := [], owner := none, num := none, plural := true, quoted := false }], bare := [{ at_ := 6, form := "Faces", sense := some "body", quoted := false }, { at_ := 12, form := "dozens", sense := some "abstract", quoted := false }, { at_ := 29, form := "order", sense := some "abstract", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/05.json") p05uses
 def p05staging : List Fixed := []
-theorem p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 13) p05uses p05staging = true := by decide +kernel
 
-theorem p06_valid : Valid spec.start (story.upTo owner 5) := by decide +kernel
-/-- knows chrollo gumOnHead -/
-theorem p06_claim0 : (Claim.knows 0 (Fact.atom 6, true)).eval (run spec.start (story.upTo owner 5)) = true := by decide +kernel
 def p06uses : Uses := { uses := [{ at_ := 0, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 21, form := "gum", head := "gum", target := Target.other "gum" "abstract", mods := [], owner := some (Target.char 1), num := none, plural := false, quoted := false }, { at_ := 32, form := "Chrollo's", head := "chrollo's", target := Target.char 0, mods := [(33, "blind")], owner := none, num := none, plural := false, quoted := false }, { at_ := 41, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 52, form := "gum", head := "gum", target := Target.other "gum" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 3, form := "head", sense := some "body", quoted := false }, { at_ := 6, form := "puppet", sense := some "person", quoted := false }, { at_ := 9, form := "In", sense := some "abstract", quoted := false }, { at_ := 13, form := "eye", sense := some "body", quoted := false }, { at_ := 24, form := "head", sense := some "body", quoted := false }, { at_ := 30, form := "foot", sense := some "body", quoted := false }, { at_ := 34, form := "spot", sense := some "abstract", quoted := false }, { at_ := 44, form := "Gyo", sense := some "abstract", quoted := false }, { at_ := 61, form := "blow", sense := some "event", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/06.json") p06uses
 def p06staging : List Fixed := []
-theorem p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 18) p06uses p06staging = true := by decide +kernel
 
-theorem p07_valid : Valid spec.start (story.upTo owner 6) := by decide +kernel
-/-- falseBelief hisoka gfUp -/
-theorem p07_claim0 : (Claim.falseBelief 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 6)) = true := by decide +kernel
-/-- falseBelief hisoka decoyIsChrollo -/
-theorem p07_claim1 : (Claim.falseBelief 1 (Fact.atom 5, true)).eval (run spec.start (story.upTo owner 6)) = true := by decide +kernel
 def p07uses : Uses := { uses := [{ at_ := 7, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 5, form := "bookmark", head := "bookmark", target := Target.spot (Spot.thing 1), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 9, form := "Gallery", head := "gallery", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 10, form := "Fake", head := "fake", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 14, form := "copies", head := "copy", target := Target.other "copies" "group", mods := [], owner := none, num := none, plural := true, quoted := false }, { at_ := 22, form := "seals", head := "seal", target := Target.other "seals" "abstract", mods := [], owner := none, num := none, plural := true, quoted := false }, { at_ := 27, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 31, form := "ability", head := "ability", target := Target.other "galleryFake" "abstract", mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 41, form := "man", head := "man", target := Target.char 4, mods := [(46, "unhurried")], owner := none, num := none, plural := false, quoted := false }, { at_ := 43, form := "Chrollo's", head := "chrollo's", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 52, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 57, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 21, form := "man's", sense := some "person", quoted := false }, { at_ := 38, form := "smoke", sense := some "substance", quoted := false }, { at_ := 44, form := "face", sense := some "body", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/07.json") p07uses
 def p07staging : List Fixed := []
-theorem p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 19) p07uses p07staging = true := by decide +kernel
 
-theorem p08_valid : Valid spec.start (story.upTo owner 7) := by decide +kernel
-/-- thinks hisoka !decoyIsChrollo -/
-theorem p08_claim0 : (Claim.thinks 1 (Fact.atom 5, false)).eval (run spec.start (story.upTo owner 7)) = true := by decide +kernel
-/-- knows hisoka !needsBoth -/
-theorem p08_claim1 : (Claim.knows 1 (Fact.atom 1, false)).eval (run spec.start (story.upTo owner 7)) = true := by decide +kernel
-/-- true hisokaMaimed -/
-theorem p08_claim2 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 7)) = true := by decide +kernel
 def p08uses : Uses := { uses := [{ at_ := 8, form := "man", head := "man", target := Target.char 4, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 11, form := "copy", head := "copy", target := Target.char 4, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 13, form := "Chrollo's", head := "chrollo's", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 32, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 38, form := "seals", head := "seal", target := Target.other "seals" "abstract", mods := [], owner := none, num := none, plural := true, quoted := false }, { at_ := 48, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 73, form := "Chrollo's", head := "chrollo's", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 5, form := "hand", sense := some "body", quoted := false }, { at_ := 14, form := "face", sense := some "body", quoted := false }, { at_ := 19, form := "sun", sense := some "abstract", quoted := false }, { at_ := 22, form := "moon", sense := some "abstract", quoted := false }, { at_ := 30, form := "arms", sense := some "body", quoted := false }, { at_ := 42, form := "hand", sense := some "body", quoted := false }, { at_ := 45, form := "time", sense := some "time", quoted := false }, { at_ := 53, form := "hands", sense := some "body", quoted := false }, { at_ := 59, form := "bomb", sense := some "abstract", quoted := false }, { at_ := 65, form := "body", sense := some "body", quoted := false }, { at_ := 71, form := "puppet", sense := some "person", quoted := false }, { at_ := 74, form := "leash", sense := some "figurative", quoted := false }, { at_ := 79, form := "hand", sense := some "body", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/08.json") p08uses
 def p08staging : List Fixed := []
-theorem p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 22) p08uses p08staging = true := by decide +kernel
 
-theorem p09_valid : Valid spec.start (story.upTo owner 8) := by decide +kernel
-/-- at hisoka upper -/
-theorem p09_claim0 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 8)) = true := by decide +kernel
-/-- true hisokaMaimed -/
-theorem p09_claim1 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 8)) = true := by decide +kernel
 def p09uses : Uses := { uses := [{ at_ := 0, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 6, form := "floor", head := "floor", target := Target.spot (Spot.place 2), mods := [(5, "upper")], owner := none, num := none, plural := false, quoted := false }, { at_ := 10, form := "gallery", head := "gallery", target := Target.spot (Spot.place 2), mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 18, form := "Chrollo", head := "chrollo", target := Target.char 0, mods := [], owner := none, num := none, plural := false, quoted := false }, { at_ := 22, form := "copies", head := "copy", target := Target.other "copies" "group", mods := [(21, "last")], owner := none, num := none, plural := true, quoted := false }, { at_ := 46, form := "Hisoka", head := "hisoka", target := Target.char 1, mods := [], owner := none, num := none, plural := false, quoted := false }], bare := [{ at_ := 13, form := "ceiling", sense := some "part", quoted := false }, { at_ := 24, form := "orders", sense := some "abstract", quoted := false }, { at_ := 41, form := "stairs", sense := some "part", quoted := false }, { at_ := 44, form := "tide", sense := some "figurative", quoted := false }, { at_ := 51, form := "breath", sense := some "body", quoted := false }] }
 #guard usesMatch spec (include_str "paragraphs/09.json") p09uses
 def p09staging : List Fixed := []
-theorem p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 26) p09uses p09staging = true := by decide +kernel
+
+/-- Every paragraph's verdicts, checked together (see `storyLean`); each is
+restated below under its own name. -/
+theorem paragraphs :
+    (Valid spec.start (story.upTo owner 0)) ∧
+    ((Claim.knows 1 (Fact.atom 7, true)).eval (run spec.start (story.upTo owner 0)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true) ∧
+    (Valid spec.start (story.upTo owner 1)) ∧
+    ((Claim.holdsTrue (Fact.atom 8, true)).eval (run spec.start (story.upTo owner 1)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 1) 2) p02uses p02staging = true) ∧
+    (Valid spec.start (story.upTo owner 2)) ∧
+    ((Claim.knows 1 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 2)) = true) ∧
+    ((Claim.falseBelief 1 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 2)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 2) 3) p03uses p03staging = true) ∧
+    (Valid spec.start (story.upTo owner 3)) ∧
+    ((Claim.thinks 1 (Fact.at_ 0 0, false)).eval (run spec.start (story.upTo owner 3)) = true) ∧
+    ((Claim.holdsTrue (Fact.atom 9, true)).eval (run spec.start (story.upTo owner 3)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 3) 8) p04uses p04staging = true) ∧
+    (Valid spec.start (story.upTo owner 4)) ∧
+    ((Claim.knows 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 4)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 4) 13) p05uses p05staging = true) ∧
+    (Valid spec.start (story.upTo owner 5)) ∧
+    ((Claim.knows 0 (Fact.atom 6, true)).eval (run spec.start (story.upTo owner 5)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 5) 18) p06uses p06staging = true) ∧
+    (Valid spec.start (story.upTo owner 6)) ∧
+    ((Claim.falseBelief 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 6)) = true) ∧
+    ((Claim.falseBelief 1 (Fact.atom 5, true)).eval (run spec.start (story.upTo owner 6)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 6) 19) p07uses p07staging = true) ∧
+    (Valid spec.start (story.upTo owner 7)) ∧
+    ((Claim.thinks 1 (Fact.atom 5, false)).eval (run spec.start (story.upTo owner 7)) = true) ∧
+    ((Claim.knows 1 (Fact.atom 1, false)).eval (run spec.start (story.upTo owner 7)) = true) ∧
+    ((Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 7)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 7) 22) p08uses p08staging = true) ∧
+    (Valid spec.start (story.upTo owner 8)) ∧
+    ((Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 8)) = true) ∧
+    ((Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 8)) = true) ∧
+    (spec.settingOk (sceneOf spec.start (story.upTo owner 8) 26) p09uses p09staging = true) := by
+  decide +kernel
+
+theorem p01_valid : Valid spec.start (story.upTo owner 0) := by exact paragraphs.1
+/-- knows hisoka judgeHeld -/
+theorem p01_claim0 : (Claim.knows 1 (Fact.atom 7, true)).eval (run spec.start (story.upTo owner 0)) = true := by exact paragraphs.2.1
+theorem p01_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true := by exact paragraphs.2.2.1
+theorem p02_valid : Valid spec.start (story.upTo owner 1) := by exact paragraphs.2.2.2.1
+/-- true judgeDead -/
+theorem p02_claim0 : (Claim.holdsTrue (Fact.atom 8, true)).eval (run spec.start (story.upTo owner 1)) = true := by exact paragraphs.2.2.2.2.1
+theorem p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 2) p02uses p02staging = true := by exact paragraphs.2.2.2.2.2.1
+theorem p03_valid : Valid spec.start (story.upTo owner 2) := by exact paragraphs.2.2.2.2.2.2.1
+/-- knows hisoka usesBoth -/
+theorem p03_claim0 : (Claim.knows 1 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 2)) = true := by exact paragraphs.2.2.2.2.2.2.2.1
+/-- falseBelief hisoka needsBoth -/
+theorem p03_claim1 : (Claim.falseBelief 1 (Fact.atom 1, true)).eval (run spec.start (story.upTo owner 2)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.1
+theorem p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 3) p03uses p03staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.1
+theorem p04_valid : Valid spec.start (story.upTo owner 3) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.1
+/-- thinks hisoka !at(chrollo,ring) -/
+theorem p04_claim0 : (Claim.thinks 1 (Fact.at_ 0 0, false)).eval (run spec.start (story.upTo owner 3)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.1
+/-- true chrolloHidden -/
+theorem p04_claim1 : (Claim.holdsTrue (Fact.atom 9, true)).eval (run spec.start (story.upTo owner 3)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p04_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 3) 8) p04uses p04staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p05_valid : Valid spec.start (story.upTo owner 4) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- knows hisoka gfUp -/
+theorem p05_claim0 : (Claim.knows 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 4)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p05_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 4) 13) p05uses p05staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p06_valid : Valid spec.start (story.upTo owner 5) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- knows chrollo gumOnHead -/
+theorem p06_claim0 : (Claim.knows 0 (Fact.atom 6, true)).eval (run spec.start (story.upTo owner 5)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p06_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 5) 18) p06uses p06staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p07_valid : Valid spec.start (story.upTo owner 6) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- falseBelief hisoka gfUp -/
+theorem p07_claim0 : (Claim.falseBelief 1 (Fact.atom 10, true)).eval (run spec.start (story.upTo owner 6)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- falseBelief hisoka decoyIsChrollo -/
+theorem p07_claim1 : (Claim.falseBelief 1 (Fact.atom 5, true)).eval (run spec.start (story.upTo owner 6)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p07_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 6) 19) p07uses p07staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p08_valid : Valid spec.start (story.upTo owner 7) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- thinks hisoka !decoyIsChrollo -/
+theorem p08_claim0 : (Claim.thinks 1 (Fact.atom 5, false)).eval (run spec.start (story.upTo owner 7)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- knows hisoka !needsBoth -/
+theorem p08_claim1 : (Claim.knows 1 (Fact.atom 1, false)).eval (run spec.start (story.upTo owner 7)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- true hisokaMaimed -/
+theorem p08_claim2 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 7)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p08_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 7) 22) p08uses p08staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p09_valid : Valid spec.start (story.upTo owner 8) := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- at hisoka upper -/
+theorem p09_claim0 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 8)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+/-- true hisokaMaimed -/
+theorem p09_claim1 : (Claim.holdsTrue (Fact.atom 11, true)).eval (run spec.start (story.upTo owner 8)) = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+theorem p09_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 8) 26) p09uses p09staging = true := by exact paragraphs.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2
 
 theorem layout_consistent : spec.layoutOk = true := by decide +kernel
 
