@@ -121,3 +121,17 @@
 }
 .legend span { display: inline-flex; align-items: center; gap: 5px; }
 .legend .sw { width: 16px; height: 0; border-bottom: 2px solid; display: inline-block; }
+
+/* completeness: clause heads underlined by how they are judged; connectives marked */
+.overview .tok.jc { --jk: var(--ok); text-decoration-line: underline; text-decoration-style: double;
+  text-decoration-thickness: 1px; text-underline-offset: 0.3em; text-decoration-color: var(--jk); }
+.overview .tok.jc.ent { text-decoration-style: solid; }
+.overview .tok.jc.jk-claim { --jk: var(--c4); }
+.overview .tok.jc.jk-content { --jk: var(--c1); }
+.overview .tok.jc.jk-goal { --jk: var(--c2); }
+.overview .tok.jc.jk-external { --jk: var(--accent); }
+.overview .tok.jc.jk-act, .overview .tok.jc.jk-speech, .overview .tok.jc.jk-hypothetical { --jk: var(--ink-3); }
+.overview .tok.jc.jbad { --jk: var(--bad); text-decoration-style: wavy; }
+.overview .tok.jlinkw { font-style: italic; }
+.overview .tok.jlinkw.jok { color: color-mix(in srgb, var(--c0) 70%, var(--ink)); }
+.overview .tok.jlinkw.jbad { color: var(--bad); text-decoration: line-through wavy var(--bad); }

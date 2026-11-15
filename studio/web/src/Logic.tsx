@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { Paragraph, Report, Theorem } from './types'
 import { entityColour } from './Prose'
+import { compOf, JudgementSection } from './Judgements'
 
 const charColour = (report: Report, id: string) => {
   const i = report.characters.findIndex(c => c.id === id)
@@ -134,6 +135,10 @@ function Card({ report, p, index, current, theorems, onSelect }: {
             {e.src !== 'plan' && <span className="src" title="read off the prose">¶</span>}
             {e.why && <div className="why">{e.why}</div>}
           </li>))}</ul>
+      </Section>}
+
+      {compOf(report, p.name) && <Section title="judgements">
+        <JudgementSection report={report} c={compOf(report, p.name)!} />
       </Section>}
 
       {(d.moves.length > 0 || d.objects.length > 0) && <Section title="scene">

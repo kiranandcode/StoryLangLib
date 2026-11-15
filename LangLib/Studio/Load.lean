@@ -161,12 +161,37 @@ def storyReport (dir : System.FilePath) : IO Json := do
     let issues := paraCompleteness s (paraCtx s timed owner k p) p
     let f := (p.doc.map (treeFacts s)).getD {}
     let toks : List String := (p.doc.map (·.render)).getD []
+    let n := s.names
+    let one (at_ : Nat) (kind text gloss : String) : Json :=
+      Json.mkObj [("at", at_), ("kind", kind), ("text", text), ("gloss", gloss)]
+    let judgesJ : List Json := match p.reading with
+      | none => []
+      | some j =>
+        ((arr j "events").filterMap fun e => do
+          let a ← (e.getObjValAs? Nat "at").toOption
+          let str ← (e.getObjValAs? String "e").toOption
+          pure (one a "event" str (match n.ev str with | .ok ev => s.evGloss ev | .error _ => str))) ++
+        ((arr j "claims").filterMap fun c => do
+          let a ← (c.getObjValAs? Nat "at").toOption
+          let str ← (c.getObjValAs? String "c").toOption
+          pure (one a "claim" str str)) ++
+        ((arr j "judge").filterMap fun x => do
+          let a ← (x.getObjValAs? Nat "at").toOption
+          let kind := (x.getObjValAs? String "kind").toOption.getD ""
+          let lit := (x.getObjValAs? String "lit").toOption
+          let e := (x.getObjValAs? String "e").toOption
+          let text := (lit <|> e).getD kind
+          let gloss := match lit with
+            | some l => match n.lit l with | .ok l => s.litGloss l | .error _ => l
+            | none => text
+          pure (one a kind text gloss))
     Json.mkObj [("name", p.name), ("issues", Json.arr (issues.map Json.str).toArray),
       ("clauses", Json.arr (f.preds.map fun c => Json.mkObj [("at", c.at_), ("w", Json.str (toks.getD c.at_ "")),
         ("neg", c.neg), ("modal", c.modal), ("quoted", c.quoted),
         ("parent", match c.parent with | some q => Json.num q | none => Json.null)]).toArray),
       ("links", Json.arr (f.links.map fun l => Json.mkObj [("at", l.at_), ("word", l.word),
-        ("rel", reprStr l.rel |>.replace "LangLib.Studio.LinkRel." ""), ("a", l.a), ("b", l.b)]).toArray)]
+        ("rel", reprStr l.rel |>.replace "LangLib.Studio.LinkRel." ""), ("a", l.a), ("b", l.b)]).toArray),
+      ("judges", Json.arr judgesJ.toArray)]
   pure (r.setObjVal! "completeness" (Json.arr cs.toArray))
 
 /-! ## The story as a Lean file -/

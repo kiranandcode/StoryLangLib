@@ -211,3 +211,37 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .ins-foot .btn { background: transparent; border: 1px solid var(--rule-2); border-radius: 6px; padding: 3px 12px; cursor: pointer; color: var(--ink-2); }
 .ins-foot .btn.primary { color: var(--paper); background: var(--accent); border-color: var(--accent); }
 .ins-foot .btn.primary:disabled { opacity: 0.45; cursor: default; }
+
+/* judgements (Judgements.tsx): every clause tied to the world */
+.judge-sec .jarcs-wrap { overflow-x: auto; margin: 2px 0 4px; }
+.jarcs { display: block; overflow: visible; }
+.jarcs .jclause .w { font-size: 11px; fill: var(--ink); font-weight: 600; }
+.jarcs .jclause.bad .w { fill: var(--bad); }
+.jarcs .jlink path { fill: none; stroke-width: 1.4; stroke: var(--proved); }
+.jarcs .jlink text { font-size: 10px; fill: var(--proved); }
+.jarcs .jlink.r-cause path, .jarcs .jlink.r-effect path { stroke: var(--c0); }
+.jarcs .jlink.r-cause text, .jarcs .jlink.r-effect text { fill: var(--c0); }
+.jarcs .jlink.r-purpose path { stroke: var(--c2); }
+.jarcs .jlink.r-purpose text { fill: var(--c2); }
+.jarcs .jlink.bad path { stroke: var(--bad); stroke-dasharray: 3 2; }
+.jarcs .jlink.bad text { fill: var(--bad); font-weight: 600; }
+.jarcs .jarrowhead { fill: var(--ink-3); }
+.jdot { stroke: var(--paper); stroke-width: 1; }
+.jdot.k-event, .jchip.k-event { --jk: var(--ok); }
+.jdot.k-claim, .jchip.k-claim { --jk: var(--c4); }
+.jdot.k-content, .jchip.k-content { --jk: var(--c1); }
+.jdot.k-goal, .jchip.k-goal { --jk: var(--c2); }
+.jdot.k-external, .jchip.k-external { --jk: var(--accent); }
+.jdot.k-act, .jdot.k-speech, .jdot.k-hypothetical,
+.jchip.k-act, .jchip.k-speech, .jchip.k-hypothetical { --jk: var(--ink-3); }
+.jdot.k-missing, .jchip.k-missing { --jk: var(--bad); }
+.jdot { fill: var(--jk); }
+.jlist { list-style: none; margin: 0; padding: 0; }
+.jlist li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; padding: 1px 0; }
+.jlist li.bad .jw { color: var(--bad); }
+.jlist .jw { min-width: 5.5em; }
+.jflag { font-size: 9.5px; color: var(--ink-3); border: 1px solid var(--rule-2); border-radius: 6px; padding: 0 4px; }
+.jchip { font-size: 11px; color: var(--jk); border: 1px solid color-mix(in srgb, var(--jk) 45%, transparent);
+  border-radius: 8px; padding: 0 6px; background: color-mix(in srgb, var(--jk) 7%, transparent); }
+.jchip i { font-style: normal; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.8; }
+.jissue { font-size: 11.5px; }

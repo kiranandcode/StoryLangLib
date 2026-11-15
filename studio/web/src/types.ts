@@ -105,6 +105,15 @@ export interface Paragraph {
   freshness?: { status: 'none' | 'unstamped' | 'fresh' | 'stale'; why: string[]; sha: string }
 }
 
+/** Completeness (LangLib/Studio/Complete.lean): every clause judged, connectives checked. */
+export interface Completeness {
+  name: string
+  issues: string[]
+  clauses: { at: number; w: string; neg: boolean; modal: boolean; quoted: boolean; parent: number | null }[]
+  links: { at: number; word: string; rel: string; a: number; b: number }[]
+  judges: { at: number; kind: string; text: string; gloss: string }[]
+}
+
 export interface Character { id: string; name: string; pron: string; traits: string[]; values: string[] }
 
 export interface Theorem { line: number; statement: string; ok?: boolean; error?: string }
@@ -146,6 +155,7 @@ export interface Report {
   time: { consistent: boolean; toldOrder: boolean; constraints: number }
   verdict: { valid: boolean; plausible: boolean; assumptions: number; failure: { i: number; why: string } | null }
   beats: Beats | null
+  completeness?: Completeness[]
   proofs: Proofs
   meta?: Record<string, unknown>
   summary?: Record<string, unknown>

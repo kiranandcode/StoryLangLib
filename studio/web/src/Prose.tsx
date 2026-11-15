@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import type { Paragraph, Report, Token, EventRow } from './types'
+import { byToken, compOf, KIND_LABEL } from './Judgements'
 
 export interface Hover { x: number; y: number; body: React.ReactNode }
 
@@ -71,6 +72,7 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
       m.set(l.at, [...(m.get(l.at) ?? []), { e: l.e, lex: true, status: l.asserted ? 'yes' : 'lexicon only' }])
     return m
   }, [p])
+  const judged = useMemo(() => { const c = compOf(report, p.name); return c ? byToken(c) : null }, [report, p.name])
   const warn = warningsOf(p)
   const speakers = doc ? [...new Set(doc.tokens.map(t => t.spk).filter((s): s is string => !!s && s !== '?'))] : []
 
@@ -102,12 +104,18 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
         const worst = evs.some(e => e.status === 'no') ? 'no' : evs.some(e => e.status === 'unknown') ? 'unknown' : 'yes'
         cls.push(worst)
       }
+      const jt = judged?.get(i)
+      if (jt?.clause) {
+        cls.push('jc', jt.bad || jt.judges.length === 0 ? 'jbad' : `jk-${jt.judges[0].kind}`)
+        tg.push(`tok:${p.name}:${i}`)
+      }
+      if (jt?.link) cls.push('jlinkw', jt.link.ok ? 'jok' : 'jbad')
       out.push(<span key={i} className={cls.join(' ')} style={style as React.CSSProperties} data-i={i} data-target={tg.filter(Boolean).join(' ') || undefined}>{p.text.slice(start, end)}</span>)
       at = end
     })
     if (at < p.text.length) out.push(p.text.slice(at).replace(/\s+$/, ''))
     return out
-  }, [p, doc, evAt, hoverEnt, report])
+  }, [p, doc, evAt, hoverEnt, report, judged])
 
   const onOver = (ev: React.MouseEvent) => {
     if (!overview || !doc) return
@@ -127,6 +135,13 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
     if (evs) for (const e of evs) rows.push(
       <div key={e.e} className="row"><span className="k">{e.lex ? 'read by the lexicon' : 'event'}</span> {e.gloss ?? e.e}<br /><code>{e.e}</code>{e.status && e.status !== 'yes' ? <> · <b>{e.status}</b></> : null}{e.why ? <div>{e.why}</div> : null}</div>)
     if (t.time) rows.push(<div key="time" className="row"><span className="k">time word</span></div>)
+    const jt = judged?.get(i)
+    if (jt?.clause) {
+      rows.push(<div key="jc" className="row"><span className="k">clause</span> {jt.judges.length === 0 ? <b className="bad">no judgement</b> : null}</div>)
+      for (const [k, j] of jt.judges.entries()) rows.push(
+        <div key={`j${k}`} className="row"><span className="k">{KIND_LABEL[j.kind] ?? j.kind}</span> {j.gloss}{j.gloss !== j.text ? <><br /><code>{j.text}</code></> : null}</div>)
+    }
+    if (jt?.link) rows.push(<div key="jl" className="row"><span className="k">connective</span> ‘{jt.link.word}’: {jt.link.rel}, “{jt.link.a}” → “{jt.link.b}” {jt.link.ok ? <b className="ok">✓</b> : <b className="bad">✗ not borne out</b>}</div>)
     const r = el.getBoundingClientRect()
     setHover({ x: r.left, y: r.bottom + 6, body: rows })
   }
