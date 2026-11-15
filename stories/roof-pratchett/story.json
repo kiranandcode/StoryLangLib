@@ -1,0 +1,777 @@
+{
+  "title": "Eleven, on the Roof",
+  "characters": [
+    {
+      "id": "kiran",
+      "name": "Kiran",
+      "pron": "she",
+      "traits": [
+        "brash",
+        "proud",
+        "confident",
+        "romantic",
+        "skeptical"
+      ],
+      "values": [
+        "desire",
+        "pride",
+        "safety",
+        "curiosity"
+      ],
+      "notes": "Cocky and bratty: defends herself by being confrontational, cutely; loves teasing. Desperately wants to be loved but assumes the people she is into won't want her, so she reads no romantic intent into anything, though she can't stop hoping; she half-imagines romance in every close male friendship and never lets herself believe it. Trans; pretty, and hot. Transitioned in Singapore, where racism kept her out of housing; used to being looked at with disgust. Disowned when she came out; has supported herself since and is used to being abandoned. Very little life outside the lab, few friends; her work is everything. Career excellence is how she made people want her, so she is proud, independent, confident, arrogant as a researcher, and that pride costs her the vulnerability relationships need; in a relationship she wants to be taken care of, and bridging the two is hard for her. Yaps happily about her research ideas once she gets going. Little luck dating. (For the model, to justify what she does; not to be recited in the prose.)"
+    },
+    {
+      "id": "ran",
+      "name": "Ranulf",
+      "pron": "he",
+      "traits": [
+        "confident",
+        "honest",
+        "loyal"
+      ],
+      "values": [
+        "desire",
+        "loyalty",
+        "honesty",
+        "pride"
+      ]
+    }
+  ],
+  "places": [
+    {
+      "id": "lab",
+      "kind": "computer lab",
+      "desc": "open plan, cosy and warmly lit; late at night only Kiran and Ran are in it",
+      "words": [
+        "lab"
+      ],
+      "attrs": {
+        "kind": "computer",
+        "occupancy": "empty"
+      },
+      "fixtures": [
+        {
+          "id": "kdesk",
+          "what": "Kiran's desk, at the corner end of the window row",
+          "words": [
+            "desk",
+            "corner"
+          ],
+          "owner": "kiran",
+          "count": 1,
+          "attrs": {
+            "position": "corner"
+          }
+        },
+        {
+          "id": "rdesk",
+          "what": "the desk on Kiran's left, which Ran has borrowed all week",
+          "words": [
+            "desk"
+          ],
+          "count": 1,
+          "attrs": {
+            "state": "bare"
+          }
+        },
+        {
+          "id": "rchair",
+          "what": "the chair at Ran's desk",
+          "words": [
+            "chair"
+          ],
+          "count": 1
+        },
+        {
+          "id": "rows",
+          "what": "the two rows of desks along the window, set back to back",
+          "words": [
+            "row",
+            "desk"
+          ],
+          "count": 2,
+          "attrs": {
+            "arrangement": "back-to-back"
+          }
+        },
+        {
+          "id": "dividers",
+          "what": "low dividers between neighbouring desks; they screen only the desk tops, so you see the person to your left or right",
+          "words": [
+            "divider"
+          ],
+          "attrs": {
+            "height": "low"
+          }
+        },
+        {
+          "id": "window",
+          "what": "the window the rows run along",
+          "words": [
+            "window"
+          ],
+          "count": 1
+        },
+        {
+          "id": "lamps",
+          "what": "the desk lamps",
+          "words": [
+            "lamp"
+          ]
+        },
+        {
+          "id": "printers",
+          "what": "the printers and other shared machines",
+          "words": [
+            "printer"
+          ]
+        },
+        {
+          "id": "table",
+          "what": "the big table on the far side of the desk space",
+          "words": [
+            "table"
+          ],
+          "count": 1,
+          "attrs": {
+            "size": "big"
+          }
+        },
+        {
+          "id": "labdoor",
+          "what": "the lab door",
+          "words": [
+            "door"
+          ],
+          "count": 1
+        },
+        {
+          "id": "laptop",
+          "what": "Kiran's laptop, on her desk",
+          "words": [
+            "laptop"
+          ],
+          "owner": "kiran",
+          "count": 1
+        },
+        {
+          "id": "keyboard",
+          "what": "Kiran's keyboard",
+          "words": [
+            "keyboard"
+          ],
+          "owner": "kiran",
+          "count": 1
+        },
+        {
+          "id": "corridor",
+          "what": "the corridor from the lab to the kitchen",
+          "words": [
+            "corridor"
+          ],
+          "count": 1
+        },
+        {
+          "id": "stairs",
+          "what": "the stairs up to the roof",
+          "words": [
+            "stair",
+            "stairs",
+            "stairwell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "kind": "small shared kitchen at the end of the corridor",
+      "words": [
+        "kitchen"
+      ],
+      "fixtures": [
+        {
+          "id": "kettle",
+          "what": "the kitchen kettle",
+          "words": [
+            "kettle"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "roof",
+      "kind": "the flat roof of the building, over the city",
+      "words": [
+        "roof"
+      ],
+      "fixtures": [
+        {
+          "id": "ledge",
+          "what": "the low wall at the roof's edge",
+          "words": [
+            "ledge",
+            "wall",
+            "parapet"
+          ],
+          "count": 1,
+          "attrs": {
+            "height": "low"
+          }
+        },
+        {
+          "id": "city",
+          "what": "the city below, seen from the roof",
+          "words": [
+            "city"
+          ],
+          "count": 1
+        },
+        {
+          "id": "roofdoor",
+          "what": "the door at the top of the stairs, which sticks",
+          "words": [
+            "door"
+          ],
+          "count": 1
+        }
+      ],
+      "outdoor": true
+    },
+    {
+      "id": "garageRoof",
+      "kind": "the flat garage roof they climbed as kids",
+      "words": [
+        "roof"
+      ],
+      "attrs": {
+        "kind": "garage"
+      },
+      "outdoor": true
+    }
+  ],
+  "objects": [
+    {
+      "id": "note",
+      "what": "Ran's note, a page torn from his notebook",
+      "words": [
+        "note",
+        "page"
+      ]
+    }
+  ],
+  "scenery": [
+    {
+      "id": "scarf",
+      "what": "Ran's scarf",
+      "words": [
+        "scarf"
+      ],
+      "owner": "ran",
+      "count": 1
+    },
+    {
+      "id": "mug",
+      "what": "Kiran's mug",
+      "words": [
+        "mug"
+      ],
+      "owner": "kiran",
+      "count": 1
+    },
+    {
+      "id": "notebook",
+      "what": "Ran's notebook",
+      "words": [
+        "notebook"
+      ],
+      "owner": "ran",
+      "count": 1
+    },
+    {
+      "id": "torch",
+      "what": "the flashlight they passed between them as kids",
+      "words": [
+        "flashlight",
+        "torch"
+      ],
+      "count": 1
+    }
+  ],
+  "layout": [
+    "in kdesk rows",
+    "in rdesk rows",
+    "leftOf rdesk kdesk",
+    "at rchair rdesk",
+    "near rows window",
+    "in dividers rows",
+    "farFrom table rows",
+    "on laptop kdesk",
+    "partOf keyboard laptop",
+    "leadsTo corridor kitchen",
+    "leadsTo stairs roof",
+    "near ledge city"
+  ],
+  "atoms": [
+    {
+      "id": "noteConfession",
+      "label": "the note is a confession",
+      "truth": true,
+      "group": "noteMeans",
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "noteOldTimes",
+      "label": "the note is only for old times' sake",
+      "truth": false,
+      "group": "noteMeans",
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranLikesKiran",
+      "label": "Ran likes Kiran",
+      "truth": true,
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "kiranLikesRan",
+      "label": "Kiran likes Ran",
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ]
+    },
+    {
+      "id": "raining",
+      "label": "it is raining",
+      "truth": true,
+      "state": true,
+      "kind": "weather",
+      "perceptible": true
+    },
+    {
+      "id": "labEmptied",
+      "label": "everyone else has gone home from the lab",
+      "truth": true
+    },
+    {
+      "id": "childhoodFriends",
+      "label": "Kiran and Ran have been friends since they were nine",
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ]
+    },
+    {
+      "id": "kiranTrans",
+      "label": "Kiran is trans",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "kiranDisowned",
+      "label": "Kiran's parents disowned her when she came out",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "kiranLabLife",
+      "label": "Kiran's life is her work; she has little outside the lab",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranMovedAway",
+      "label": "ten years ago Ran's family moved away and he left",
+      "truth": true,
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranLeftHer",
+      "label": "Ran has gone without a goodbye",
+      "truth": false,
+      "who": [
+        "ran",
+        "kiran"
+      ]
+    },
+    {
+      "id": "ranLeaving",
+      "label": "Ran leaves tomorrow",
+      "truth": true,
+      "who": [
+        "ran"
+      ]
+    },
+    {
+      "id": "kiranUnrequited",
+      "label": "Kiran has fallen for people before who never wanted her back",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
+    },
+    {
+      "id": "printersCooling",
+      "label": "the printers are cooling down for the night",
+      "truth": true,
+      "about": "printers",
+      "kind": "sound",
+      "perceptible": true
+    },
+    {
+      "id": "labDoorClicks",
+      "label": "the lab door clicks shut behind whoever comes in",
+      "truth": true,
+      "about": "labdoor",
+      "kind": "sound"
+    },
+    {
+      "id": "kettleQuick",
+      "label": "the kitchen kettle boils in a minute",
+      "truth": true,
+      "about": "kettle",
+      "kind": "condition"
+    },
+    {
+      "id": "rdeskBare",
+      "label": "the desk Ran borrowed is bare",
+      "truth": true,
+      "about": "rdesk",
+      "kind": "condition"
+    },
+    {
+      "id": "rchairIn",
+      "label": "the chair at Ran's desk is pushed in",
+      "truth": false,
+      "state": true,
+      "about": "rchair",
+      "kind": "condition"
+    },
+    {
+      "id": "stairwellStale",
+      "label": "the stairwell smells of dust and old coffee",
+      "truth": true,
+      "about": "stairs",
+      "kind": "smell"
+    },
+    {
+      "id": "roofDoorSticks",
+      "label": "the roof door sticks",
+      "truth": true,
+      "about": "roofdoor",
+      "kind": "condition"
+    },
+    {
+      "id": "cityLit",
+      "label": "the city below is lit",
+      "truth": true,
+      "about": "city",
+      "kind": "light",
+      "perceptible": true
+    },
+    {
+      "id": "talkedTillDawn",
+      "label": "as kids they talked on the garage roof until the sky went grey",
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ],
+      "kind": "light"
+    }
+  ],
+  "lore": [
+    {
+      "if": [
+        "noteConfession"
+      ],
+      "then": "ranLikesKiran"
+    }
+  ],
+  "plans": [
+    {
+      "id": "teaBreak",
+      "agent": "kiran",
+      "goal": "at(kiran,lab)",
+      "steps": [
+        "move kiran kitchen",
+        "move kiran lab"
+      ]
+    },
+    {
+      "id": "theNote",
+      "agent": "ran",
+      "goal": "at(kiran,roof)",
+      "steps": [
+        "drop ran note",
+        "make ran rchairIn",
+        "move ran roof"
+      ]
+    }
+  ],
+  "start": {
+    "at": {
+      "kiran": "lab"
+    },
+    "holds": {
+      "note": "ran"
+    },
+    "bonds": {
+      "kiran>ran": {
+        "trust": 2,
+        "affection": 2,
+        "attraction": 1
+      },
+      "ran>kiran": {
+        "trust": 2,
+        "affection": 2,
+        "attraction": 2
+      }
+    },
+    "knows": {
+      "kiran": [
+        "kiranLikesRan",
+        "kiranTrans",
+        "kiranDisowned",
+        "kiranLabLife",
+        "ranMovedAway",
+        "childhoodFriends",
+        "ranLeaving",
+        "kiranUnrequited"
+      ],
+      "ran": [
+        "ranLikesKiran",
+        "noteConfession",
+        "!noteOldTimes",
+        "ranMovedAway",
+        "childhoodFriends",
+        "kiranTrans",
+        "ranLeaving"
+      ]
+    }
+  },
+  "beats": {
+    "conds": [
+      "lingering",
+      "spark",
+      "noteLeft",
+      "found",
+      "doubting",
+      "together",
+      "kiranKnows",
+      "negotiated",
+      "kissed"
+    ],
+    "init": [],
+    "vocab": [
+      {
+        "id": "lingers",
+        "label": "Ran finds an excuse to stay",
+        "add": [
+          "lingering"
+        ],
+        "keys": [
+          "move ran lab"
+        ]
+      },
+      {
+        "id": "spark",
+        "label": "Banter that is not quite banter",
+        "pre": [
+          "lingering"
+        ],
+        "add": [
+          "spark"
+        ],
+        "keys": [
+          "sarcasm kiran ran kiranLikesRan"
+        ]
+      },
+      {
+        "id": "note",
+        "label": "Ran leaves a note and goes up",
+        "pre": [
+          "spark"
+        ],
+        "add": [
+          "noteLeft"
+        ],
+        "keys": [
+          "drop ran note"
+        ]
+      },
+      {
+        "id": "find",
+        "label": "Kiran comes back and finds the note",
+        "pre": [
+          "noteLeft"
+        ],
+        "add": [
+          "found"
+        ],
+        "keys": [
+          "take kiran note"
+        ]
+      },
+      {
+        "id": "doubt",
+        "label": "Kiran reads it as old times' sake",
+        "pre": [
+          "found"
+        ],
+        "add": [
+          "doubting"
+        ],
+        "keys": [
+          "notice kiran noteOldTimes assumed"
+        ]
+      },
+      {
+        "id": "climb",
+        "label": "Kiran goes up anyway",
+        "pre": [
+          "found"
+        ],
+        "add": [
+          "together"
+        ],
+        "keys": [
+          "move kiran roof"
+        ]
+      },
+      {
+        "id": "confess",
+        "label": "On the roof, Ran says what he should have said",
+        "pre": [
+          "together"
+        ],
+        "add": [
+          "kiranKnows"
+        ],
+        "del": [
+          "doubting"
+        ],
+        "keys": [
+          "tell ran kiran ranLikesKiran"
+        ]
+      },
+      {
+        "id": "negotiate",
+        "label": "They ask, and answer, out loud",
+        "pre": [
+          "kiranKnows"
+        ],
+        "add": [
+          "negotiated"
+        ],
+        "keys": [
+          "askAct ran kiran kiss"
+        ]
+      },
+      {
+        "id": "kiss",
+        "label": "The kiss",
+        "pre": [
+          "negotiated"
+        ],
+        "add": [
+          "kissed"
+        ],
+        "keys": [
+          "act kiran ran kiss"
+        ]
+      }
+    ],
+    "story": [
+      "lingers",
+      "spark",
+      "note",
+      "find",
+      "doubt",
+      "climb",
+      "confess",
+      "negotiate",
+      "kiss"
+    ]
+  },
+  "lexicon": [
+    {
+      "verb": "like",
+      "subj": "ran",
+      "obj": "kiran",
+      "lit": "ranLikesKiran"
+    },
+    {
+      "verb": "like",
+      "subj": "kiran",
+      "obj": "ran",
+      "lit": "kiranLikesRan"
+    },
+    {
+      "verb": "want",
+      "subj": "ran",
+      "obj": "kiran",
+      "lit": "ranLikesKiran"
+    }
+  ],
+  "outline": [
+    {
+      "beat": "lingers",
+      "brief": "Late in the computer lab (Kiran is a computer science researcher), everyone else gone. Kiran at her desk. Ranulf (Ran), her childhood friend, back in town for a week after ten years away and leaving tomorrow, comes back in for a scarf he says he forgot (an excuse to stay), and sits at the desk beside hers. He is easy and direct; he flirts with her. (The lab's layout is in the model; the prose needs only what the moment uses.)"
+    },
+    {
+      "beat": "spark",
+      "brief": "Kiran answers with dry teasing: she says the opposite of what she feels (that she is glad he's leaving), and he reads it correctly and grins; he knows her too well."
+    },
+    {
+      "beat": "note",
+      "brief": "Kiran steps out to the kitchen to make tea (she plans to come straight back). Ran, alone, writes a short initialled note ('Roof. Eleven. Like before. There's something I should have said. —R') and leaves it on her desk, then goes up to the roof."
+    },
+    {
+      "beat": "find",
+      "brief": "Kiran comes back with her tea to an empty lab and the note on her keyboard. She picks it up and reads it. 'Like before': as children they met on the garage roof between their houses at eleven at night."
+    },
+    {
+      "beat": "doubt",
+      "brief": "She reads it as nostalgia, a goodbye for old times' sake, and tells herself not to want more from it. She goes up anyway, because it is his last night."
+    },
+    {
+      "beat": "climb",
+      "brief": "Kiran climbs the stairs to the roof, the note in her pocket, the city below."
+    },
+    {
+      "beat": "confess",
+      "brief": "On the roof Ran tells her the note meant what it said, not old times: what he should have said ten years ago, before his family moved, is that he liked her then and he likes her now."
+    },
+    {
+      "beat": "negotiate",
+      "brief": "Ran asks, out loud and plainly, whether he can kiss her. Kiran says yes; he says yes too (consent on both sides, explicit). Kiran wants it."
+    },
+    {
+      "beat": "kiss",
+      "brief": "The kiss: Kiran kisses Ran. Close on what she notices."
+    }
+  ],
+  "pov": "kiran"
+}

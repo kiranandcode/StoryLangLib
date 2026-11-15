@@ -1,0 +1,11 @@
+{
+  "persona": "as in stories/roof (set by Kiran, 2026-11-15): brash, proud, confident, romantic, skeptical; values desire > pride > safety > curiosity",
+  "explicitness": "as in stories/roof: sensual but not graphic; fades after the kiss",
+  "pov": "an omniscient narrator in the manner of Terry Pratchett, past tense, staying with Kiran (story.json pov: kiran, for what she perceives); the narrator generalises in the present tense, footnotes, and comments, and does not enter Ran's head",
+  "style": "Pratchett pastiche, never his sentences: footnotes (marker * or † after the anchor sentence's punctuation; the note at the paragraph's end on its own line, starting with the same marker), wry omniscient asides, present-tense generalisations ('People do.') and bathos, capitalised Concepts (Last Night, Deadlines, Great Truths), similes that swerve, and warm moral seriousness under the jokes (about being asked, and meaning yes)",
+  "footnotes": "convention: the anchor marker is a SYM leaf with role dep, a direct child of the anchor sentence's root, so the sentence is complete without it; the note is one PRN tree (marker as its first leaf, role mark, then its sentences) at the end of the paragraph; tokens stay in text order",
+  "writer": "interactive Claude session (Opus 5.5), no headless model calls",
+  "annotator": "interactive Claude session (Opus 5.5), no headless model calls",
+  "cast": "as in stories/roof: Kiran and Ranulf (Ran) only",
+  "source": "same world, beats and plans as stories/roof (story.json and the paragraph plans copied); only the telling differs"
+}

@@ -1,0 +1,1650 @@
+{
+"entities": [
+{
+"id": "kiran",
+"name": "Kiran",
+"kind": "person",
+"pron": "she"
+},
+{
+"id": "ran",
+"name": "Ranulf",
+"kind": "person",
+"pron": "he"
+},
+{
+"id": "lab",
+"name": "the lab",
+"kind": "place",
+"pron": "it"
+},
+{
+"id": "printers",
+"name": "the printers",
+"kind": "object",
+"pron": "they"
+},
+{
+"id": "labdoor",
+"name": "the lab door",
+"kind": "object",
+"pron": "it"
+},
+{
+"id": "rdesk",
+"name": "the desk Ran borrowed",
+"kind": "object",
+"pron": "it"
+},
+{
+"id": "scarf",
+"name": "Ran's scarf",
+"kind": "object",
+"pron": "it"
+},
+{
+"id": "night",
+"name": "Ran's last night",
+"kind": "time",
+"pron": "it"
+},
+{
+"id": "remark",
+"name": "Ran's remark",
+"kind": "abstract",
+"pron": "it"
+}
+],
+"topics": [
+{
+"id": "t1",
+"label": "the lab late at night",
+"entities": [
+"lab",
+"kiran"
+]
+},
+{
+"id": "t2",
+"label": "Ran comes back and stays",
+"entities": [
+"ran",
+"kiran"
+]
+},
+{
+"id": "t3",
+"label": "the narrator on men and printers",
+"entities": []
+}
+],
+"sentences": [
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "By",
+"p": "ADP",
+"r": "case"
+},
+{
+"c": "NP",
+"r": "head",
+"k": [
+{
+"w": "ten",
+"p": "NUM",
+"r": "nummod"
+},
+{
+"w": "o'clock",
+"p": "NOUN",
+"r": "head",
+"sense": "time"
+}
+]
+}
+]
+},
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "lab",
+"p": "NOUN",
+"r": "head"
+}
+],
+"ref": "lab"
+},
+{
+"c": "VP",
+"r": "head",
+"k": [
+{
+"w": "had",
+"p": "AUX",
+"r": "aux",
+"l": "have"
+},
+{
+"w": "emptied",
+"p": "VERB",
+"r": "head",
+"l": "empty"
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "of",
+"p": "ADP",
+"r": "case"
+},
+{
+"c": "NP",
+"r": "head",
+"k": [
+{
+"w": "everyone",
+"p": "PRON",
+"r": "head"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "but",
+"p": "ADP",
+"r": "case"
+},
+{
+"c": "COORD",
+"r": "head",
+"k": [
+{
+"w": "Kiran",
+"p": "PROPN",
+"r": "conj",
+"ref": "kiran"
+},
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"c": "NP",
+"r": "conj",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "printers",
+"p": "NOUN",
+"r": "head",
+"l": "printer"
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "which",
+"p": "PRON",
+"r": "nsubj",
+"ref": "printers"
+},
+{
+"w": "ticked",
+"p": "VERB",
+"r": "head",
+"l": "tick"
+},
+{
+"c": "SBAR",
+"r": "advcl",
+"k": [
+{
+"w": "as",
+"p": "SCONJ",
+"r": "mark"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "they",
+"p": "PRON",
+"r": "head"
+}
+],
+"ref": "printers"
+},
+{
+"w": "cooled",
+"p": "VERB",
+"r": "head",
+"l": "cool"
+}
+]
+}
+]
+}
+]
+}
+],
+"ref": "printers"
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "*",
+"p": "SYM",
+"r": "dep"
+}
+],
+"topic": "t1"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"w": "Then",
+"p": "ADV",
+"r": "advmod"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "door",
+"p": "NOUN",
+"r": "head",
+"ref": "labdoor"
+}
+]
+},
+{
+"w": "clicked",
+"p": "VERB",
+"r": "head",
+"l": "click"
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"c": "S",
+"r": "conj",
+"k": [
+{
+"w": "Ran",
+"p": "PROPN",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"c": "VP",
+"r": "head",
+"k": [
+{
+"w": "came",
+"p": "VERB",
+"r": "head",
+"l": "come"
+},
+{
+"w": "back",
+"p": "ADV",
+"r": "advmod",
+"sense": "direction"
+},
+{
+"w": "in",
+"p": "ADV",
+"r": "advmod",
+"sense": "direction"
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "with",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "rain",
+"p": "NOUN",
+"r": "head",
+"sense": "weather"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "on",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "his",
+"p": "PRON",
+"r": "poss",
+"ref": "ran"
+},
+{
+"w": "shoulders",
+"p": "NOUN",
+"r": "head",
+"l": "shoulder",
+"sense": "body"
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"c": "QUOTE",
+"r": "ccomp",
+"k": [
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"c": "VP",
+"r": "head",
+"k": [
+{
+"w": "Forgot",
+"p": "VERB",
+"r": "head",
+"l": "forget"
+},
+{
+"c": "NP",
+"r": "obj",
+"k": [
+{
+"w": "my",
+"p": "PRON",
+"r": "poss"
+},
+{
+"w": "scarf",
+"p": "NOUN",
+"r": "head"
+}
+],
+"ref": "scarf"
+}
+]
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"spk": "ran"
+},
+{
+"w": "he",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"w": "said",
+"p": "VERB",
+"r": "head",
+"l": "say"
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"w": "He",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"c": "VP",
+"r": "head",
+"k": [
+{
+"w": "did",
+"p": "AUX",
+"r": "aux",
+"l": "do"
+},
+{
+"w": "not",
+"p": "PART",
+"r": "advmod"
+},
+{
+"w": "look",
+"p": "VERB",
+"r": "head"
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "for",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "it",
+"p": "PRON",
+"r": "head",
+"ref": "scarf"
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"w": "There",
+"p": "PRON",
+"r": "expl"
+},
+{
+"w": "is",
+"p": "VERB",
+"r": "head",
+"l": "be",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "a",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "kind",
+"p": "NOUN",
+"r": "head",
+"sense": "kind"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "of",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "man",
+"p": "NOUN",
+"r": "head",
+"sense": "person"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "who",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "forgets",
+"p": "VERB",
+"r": "head",
+"l": "forget",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"c": "NP",
+"r": "obj",
+"k": [
+{
+"w": "a",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "scarf",
+"p": "NOUN",
+"r": "head",
+"sense": "kind"
+}
+]
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "on",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "purpose",
+"p": "NOUN",
+"r": "head",
+"sense": "abstract"
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"c": "S",
+"r": "conj",
+"k": [
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "such",
+"p": "ADJ",
+"r": "amod"
+},
+{
+"w": "men",
+"p": "NOUN",
+"r": "head",
+"l": "man",
+"sense": "person"
+}
+]
+},
+{
+"w": "are",
+"p": "AUX",
+"r": "cop",
+"l": "be",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "rarer",
+"p": "ADJ",
+"r": "head",
+"l": "rare"
+},
+{
+"c": "SBAR",
+"r": "advcl",
+"k": [
+{
+"w": "than",
+"p": "SCONJ",
+"r": "mark"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"w": "you",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "would",
+"p": "AUX",
+"r": "aux"
+},
+{
+"w": "think",
+"p": "VERB",
+"r": "head"
+}
+]
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "SBAR",
+"r": "advcl",
+"k": [
+{
+"w": "because",
+"p": "SCONJ",
+"r": "mark"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "most",
+"p": "ADJ",
+"r": "amod"
+},
+{
+"w": "men",
+"p": "NOUN",
+"r": "head",
+"l": "man",
+"sense": "person"
+}
+]
+},
+{
+"w": "only",
+"p": "ADV",
+"r": "advmod",
+"sense": "degree"
+},
+{
+"w": "forget",
+"p": "VERB",
+"r": "head",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "scarves",
+"p": "NOUN",
+"r": "obj",
+"l": "scarf",
+"sense": "kind"
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t3"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"w": "Ran",
+"p": "PROPN",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"c": "COORD",
+"r": "head",
+"k": [
+{
+"c": "VP",
+"r": "conj",
+"k": [
+{
+"w": "took",
+"p": "VERB",
+"r": "head",
+"l": "take"
+},
+{
+"c": "NP",
+"r": "obj",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "desk",
+"p": "NOUN",
+"r": "head"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "beside",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "hers",
+"p": "PRON",
+"r": "head",
+"l": "her",
+"ref": "kiran"
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "NP",
+"r": "appos",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "one",
+"p": "PRON",
+"r": "head"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "he",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"w": "had",
+"p": "AUX",
+"r": "aux",
+"l": "have"
+},
+{
+"w": "borrowed",
+"p": "VERB",
+"r": "head",
+"l": "borrow"
+},
+{
+"c": "NP",
+"r": "obl",
+"k": [
+{
+"w": "all",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "week",
+"p": "NOUN",
+"r": "head",
+"sense": "time"
+}
+]
+}
+]
+}
+]
+}
+],
+"ref": "rdesk"
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+}
+]
+},
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"c": "VP",
+"r": "conj",
+"k": [
+{
+"w": "watched",
+"p": "VERB",
+"r": "head",
+"l": "watch"
+},
+{
+"w": "her",
+"p": "PRON",
+"r": "obj",
+"ref": "kiran"
+},
+{
+"w": "type",
+"p": "VERB",
+"r": "xcomp"
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "like",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "a",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "heron",
+"p": "NOUN",
+"r": "head",
+"sense": "figurative"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "at",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "a",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "pond",
+"p": "NOUN",
+"r": "head",
+"sense": "figurative"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "that",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "has",
+"p": "AUX",
+"r": "aux",
+"l": "have",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "never",
+"p": "ADV",
+"r": "advmod",
+"sense": "time"
+},
+{
+"w": "once",
+"p": "ADV",
+"r": "advmod",
+"sense": "degree"
+},
+{
+"w": "held",
+"p": "VERB",
+"r": "head",
+"l": "hold"
+},
+{
+"c": "NP",
+"r": "obj",
+"k": [
+{
+"w": "a",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "fish",
+"p": "NOUN",
+"r": "head",
+"sense": "figurative"
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"c": "QUOTE",
+"r": "ccomp",
+"k": [
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "NP",
+"r": "head",
+"k": [
+{
+"w": "Your",
+"p": "PRON",
+"r": "poss"
+},
+{
+"w": "Last",
+"p": "ADJ",
+"r": "amod",
+"l": "last"
+},
+{
+"w": "Night",
+"p": "NOUN",
+"r": "head",
+"l": "night",
+"sense": "time"
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"spk": "kiran"
+},
+{
+"w": "she",
+"p": "PRON",
+"r": "nsubj",
+"ref": "kiran"
+},
+{
+"w": "said",
+"p": "VERB",
+"r": "head",
+"l": "say"
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "QUOTE",
+"r": "parataxis",
+"k": [
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"w": "you",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "spend",
+"p": "VERB",
+"r": "head"
+},
+{
+"w": "it",
+"p": "PRON",
+"r": "obj",
+"ref": "night"
+},
+{
+"w": "here",
+"p": "ADV",
+"r": "advmod",
+"sense": "place"
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"spk": "kiran"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"c": "QUOTE",
+"r": "head",
+"k": [
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "FRAG",
+"r": "head",
+"k": [
+{
+"c": "NP",
+"r": "head",
+"k": [
+{
+"w": "Ten",
+"p": "NUM",
+"r": "nummod"
+},
+{
+"w": "years",
+"p": "NOUN",
+"r": "head",
+"l": "year",
+"sense": "time"
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "Kiran",
+"p": "PROPN",
+"r": "vocative",
+"ref": "kiran"
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"w": "\"",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"spk": "ran"
+}
+],
+"topic": "t2"
+},
+{
+"c": "S",
+"r": "root",
+"k": [
+{
+"w": "He",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"c": "COORD",
+"r": "head",
+"k": [
+{
+"c": "VP",
+"r": "conj",
+"k": [
+{
+"w": "said",
+"p": "VERB",
+"r": "head",
+"l": "say"
+},
+{
+"w": "it",
+"p": "PRON",
+"r": "obj",
+"ref": "remark"
+},
+{
+"w": "plainly",
+"p": "ADV",
+"r": "advmod",
+"sense": "manner"
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "NP",
+"r": "obl",
+"k": [
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "way",
+"p": "NOUN",
+"r": "head",
+"sense": "abstract"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "he",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"w": "had",
+"p": "AUX",
+"r": "aux",
+"l": "have"
+},
+{
+"w": "said",
+"p": "VERB",
+"r": "head",
+"l": "say"
+},
+{
+"w": "everything",
+"p": "PRON",
+"r": "obj"
+},
+{
+"c": "SBAR",
+"r": "advcl",
+"k": [
+{
+"w": "since",
+"p": "SCONJ",
+"r": "mark",
+"sense": "time"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"w": "he",
+"p": "PRON",
+"r": "nsubj",
+"ref": "ran"
+},
+{
+"w": "was",
+"p": "AUX",
+"r": "cop",
+"l": "be"
+},
+{
+"w": "nine",
+"p": "NUM",
+"r": "head"
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+}
+]
+},
+{
+"w": "and",
+"p": "CCONJ",
+"r": "cc"
+},
+{
+"c": "VP",
+"r": "conj",
+"k": [
+{
+"w": "smiled",
+"p": "VERB",
+"r": "head",
+"l": "smile"
+},
+{
+"c": "PP",
+"r": "obl",
+"k": [
+{
+"w": "at",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "her",
+"p": "PRON",
+"r": "head",
+"ref": "kiran"
+}
+]
+},
+{
+"c": "SBAR",
+"r": "advcl",
+"k": [
+{
+"w": "until",
+"p": "SCONJ",
+"r": "mark"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"w": "she",
+"p": "PRON",
+"r": "nsubj",
+"ref": "kiran"
+},
+{
+"w": "had",
+"p": "VERB",
+"r": "head",
+"l": "have"
+},
+{
+"w": "to",
+"p": "PART",
+"r": "mark"
+},
+{
+"w": "look",
+"p": "VERB",
+"r": "xcomp"
+},
+{
+"w": "up",
+"p": "ADV",
+"r": "advmod",
+"sense": "direction"
+}
+]
+}
+]
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+],
+"topic": "t2"
+},
+{
+"c": "PRN",
+"r": "root",
+"k": [
+{
+"w": "*",
+"p": "SYM",
+"r": "mark"
+},
+{
+"c": "S",
+"r": "head",
+"k": [
+{
+"c": "NP",
+"r": "nsubj",
+"k": [
+{
+"w": "Printers",
+"p": "NOUN",
+"r": "head",
+"l": "printer",
+"sense": "kind"
+}
+]
+},
+{
+"w": "are",
+"p": "AUX",
+"r": "cop",
+"l": "be",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "only",
+"p": "ADJ",
+"r": "amod"
+},
+{
+"w": "machines",
+"p": "NOUN",
+"r": "head",
+"l": "machine",
+"sense": "kind"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "that",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "understand",
+"p": "VERB",
+"r": "head",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "Deadlines",
+"p": "NOUN",
+"r": "obj",
+"l": "deadline",
+"sense": "abstract"
+}
+]
+},
+{
+"w": ",",
+"p": "PUNCT",
+"r": "punct"
+},
+{
+"c": "S",
+"r": "relcl",
+"k": [
+{
+"w": "which",
+"p": "PRON",
+"r": "nsubj"
+},
+{
+"w": "is",
+"p": "AUX",
+"r": "cop",
+"l": "be",
+"f": {
+"Tense": "Pres"
+}
+},
+{
+"w": "not",
+"p": "PART",
+"r": "advmod"
+},
+{
+"w": "the",
+"p": "DET",
+"r": "det"
+},
+{
+"w": "same",
+"p": "ADJ",
+"r": "amod"
+},
+{
+"w": "thing",
+"p": "NOUN",
+"r": "head",
+"sense": "abstract"
+},
+{
+"c": "PP",
+"r": "nmod",
+"k": [
+{
+"w": "as",
+"p": "ADP",
+"r": "case"
+},
+{
+"w": "sympathy",
+"p": "NOUN",
+"r": "head",
+"sense": "abstract"
+}
+]
+}
+]
+},
+{
+"w": ".",
+"p": "PUNCT",
+"r": "punct"
+}
+]
+}
+],
+"topic": "t3"
+}
+]
+}

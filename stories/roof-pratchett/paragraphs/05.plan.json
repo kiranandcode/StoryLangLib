@@ -1,0 +1,15 @@
+{
+ "events": [
+  "notice kiran noteOldTimes assumed",
+  "adopt kiran at(kiran,roof)"
+ ],
+ "claims": [
+  "goal kiran at(kiran,roof)"
+ ],
+ "beat": "doubt",
+ "setting": [
+  "lab",
+  "rdesk",
+  "note"
+ ]
+}

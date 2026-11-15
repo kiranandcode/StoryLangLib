@@ -1,0 +1,169 @@
+{
+ "text_sha": "41f8593e398eefef",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "intend kiran teaBreak",
+   "at": 5,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move kiran kitchen",
+   "at": 35,
+   "w": "carried",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "intend ran theNote",
+   "at": 93,
+   "w": "wrote",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "drop ran note",
+   "at": 119,
+   "w": "set",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make ran rchairIn",
+   "at": 133,
+   "w": "pushed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move ran roof",
+   "at": 139,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows kiran kiranLikesRan",
+   "at": 14,
+   "w": "doing"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 45,
+   "w": "stood"
+  },
+  {
+   "c": "true kettleQuick",
+   "at": 53,
+   "w": "needed"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 53,
+   "w": "needed"
+  },
+  {
+   "c": "true objAt(note,lab)",
+   "at": 119,
+   "w": "set"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 119,
+   "w": "set"
+  },
+  {
+   "c": "true rchairIn",
+   "at": 133,
+   "w": "pushed"
+  },
+  {
+   "c": "at ran roof",
+   "at": 139,
+   "w": "took"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "standing",
+   "kind": "act"
+  },
+  {
+   "at": 19,
+   "w": "want",
+   "kind": "content",
+   "lit": "kiranLikesRan"
+  },
+  {
+   "at": 29,
+   "w": "touch",
+   "kind": "speech"
+  },
+  {
+   "at": 59,
+   "w": "use",
+   "kind": "generic"
+  },
+  {
+   "at": 68,
+   "w": "ready",
+   "kind": "generic"
+  },
+  {
+   "at": 70,
+   "w": "go",
+   "kind": "generic"
+  },
+  {
+   "at": 82,
+   "w": "tore",
+   "kind": "act"
+  },
+  {
+   "at": 96,
+   "w": "crossed",
+   "kind": "act"
+  },
+  {
+   "at": 108,
+   "w": "There's",
+   "kind": "speech"
+  },
+  {
+   "at": 113,
+   "w": "said",
+   "kind": "speech"
+  },
+  {
+   "at": 130,
+   "w": "miss",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 152,
+   "w": "runs",
+   "kind": "generic"
+  },
+  {
+   "at": 160,
+   "w": "know",
+   "kind": "generic"
+  },
+  {
+   "at": 164,
+   "w": "take",
+   "kind": "generic"
+  },
+  {
+   "at": 172,
+   "w": "caught",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}

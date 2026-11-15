@@ -1,0 +1,188 @@
+{
+ "text_sha": "2b0fcfc52118710f",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "move kiran roof",
+   "at": 24,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true stairwellStale",
+   "at": 2,
+   "w": "smelled"
+  },
+  {
+   "c": "goal kiran at(kiran,roof)",
+   "at": 2,
+   "w": "smelled"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 24,
+   "w": "took"
+  },
+  {
+   "c": "at ran roof",
+   "at": 24,
+   "w": "took"
+  },
+  {
+   "c": "at ran roof",
+   "at": 35,
+   "w": "had"
+  },
+  {
+   "c": "true kiranLikesRan",
+   "at": 61,
+   "w": "cared"
+  },
+  {
+   "c": "true roofDoorSticks",
+   "at": 68,
+   "w": "stuck"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 68,
+   "w": "stuck"
+  },
+  {
+   "c": "true roofDoorSticks",
+   "at": 73,
+   "w": "did"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 73,
+   "w": "did"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 83,
+   "w": "blew"
+  },
+  {
+   "c": "true raining",
+   "at": 83,
+   "w": "blew"
+  },
+  {
+   "c": "true cityLit",
+   "at": 89,
+   "w": "opened"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 89,
+   "w": "opened"
+  },
+  {
+   "c": "at ran roof",
+   "at": 115,
+   "w": "by"
+  }
+ ],
+ "judge": [
+  {
+   "at": 12,
+   "w": "what",
+   "kind": "generic"
+  },
+  {
+   "at": 15,
+   "w": "made",
+   "kind": "generic"
+  },
+  {
+   "at": 20,
+   "w": "looking",
+   "kind": "generic"
+  },
+  {
+   "at": 38,
+   "w": "made",
+   "kind": "act"
+  },
+  {
+   "at": 40,
+   "w": "slow",
+   "kind": "act"
+  },
+  {
+   "at": 50,
+   "w": "going",
+   "kind": "act"
+  },
+  {
+   "at": 52,
+   "w": "arrive",
+   "kind": "act"
+  },
+  {
+   "at": 57,
+   "w": "looking",
+   "kind": "act"
+  },
+  {
+   "at": 61,
+   "w": "cared",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 76,
+   "w": "shouldered",
+   "kind": "act"
+  },
+  {
+   "at": 100,
+   "w": "kicked",
+   "kind": "generic"
+  },
+  {
+   "at": 132,
+   "w": "turned",
+   "kind": "act"
+  },
+  {
+   "at": 135,
+   "w": "heard",
+   "kind": "act"
+  },
+  {
+   "at": 142,
+   "w": "look",
+   "kind": "act"
+  },
+  {
+   "at": 145,
+   "w": "see",
+   "kind": "act"
+  },
+  {
+   "at": 155,
+   "w": "thing",
+   "kind": "act"
+  },
+  {
+   "at": 158,
+   "w": "done",
+   "kind": "act"
+  },
+  {
+   "at": 167,
+   "w": "design",
+   "kind": "generic"
+  },
+  {
+   "at": 173,
+   "w": "accumulates",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}

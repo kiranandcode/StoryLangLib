@@ -1,0 +1,25 @@
+{
+ "events": [
+  "move kiran lab",
+  "notice kiran ranLeftHer inferred",
+  "notice kiran objAt(note,lab) seen",
+  "adopt kiran holds(kiran,note)",
+  "take kiran note"
+ ],
+ "claims": [
+  "at kiran lab",
+  "holds kiran note",
+  "unaware kiran at(ran,roof)"
+ ],
+ "beat": "find",
+ "setting": [
+  "lab",
+  "rdesk",
+  "rchair",
+  "mug",
+  "note",
+  "keyboard",
+  "garageRoof",
+  "torch"
+ ]
+}

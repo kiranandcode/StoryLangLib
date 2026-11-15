@@ -1,0 +1,195 @@
+{
+ "text_sha": "69d976fcc3497c9c",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "adopt ran at(ran,lab)",
+   "at": 40,
+   "w": "Forgot",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move ran lab",
+   "at": 29,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran at(ran,lab) sensed",
+   "at": 25,
+   "w": "clicked",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "flirt ran kiran",
+   "at": 159,
+   "w": "smiled",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at kiran lab",
+   "at": 6,
+   "w": "emptied"
+  },
+  {
+   "c": "true labEmptied",
+   "at": 6,
+   "w": "emptied"
+  },
+  {
+   "c": "true printersCooling",
+   "at": 16,
+   "w": "ticked"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 16,
+   "w": "ticked"
+  },
+  {
+   "c": "true printersCooling",
+   "at": 19,
+   "w": "cooled"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 19,
+   "w": "cooled"
+  },
+  {
+   "c": "true labDoorClicks",
+   "at": 25,
+   "w": "clicked"
+  },
+  {
+   "c": "at ran lab",
+   "at": 29,
+   "w": "came"
+  },
+  {
+   "c": "true raining",
+   "at": 29,
+   "w": "came"
+  },
+  {
+   "c": "goal ran at(ran,lab)",
+   "at": 51,
+   "w": "look"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 156,
+   "w": "nine"
+  }
+ ],
+ "judge": [
+  {
+   "at": 40,
+   "w": "Forgot",
+   "kind": "speech"
+  },
+  {
+   "at": 46,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 56,
+   "w": "is",
+   "kind": "generic"
+  },
+  {
+   "at": 62,
+   "w": "forgets",
+   "kind": "generic"
+  },
+  {
+   "at": 72,
+   "w": "rarer",
+   "kind": "generic"
+  },
+  {
+   "at": 76,
+   "w": "think",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 82,
+   "w": "forget",
+   "kind": "generic"
+  },
+  {
+   "at": 86,
+   "w": "took",
+   "kind": "act"
+  },
+  {
+   "at": 96,
+   "w": "borrowed",
+   "kind": "act"
+  },
+  {
+   "at": 101,
+   "w": "watched",
+   "kind": "act"
+  },
+  {
+   "at": 114,
+   "w": "held",
+   "kind": "generic"
+  },
+  {
+   "at": 125,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 130,
+   "w": "spend",
+   "kind": "speech"
+  },
+  {
+   "at": 143,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 151,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 164,
+   "w": "had",
+   "kind": "act"
+  },
+  {
+   "at": 174,
+   "w": "machines",
+   "kind": "generic"
+  },
+  {
+   "at": 176,
+   "w": "understand",
+   "kind": "generic"
+  },
+  {
+   "at": 184,
+   "w": "thing",
+   "kind": "generic"
+  }
+ ],
+ "staging": [
+  {
+   "s": "beside rdesk kdesk",
+   "at": 89,
+   "w": "beside"
+  }
+ ]
+}

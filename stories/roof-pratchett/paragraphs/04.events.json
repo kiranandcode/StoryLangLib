@@ -1,0 +1,161 @@
+{
+ "text_sha": "230eeaaa0b588335",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "move kiran lab",
+   "at": 1,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran ranLeftHer inferred",
+   "at": 27,
+   "w": "dropped",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran objAt(note,lab) seen",
+   "at": 48,
+   "w": "saw",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt kiran holds(kiran,note)",
+   "at": 56,
+   "w": "put",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "take kiran note",
+   "at": 61,
+   "w": "opened",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at kiran lab",
+   "at": 1,
+   "w": "came"
+  },
+  {
+   "c": "true rdeskBare",
+   "at": 16,
+   "w": "bare"
+  },
+  {
+   "c": "true !at(ran,lab)",
+   "at": 16,
+   "w": "bare"
+  },
+  {
+   "c": "true rchairIn",
+   "at": 21,
+   "w": "pushed"
+  },
+  {
+   "c": "true !at(ran,lab)",
+   "at": 21,
+   "w": "pushed"
+  },
+  {
+   "c": "falseBelief kiran ranLeftHer",
+   "at": 40,
+   "w": "gone"
+  },
+  {
+   "c": "true objAt(note,lab)",
+   "at": 48,
+   "w": "saw"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 61,
+   "w": "opened"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 73,
+   "w": "the"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 77,
+   "w": "used"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 79,
+   "w": "climb"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 87,
+   "w": "twelve"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 89,
+   "w": "passing"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 95,
+   "w": "talking"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 99,
+   "w": "went"
+  },
+  {
+   "c": "true talkedTillDawn",
+   "at": 99,
+   "w": "went"
+  },
+  {
+   "c": "unaware kiran at(ran,roof)",
+   "at": 103,
+   "w": "read"
+  }
+ ],
+ "judge": [
+  {
+   "at": 32,
+   "w": "knows",
+   "kind": "generic"
+  },
+  {
+   "at": 43,
+   "w": "do",
+   "kind": "generic"
+  },
+  {
+   "at": 120,
+   "w": "change",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 125,
+   "w": "one",
+   "kind": "generic"
+  },
+  {
+   "at": 136,
+   "w": "holds",
+   "kind": "generic"
+  },
+  {
+   "at": 139,
+   "w": "comes",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}

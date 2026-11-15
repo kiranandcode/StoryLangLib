@@ -1,0 +1,151 @@
+{
+ "text_sha": "87252c107089dec9",
+ "world_sha": "e7a75b65a7b7afc8",
+ "events": [
+  {
+   "e": "notice kiran noteOldTimes assumed",
+   "at": 34,
+   "w": "Old",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt kiran at(kiran,roof)",
+   "at": 115,
+   "w": "told",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "holds kiran note",
+   "at": 34,
+   "w": "Old"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 13,
+   "w": "Knowing"
+  },
+  {
+   "c": "knows kiran ranLeaving",
+   "at": 51,
+   "w": "left"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 80,
+   "w": "built"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 94,
+   "w": "noticed"
+  },
+  {
+   "c": "knows kiran ranLeaving",
+   "at": 103,
+   "w": "his"
+  },
+  {
+   "c": "goal kiran at(kiran,roof)",
+   "at": 115,
+   "w": "told"
+  }
+ ],
+ "judge": [
+  {
+   "at": 4,
+   "w": "said",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 7,
+   "w": "snorted",
+   "kind": "act"
+  },
+  {
+   "at": 19,
+   "w": "that",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 22,
+   "w": "let",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 24,
+   "w": "win",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 30,
+   "w": "twelve",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 39,
+   "w": "all",
+   "kind": "content",
+   "lit": "noteOldTimes"
+  },
+  {
+   "at": 58,
+   "w": "going",
+   "kind": "act"
+  },
+  {
+   "at": 60,
+   "w": "stand",
+   "kind": "act"
+  },
+  {
+   "at": 67,
+   "w": "building",
+   "kind": "act"
+  },
+  {
+   "at": 108,
+   "w": "folded",
+   "kind": "act"
+  },
+  {
+   "at": 120,
+   "w": "going",
+   "kind": "speech"
+  },
+  {
+   "at": 126,
+   "w": "rude",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 133,
+   "w": "sort",
+   "kind": "generic"
+  },
+  {
+   "at": 138,
+   "w": "carried",
+   "kind": "generic"
+  },
+  {
+   "at": 150,
+   "w": "build",
+   "kind": "generic"
+  },
+  {
+   "at": 163,
+   "w": "enough",
+   "kind": "generic"
+  },
+  {
+   "at": 169,
+   "w": "is",
+   "kind": "generic"
+  }
+ ],
+ "staging": []
+}
