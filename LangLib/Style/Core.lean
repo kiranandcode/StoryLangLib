@@ -164,6 +164,8 @@ structure Down where
   subj : Option EntityId := none
   tense : Option String := none
   quoted : Bool := false
+  /-- under a verb of saying: reported speech, not the narrator's -/
+  said : Bool := false
 
 /-- The head verb of a node: a direct `VERB` head leaf, else that of its head `VP`. -/
 private def headVerb (kids : List Tree) : Option Word :=
@@ -209,7 +211,7 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
       let interior := !quoted && subj == some cx.pov &&
         (interiorVerbs.contains lem || lem == "be" || (lem == "tell" && reflexive))
       { clauses := 1,
-        generics := if !quoted && tns == some "Pres" && !charSubj then 1 else 0,
+        generics := if !quoted && !d.said && tns == some "Pres" && !charSubj then 1 else 0,
         interior := if interior then 1 else 0,
         choreo := if !quoted && charSubj && !interior then 1 else 0,
         povClauses := if !quoted && subj == some cx.pov then 1 else 0 }
@@ -235,10 +237,13 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
         | some w => if speechTagVerbs.contains (lemmaOf w) then { tags := [lemmaOf w] } else {}
         | none => {}
       else {}
+    -- the subject passes down the head and conjuncts; the tense to every clause below
+    -- without its own (as in `Complete.lean`), and a verb of saying makes what it says reported
+    let saying := (verb.map fun w => speechTagVerbs.contains (lemmaOf w)).getD false
     let down (k : Tree) : Down :=
       let inherits := roleIs k .head || roleIs k .conj
       { subj := if inherits then subj else none,
-        tense := if inherits then tns else none, quoted }
+        tense := tns, quoted, said := d.said || (saying && !inherits) }
     let below := kids.foldl (fun a k => a.add (accOf cx (down k) k)) {}
     [here, prn, like, asif, asas, tag].foldl Acc.add below
 
