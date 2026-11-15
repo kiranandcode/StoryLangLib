@@ -135,3 +135,7 @@
 .overview .tok.jlinkw { font-style: italic; }
 .overview .tok.jlinkw.jok { color: color-mix(in srgb, var(--c0) 70%, var(--ink)); }
 .overview .tok.jlinkw.jbad { color: var(--bad); text-decoration: line-through wavy var(--bad); }
+
+/* words linked from the hovered side-panel item */
+.prose .linked { background: color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 3px;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent); }

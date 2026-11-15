@@ -5,6 +5,7 @@ import { ContextMenu, InspectorView, describeTarget, targetsAt, type Menu, type 
 import { ParagraphView, type Hover, entityColour } from './Prose'
 import { JudgementsView } from './Judgements'
 import { ArgumentView } from './Argument'
+import { LinkLines } from './Links'
 import { LogicPanel } from './Logic'
 import { ProofView, RunsView, StoryView } from './StoryViews'
 
@@ -267,6 +268,7 @@ export function App() {
       </div>
       {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
       {draft && <Composer story={story} draft={draft} onClose={() => setDraft(null)} onSent={() => { loadRequests(); setTab('requests') }} />}
+      <LinkLines />
       {hover && overview && <div className="card-pop" style={{ left: Math.max(8, Math.min(hover.x, innerWidth - Math.min(340, innerWidth - 16) - 8)), top: Math.max(8, Math.min(hover.y, innerHeight - 160)) }}>{hover.body}</div>}
     </div>
   )

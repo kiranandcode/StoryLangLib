@@ -119,7 +119,7 @@ export interface Completeness {
 /** The story as an argument graph (Complete.lean `argumentGraph`): facts, beliefs, sayings;
  *  support and attack edges; grounded labelling (in / out). */
 export interface Argument {
-  nodes: { id: string; kind: 'fact' | 'belief' | 'said'; who: string; lit: string; gloss: string; para: string; status: 'in' | 'out'; note: string }[]
+  nodes: { id: string; kind: 'fact' | 'belief' | 'said'; who: string; lit: string; gloss: string; para: string; status: 'in' | 'out'; note: string; ats?: string[] }[]
   edges: { src: string; tgt: string; kind: 'support' | 'attack'; why: string }[]
 }
 

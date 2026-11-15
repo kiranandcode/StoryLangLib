@@ -964,6 +964,8 @@ structure ANode where
   para : String
   status : String := "in"
   note : String := ""
+  /-- where the story asserts it: (paragraph, token) -/
+  ats : List (String × Nat) := []
   deriving Inhabited
 
 structure AEdge where
@@ -984,9 +986,9 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
   let factId (l : Fact × Bool) := s!"F:{n.litS l}"
   let belId (c : Nat) (l : Fact × Bool) := s!"B:{n.chS c}:{n.litS l}"
   let fact (l : Fact × Bool) (para status note : String) : ANode :=
-    ANode.mk (factId l) "fact" "" (n.litS l) (s.litGloss l) para status note
+    ANode.mk (factId l) "fact" "" (n.litS l) (s.litGloss l) para status note []
   let belief (c : Nat) (l : Fact × Bool) (para status : String) : ANode :=
-    ANode.mk (belId c l) "belief" (n.chS c) (n.litS l) (s.litGloss l) para status ""
+    ANode.mk (belId c l) "belief" (n.chS c) (n.litS l) (s.litGloss l) para status "" []
   let add (nodes : Array ANode) (x : ANode) : Array ANode :=
     if nodes.any (·.id == x.id) then nodes else nodes.push x
   for (name, c, f, js, toks) in ps do
@@ -1013,12 +1015,15 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
     for j in js do
       -- a node seen again takes its status there: a belief true when formed can turn false
       if let some x := nodeOf j then
+        let here := (name, j.at_)
         nodes := match nodes.findIdx? (·.id == x.id) with
           | some k =>
-            if nodes[k]!.status == x.status then nodes else
+            let old := nodes[k]!
+            let ats := if old.ats.contains here then old.ats else old.ats ++ [here]
+            if old.status == x.status then nodes.set! k { old with ats } else
             let note := s!"{if x.status == "out" then "false" else "true"} from ¶ {name}"
-            nodes.set! k { nodes[k]! with status := x.status, note }
-          | none => nodes.push x
+            nodes.set! k { old with status := x.status, note, ats }
+          | none => nodes.push { x with ats := [here] }
       -- what supports a belief: being told, seeing
       if let .event i := j.kind then
         if let some (e, _) := c.items[i]? then
@@ -1026,6 +1031,7 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
           | .tell sp d l | .whisper sp d l | .lie sp d l =>
             let note := match e with | .lie .. => "a lie" | _ => ""
             let said := ANode.mk s!"S:{n.chS sp}:{n.litS l}" "said" (n.chS sp) (n.litS l) (s.litGloss l) name "in" note
+              [(name, j.at_)]
             nodes := add nodes said
             edges := edges.push ⟨said.id, belId d l, "support", "told"⟩
           | .notice ch l ev =>
@@ -1068,7 +1074,8 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
 def argumentJson (g : List ANode × List AEdge) : Json :=
   Json.mkObj [
     ("nodes", Json.arr (g.1.map fun x => Json.mkObj [("id", x.id), ("kind", x.kind), ("who", x.who), ("lit", x.lit),
-      ("gloss", x.gloss), ("para", x.para), ("status", x.status), ("note", x.note)]).toArray),
+      ("gloss", x.gloss), ("para", x.para), ("status", x.status), ("note", x.note),
+      ("ats", Json.arr (x.ats.map fun (p, t) => Json.str s!"tok:{p}:{t}").toArray)]).toArray),
     ("edges", Json.arr (g.2.map fun e => Json.mkObj [("src", e.src), ("tgt", e.tgt), ("kind", e.kind),
       ("why", e.why)]).toArray)]
 

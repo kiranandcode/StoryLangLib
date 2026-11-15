@@ -78,6 +78,7 @@ export function ArgumentView({ report, onSelect }: { report: Report; onSelect: (
           {g.nodes.map(n => {
             const p = pos(n.id)
             return <g key={n.id} className={`argnode ${n.kind} ${n.status} ${near(n.id) ? '' : 'faint'}`}
+              data-target={(n.ats ?? []).join(' ') || undefined}
               onMouseEnter={() => setHover(n.id)} onMouseLeave={() => setHover(null)}
               style={{ '--lc': n.kind === 'fact' ? 'var(--ink-2)' : charColour(report, n.who) } as React.CSSProperties}>
               <rect x={p.x - p.w / 2} y={p.y - NH / 2} width={p.w} height={NH} rx={n.kind === 'fact' ? 2 : 9} />

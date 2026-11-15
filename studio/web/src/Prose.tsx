@@ -109,7 +109,7 @@ export const ParagraphView = React.memo(function ParagraphView(props: ParaProps)
         cls.push('jc', jt.bad || jt.judges.length === 0 ? 'jbad' : `jk-${jt.judges[0].kind}`)
         tg.push(`tok:${p.name}:${i}`)
       }
-      if (jt?.link) cls.push('jlinkw', jt.link.ok ? 'jok' : 'jbad')
+      if (jt?.link) { cls.push('jlinkw', jt.link.ok ? 'jok' : 'jbad'); tg.push(`tok:${p.name}:${i}`) }
       out.push(<span key={i} className={cls.join(' ')} style={style as React.CSSProperties} data-i={i} data-target={tg.filter(Boolean).join(' ') || undefined}>{p.text.slice(start, end)}</span>)
       at = end
     })

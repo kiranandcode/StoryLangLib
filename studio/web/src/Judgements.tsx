@@ -162,13 +162,13 @@ function SentenceTree({ c, tree, start }: { c: Completeness; tree: TreeJ; start:
         const link = c.links.find(k => k.at === l.i && k.a !== k.b)
         const cls = ['word', isClause ? 'clause' : '', isClause && (bad.has(l.i) || !js.length) ? 'bad' : '',
           isClause && kind ? `k-${kind}` : '', link ? (bad.has(l.i) ? 'conn bad' : 'conn') : ''].join(' ')
-        return <g key={l.i} data-target={isClause ? `tok:${c.name}:${l.i}` : undefined}>
+        return <g key={l.i} data-target={isClause || link ? `tok:${c.name}:${l.i}` : undefined}>
           <text x={l.x} y={wordY} textAnchor="middle" className={cls}>{l.w}</text>
           <text x={l.x} y={wordY + 11} textAnchor="middle" className={`pos ${l.sense && (l.p === 'ADV' || l.p === 'ADJ') ? 'sense' : ''}`}>
             {l.p}{l.sense && (l.p === 'ADV' || l.p === 'ADJ') ? `·${l.sense}` : ''}</text>
         </g>
       })}
-      {boxes.map((b, k) => <g key={k} className={`jbox k-${b.kind} ${bad.has(b.i) ? 'bad' : ''}`}>
+      {boxes.map((b, k) => <g key={k} className={`jbox k-${b.kind} ${bad.has(b.i) ? 'bad' : ''}`} data-target={`tok:${c.name}:${b.i}`}>
         {boxes.findIndex(o => o.i === b.i) === k && <line x1={b.x} y1={wordY + 15} x2={b.x} y2={b.y - 6} className="stem" />}
         <rect x={b.x - b.w / 2} y={b.y - 6} width={b.w} height={13} rx={4} />
         <text x={b.x} y={b.y + 3.5} textAnchor="middle">{b.text}</text>
@@ -226,11 +226,11 @@ function Why({ d, depth, openTo = 1 }: { d: Deriv; depth: number; openTo?: numbe
 
 /** One judgement: Γ¶ ⊢ «the words» ⟹ what they mean, each with its evidence (Fitch-style, linear);
  *  or the same derivation as a proof tree. */
-export function JudgementCard({ d, para, compact }: { d: Deriv; para: string; compact?: boolean }) {
+export function JudgementCard({ d, para, compact, at }: { d: Deriv; para: string; compact?: boolean; at?: number }) {
   const [tree, setTree] = useState(false)
   const isClause = d.rule === 'clause'
   return (
-    <div className={`jcard ${d.ok ? 'ok' : 'bad'} ${compact ? 'compact' : ''}`}>
+    <div className={`jcard ${d.ok ? 'ok' : 'bad'} ${compact ? 'compact' : ''}`} data-target={at !== undefined ? `tok:${para}:${at}` : undefined}>
       <div className="jhead">
         {isClause && <span className="gamma">Γ<sub>¶{para}</sub> ⊢</span>}
         <span className="jwords">{isClause ? d.concl : <><span className="jtag">{d.rule}</span> {d.concl}</>}</span>
@@ -246,7 +246,7 @@ export function JudgementCard({ d, para, compact }: { d: Deriv; para: string; co
 
 function Rules({ c }: { c: Completeness }) {
   return <div className="jrules">{(c.derivations ?? []).map((x, k) =>
-    <JudgementCard key={k} d={x.d} para={c.name} />)}</div>
+    <JudgementCard key={k} d={x.d} para={c.name} at={x.at} />)}</div>
 }
 
 /** The judgement for a token of a paragraph, if it heads a clause or is a connective. */
@@ -314,11 +314,11 @@ export function JudgementsView({ report, onSelect }: { report: Report; onSelect:
         const pi = report.paragraphs.findIndex(p => p.name === c.name)
         const bad = badTokens(c)
         const word = (t: number) => c.clauses.find(x => x.at === t)?.w ?? `token ${t}`
-        type Row = { at: number; node: React.ReactNode; bad: boolean; kinds: string[] }
+        type Row = { at: number; tok: number; node: React.ReactNode; bad: boolean; kinds: string[] }
         const rows: Row[] = []
         for (const cl of c.clauses) {
           const js = c.judges.filter(j => j.at === cl.at)
-          rows.push({ at: cl.at, bad: bad.has(cl.at) || js.length === 0, kinds: js.map(j => j.kind), node: <>
+          rows.push({ at: cl.at, tok: cl.at, bad: bad.has(cl.at) || js.length === 0, kinds: js.map(j => j.kind), node: <>
             <b className="jw">{cl.w}</b>
             {js.length === 0 && <span className="jchip k-missing">no judgement</span>}
             {js.map((j, k) => <span key={k} className={`jchip k-${j.kind}`} title={j.text}>
@@ -327,7 +327,7 @@ export function JudgementsView({ report, onSelect }: { report: Report; onSelect:
         }
         for (const l of c.links.filter(l => l.a !== l.b)) {
           const ok = !bad.has(l.at)
-          rows.push({ at: l.at + 0.5, bad: !ok, kinds: ['link'], node: <span className={`jconn r-${l.rel} ${ok ? 'ok' : 'bad'}`}>
+          rows.push({ at: l.at + 0.5, tok: l.at, bad: !ok, kinds: ['link'], node: <span className={`jconn r-${l.rel} ${ok ? 'ok' : 'bad'}`}>
             ‘{l.word}’ <span className="dim">{word(l.a)} → {word(l.b)}</span> {l.rel} {ok ? '✓' : '✗'}</span> })
         }
         const shown = rows.sort((a, b) => a.at - b.at).filter(r =>
@@ -340,12 +340,12 @@ export function JudgementsView({ report, onSelect }: { report: Report; onSelect:
           if (!ds.length) return null
           return <div key={c.name} className="jpara" onClick={() => onSelect(pi)}>
             <div className="jpn">¶ {c.name}</div>
-            <div className="jrules">{ds.map((x, k) => <JudgementCard key={k} d={x.d} para={c.name} />)}</div>
+            <div className="jrules">{ds.map((x, k) => <JudgementCard key={k} d={x.d} para={c.name} at={x.at} />)}</div>
           </div>
         }
         return <div key={c.name} className="jpara" onClick={() => onSelect(pi)}>
           <div className="jpn">¶ {c.name}</div>
-          <ul className="jlist">{shown.map((r, k) => <li key={k} className={r.bad ? 'bad' : ''}>{r.node}</li>)}</ul>
+          <ul className="jlist">{shown.map((r, k) => <li key={k} className={r.bad ? 'bad' : ''} data-target={`tok:${c.name}:${r.tok}`}>{r.node}</li>)}</ul>
           {(only === null || only === 'bad') && c.issues.map((i, k) => <div key={k} className="row bad jissue">✗ {i}</div>)}
         </div>
       })}

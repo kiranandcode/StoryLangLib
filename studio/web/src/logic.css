@@ -362,3 +362,9 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .jwhy .jmore { font-size: 10px; color: var(--ink-3); }
 .jcard.compact { border: none; padding: 0; margin: 0; background: none; max-width: 420px; }
 .card-pop .jcard.compact .jwords { font-size: 12px; }
+
+/* lines from the side panel to the prose (Links.tsx) */
+.linklines { position: fixed; inset: 0; pointer-events: none; z-index: 45; overflow: visible; }
+.linklines path { fill: none; stroke: var(--accent); stroke-width: 1.4; opacity: 0.75; stroke-dasharray: 4 3; }
+.linklines circle { fill: var(--accent); }
+.linklines .off { font-size: 11px; fill: var(--accent); font-weight: 600; }
