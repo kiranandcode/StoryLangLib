@@ -235,7 +235,8 @@
           ],
           "count": 1
         }
-      ]
+      ],
+      "outdoor": true
     },
     {
       "id": "garageRoof",
@@ -245,7 +246,8 @@
       ],
       "attrs": {
         "kind": "garage"
-      }
+      },
+      "outdoor": true
     }
   ],
   "objects": [
@@ -353,7 +355,8 @@
       "id": "raining",
       "label": "it is raining",
       "truth": true,
-      "state": true
+      "state": true,
+      "weather": true
     },
     {
       "id": "labEmptied",
@@ -698,5 +701,6 @@
       "beat": "kiss",
       "brief": "The kiss: Kiran kisses Ran. Close on what she notices."
     }
-  ]
+  ],
+  "pov": "kiran"
 }

@@ -289,6 +289,7 @@ def specOfJson (j : Json) : Except String Spec := do
             group := (str a "group").getD "",
             state := (a.getObjValAs? Bool "state").toOption.getD false,
             about := ← (str a "about").mapM n0.spot,
+            weather := (a.getObjValAs? Bool "weather").toOption.getD false,
             who := ← (strs a "who").mapM n0.ch } : AtomSpec)
   let thing (place : Option Nat) (t : Json) : Except String ThingSpec := do
     let id ← need "fixture or scenery id" (str t "id")
@@ -299,7 +300,8 @@ def specOfJson (j : Json) : Except String Spec := do
   let placeInfo := ((arr j "places").zipIdx).filterMap fun (p, i) =>
     if (str p "kind").isNone && (arr p "fixtures").isEmpty && (strs p "words").isEmpty then none
     else some (i, ({ kind := (str p "kind").getD "", desc := (str p "desc").getD "",
-                     words := lower (strs p "words"), attrs := attrsOf p } : PlaceInfo))
+                     words := lower (strs p "words"), attrs := attrsOf p,
+                     outdoor := (p.getObjValAs? Bool "outdoor").toOption.getD false } : PlaceInfo))
   let objWords := ((arr j "objects").zipIdx).filterMap fun (o, i) =>
     let ws := lower (strs o "words"); if ws.isEmpty then none else some (i, ws)
   let layout ← (strs j "layout").mapM n0.fixed
@@ -337,6 +339,7 @@ def specOfJson (j : Json) : Except String Spec := do
     | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
     | _ => pure []
   pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, goals,
-         placeInfo, things := fixtures ++ scenery, objWords, layout }
+         placeInfo, things := fixtures ++ scenery, objWords, layout,
+         pov := ← (str j "pov").mapM n0.ch }
 
 end LangLib.Studio

@@ -74,6 +74,8 @@ structure AtomSpec where
   state : Bool := false
   /-- the place or thing the state is about (whoever changes it must be there) -/
   about : Option Spot := none
+  /-- weather: whoever the story follows must notice it on stepping outdoors -/
+  weather : Bool := false
   /-- the characters it is about (for holding the prose's clauses to it) -/
   who : List Nat := []
   deriving Repr, DecidableEq
@@ -110,6 +112,8 @@ structure Spec where
   /-- the nouns that name each plot object -/
   objWords : List (Nat × List String) := []
   layout : List Fixed := []
+  /-- the point-of-view character, when the story keeps to one -/
+  pov : Option Nat := none
   deriving Repr, DecidableEq
 
 structure Ch (s : Spec) where i : Nat deriving DecidableEq, Repr

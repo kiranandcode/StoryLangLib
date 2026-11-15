@@ -79,6 +79,8 @@ structure PlaceInfo where
   desc : String := ""
   words : List String := []
   attrs : List (String × String) := []
+  /-- open to the weather -/
+  outdoor : Bool := false
   deriving Repr, DecidableEq
 
 end LangLib.Studio

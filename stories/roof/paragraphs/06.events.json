@@ -1,5 +1,5 @@
 {
- "text_sha": "4217d35df7f0482e",
+ "text_sha": "d2ab7f01c0765ca7",
  "world_sha": "c3c7750dd11313b2",
  "events": [
   {
@@ -39,7 +39,12 @@
   {
    "c": "at kiran roof",
    "at": 68,
-   "w": "came"
+   "w": "blew"
+  },
+  {
+   "c": "true raining",
+   "at": 68,
+   "w": "blew"
   },
   {
    "c": "at kiran roof",
@@ -94,22 +99,22 @@
    "kind": "act"
   },
   {
-   "at": 103,
+   "at": 108,
    "w": "turned",
    "kind": "act"
   },
   {
-   "at": 106,
+   "at": 111,
    "w": "heard",
    "kind": "act"
   },
   {
-   "at": 114,
+   "at": 119,
    "w": "look",
    "kind": "act"
   },
   {
-   "at": 117,
+   "at": 122,
    "w": "see",
    "kind": "act"
   }

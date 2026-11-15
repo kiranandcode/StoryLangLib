@@ -220,6 +220,60 @@ def sceneOf (w₀ : W s) (es : List (E s)) (from_ : Nat) : List Nat :=
     (next w e, i + 1, if i ≥ from_ then acc ++ at_ w else acc)) (w₀, 0, [])
   (out ++ at_ (run w₀ es)).eraseDups
 
+/-! ## Weather the story follows someone into -/
+
+def litAtoms : Fact × Bool → List Nat
+  | (.atom i, _) => [i]
+  | _ => []
+
+/-- The fact ids an event is about. -/
+def Ev.atoms : Ev → List Nat
+  | .tell _ _ l | .whisper _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
+  | .hint _ _ l | .sarcasm _ _ l | .promise _ _ l | .request _ _ l | .adopt _ l | .dropGoal _ l
+  | .abandon _ l => litAtoms l
+  | .make _ a _ | .become a _ => [a]
+  | .ask _ _ f => litAtoms (f, true)
+  | _ => []
+
+def Claim.atoms : Claim → List Nat
+  | .thinks _ l | .knows _ l | .falseBelief _ l | .goal _ l | .thinksThinks _ _ l | .holdsTrue l => litAtoms l
+  | .unaware _ f => litAtoms (f, true)
+  | _ => []
+
+/-- When the point-of-view character steps into an outdoor place (in the
+paragraph's events from `from_` on) while a weather state holds there, and the
+paragraph never mentions it: (place, weather atom). -/
+def weatherMisses (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : List (Nat × Nat) :=
+  match s.pov with
+  | none => []
+  | some c =>
+    let outdoor (p : Nat) : Bool := ((lookup s.placeInfo p).map (·.outdoor)).getD false
+    let weather := (s.atoms.zipIdx.filter fun (a, _) => a.weather).map (·.2)
+    let (_, _, out) := es.foldl (fun (w, i, (acc : List (Nat × Nat))) e =>
+      let w' := next w e
+      let p := (w'.loc ⟨c⟩).i
+      let miss : List (Nat × Nat) :=
+        if i < from_ || (w.loc ⟨c⟩).i == p || !outdoor p then [] else
+        weather.filterMap fun a =>
+          let here := match s.stateWhere a with | some q => q == p | none => true
+          if here && w'.atomNow a && !mentioned.contains a then some (p, a) else none
+      (w', i + 1, acc ++ miss)) (w₀, 0, [])
+    out
+
+def Spec.weatherOk (s : Spec) (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List Nat) : Bool :=
+  (weatherMisses w₀ es from_ mentioned).isEmpty
+
+/-- The fact ids a paragraph's events and claims (string or anchored) mention. -/
+def Para.mentioned (s : Spec) (p : Para) : List Nat :=
+  let n := s.names
+  let anchored := match p.reading with
+    | some j => match j.getObjVal? "claims" with
+      | .ok (.arr a) => a.toList.filterMap fun c => (c.getObjValAs? String "c").toOption
+      | _ => []
+    | none => []
+  ((p.items.flatMap (·.ev.atoms)) ++
+    ((p.claims ++ anchored).flatMap fun c => match n.claim c with | .ok cl => cl.atoms | .error _ => [])).eraseDups
+
 /-! ## Snapshots -/
 
 def triName : Tri → String | .yes => "yes" | .no => "no" | .unknown => "unknown"
@@ -473,7 +527,11 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
           | some i, some w => if toks[i]? == some w then none else
             some s!"stale reading: staging '{n.fixedS st}' points at token {i} '{toks.getD i "?"}', not '{w}'"
           | _, _ => none
-        Json.mkObj [("issues", Json.arr ((anchors ++ s.settingIssues scene u p.staging).map Json.str).toArray),
+        let weatherIs := (weatherMisses start (seq.map (·.2)) firstMine (p.mentioned s)).map fun (pl, a) =>
+          s!"{(s.chars[s.pov.getD 0]?.map (·.name)).getD "?"} steps out onto the {n.plS pl} while " ++
+          s!"'{s.stateLabel a}' holds there, and the paragraph never registers it: the prose must say so " ++
+          s!"(read it as a claim or event about {n.atoms.getD a "?"})"
+        Json.mkObj [("issues", Json.arr ((anchors ++ s.settingIssues scene u p.staging ++ weatherIs).map Json.str).toArray),
           ("scene", Json.arr ((scene.map n.plS).map Json.str).toArray),
           ("uses", Json.arr (u.uses.map fun x => Json.mkObj [("at", x.at_), ("w", x.form),
             ("is", match x.target with
