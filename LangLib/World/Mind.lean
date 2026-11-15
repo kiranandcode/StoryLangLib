@@ -258,9 +258,15 @@ def stale (hs : List (Held C Φ)) (h : Held C Φ) : Bool :=
     | some l, some l' => clash l l'
     | _, _ => false
 
+/-- The items that can enter a view: first-order and not merely noted. Only
+these can make another item stale, so `lits` sorts just them (the nested
+beliefs witnesses add for each other are most of a base). -/
+private def adoptable (hs : List (Held C Φ)) : List (Held C Φ) :=
+  hs.filter fun h => h.up != .note && (litOf h.b).isSome
+
 private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
-  (ordered (hs.filter fun h => !stale hs h)).filterMap fun h =>
-    if h.up == .note then none else litOf h.b
+  let hs := adoptable hs
+  (ordered (hs.filter fun h => !stale hs h)).filterMap fun h => litOf h.b
 
 /-- What `c` now believes held at time `t`: their information about times up to `t`. -/
 def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
