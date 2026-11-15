@@ -164,7 +164,8 @@ def langlib(*args: str, timeout: float = 120) -> procs.Result:
 
 
 def report(d: Path) -> dict:
-    res = langlib("story", str(d))
+    # a long story's report takes minutes (every clause judged against the story so far)
+    res = langlib("story", str(d), timeout=900)
     try:
         return json.loads(res.stdout)
     except json.JSONDecodeError:

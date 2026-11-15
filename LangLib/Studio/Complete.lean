@@ -438,6 +438,9 @@ order they take effect) and its own events with the tokens they are read at. -/
 structure ParaCtx (s : Spec) where
   prior : List (E s)
   items : List (Ev × Nat)
+  /-- the state when the paragraph opens, computed once (judgements run from here, not from the
+  story's start: the same state, by `run_append`) -/
+  base : W s := run s.start prior
 
 namespace ParaCtx
 variable (c : ParaCtx s)
@@ -448,7 +451,10 @@ def before (t : Nat) : List (Ev × Nat) := c.items.filter (·.2 < t)
 /-- The story up to token `t` of the paragraph. -/
 def upToTok (t : Nat) : List (E s) := c.prior ++ (c.before t).map (Ev.toE s ·.1)
 
-def stateAt (t : Nat) : W s := run s.start (c.upToTok t)
+def stateAt (t : Nat) : W s := run c.base ((c.before t).map (Ev.toE s ·.1))
+
+/-- The state after the paragraph's `i`-th event (`run s.start (c.upToItem i).1`). -/
+def afterItem (i : Nat) : W s := run c.base ((c.items.take (i + 1)).map (Ev.toE s ·.1))
 
 /-- The story up to and including the paragraph's `i`-th event, and its index there. -/
 def upToItem (i : Nat) : List (E s) × Nat :=
@@ -586,7 +592,7 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
         | some k =>
           let ok := (judgesAt js k.b).any fun gj => match gj.kind with
             | .event i => match (c.items[i]?).bind (·.1.agent) with
-              | some ag => (goalsOf (run s.start (c.upToItem i).1) (⟨ag⟩ : Ch s)).contains (lit l)
+              | some ag => (goalsOf (c.afterItem i) (⟨ag⟩ : Ch s)).contains (lit l)
               | none => false
             | _ => false
           if ok then [] else
@@ -842,8 +848,8 @@ def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List St
     | none => leaf "event" s!"event {i}" false
     | some (e, _) =>
       let (es, k) := c.upToItem i
-      let before := run s.start (es.take k)
-      let allowed := okAt s.start es k
+      let before := run c.base ((c.items.take i).map (Ev.toE s ·.1))
+      let allowed := Domain.ok before (Ev.toE s e)
       let negOk := !p.neg || (e.content.map (·.2)) == some false
       let motive : List Deriv :=
         match ((motives (C := Ch s) (Φ := SFact s) (E := A s) s.start es 0).find? (·.1 == k)).map (·.2) with
@@ -896,7 +902,7 @@ def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List St
     | some k =>
       let agentOk := (judgesAt js k.b).findSome? fun gj => match gj.kind with
         | .event i => (c.items[i]?).bind fun (e, _) => e.agent.map fun ag =>
-            (s.charName ag, (goalsOf (run s.start (c.upToItem i).1) (⟨ag⟩ : Ch s)).contains (lit l))
+            (s.charName ag, (goalsOf (c.afterItem i) (⟨ag⟩ : Ch s)).contains (lit l))
         | _ => none
       match agentOk with
       | some (ag, ok) => .mk "goal" s!"{ag}'s purpose: {s.litGloss l}" ok
@@ -1090,10 +1096,10 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
     -- truth where the judgement stands: after its event in story order, or at its token
     let inOut (j : Judge) (l : Fact × Bool) : String :=
       let st := match j.kind with
-        | .event i => run s.start (c.upToItem i).1
+        | .event i => c.afterItem i
         -- a claim's fact: true or false by the end of its paragraph, in story order (prose may
         -- tell a move after the belief it explains)
-        | _ => run s.start (c.prior ++ c.items.map fun (x : Ev × Nat) => Ev.toE s x.1)
+        | _ => run c.base (c.items.map fun (x : Ev × Nat) => Ev.toE s x.1)
       if truthLit st (lit (s := s) l) then "in" else "out"
     -- the node a judgement stands for, if any
     let nodeOf (j : Judge) : Option ANode :=
