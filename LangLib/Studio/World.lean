@@ -70,6 +70,9 @@ structure AtomSpec where
   truth : Bool
   /-- atoms in the same non-empty group exclude each other -/
   group : String := ""
+  /-- the group as a number (0: none), so the kernel compares groups without strings;
+  `specOfJson` numbers them -/
+  gid : Nat := 0
   /-- a state events change (`make`, `become`); `truth` is its opening value -/
   state : Bool := false
   /-- the place or thing the state is about (whoever changes it must be there) -/
@@ -207,8 +210,8 @@ def Fact.supersedes (s : Spec) : Fact → Fact → Bool
     -- one lookup decides for the many atoms in no group (this runs inside every
     -- consistency check of every view)
     i != j && match s.atoms[i]? with
-      | some a => a.group != "" && match s.atoms[j]? with
-        | some b => a.group == b.group
+      | some a => a.gid != 0 && match s.atoms[j]? with
+        | some b => a.gid == b.gid
         | none => false
       | none => false
   | _, _ => false

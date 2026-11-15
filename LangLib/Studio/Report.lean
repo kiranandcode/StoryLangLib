@@ -274,6 +274,31 @@ def perceptMisses (w₀ : W s) (es : List (E s)) (from_ : Nat) (mentioned : List
       (w', i + 1, look seen w' p', acc ++ miss)) (w₀, 0, [], first)
     out
 
+/-- `perceptMisses` resumed from a checkpoint: `seen` is what the point-of-view
+character had seen (by atom) when the paragraph opens, `opening` whether it is the
+story's first paragraph. Returns the misses and what she has seen at its end, so
+paragraph by paragraph it computes what `perceptMisses` computes over the story. -/
+def perceptFrom (w₀ : W s) (seen₀ : List (Nat × Bool)) (opening : Bool) (es : List (E s))
+    (mentioned : List Nat) : List (Nat × Nat) × List (Nat × Bool) :=
+  match s.pov with
+  | none => ([], seen₀)
+  | some c =>
+    let atoms := List.range s.atoms.length
+    let look (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Bool) :=
+      (atoms.filter (s.perceptibleAt · p)).foldl (fun acc a => (a, w.atomNow a) :: acc.filter (·.1 != a)) seen
+    let misses (seen : List (Nat × Bool)) (w : W s) (p : Nat) : List (Nat × Nat) :=
+      (atoms.filter fun a => s.perceptibleAt a p && lookup seen a != some (w.atomNow a) && !mentioned.contains a).map (p, ·)
+    let p₀ := (w₀.loc ⟨c⟩).i
+    let first := if opening && w₀.known.contains ⟨c⟩ then misses [] w₀ p₀ else []
+    let (_, seen, out) := es.foldl (fun (w, seen, (acc : List (Nat × Nat))) e =>
+      let w' := next w e
+      let p := (w.loc ⟨c⟩).i
+      let p' := (w'.loc ⟨c⟩).i
+      let seen := look seen w p
+      let miss := if p' != p then misses seen w' p' else []
+      (w', look seen w' p', acc ++ miss)) (w₀, seen₀, first)
+    (out, seen)
+
 /-- `perceptMisses` given the states after each event (`after[i]` follows event
 `i` from `w₀`), so a caller that has walked the story already need not run it again. -/
 def perceptMissesOn (w₀ : W s) (after : List (W s)) (from_ : Nat) (mentioned : List Nat) : List (Nat × Nat) :=

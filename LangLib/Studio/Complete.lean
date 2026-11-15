@@ -497,17 +497,18 @@ def judgesAt (js : List Judge) (t : Nat) : List Judge := js.filter (·.at_ == t)
 /-- Does one judgement cause another (`World/Cause.lean`)? -/
 def causes (c : ParaCtx s) (a b : Judge) : Bool :=
   match a.kind, b.kind with
+  -- replayed from the state the paragraph opens in: the events before it are the same with
+  -- or without one of the paragraph's own (`run_append`)
   | .event i, .event j =>
-    let (es, jj) := c.upToItem j
-    let ii := c.prior.length + i
-    enables s.start es ii jj ||
-      motivates (C := Ch s) (Φ := SFact s) (E := A s) s.start es ii jj
+    let es := (c.items.take (j + 1)).map (Ev.toE s ·.1)
+    enables c.base es i j ||
+      motivates (C := Ch s) (Φ := SFact s) (E := A s) c.base es i j
   | .event i, .claim cl =>
-    let es := c.upToTok b.at_
-    bringsAbout s.start es (c.prior.length + i) es.length (fun w => cl.eval w)
+    let es := (c.before b.at_).map (Ev.toE s ·.1)
+    bringsAbout c.base es i es.length (fun w => cl.eval w)
   | .event i, .content l | .event i, .goal l =>
-    let es := c.upToTok b.at_
-    bringsAbout s.start es (c.prior.length + i) es.length (fun w => truthLit w (lit (s := s) l))
+    let es := (c.before b.at_).map (Ev.toE s ·.1)
+    bringsAbout c.base es i es.length (fun w => truthLit w (lit (s := s) l))
   | .claim _, .event j | .content _, .event j =>
     let l := match a.kind with | .claim cl => cl.content | .content l => some l | _ => none
     match l, ((c.items[j]?).bind (·.1.agent)) with

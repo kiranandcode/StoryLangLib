@@ -282,11 +282,14 @@ def specOfJson (j : Json) : Except String Spec := do
   let n0 : Names := { chars := chars.map (·.id), places, objects,
                       atoms := (arr j "atoms").filterMap (str · "id"),
                       plans := (arr j "plans").filterMap (str · "id"), things := thingIds }
+  -- exclusion groups, numbered from 1 in order of first use (0: no group)
+  let groups := ((arr j "atoms").filterMap fun a => (str a "group").filter (· != "")).eraseDups
   let atoms ← (arr j "atoms").mapM fun a => do
     let id ← need "atom id" (str a "id")
+    let group := (str a "group").getD ""
     pure ({ id, label := (str a "label").getD id,
             truth := (a.getObjValAs? Bool "truth").toOption.getD true,
-            group := (str a "group").getD "",
+            group, gid := ((groups.idxOf? group).map (· + 1)).getD 0,
             state := (a.getObjValAs? Bool "state").toOption.getD false,
             about := ← (str a "about").mapM n0.spot,
             kind := (str a "kind").getD (if (a.getObjValAs? Bool "weather").toOption.getD false then "weather" else ""),
