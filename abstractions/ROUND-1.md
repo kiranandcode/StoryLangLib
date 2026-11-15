@@ -76,3 +76,32 @@ Stated over the existing terms (`LangLib/World/Mind.lean`, `Studio/World.lean`):
 
 Same paragraph, the story's lore deleted (scratch copy): `p33_step` 45.3 s →
 6.0 s. The lore branch of `view` is the cost; L5/L6 target it.
+
+## 3. What was tried (the meet: rules over the existing terms, no new datatype)
+
+Measured on paragraph 33, seconds inside the Lean lock, baseline about 5 s.
+
+| change | `p33_step` | the paragraph's forcing checks |
+|---|---|---|
+| checkpoints + data world (incumbent) | 45.3 | ~4 × 45 (step, setting, perceived, complete) |
+| L1, reasons as codes (langlib-1a, `511f973`) | 45.3 → no change | — |
+| L6, settled only when a rule head qualifies (`243adaf`) | 30.7 | ~4 × 30 |
+| per-paragraph bundle: the checks as one conjunction | — | 35.3 together |
+
+* L1 is still worth having (it removed strings from states) but was not the cost.
+* L6 is exact (`settledAt_guard`, `view_eq_viewSpec` re-proved) and saved a third
+  of a step: the witness with no qualifying rule head (Robin) no longer builds
+  per-time views; the one with two (Remy) still does.
+* Bundling a paragraph's checks into one declaration lets the kernel run the
+  paragraph's events once (whnf is shared within a declaration, never across):
+  about 3× on the forcing checks. A check whose native verdict is false stays a
+  theorem of its own, so a failure still names itself.
+
+## 4. Next: L5 (needs a decision)
+
+What remains in a step is the per-time views for characters with a qualifying
+rule head. L5 removes them: since the past is frozen, carry each character's
+settled conclusions as a table in the state, extended at each learn by the heads
+in the view at the newest time, and written into the checkpoint literal. It
+changes `HasMinds` (shared with the Fight world and its generated snapshots), so
+it goes to Kiran with these numbers first.

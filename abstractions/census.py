@@ -17,6 +17,12 @@ for l in src:
 prev = f"{int(nn) - 1:02}"
 defs = [l for l in src if re.match(rf'def (chunk{nn}|c{prev}|c{nn}|s{prev}|s{nn}|p{nn}uses|p{nn}staging|p{nn}tree|p{nn}judges) ', l)]
 thms = [l for l in src if l.startswith(f'theorem p{nn}_') and ':= by decide' in l]
+# a bundled paragraph: `theorem pNN_checks :` spans lines up to its `decide +kernel`
+for i, l in enumerate(src):
+    if l.startswith(f'theorem p{nn}_checks'):
+        j = i
+        while 'decide +kernel' not in src[j]: j += 1
+        thms.append('\n'.join(src[i:j + 1]))
 base = '\n'.join(hdr) + '\n' + '\n'.join(defs) + '\n'
 ns = re.search(r'^namespace (\S+)', '\n'.join(hdr), re.M).group(1)
 cases = [('baseline', 'theorem baseline : True := trivial')] + [(t.split()[1], t) for t in thms]
