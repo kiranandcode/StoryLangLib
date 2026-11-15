@@ -6,5 +6,9 @@
  "claims": [
   "goal kiran at(kiran,roof)"
  ],
- "beat": "doubt"
+ "beat": "doubt",
+ "setting": [
+  "lab",
+  "note"
+ ]
 }

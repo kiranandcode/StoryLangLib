@@ -6,5 +6,11 @@
   "at kiran roof",
   "at ran roof"
  ],
- "beat": "climb"
+ "beat": "climb",
+ "setting": [
+  "stairs",
+  "roof",
+  "city",
+  "note"
+ ]
 }

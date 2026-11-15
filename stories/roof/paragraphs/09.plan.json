@@ -6,5 +6,8 @@
  "claims": [
   "true did(kiran,ran,kiss)"
  ],
- "beat": "kiss"
+ "beat": "kiss",
+ "setting": [
+  "roof"
+ ]
 }

@@ -66,6 +66,8 @@ structure Para where
   /-- spatial relations the prose asserts, with the token each is anchored at -/
   staging : List Fixed := []
   stagingAt : List (Option Nat × Option String) := []
+  /-- the places and things a plan says its paragraph will use -/
+  planSetting : List Spot := []
   /-- the paragraph's events file as read (its judgements, for completeness) -/
   reading : Option Json := none
 
@@ -476,7 +478,12 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
           ("uses", Json.arr (u.uses.map fun x => Json.mkObj [("at", x.at_), ("w", x.form),
             ("is", match x.target with
               | .spot y => n.spotS y | .char c => n.chS c | .other e _ => e)]).toArray)]
-      | none => Json.null
+      | none =>
+        if !s.hasSetting || p.plan.isNone then Json.null else
+        let scene := sceneOf start (seq.map (·.2)) firstMine
+        Json.mkObj [("issues", Json.arr ((s.planSettingIssues scene p.planSetting p.staging).map Json.str).toArray),
+          ("scene", Json.arr ((scene.map n.plS).map Json.str).toArray),
+          ("uses", Json.arr (p.planSetting.map fun x => Json.mkObj [("is", n.spotS x)]).toArray)]
     let real := match p.plan with
       | some plan =>
         if p.items.all (·.src == "plan") then Json.null else

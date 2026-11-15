@@ -7,5 +7,10 @@
   "thinks kiran ranLikesKiran",
   "thinks kiran noteConfession"
  ],
- "beat": "confess"
+ "beat": "confess",
+ "setting": [
+  "roof",
+  "ledge",
+  "city"
+ ]
 }

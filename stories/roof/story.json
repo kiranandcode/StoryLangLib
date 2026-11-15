@@ -195,6 +195,29 @@
       "kind": "the flat roof of the building, over the city",
       "words": [
         "roof"
+      ],
+      "fixtures": [
+        {
+          "id": "ledge",
+          "what": "the low wall at the roof's edge",
+          "words": [
+            "ledge",
+            "wall",
+            "parapet"
+          ],
+          "count": 1,
+          "attrs": {
+            "height": "low"
+          }
+        },
+        {
+          "id": "city",
+          "what": "the city below, seen from the roof",
+          "words": [
+            "city"
+          ],
+          "count": 1
+        }
       ]
     }
   ],
@@ -248,7 +271,8 @@
     "on laptop kdesk",
     "partOf keyboard laptop",
     "leadsTo corridor kitchen",
-    "leadsTo stairs roof"
+    "leadsTo stairs roof",
+    "near ledge city"
   ],
   "atoms": [
     {

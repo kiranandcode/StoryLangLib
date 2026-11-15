@@ -272,6 +272,17 @@ def Spec.settingOk (s : Spec) (scene : List Nat) (u : Uses) (staging : List Fixe
 
 /-! ## The layout's laws -/
 
+/-- A plan names the setting its paragraph will use: each fixture must be in a
+place someone is in, and its staging must follow from the layout. -/
+def Spec.planSettingIssues (s : Spec) (scene : List Nat) (xs : List Spot) (staging : List Fixed) : List String :=
+  (xs.filterMap fun x =>
+    if s.inScene scene x then none
+    else some s!"the plan uses {s.names.spotS x} ({s.spotWhat x}), but nobody is there in this paragraph") ++
+  staging.flatMap s.stageIssues
+
+def Spec.planSettingOk (s : Spec) (scene : List Nat) (xs : List Spot) (staging : List Fixed) : Bool :=
+  (s.planSettingIssues scene xs staging).isEmpty
+
 def Spec.layoutIssues (s : Spec) : List String :=
   let n := s.names
   let c := Rel.closure s.layout

@@ -9,5 +9,12 @@
   "holds kiran note",
   "unaware kiran at(ran,roof)"
  ],
- "beat": "find"
+ "beat": "find",
+ "setting": [
+  "lab",
+  "kdesk",
+  "keyboard",
+  "mug",
+  "note"
+ ]
 }

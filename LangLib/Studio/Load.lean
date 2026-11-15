@@ -110,7 +110,14 @@ def loadStory (dir : System.FilePath) : IO Loaded := do
         ({ ev := ev, src := "plan", phase := Phase.ofString ph } : Item)
     let mut staging : List Fixed := []
     let mut stagingAt : List (Option Nat × Option String) := []
-    if let some ej := evJ then
+    -- a plan names the setting its paragraph will use (`setting`, `staging`)
+    let mut planSetting : List Spot := []
+    if let some pj := planJ then
+      for x in strs pj "setting" do
+        match n.spot x with
+        | .ok sp => planSetting := planSetting ++ [sp]
+        | .error m => errors := errors ++ [s!"plan setting: {m}"]
+    for ej in (evJ <|> (if doc.isNone then planJ else none)).toList do
       for it in arr ej "staging" do
         let str := (it.getStr?.toOption <|> (it.getObjValAs? String "s").toOption).getD ""
         match n.fixed str with
@@ -124,7 +131,7 @@ def loadStory (dir : System.FilePath) : IO Loaded := do
     let claims := (evJ.map claimStrs).getD [] ++ (planJ.map claimStrs).getD []
     let beat := planJ.bind fun pj => (pj.getObjValAs? String "beat").toOption
     pure ({ name := nm, text, doc, plan, items, claims := claims.eraseDups, beat, errors, staging, stagingAt,
-            reading := evJ } : Para)
+            planSetting, reading := evJ } : Para)
   pure { spec, beats, beatStory, lex, paras }
 
 /-- A paragraph's context for completeness: the story before it, and its events
@@ -238,6 +245,14 @@ def stagingMatch (s : Spec) (str : String) (st : List Fixed) : Bool :=
     (xs.mapM s.names.fixed).toOption == some st
   | .error _ => false
 
+/-- A plan still names `xs` as its setting. -/
+def planSettingMatch (s : Spec) (str : String) (xs : List Spot) : Bool :=
+  match Json.parse str with
+  | .ok j =>
+    let ids := ((j.getObjValAs? (Array String) "setting").toOption.getD #[]).toList
+    (ids.mapM s.names.spot).toOption == some xs
+  | .error _ => false
+
 /-- One-line `repr` (structure instances must not wrap below their first field). -/
 private def rs {α : Type} [Repr α] (a : α) : String := (repr a).pretty 1000000
 
@@ -315,6 +330,18 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
         -- claimed true whatever the verdict: a paragraph that breaks the setting fails its proof
         let stmt := s!"spec.settingOk (sceneOf spec.start {up} {prev}) p{nm}uses p{nm}staging = true"
         if s.settingOk (sceneOf s.start es prev) u p.staging then
+          bundled := bundled.push (s!"p{nm}_setting", stmt, "")
+        else
+          out := out ++ s!"theorem p{nm}_setting : {stmt} := by decide +kernel\n"
+      if p.doc.isNone && p.plan.isSome then
+        let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
+        out := out ++ s!"def p{nm}setting : List Spot := {lean (rs p.planSetting)}\n"
+        out := out ++ s!"#guard planSettingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}setting\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        if !p.staging.isEmpty then
+          out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}staging\n"
+        let stmt := s!"spec.planSettingOk (sceneOf spec.start {up} {prev}) p{nm}setting p{nm}staging = true"
+        if s.planSettingOk (sceneOf s.start es prev) p.planSetting p.staging then
           bundled := bundled.push (s!"p{nm}_setting", stmt, "")
         else
           out := out ++ s!"theorem p{nm}_setting : {stmt} := by decide +kernel\n"
