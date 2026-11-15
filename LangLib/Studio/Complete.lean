@@ -215,6 +215,18 @@ private partial def shallowLeaves : Tree → List Word
   | .leaf w => [w]
   | .node i kids => if i.cat == .S || i.cat == .SBAR then [] else kids.flatMap shallowLeaves
 
+/-- The words of a subject that can negate its clause: its head or determiner ("nobody came",
+"no one came"), not a modifier inside it ("the not so sober men passed out"). -/
+private def subjNegLeaves : Tree → List Word
+  | .leaf w => [w]
+  | .node _ kids => kids.filterMap fun
+    | .leaf w => if w.role == some .head || w.role == some .det then some w else none
+    | _ => none
+
+/-- Adverbs that make a "because" evidence for the clause rather than its cause ("clearly he
+agrees, because he pushes on"): then both must hold, as for "though". -/
+def evidentialWords : List String := ["clearly", "apparently", "obviously", "evidently", "surely"]
+
 structure TCtx where
   subj : Option WId := none
   parent : Option Nat := none
@@ -285,7 +297,8 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
           headSense).filter factSenses.contains |>.eraseDups,
         args := (kids.filter fun k => roleIs k .obj || roleIs k .iobj || roleIs k .obl).filterMap
           (fun k => (refOf k).bind (wid s R)),
-        neg := near.any fun w => negWords.contains (lower w),
+        neg := (kids.flatMap fun k => if roleIs k .nsubj then subjNegLeaves k else shallowLeaves k).any
+          fun w => negWords.contains (lower w),
         present := near.any (fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres")) ||
           (ctx.present && !near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.any (·.1 == "Tense")),
         genSubj := match nsubjK with | some k => (refOf k).isNone | none => ctx.genSubj,
@@ -316,8 +329,11 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
           -- temporal "as" already reads as at the same time, and stays so
           let temporal := marks.any fun (x, _) => match x with
             | .leaf w => w.sense == some "time" | _ => false
+          let evidential := (kids.flatMap shallowLeaves).any fun w =>
+            w.upos == .ADV && evidentialWords.contains (lower w)
           let rel := (LinkRel.ofMarker phrase).map fun r =>
-            if temporal && r == .cause then LinkRel.after else r
+            if temporal && r == .cause then LinkRel.after
+            else if evidential && r == .cause then LinkRel.concession else r
           match rel, marks.head?, headAt k o, hereAt with
           | some r, some (_, mo), some a, some b => some { at_ := mo, word := phrase, rel := r, a, b }
           | _, _, _, _ => none
