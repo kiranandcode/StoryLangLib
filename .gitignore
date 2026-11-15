@@ -6,3 +6,6 @@ eval/runs-v1/
 eval/*.log
 studio/web/tsconfig.tsbuildinfo
 stories/*/source/
+
+# third-party or private texts: the Studio shows them, git never sees them
+stories/private-*/
