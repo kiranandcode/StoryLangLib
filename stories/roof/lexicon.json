@@ -21,6 +21,11 @@
 "always": {
 "reg": "neutral"
 },
+"and": {
+"cls": [
+"and"
+]
+},
 "annoy": {
 "reg": "informal"
 },
@@ -31,7 +36,10 @@
 "reg": "neutral"
 },
 "ask": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "back": {
 "reg": "neutral"
@@ -46,10 +54,18 @@
 "reg": "neutral"
 },
 "be": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"be"
+]
 },
 "because": {
 "rel": "cause"
+},
+"been": {
+"cls": [
+"be"
+]
 },
 "before": {
 "reg": "neutral"
@@ -67,16 +83,35 @@
 "reg": "neutral"
 },
 "breathe": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "build": {
 "reg": "neutral"
 },
+"by": {
+"cls": [
+"agent"
+]
+},
 "care": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
+},
+"carried": {
+"cls": [
+"light"
+]
 },
 "carry": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"light"
+]
 },
 "cathedral": {
 "reg": "neutral"
@@ -132,6 +167,11 @@
 "desk": {
 "reg": "neutral"
 },
+"did": {
+"cls": [
+"light"
+]
+},
 "didn't": {
 "rel": "neg"
 },
@@ -142,7 +182,10 @@
 "reg": "neutral"
 },
 "do": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"light"
+]
 },
 "don't": {
 "rel": "neg"
@@ -160,7 +203,10 @@
 "reg": "neutral"
 },
 "embarrassing": {
-"reg": "informal"
+"reg": "informal",
+"cls": [
+"ing"
+]
 },
 "empty": {
 "reg": "neutral"
@@ -176,7 +222,10 @@
 "reg": "neutral"
 },
 "exactly": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"intensifier"
+]
 },
 "face": {
 "reg": "neutral"
@@ -197,7 +246,10 @@
 "reg": "neutral"
 },
 "flatter": {
-"reg": "informal"
+"reg": "informal",
+"cls": [
+"animate"
+]
 },
 "flight": {
 "reg": "neutral"
@@ -209,7 +261,10 @@
 "reg": "neutral"
 },
 "forget": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "full": {
 "reg": "neutral"
@@ -238,6 +293,11 @@
 "grin": {
 "reg": "informal"
 },
+"had": {
+"cls": [
+"light"
+]
+},
 "hair": {
 "reg": "neutral"
 },
@@ -248,13 +308,19 @@
 "reg": "neutral"
 },
 "have": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"light"
+]
 },
 "head": {
 "reg": "neutral"
 },
 "hear": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "here": {
 "reg": "neutral"
@@ -278,6 +344,11 @@
 "reg": "neutral",
 "rel": "contrast"
 },
+"is": {
+"cls": [
+"be"
+]
+},
 "joke": {
 "reg": "informal"
 },
@@ -297,13 +368,19 @@
 "reg": "neutral"
 },
 "kiss": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "kitchen": {
 "reg": "neutral"
 },
 "know": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "lab": {
 "reg": "neutral"
@@ -315,7 +392,10 @@
 "reg": "neutral"
 },
 "laugh": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "leave": {
 "reg": "neutral"
@@ -333,7 +413,10 @@
 "reg": "neutral"
 },
 "like": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "line": {
 "reg": "neutral"
@@ -348,7 +431,10 @@
 "reg": "neutral"
 },
 "look": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"nominal"
+]
 },
 "lose": {
 "reg": "neutral"
@@ -356,8 +442,16 @@
 "low": {
 "reg": "neutral"
 },
+"made": {
+"cls": [
+"light"
+]
+},
 "make": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"light"
+]
 },
 "mean": {
 "reg": "neutral"
@@ -372,7 +466,10 @@
 "reg": "neutral"
 },
 "move": {
-"reg": "technical"
+"reg": "technical",
+"cls": [
+"nominal"
+]
 },
 "much": {
 "reg": "neutral"
@@ -409,7 +506,10 @@
 "rel": "neg"
 },
 "notice": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "old": {
 "reg": "neutral"
@@ -467,7 +567,10 @@
 "reg": "informal"
 },
 "push": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"nominal"
+]
 },
 "put": {
 "reg": "neutral"
@@ -483,13 +586,19 @@
 "reg": "neutral"
 },
 "read": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"nominal"
+]
 },
 "ready": {
 "reg": "neutral"
 },
 "real": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"intensifier"
+]
 },
 "roof": {
 "reg": "neutral"
@@ -504,13 +613,19 @@
 "reg": "neutral"
 },
 "say": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "scarf": {
 "reg": "neutral"
 },
 "see": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "set": {
 "reg": "neutral"
@@ -531,13 +646,22 @@
 "reg": "neutral"
 },
 "smell": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "smile": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "snort": {
-"reg": "informal"
+"reg": "informal",
+"cls": [
+"animate"
+]
 },
 "so ,": {
 "rel": "cause"
@@ -591,13 +715,22 @@
 "reg": "neutral"
 },
 "take": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"light"
+]
 },
 "talk": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "taste": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "tea": {
 "reg": "neutral"
@@ -606,10 +739,16 @@
 "reg": "neutral"
 },
 "tell": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "that": {
-"rel": "demonstrative"
+"rel": "demonstrative",
+"cls": [
+"that"
+]
 },
 "then": {
 "reg": "neutral"
@@ -618,7 +757,10 @@
 "reg": "neutral"
 },
 "think": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "third": {
 "reg": "neutral"
@@ -647,6 +789,11 @@
 "tomorrow": {
 "reg": "neutral"
 },
+"took": {
+"cls": [
+"light"
+]
+},
 "top": {
 "reg": "neutral"
 },
@@ -666,7 +813,10 @@
 "reg": "neutral"
 },
 "use": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"nominal"
+]
 },
 "wait": {
 "reg": "neutral"
@@ -675,13 +825,24 @@
 "reg": "neutral"
 },
 "want": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "warm": {
 "reg": "neutral"
 },
+"was": {
+"cls": [
+"be"
+]
+},
 "watch": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"animate"
+]
 },
 "way": {
 "reg": "neutral"
@@ -689,8 +850,31 @@
 "week": {
 "reg": "neutral"
 },
+"were": {
+"cls": [
+"be"
+]
+},
+"what": {
+"cls": [
+"wh"
+]
+},
 "where": {
-"reg": "neutral"
+"reg": "neutral",
+"cls": [
+"wh"
+]
+},
+"which": {
+"cls": [
+"that"
+]
+},
+"who": {
+"cls": [
+"that"
+]
 },
 "win": {
 "reg": "neutral"

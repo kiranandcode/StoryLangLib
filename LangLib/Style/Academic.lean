@@ -74,10 +74,16 @@ structure Lex where
   /-- multiword expressions (lower-cased forms), with a register and a relation
   ("" for none) that override their words' ("sweet spot", "at least") -/
   mwe : List (List String × String × String) := []
+  /-- word classes, by `lemma/UPOS` or lemma or lower-cased form (several per key):
+  `nominal`, `animate`, `light`, `be`, `agent`, `significance`, `intensifier`,
+  `buzz`, `us`, ... -/
+  cls : List (String × String) := []
+  /-- multiword expressions with a class ("it is worth noting": `throat`) -/
+  mweCls : List (List String × String) := []
 
-private def lower (s : String) : String := s.toLower
-private def isWord (w : Word) : Bool := w.upos != .PUNCT && w.upos != .SYM
-private def isContent (w : Word) : Bool :=
+def lower (s : String) : String := s.toLower
+def isWord (w : Word) : Bool := w.upos != .PUNCT && w.upos != .SYM
+def isContent (w : Word) : Bool :=
   w.upos == .NOUN || w.upos == .VERB || w.upos == .ADJ || w.upos == .ADV
 
 /-- A register by `lemma/UPOS` first (one sense per part of speech), then by lemma. -/
@@ -86,6 +92,11 @@ def Lex.regOf (lx : Lex) (w : Word) : Option String :=
   lx.reg.lookup s!"{k}/{w.upos.name}" <|> lx.reg.lookup k
 def Lex.relOf (lx : Lex) (w : Word) : Option String := lx.rel.lookup (lower w.form)
 def Lex.is (lx : Lex) (w : Word) (r : String) : Bool := lx.relOf w == some r
+
+/-- `w` is in word class `c`. -/
+def Lex.has (lx : Lex) (w : Word) (c : String) : Bool :=
+  let k := lower (w.lemma.getD w.form)
+  [s!"{k}/{w.upos.name}", k, lower w.form].any fun key => lx.cls.contains (key, c)
 
 /-! ## Per sentence -/
 
@@ -138,39 +149,39 @@ structure ASent where
   negated : Bool := false
   deriving Repr, DecidableEq, Inhabited
 
-private def roleIs (t : Tree) (r : Role) : Bool := match t with
+def roleIs (t : Tree) (r : Role) : Bool := match t with
   | .leaf w => w.role == some r
   | .node i _ => i.role == some r
 
-private def roleOf : Tree → Option Role
+def roleOf : Tree → Option Role
   | .leaf w => w.role
   | .node i _ => i.role
 
-private partial def leavesOf : Tree → List Word
+partial def leavesOf : Tree → List Word
   | .leaf w => [w]
   | .node _ kids => kids.flatMap leavesOf
 
-private def wc (t : Tree) : Nat := ((leavesOf t).filter isWord).length
+def wc (t : Tree) : Nat := ((leavesOf t).filter isWord).length
 
 /-- The entity a constituent mentions. -/
-private partial def refOf : Tree → Option String
+partial def refOf : Tree → Option String
   | .leaf w => w.ref
   | .node i kids => i.ref <|> kids.findSome? fun k => match k with
     | .leaf w => if w.role == some .head then w.ref else none
     | .node j _ => if j.cat == .NP || j.role == some .head then refOf k else none
 
 /-- Every mention, in reading order, with the word index where it starts. -/
-private partial def mentions : Tree → Nat → List (String × Nat) × Nat
+partial def mentions : Tree → Nat → List (String × Nat) × Nat
   | .leaf w, i => ((w.ref.map fun r => [(r, i)]).getD [], if isWord w then i + 1 else i)
   | .node info kids, i =>
     let own := (info.ref.map fun r => [(r, i)]).getD []
     kids.foldl (fun (acc, j) k => let (m, j') := mentions k j; (acc ++ m, j')) (own, i)
 
-private def firstEach (ms : List (String × Nat)) : List (String × Nat) :=
+def firstEach (ms : List (String × Nat)) : List (String × Nat) :=
   ms.foldl (fun acc (e, i) => if acc.any (·.1 == e) then acc else acc ++ [(e, i)]) []
 
 /-- The main clause's subject: an `nsubj` child, else down the heads. -/
-private partial def mainSubj (t : Tree) (start : Nat) : Option (Option String × Nat) :=
+partial def mainSubj (t : Tree) (start : Nat) : Option (Option String × Nat) :=
   match t with
   | .leaf _ => none
   | .node _ kids =>
@@ -204,7 +215,7 @@ private partial def quotedIn (lx : Lex) : Tree → List String
     here ++ kids.flatMap (quotedIn lx)
 
 /-- A clause has its own subject: `nsubj`, `csubj` or expletive, down the chain of heads. -/
-private partial def hasSubj : Tree → Bool
+partial def hasSubj : Tree → Bool
   | .leaf _ => false
   | .node _ kids => kids.any (fun k => roleIs k .nsubj || roleIs k .csubj || roleIs k .expl) ||
     kids.any fun k => match k with
@@ -288,7 +299,7 @@ private partial def questionWords (lx : Lex) : Tree → Nat
   | .leaf w => if lx.is w "question" then 1 else 0
   | .node i kids => if i.cat == .PP then 0 else kids.foldl (fun n k => n + questionWords lx k) 0
 
-private def feat (w : Word) (k : String) : Option String := (w.feats.find? (·.1 == k)).map (·.2)
+def feat (w : Word) (k : String) : Option String := (w.feats.find? (·.1 == k)).map (·.2)
 
 /-- Per leaf, the register and relation after multiword expressions override. -/
 def overlay (lx : Lex) (ws : List Word) : List (Option String × Option String) :=
@@ -384,7 +395,17 @@ def under (lo : ALore) : Nat → String → String → Bool
   | 0, e, g => e == g
   | n + 1, e, g => e == g || lo.parts.any fun (d, m) => d == e && under lo n m g
 
-def under' (lo : ALore) (e g : String) : Bool := under lo lo.parts.length e g
+/-- Everything `e` is a detail of, `e` included: the lore's closure from `e`,
+computed once (one pass per lore pair at most). -/
+def ancestorsN (lo : ALore) : Nat → List String → List String
+  | 0, acc => acc
+  | n + 1, acc =>
+    let next := lo.parts.filterMap fun (d, m) => if acc.contains d && !acc.contains m then some m else none
+    if next.isEmpty then acc else ancestorsN lo n (acc ++ next)
+
+def ancestors (lo : ALore) (e : String) : List String := ancestorsN lo lo.parts.length [e]
+
+def under' (lo : ALore) (e g : String) : Bool := (ancestors lo e).contains g
 
 structure Flow where
   tracked : Nat := 0
@@ -399,7 +420,7 @@ structure Flow where
 
 /-- `e` is a detail (part, instance) of something already mentioned. -/
 def bridgedBy (lo : ALore) (seen : List String) (e : String) : Bool :=
-  seen.any fun g => g != e && under' lo e g
+  ((ancestors lo e).filter (· != e)).any seen.contains
 
 /-- `e` is a composite whose parts the sentence names after its subject. -/
 def announcedIn (lo : ALore) (s : ASent) (e : String) : Bool :=
@@ -438,7 +459,7 @@ def countMentions (e : String) : List ASent → Nat
 /-- Sentences mentioning something `f` covers. -/
 def cover (lo : ALore) (f : String) : List ASent → Nat
   | [] => 0
-  | s :: ss => (if (names s).any (under' lo · f) then 1 else 0) + cover lo f ss
+  | s :: ss => (if (names s).any (fun e => e == f || under' lo e f) then 1 else 0) + cover lo f ss
 
 def distinct : List String → List String
   | [] => []
@@ -881,7 +902,7 @@ open Lean
 def isParaDoc (n : String) : Bool :=
   n.length == 7 && n.endsWith ".json" && (n.toList.take 2).all Char.isDigit
 
-private def readJson? (p : String) : IO (Option Json) := do
+def readJson? (p : String) : IO (Option Json) := do
   if !(← System.FilePath.pathExists p) then return none
   match Json.parse (← IO.FS.readFile p) with
   | .ok j => pure (some j)
@@ -893,7 +914,13 @@ def loadLex (dir : String) : IO Lex := do
   let mut reg := #[]
   let mut rel := #[]
   let mut mwe := #[]
+  let mut cls := #[]
+  let mut mweCls := #[]
   for (k, v) in kvs.toList do
+    let cs := (v.getObjValAs? (List String) "cls").toOption.getD []
+    for c in cs do
+      if k.contains ' ' then mweCls := mweCls.push ((k.splitOn " ").filter (· != ""), c)
+      else cls := cls.push (k, c)
     let rg := match v with
       | .str r => r
       | j => (j.getObjValAs? String "reg").toOption.getD ""
@@ -905,7 +932,8 @@ def loadLex (dir : String) : IO Lex := do
       if rl != "" then rel := rel.push (k, rl)
   -- longer expressions first, so ", so long as" wins over ", so"
   pure { reg := reg.toList, rel := rel.toList,
-         mwe := mwe.toList.mergeSort fun a b => a.1.length ≥ b.1.length }
+         mwe := mwe.toList.mergeSort fun a b => a.1.length ≥ b.1.length,
+         cls := cls.toList, mweCls := mweCls.toList }
 
 def loadAll (dir : String) : IO (List ASent × ALore × List String) := do
   let lx ← loadLex dir

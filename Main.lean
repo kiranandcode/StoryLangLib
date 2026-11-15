@@ -67,6 +67,9 @@ def main : List String → IO UInt32
   | "style" :: dir :: opts => do
     IO.println (← LangLib.Style.styleMain dir opts)
     pure 0
+  | "house" :: dir :: opts => do
+    IO.println (← LangLib.Style.House.houseMain dir opts)
+    pure 0
   | "academic" :: dir :: opts => do
     IO.println (← LangLib.Style.Academic.academicMain dir opts)
     pure 0
