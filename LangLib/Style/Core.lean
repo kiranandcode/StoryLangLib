@@ -160,6 +160,11 @@ def Acc.add (a b : Acc) : Acc :=
 structure Ctx where
   pov : String := ""
   chars : List String := []
+  /-- the text is a paper (`"kind": "paper"` in story.json) -/
+  paper : Bool := false
+  /-- in a paper, the entities that are individuals (not `generic` kinds): a
+  present-tense clause about one of them reports, it does not generalise -/
+  specific : List String := []
 
 structure Down where
   subj : Option EntityId := none
@@ -212,7 +217,8 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
       let interior := !quoted && subj == some cx.pov &&
         (interiorVerbs.contains lem || lem == "be" || (lem == "tell" && reflexive))
       { clauses := 1,
-        generics := if !quoted && !d.said && tns == some "Pres" && !charSubj then 1 else 0,
+        generics := if !quoted && !d.said && tns == some "Pres" && !charSubj &&
+          !(match subj with | some e => cx.specific.contains e | none => false) then 1 else 0,
         interior := if interior then 1 else 0,
         choreo := if !quoted && charSubj && !interior then 1 else 0,
         povClauses := if !quoted && subj == some cx.pov then 1 else 0 }
@@ -291,6 +297,7 @@ def sentOf (cx : Ctx) (para : Nat) (t : Tree) : Sent :=
 
 /-- Read a paragraph's document. -/
 def sentsOfDoc (cx : Ctx) (para : Nat) (d : Doc) : List Sent :=
+  let cx := if cx.paper then { cx with specific := (d.entities.filter (!·.generic)).map (·.id) } else cx
   d.sentences.map fun s => sentOf cx para s.tree
 
 /-! ## A story's features -/

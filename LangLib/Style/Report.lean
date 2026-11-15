@@ -30,7 +30,8 @@ def loadSents (dir : String) (pov? : Option String) : IO (List Sent × Ctx) := d
   let chars := match story.getObjVal? "characters" with
     | .ok (.arr a) => a.toList.filterMap fun c => (c.getObjValAs? String "id").toOption
     | _ => []
-  let cx : Ctx := { pov, chars }
+  let paper := (story.getObjValAs? String "kind").toOption == some "paper"
+  let cx : Ctx := { pov, chars, paper }
   let names := ((← System.FilePath.readDir s!"{dir}/paragraphs").map (·.fileName)).toList.filter isParaDoc
   let names := names.mergeSort (· ≤ ·)
   let mut out : List Sent := []
