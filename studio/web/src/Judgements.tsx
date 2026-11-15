@@ -219,10 +219,65 @@ export function JudgementSection({ c }: { report: Report; c: Completeness }) {
             {cl.neg && <span className="jflag">not</span>}{cl.modal && <span className="jflag">modal</span>}{cl.quoted && <span className="jflag">quoted</span>}
             {js.length === 0 && <span className="jchip k-missing">no judgement</span>}
             {js.map((j, k) => <span key={k} className={`jchip k-${j.kind}`} title={j.text}>
-              <i>{KIND_LABEL[j.kind] ?? j.kind}</i> {j.kind === 'event' || j.kind === 'content' || j.kind === 'goal' ? j.gloss : j.text}</span>)}
+              <i>{KIND_LABEL[j.kind] ?? j.kind}</i>{['act', 'speech', 'hypothetical'].includes(j.kind) ? null : <> {j.kind === 'event' || j.kind === 'content' || j.kind === 'goal' ? j.gloss : j.text}</>}</span>)}
           </li>)
       })}</ul></>}
       {c.issues.map((i, k) => <div key={k} className="row bad jissue">✗ {i}</div>)}
+    </div>
+  )
+}
+
+/** The story's judgements alone: every clause in story order with what the world says of it, the
+ *  connectives with their verdicts, and the objections; no prose, no trees. */
+export function JudgementsView({ report, onSelect }: { report: Report; onSelect: (i: number) => void }) {
+  const [only, setOnly] = useState<string | null>(null)
+  const comps = report.completeness ?? []
+  const all = comps.flatMap(c => c.judges)
+  const kinds = [...new Set(all.map(j => j.kind))]
+  const issues = comps.reduce((n, c) => n + c.issues.length, 0)
+  const clauses = comps.reduce((n, c) => n + c.clauses.length, 0)
+  const links = comps.flatMap(c => c.links.filter(l => l.a !== l.b))
+  return (
+    <div className="jview-all">
+      <div className={`row ${issues ? 'bad' : 'ok'}`}>
+        {issues ? `${issues} objection${issues > 1 ? 's' : ''}` : 'complete'} · {clauses} clauses · {all.length} judgements · {links.length} connectives checked
+      </div>
+      <div className="jfilter">
+        <button className={only === null ? 'on' : ''} onClick={() => setOnly(null)}>all</button>
+        {kinds.map(k => <button key={k} className={`jchip k-${k} ${only === k ? 'on' : ''}`}
+          onClick={() => setOnly(only === k ? null : k)}>{KIND_LABEL[k] ?? k} {all.filter(j => j.kind === k).length}</button>)}
+        <button className={`jchip k-link ${only === 'link' ? 'on' : ''}`} onClick={() => setOnly(only === 'link' ? null : 'link')}>connectives {links.length}</button>
+        {issues > 0 && <button className={`jchip k-missing ${only === 'bad' ? 'on' : ''}`} onClick={() => setOnly(only === 'bad' ? null : 'bad')}>objections {issues}</button>}
+      </div>
+      {comps.map(c => {
+        const pi = report.paragraphs.findIndex(p => p.name === c.name)
+        const bad = badTokens(c)
+        const word = (t: number) => c.clauses.find(x => x.at === t)?.w ?? `token ${t}`
+        type Row = { at: number; node: React.ReactNode; bad: boolean; kinds: string[] }
+        const rows: Row[] = []
+        for (const cl of c.clauses) {
+          const js = c.judges.filter(j => j.at === cl.at)
+          rows.push({ at: cl.at, bad: bad.has(cl.at) || js.length === 0, kinds: js.map(j => j.kind), node: <>
+            <b className="jw">{cl.w}</b>
+            {js.length === 0 && <span className="jchip k-missing">no judgement</span>}
+            {js.map((j, k) => <span key={k} className={`jchip k-${j.kind}`} title={j.text}>
+              <i>{KIND_LABEL[j.kind] ?? j.kind}</i>{['act', 'speech', 'hypothetical'].includes(j.kind) ? null : <> {j.kind === 'event' || j.kind === 'content' || j.kind === 'goal' ? j.gloss : j.text}</>}</span>)}
+          </> })
+        }
+        for (const l of c.links.filter(l => l.a !== l.b)) {
+          const ok = !bad.has(l.at)
+          rows.push({ at: l.at + 0.5, bad: !ok, kinds: ['link'], node: <span className={`jconn r-${l.rel} ${ok ? 'ok' : 'bad'}`}>
+            ‘{l.word}’ <span className="dim">{word(l.a)} → {word(l.b)}</span> {l.rel} {ok ? '✓' : '✗'}</span> })
+        }
+        const shown = rows.sort((a, b) => a.at - b.at).filter(r =>
+          only === null || (only === 'bad' ? r.bad : r.kinds.includes(only)))
+        if (!shown.length && !(only === 'bad' && c.issues.length)) return null
+        return <div key={c.name} className="jpara" onClick={() => onSelect(pi)}>
+          <div className="jpn">¶ {c.name}</div>
+          <ul className="jlist">{shown.map((r, k) => <li key={k} className={r.bad ? 'bad' : ''}>{r.node}</li>)}</ul>
+          {(only === null || only === 'bad') && c.issues.map((i, k) => <div key={k} className="row bad jissue">✗ {i}</div>)}
+        </div>
+      })}
     </div>
   )
 }

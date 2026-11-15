@@ -282,3 +282,19 @@ code, .lit { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 
 .jtree .jlink.r-purpose text { fill: var(--c2); }
 .jtree .jlink.bad path { stroke: var(--bad); stroke-dasharray: 3 2; }
 .jtree .jlink.bad text { fill: var(--bad); font-weight: 600; }
+
+/* the judgements tab */
+.jview-all { padding-left: 12px; }
+.jfilter { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 10px; }
+.jfilter button { cursor: pointer; font-size: 11px; }
+.jfilter > button:first-child { border: 1px solid var(--rule-2); background: none; border-radius: 8px; padding: 0 7px; color: var(--ink-3); }
+.jfilter button.on { outline: 1.5px solid currentColor; }
+.jfilter > button:first-child.on { color: var(--ink); }
+.jchip.k-link { --jk: var(--c0); }
+.jpara { cursor: pointer; padding: 2px 0 6px; border-top: 1px solid var(--rule); }
+.jpara:hover { background: var(--hover); }
+.jpn { font-size: 10px; color: var(--ink-3); font-variant-numeric: tabular-nums; margin: 3px 0 1px; }
+.jconn { font-size: 11.5px; color: var(--c0); }
+.jconn.r-purpose { color: var(--c2); }
+.jconn.r-after, .jconn.r-before, .jconn.r-during { color: var(--proved); }
+.jconn.bad { color: var(--bad); font-weight: 600; }

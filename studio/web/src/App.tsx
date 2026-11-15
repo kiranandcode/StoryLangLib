@@ -3,6 +3,7 @@ import type { Report, StudioRequest } from './types'
 import { Composer, RequestsView, type Draft } from './Requests'
 import { ContextMenu, InspectorView, describeTarget, targetsAt, type Menu, type MenuItem, type Vocab } from './Inspector'
 import { ParagraphView, type Hover, entityColour } from './Prose'
+import { JudgementsView } from './Judgements'
 import { LogicPanel } from './Logic'
 import { ProofView, RunsView, StoryView } from './StoryViews'
 
@@ -14,7 +15,7 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
+type Tab = 'paragraphs' | 'judgements' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
@@ -248,10 +249,11 @@ export function App() {
         {overview && report && !report.error && (
           <aside className="right">
             <nav className="tabs">
-              {(['paragraphs', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
+              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
+            {tab === 'judgements' && <div className="logic"><JudgementsView report={report} onSelect={select} /></div>}
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
