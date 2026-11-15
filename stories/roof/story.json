@@ -255,29 +255,59 @@
       "id": "noteConfession",
       "label": "the note is a confession",
       "truth": true,
-      "group": "noteMeans"
+      "group": "noteMeans",
+      "who": [
+        "ran",
+        "kiran"
+      ]
     },
     {
       "id": "noteOldTimes",
       "label": "the note is only for old times' sake",
       "truth": false,
-      "group": "noteMeans"
+      "group": "noteMeans",
+      "who": [
+        "ran",
+        "kiran"
+      ]
     },
     {
       "id": "ranLikesKiran",
       "label": "Ran likes Kiran",
-      "truth": true
+      "truth": true,
+      "who": [
+        "ran",
+        "kiran"
+      ]
     },
     {
       "id": "kiranLikesRan",
       "label": "Kiran likes Ran",
-      "truth": true
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ]
     },
     {
       "id": "raining",
       "label": "it is raining",
       "truth": true,
       "state": true
+    },
+    {
+      "id": "labEmptied",
+      "label": "everyone else has gone home from the lab",
+      "truth": true
+    },
+    {
+      "id": "childhoodFriends",
+      "label": "Kiran and Ran have been friends since they were nine",
+      "truth": true,
+      "who": [
+        "kiran",
+        "ran"
+      ]
     }
   ],
   "lore": [

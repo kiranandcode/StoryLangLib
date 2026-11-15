@@ -30,9 +30,10 @@ does the same for the rest of the tree, closed-world:
 * **Connectives**, read off the tree: "then", "after", "once", "when" (the
   second after the first), "before", "until", "while", "meanwhile" (time,
   checked on the order of the judgements); "because", "since", "so" (cause:
-  `World/Cause.lean`); "to", "in order to", "so that" (purpose: the clause is
-  judged `goal`); "though", "although" (both hold); "if", "as if", "unless",
-  "whether" (the dependent clause is hypothetical).
+  `World/Cause.lean`; a "since" marked `"sense": "time"` is time order);
+  "to", "in order to", "so that" (purpose: the clause is judged `goal`);
+  "though", "although" (both hold); "if", "as if", "unless", "whether" (the
+  dependent clause is hypothetical).
 * **Modifiers** on people and events: an adjective said of a character is one
   of their traits or marked `impression`; an adverb on a clause is a connective
   or negation the model reads, or carries a sense (`impression`, `manner`,
@@ -234,7 +235,12 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
             | _ => false
           let phrase := " ".intercalate (marks.map fun (x, _) => match x with
             | .leaf w => lower w | _ => "")
-          match LinkRel.ofMarker phrase, marks.head?, headAt k o, hereAt with
+          -- "since" (and "as") marked `"sense": "time"` is temporal, not causal ("since he was nine")
+          let temporal := marks.any fun (x, _) => match x with
+            | .leaf w => w.sense == some "time" | _ => false
+          let rel := (LinkRel.ofMarker phrase).map fun r =>
+            if temporal && (r == .cause || r == .during) then LinkRel.after else r
+          match rel, marks.head?, headAt k o, hereAt with
           | some r, some (_, mo), some a, some b => some { at_ := mo, word := phrase, rel := r, a, b }
           | _, _, _, _ => none
         else if ki.role == some .conj then

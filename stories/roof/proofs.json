@@ -1,174 +1,159 @@
 {
  "status": "ok",
- "secs": 101.5,
+ "secs": 14.7,
  "theorems": {
   "story_valid": {
    "line": 63,
    "statement": "story_valid : story.Valid spec.start",
    "ok": true
   },
+  "paragraphs": {
+   "line": 98,
+   "statement": "paragraphs :",
+   "ok": true
+  },
   "p01_valid": {
-   "line": 65,
+   "line": 127,
    "statement": "p01_valid : Valid spec.start (story.upTo owner 0)",
    "ok": true
   },
-  "p01_claim0": {
-   "line": 67,
-   "statement": "p01_claim0 : (Claim.holdsTrue (Fact.at_ 1 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
-  "p01_claim1": {
-   "line": 69,
-   "statement": "p01_claim1 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
-  "p01_claim2": {
-   "line": 71,
-   "statement": "p01_claim2 : (Claim.holdsTrue (Fact.atom 4, true)).eval (run spec.start (story.upTo owner 0)) = true",
-   "ok": true
-  },
   "p01_setting": {
-   "line": 76,
+   "line": 128,
    "statement": "p01_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 0) 0) p01uses p01staging = true",
    "ok": true
   },
+  "p01_complete": {
+   "line": 129,
+   "statement": "p01_complete : completeOk (\u27e8[], p01.zip [33, 23, 19, 123]\u27e9 : ParaCtx spec) p01tree p01judges = true",
+   "ok": true
+  },
   "p02_valid": {
-   "line": 78,
+   "line": 130,
    "statement": "p02_valid : Valid spec.start (story.upTo owner 1)",
    "ok": true
   },
-  "p02_claim0": {
-   "line": 80,
-   "statement": "p02_claim0 : (Claim.thinks 1 (Fact.atom 3, true)).eval (run spec.start (story.upTo owner 1)) = true",
+  "p02_setting": {
+   "line": 131,
+   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 4) p02uses p02staging = true",
    "ok": true
   },
-  "p02_setting": {
-   "line": 84,
-   "statement": "p02_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 1) 3) p02uses p02staging = true",
+  "p02_complete": {
+   "line": 132,
+   "statement": "p02_complete : completeOk (\u27e8story.upTo owner 0, p02.zip [11, 57, 79]\u27e9 : ParaCtx spec) p02tree p02judges = true",
    "ok": true
   },
   "p03_valid": {
-   "line": 86,
+   "line": 133,
    "statement": "p03_valid : Valid spec.start (story.upTo owner 2)",
    "ok": true
   },
-  "p03_claim0": {
-   "line": 88,
-   "statement": "p03_claim0 : (Claim.holdsTrue (Fact.at_ 0 1, true)).eval (run spec.start (story.upTo owner 2)) = true",
-   "ok": true
-  },
-  "p03_claim1": {
-   "line": 90,
-   "statement": "p03_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 2)) = true",
-   "ok": true
-  },
-  "p03_claim2": {
-   "line": 92,
-   "statement": "p03_claim2 : (Claim.holdsTrue (Fact.objAt 0 0, true)).eval (run spec.start (story.upTo owner 2)) = true",
-   "ok": true
-  },
   "p03_setting": {
-   "line": 97,
-   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 6) p03uses p03staging = true",
+   "line": 134,
+   "statement": "p03_setting : spec.settingOk (sceneOf spec.start (story.upTo owner 2) 7) p03uses p03staging = true",
+   "ok": true
+  },
+  "p03_complete": {
+   "line": 135,
+   "statement": "p03_complete : completeOk (\u27e8story.upTo owner 1, p03.zip [5, 35, 73, 103, 122]\u27e9 : ParaCtx spec) p03tree p03judges = true",
    "ok": true
   },
   "p04_valid": {
-   "line": 99,
+   "line": 136,
    "statement": "p04_valid : Valid spec.start (story.upTo owner 3)",
    "ok": true
   },
   "p04_claim0": {
-   "line": 101,
+   "line": 138,
    "statement": "p04_claim0 : (Claim.holdsTrue (Fact.at_ 0 0, true)).eval (run spec.start (story.upTo owner 3)) = true",
    "ok": true
   },
   "p04_claim1": {
-   "line": 103,
+   "line": 140,
    "statement": "p04_claim1 : (Claim.holdsTrue (Fact.holds 0 0, true)).eval (run spec.start (story.upTo owner 3)) = true",
    "ok": true
   },
   "p04_claim2": {
-   "line": 105,
+   "line": 142,
    "statement": "p04_claim2 : (Claim.unaware 0 (Fact.at_ 1 2)).eval (run spec.start (story.upTo owner 3)) = true",
    "ok": true
   },
   "p05_valid": {
-   "line": 107,
+   "line": 143,
    "statement": "p05_valid : Valid spec.start (story.upTo owner 4)",
    "ok": true
   },
   "p05_claim0": {
-   "line": 109,
+   "line": 145,
    "statement": "p05_claim0 : (Claim.goal 0 (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 4)) = true",
    "ok": true
   },
   "p06_valid": {
-   "line": 111,
+   "line": 146,
    "statement": "p06_valid : Valid spec.start (story.upTo owner 5)",
    "ok": true
   },
   "p06_claim0": {
-   "line": 113,
+   "line": 148,
    "statement": "p06_claim0 : (Claim.holdsTrue (Fact.at_ 0 2, true)).eval (run spec.start (story.upTo owner 5)) = true",
    "ok": true
   },
   "p06_claim1": {
-   "line": 115,
+   "line": 150,
    "statement": "p06_claim1 : (Claim.holdsTrue (Fact.at_ 1 2, true)).eval (run spec.start (story.upTo owner 5)) = true",
    "ok": true
   },
   "p07_valid": {
-   "line": 117,
+   "line": 151,
    "statement": "p07_valid : Valid spec.start (story.upTo owner 6)",
    "ok": true
   },
   "p07_claim0": {
-   "line": 119,
+   "line": 153,
    "statement": "p07_claim0 : (Claim.thinks 0 (Fact.atom 2, true)).eval (run spec.start (story.upTo owner 6)) = true",
    "ok": true
   },
   "p07_claim1": {
-   "line": 121,
+   "line": 155,
    "statement": "p07_claim1 : (Claim.thinks 0 (Fact.atom 0, true)).eval (run spec.start (story.upTo owner 6)) = true",
    "ok": true
   },
   "p08_valid": {
-   "line": 123,
+   "line": 156,
    "statement": "p08_valid : Valid spec.start (story.upTo owner 7)",
    "ok": true
   },
   "p08_claim0": {
-   "line": 125,
+   "line": 158,
    "statement": "p08_claim0 : (Claim.consented 0 1 (Act.kiss)).eval (run spec.start (story.upTo owner 7)) = true",
    "ok": true
   },
   "p08_claim1": {
-   "line": 127,
+   "line": 160,
    "statement": "p08_claim1 : (Claim.consented 1 0 (Act.kiss)).eval (run spec.start (story.upTo owner 7)) = true",
    "ok": true
   },
   "p09_valid": {
-   "line": 129,
+   "line": 161,
    "statement": "p09_valid : Valid spec.start (story.upTo owner 8)",
    "ok": true
   },
   "p09_claim0": {
-   "line": 131,
+   "line": 163,
    "statement": "p09_claim0 : (Claim.holdsTrue (Fact.did 0 1 (Act.kiss), true)).eval (run spec.start (story.upTo owner 8)) = true",
    "ok": true
   },
   "layout_consistent": {
-   "line": 133,
+   "line": 165,
    "statement": "layout_consistent : spec.layoutOk = true",
    "ok": true
   },
   "beats_valid": {
-   "line": 141,
+   "line": 173,
    "statement": "beats_valid : Valid beats.start beatStory",
    "ok": true
   },
   "plans_refine_beats": {
-   "line": 142,
+   "line": 174,
    "statement": "plans_refine_beats : Refines beats.abs plans beatStory",
    "ok": true
   }
@@ -176,5 +161,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794681610.446719
+ "at": 1794711934.1836102
 }

@@ -1,6 +1,6 @@
 {
  "text_sha": "a2c93f4ebc447d53",
- "world_sha": "c8c0b8abcc0e97cf",
+ "world_sha": "aa6727cf4892dcc9",
  "events": [
   {
    "e": "sarcasm kiran ran kiranLikesRan",
@@ -11,8 +11,8 @@
   },
   {
    "e": "notice ran kiranLikesRan inferred",
-   "at": 70,
-   "w": "grin",
+   "at": 57,
+   "w": "tipped",
    "phase": "main",
    "src": "text"
   },
@@ -25,7 +25,93 @@
   }
  ],
  "claims": [
-  "thinks ran kiranLikesRan"
+  {
+   "c": "knows kiran kiranLikesRan",
+   "at": 34,
+   "w": "meant"
+  },
+  {
+   "c": "knows kiran kiranLikesRan",
+   "at": 40,
+   "w": "heard"
+  },
+  {
+   "c": "thinks ran kiranLikesRan",
+   "at": 71,
+   "w": "opened"
+  }
  ],
- "staging": []
+ "judge": [
+  {
+   "at": 2,
+   "w": "flatter",
+   "kind": "speech"
+  },
+  {
+   "at": 7,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 16,
+   "w": "gone",
+   "kind": "speech"
+  },
+  {
+   "at": 20,
+   "w": "get",
+   "kind": "speech"
+  },
+  {
+   "at": 27,
+   "w": "hums",
+   "kind": "speech"
+  },
+  {
+   "at": 45,
+   "w": "meant",
+   "kind": "content",
+   "lit": "kiranLikesRan"
+  },
+  {
+   "at": 52,
+   "w": "take",
+   "kind": "act"
+  },
+  {
+   "at": 64,
+   "w": "said",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 84,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 88,
+   "w": "did",
+   "kind": "speech"
+  },
+  {
+   "at": 101,
+   "w": "saved",
+   "kind": "act"
+  },
+  {
+   "at": 109,
+   "w": "had",
+   "kind": "act"
+  },
+  {
+   "at": 118,
+   "w": "laughed",
+   "kind": "act"
+  },
+  {
+   "at": 126,
+   "w": "answered",
+   "kind": "hypothetical"
+  }
+ ]
 }

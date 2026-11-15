@@ -1,11 +1,11 @@
 {
  "text_sha": "a75c0336efbbef1e",
- "world_sha": "c8c0b8abcc0e97cf",
+ "world_sha": "aa6727cf4892dcc9",
  "events": [
   {
    "e": "intend kiran teaBreak",
-   "at": 25,
-   "w": "Two",
+   "at": 5,
+   "w": "said",
    "phase": "main",
    "src": "text"
   },
@@ -39,20 +39,88 @@
   }
  ],
  "claims": [
-  "at kiran kitchen",
-  "at ran roof",
-  "true objAt(note,lab)"
- ],
- "staging": [
   {
-   "s": "leadsTo corridor kitchen",
-   "at": 43,
-   "w": "end"
+   "c": "knows kiran kiranLikesRan",
+   "at": 14,
+   "w": "doing"
   },
   {
-   "s": "leadsTo stairs roof",
-   "at": 125,
-   "w": "up"
+   "c": "at kiran kitchen",
+   "at": 48,
+   "w": "stood"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 55,
+   "w": "needed"
+  },
+  {
+   "c": "true objAt(note,lab)",
+   "at": 103,
+   "w": "set"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 103,
+   "w": "set"
+  },
+  {
+   "c": "at ran roof",
+   "at": 122,
+   "w": "took"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "standing",
+   "kind": "act"
+  },
+  {
+   "at": 19,
+   "w": "want",
+   "kind": "content",
+   "lit": "kiranLikesRan"
+  },
+  {
+   "at": 29,
+   "w": "touch",
+   "kind": "speech"
+  },
+  {
+   "at": 48,
+   "w": "stood",
+   "kind": "act"
+  },
+  {
+   "at": 62,
+   "w": "tore",
+   "kind": "act"
+  },
+  {
+   "at": 76,
+   "w": "crossed",
+   "kind": "act"
+  },
+  {
+   "at": 88,
+   "w": "There's",
+   "kind": "speech"
+  },
+  {
+   "at": 93,
+   "w": "said",
+   "kind": "speech"
+  },
+  {
+   "at": 99,
+   "w": "folded",
+   "kind": "act"
+  },
+  {
+   "at": 118,
+   "w": "miss",
+   "kind": "hypothetical"
   }
  ]
 }

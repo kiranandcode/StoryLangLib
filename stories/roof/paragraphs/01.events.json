@@ -1,11 +1,150 @@
 {
  "text_sha": "76a220a9a217cad3",
- "world_sha": "c8c0b8abcc0e97cf",
+ "world_sha": "aa6727cf4892dcc9",
  "events": [
-  {"e": "adopt ran at(ran,lab)", "at": 35, "w": "scarf", "phase": "main", "src": "text"},
-  {"e": "move ran lab", "at": 23, "w": "came", "phase": "main", "src": "text"},
-  {"e": "flirt ran kiran", "at": 123, "w": "smiled", "phase": "main", "src": "text"}
+  {
+   "e": "adopt ran at(ran,lab)",
+   "at": 33,
+   "w": "Forgot",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move ran lab",
+   "at": 23,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran at(ran,lab) sensed",
+   "at": 19,
+   "w": "clicked",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "flirt ran kiran",
+   "at": 123,
+   "w": "smiled",
+   "phase": "main",
+   "src": "text"
+  }
  ],
- "claims": ["at ran lab", "at kiran lab", "true raining"],
- "staging": [{"s": "beside rdesk kdesk", "at": 52, "w": "beside"}]
+ "claims": [
+  {
+   "c": "at kiran lab",
+   "at": 5,
+   "w": "down"
+  },
+  {
+   "c": "true labEmptied",
+   "at": 11,
+   "w": "ticking"
+  },
+  {
+   "c": "true labEmptied",
+   "at": 14,
+   "w": "cooled"
+  },
+  {
+   "c": "at ran lab",
+   "at": 23,
+   "w": "came"
+  },
+  {
+   "c": "true raining",
+   "at": 23,
+   "w": "came"
+  },
+  {
+   "c": "goal ran at(ran,lab)",
+   "at": 44,
+   "w": "look"
+  },
+  {
+   "c": "true childhoodFriends",
+   "at": 120,
+   "w": "nine"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 11,
+   "w": "ticking"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 14,
+   "w": "cooled"
+  }
+ ],
+ "judge": [
+  {
+   "at": 33,
+   "w": "Forgot",
+   "kind": "speech"
+  },
+  {
+   "at": 39,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 49,
+   "w": "took",
+   "kind": "act"
+  },
+  {
+   "at": 59,
+   "w": "borrowed",
+   "kind": "act"
+  },
+  {
+   "at": 64,
+   "w": "watched",
+   "kind": "act"
+  },
+  {
+   "at": 69,
+   "w": "lost",
+   "kind": "act"
+  },
+  {
+   "at": 83,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 88,
+   "w": "spend",
+   "kind": "speech"
+  },
+  {
+   "at": 103,
+   "w": "wait",
+   "kind": "speech"
+  },
+  {
+   "at": 107,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 115,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 128,
+   "w": "had",
+   "kind": "act"
+  }
+ ],
+ "staging": [
+  {
+   "s": "beside rdesk kdesk",
+   "at": 52,
+   "w": "beside"
+  }
+ ]
 }
