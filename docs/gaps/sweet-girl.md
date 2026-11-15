@@ -43,6 +43,26 @@ fixpoint, same choices; the solver is untrusted anyway). Sweet Girl: 147 s to
 about 1 s. A story *with* lore still takes the cubic path; an incremental
 closure would fix that too.
 
+### 1a. The proofs do not scale either (open; checkpointing under way)
+
+**Failed.** `prove` timed out (600 s) on the chapter's `Proofs.lean`. The
+whole-story theorem `story_valid` alone took 2542 s: kernel time for `Valid`
+over the first n events grows about as n³ (60 events 5.8 s, 120 events 45 s),
+and the 186-event run reached a 16 GB footprint and swapped. Kernel
+diagnostics put the time in `Mind.ordered`'s insertion sort (which sorts
+nested beliefs it then discards), the clash scans of `admitPlain` and `stale`,
+and re-walking the `upd` chains that encode the world's function fields. The
+kernel shares reductions within one declaration (so the bundled `paragraphs`
+conjunction does share prefixes) but not across declarations, so
+`story_valid` and `paragraphs` each replay the whole story.
+**Generalisation (proposed; the boyremoval stress test is implementing the
+first two).** A first-order world (association lists, `DecidableEq`) with a
+literal checkpoint per paragraph, each proved from the previous one, and
+`story_valid` derived from them by `valid_append`; per-paragraph checks stated
+from the checkpoint; filter nested beliefs before sorting; strings compared in
+the kernel (atom groups, setting words) interned as numbers, since 4.35's
+kernel compares strings as UTF-8 byte lists.
+
 ### 2. The shared lock starves under several agents
 
 **Failed.** Every `langlib` call takes one machine-wide lock. With two stress
