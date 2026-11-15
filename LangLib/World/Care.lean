@@ -1,4 +1,4 @@
-import LangLib.World.Relation
+import LangLib.World.Ties
 
 /-!
 # Care: needs, harm, and tending
@@ -22,7 +22,7 @@ first aid, comfort, transport, ...). Events:
 
 Care builds a tie: `tend a c k` raises the recipient's relation to the carer
 that the story names (`CareLaws.builds`, typically trust), by the law-abiding
-`setRelLaw` of `Relation.lean`. So whether a later disclosure is in character
+`setTieLaw` of `Ties.lean`. So whether a later disclosure is in character
 (see `Identity.lean`) follows from the care shown before it.
 -/
 
@@ -60,7 +60,7 @@ inductive CareEv (C K : Type) where
   deriving DecidableEq, Repr
 
 variable {W C K R : Type} [DecidableEq C] [DecidableEq K] [DecidableEq R]
-  [HasNeeds W C K] [HasRels W C R] [RelLaws R] [CareLaws K R]
+  [HasNeeds W C K] [HasTies W C R] [TieLaws R] [CareLaws K R]
 
 open HasNeeds
 
@@ -81,7 +81,7 @@ def CareEv.ok (w : W) : CareEv C K → Bool
   | .tend a c k => a != c && needsNow w c k && consentOk (R := R) w a c k
   | .shield a c x => a != c && a != x &&
     match CareLaws.threat (K := K) (R := R) with
-    | some r => HasRels.rel w r x c > 0
+    | some r => HasTies.tie w r x c > 0
     | none => false
 
 def CareEv.step (w : W) : CareEv C K → W
@@ -95,11 +95,11 @@ def CareEv.step (w : W) : CareEv C K → W
     let w := setNeeds w c ((needs w c).erase k)
     let w := setAccepted w ((accepted w).filter fun (c', a', k', _) => !(c' == c && a' == a && k' == k))
     match CareLaws.builds (K := K) (R := R) with
-    | some r => setRelLaw w r c a (HasRels.rel w r c a + 1)
+    | some r => setTieLaw w r c a (HasTies.tie w r c a + 1)
     | none => w
   | .shield a c _ =>
     match CareLaws.protects (K := K) (R := R) with
-    | some r => setRelLaw w r a c (max 1 (HasRels.rel w r a c))
+    | some r => setTieLaw w r a c (max 1 (HasTies.tie w r a c))
     | none => w
 
 instance : Domain W (CareEv C K) where

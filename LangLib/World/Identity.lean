@@ -1,4 +1,4 @@
-import LangLib.World.Relation
+import LangLib.World.Ties
 
 /-!
 # Identity: names, pronouns and private facts, as things others know
@@ -20,7 +20,7 @@ everyone. A story about a trans woman who goes by a nickname needs more:
   (deliberate) or had assumed (mistaken). Nothing is ruled out by being
   cruel; what is ruled out is a name nobody told them.
 
-Trust is a relation of `Relation.lean` (the story names it, `IdentityLaws.trust`),
+Trust is a relation of `Ties.lean` (the story names it, `IdentityLaws.trust`),
 so care that builds trust (`Care.lean`) is what makes a later disclosure in
 character.
 -/
@@ -89,7 +89,7 @@ inductive IdEv (C N X : Type) where
   deriving DecidableEq, Repr
 
 variable {W C N X R : Type} [DecidableEq C] [DecidableEq N] [DecidableEq X] [DecidableEq R]
-  [HasIdent W C N X] [IdentityLaws C N X R] [HasRels W C R]
+  [HasIdent W C N X] [IdentityLaws C N X R] [HasTies W C R]
 
 open HasIdent
 
@@ -102,7 +102,7 @@ def pronOf (w : W) (a b : C) : Option Pron :=
 
 def trustOf (w : W) (a b : C) : Nat :=
   match IdentityLaws.trust C N X with
-  | some r => HasRels.rel w r a b
+  | some r => HasTies.tie w r a b
   | none => 0
 
 def nameEntry (b : C) (n : N) : Option (N × NameKind × Nat) :=
