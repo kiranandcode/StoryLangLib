@@ -99,7 +99,9 @@ private def isNoun (w : Word) : Bool := w.upos == .NOUN || w.upos == .PROPN
 
 private def plural (w : Word) : Bool :=
   w.feats.contains ("Number", "Plur") ||
-  (w.lemma.isSome && lemmaOf w != w.form.toLower && w.form.toLower.endsWith "s")
+  (w.lemma.isSome && lemmaOf w != w.form.toLower && w.form.toLower.endsWith "s" &&
+   -- "the station's doors", "Bathroom's": a possessive or a contracted "is", not a plural
+   !w.form.endsWith "'s" && !w.form.endsWith "’s")
 
 /-- Width of a subtree, in tokens. -/
 private def width (t : Tree) : Nat := t.render.length
@@ -200,10 +202,12 @@ def Spec.spotWhat (s : Spec) : Spot → String
   | .thing t => (s.things[t]?.map fun x => if x.what == "" then x.id else x.what).getD "?"
   | .obj o => s!"the {s.names.objects.getD o "?"}"
 
-/-- Is a fixed spot in one of `scene`'s places? Places and unfixed things always are. -/
+/-- Is a fixed spot in one of `scene`'s places? Places and unfixed things always are,
+and a way (a door, a stair) is seen from the place it leads to as well as its own. -/
 def Spec.inScene (s : Spec) (scene : List Nat) : Spot → Bool
   | .thing t => match (s.things[t]?).bind (·.place) with
-    | some p => scene.contains p
+    | some p => scene.contains p || s.layout.any fun (r, a, b) =>
+        r == .leadsTo && a == .thing t && match b with | .place q => scene.contains q | _ => false
     | none => true
   | _ => true
 
