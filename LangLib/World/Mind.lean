@@ -313,21 +313,54 @@ private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
 def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
   closure (admit (lits ((beliefs w c).filter (·.about ≤ t))))
 
+/-- A conclusion stays settled only if some lore rule gave it from premises that
+are still believed (`now`) or merely went out of date (fluents); one drawn from a
+premise the character has since given up goes with it. -/
+def loreSurvives (now : List (BLit Φ)) (l : BLit Φ) : Bool := (Lore.rules (Φ := Φ)).any fun r =>
+  r.head == l && r.body.all fun b => Fluent.fluent b.1 || now.contains b
+
+/-- Permanent conclusions `c` drew at some time in their history that they no
+longer hold as information, but that still stand. -/
+def settledAt (w : W) (c : C) (base now : List (BLit Φ)) : List (BLit Φ) :=
+  ((((beliefs w c).map (·.about)).eraseDups).flatMap fun t =>
+    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && loreSurvives now l).eraseDups
+
 /-- What `c` believes now (the definition; `view` computes it).  Changeable facts are judged by the most recent
 information; permanent facts *concluded* (by the lore) about any earlier time
 are kept, so "she held the letter then" still yields "she has read it". -/
 def viewSpec (w : W) (c : C) : List (BLit Φ) :=
   let base := lits (beliefs w c)
   let now := closure (admit base)
-  let times := ((beliefs w c).map (·.about)).eraseDups
-  -- a conclusion stays settled only if some lore rule gave it from premises that
-  -- are still believed or merely went out of date (fluents); one drawn from a
-  -- premise the character has since given up goes with it
-  let survives (l : BLit Φ) : Bool := (Lore.rules (Φ := Φ)).any fun r =>
-    r.head == l && r.body.all fun b => Fluent.fluent b.1 || now.contains b
-  let settled := (times.flatMap fun t =>
-    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && survives l).eraseDups
-  closure (admit (settled ++ base))
+  closure (admit (settledAt w c base now ++ base))
+
+/-- Only a rule's head can be settled (`loreSurvives` asks for a rule that
+concludes it): when no rule's head qualifies, nothing is settled, whatever the
+history, and the per-time views need not be built. -/
+theorem settledAt_guard (w : W) (c : C) (base now : List (BLit Φ)) :
+    (if ((Lore.rules (Φ := Φ)).any fun r =>
+        !Fluent.fluent r.head.1 && !base.contains r.head && loreSurvives now r.head) then
+      settledAt w c base now else []) = settledAt w c base now := by
+  split
+  · rfl
+  · rename_i h
+    symm
+    unfold settledAt
+    have hq : ∀ l : BLit Φ, (!Fluent.fluent l.1 && !base.contains l && loreSurvives now l) = false := by
+      intro l
+      cases hl : (!Fluent.fluent l.1 && !base.contains l && loreSurvives now l)
+      · rfl
+      · exfalso
+        apply h
+        have hs : loreSurvives now l = true := by simp_all
+        unfold loreSurvives at hs
+        obtain ⟨r, hr, hrl⟩ := List.any_eq_true.mp hs
+        have hh : r.head = l := by simp_all
+        exact List.any_eq_true.mpr ⟨r, hr, by rw [hh]; exact hl⟩
+    have hf : ∀ t, (viewAt w c t).filter (fun l => !Fluent.fluent l.1 && !base.contains l && loreSurvives now l) = [] :=
+      fun t => List.filter_eq_nil_iff.mpr fun l _ => by rw [hq l]; exact Bool.false_ne_true
+    simp only [hf]
+    generalize (((beliefs w c).map (·.about)).eraseDups) = ts
+    induction ts <;> simp_all
 
 /-- What `c` believes now: `viewSpec`, computed without the work that cannot
 change it. With no lore rules nothing is settled, so the per-time views are not
@@ -337,11 +370,10 @@ def view (w : W) (c : C) : List (BLit Φ) :=
   if (Lore.rules (Φ := Φ)).isEmpty then admitPlain (lits (beliefs w c)) else
   let base := lits (beliefs w c)
   let now := closure (admit base)
-  let times := ((beliefs w c).map (·.about)).eraseDups
-  let survives (l : BLit Φ) : Bool := (Lore.rules (Φ := Φ)).any fun r =>
-    r.head == l && r.body.all fun b => Fluent.fluent b.1 || now.contains b
-  let settled := if (Lore.rules (Φ := Φ)).isEmpty then [] else (times.flatMap fun t =>
-    (viewAt w c t).filter fun l => !Fluent.fluent l.1 && !base.contains l && survives l).eraseDups
+  -- the history is only consulted when some rule's head could be settled (`settledAt_guard`)
+  let settled := if ((Lore.rules (Φ := Φ)).any fun r =>
+      !Fluent.fluent r.head.1 && !base.contains r.head && loreSurvives now r.head) then
+    settledAt w c base now else []
   if settled.isEmpty then now else closure (admit (settled ++ base))
 
 theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
@@ -349,7 +381,7 @@ theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
   · have he : (Lore.rules (Φ := Φ)).isEmpty = true := List.isEmpty_iff.mpr hr
     have hz : ∀ ts : List Nat, (ts.flatMap fun t => (viewAt w c t).filter fun _ => false) = [] := by
       intro ts; induction ts <;> simp_all
-    unfold view viewSpec
+    unfold view viewSpec settledAt loreSurvives
     simp only [if_true, hr, List.any_nil, Bool.and_false, hz]
     simp only [List.isEmpty_nil, ite_true, List.eraseDups_nil, List.nil_append]
     rw [closure_of_nil hr, admit_eq_admitPlain hr]
@@ -358,7 +390,7 @@ theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
       · rfl
       · exact absurd (List.isEmpty_iff.mp h) hr
     unfold view viewSpec
-    simp only [he, Bool.false_eq_true, ite_false]
+    simp only [he, Bool.false_eq_true, ite_false, settledAt_guard]
     split
     · rename_i h
       rw [List.isEmpty_iff.mp h]; rfl
