@@ -308,6 +308,10 @@ def specOfJson (j : Json) : Except String Spec := do
                            owner } : PlaceInfo)))
   let objWords := ((arr j "objects").zipIdx).filterMap fun (o, i) =>
     let ws := lower (strs o "words"); if ws.isEmpty then none else some (i, ws)
+  let objOwner ← ((arr j "objects").zipIdx).filterMapM fun (o, i) => do
+    match str o "owner" with
+    | some c => pure (some (i, ← n0.ch c))
+    | none => pure none
   let layout ← (strs j "layout").mapM n0.fixed
   let lore ← (arr j "lore").mapM fun r => do
     pure ((← (strs r "if").mapM n0.lit), ← n0.lit (← need "lore then" (str r "then")))
@@ -343,7 +347,7 @@ def specOfJson (j : Json) : Except String Spec := do
     | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
     | _ => pure []
   pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, goals,
-         placeInfo, things := fixtures ++ scenery, objWords, layout,
+         placeInfo, things := fixtures ++ scenery, objWords, objOwner, layout,
          pov := ← (str j "pov").mapM n0.ch }
 
 end LangLib.Studio

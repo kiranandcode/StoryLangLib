@@ -116,6 +116,8 @@ structure Spec where
   things : List ThingSpec := []
   /-- the nouns that name each plot object -/
   objWords : List (Nat × List String) := []
+  /-- whose each plot object is ("his keys"), by object index -/
+  objOwner : List (Nat × Nat) := []
   layout : List Fixed := []
   /-- the point-of-view character, when the story keeps to one -/
   pov : Option Nat := none
