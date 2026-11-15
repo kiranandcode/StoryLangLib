@@ -28,7 +28,8 @@ Annotation conventions the features read:
 * **Generic statements** (the narrator generalising: "People are like that"): a
   clause outside quotes whose finite verb, copula or auxiliary carries
   `"f": {"Tense": "Pres"}` and whose subject is not a character.
-* **Similes**: a `PP` whose case marker is "like"; a clause marked "as if" or
+* **Similes**: a `PP` whose case marker is "like", not attached to a noun
+  (`nmod`: "languages like C" gives examples); a clause marked "as if" or
   "as though"; "as ADJ as ...".
 * **Capitalised Concepts**: a common noun (`NOUN`, not `PROPN`) spelled with a
   capital that is not first in its sentence or after `. ? ! : "` or a dash.
@@ -216,7 +217,9 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
         choreo := if !quoted && charSubj && !interior then 1 else 0,
         povClauses := if !quoted && subj == some cx.pov then 1 else 0 }
     let prn : Acc := if info.cat == .PRN && !quoted then { prn := 1 } else {}
-    let like : Acc := if info.cat == .PP && kids.any (fun k => match k with
+    -- a "like" phrase attached to a noun ("languages like C and C++") gives
+    -- examples; only one attached to a verb or clause compares
+    let like : Acc := if info.cat == .PP && info.role != some .nmod && kids.any (fun k => match k with
         | .leaf w => w.role == some .case && lower w.form == "like" | _ => false) then { likeSimiles := 1 } else {}
     let marks := " ".intercalate (kids.filterMap fun k => match k with
       | .leaf w => if w.role == some .mark || w.role == some .fixed then some (lower w.form) else none
