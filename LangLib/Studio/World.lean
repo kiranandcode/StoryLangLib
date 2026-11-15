@@ -151,23 +151,48 @@ inductive E (s : Spec) where
   | goal (x : GoalEv (Ch s) (SFact s) (A s))
   deriving DecidableEq, Repr
 
+/-- The world is first-order data: what varies per character or object is a
+table (by index) over a default, never a function. The kernel then evaluates a
+state to a value instead of a growing chain of closures, so a state can be
+written down, compared by `decide`, and used as a checkpoint. `W.loc`,
+`W.beliefs`, ... read the tables with the same meaning the functions had. -/
 structure W (s : Spec) where
-  loc : Ch s → Pl s
+  locT : List (Nat × Pl s)
   known : List (Ch s)
-  holder : Ob s → Option (Ch s)
-  objLoc : Ob s → Pl s
+  holderT : List (Nat × Option (Ch s))
+  objLocT : List (Nat × Pl s)
   objKnown : List (Ob s)
-  beliefs : Ch s → List (Held (Ch s) (SFact s))
-  bond : Ch s → Ch s → Dim → Nat
+  beliefsT : List (Nat × List (Held (Ch s) (SFact s)))
+  bondT : List ((Nat × Nat × Dim) × Nat)
   consent : List (Ch s × Ch s × Act) := []
   questions : List (Ch s × Ch s × SFact s) := []
   promises : List (Ch s × Ch s × (SFact s × Bool)) := []
   requests : List (Ch s × Ch s × (SFact s × Bool)) := []
-  goals : Ch s → List (SFact s × Bool)
-  plans : Ch s → List (Plan (A s) (SFact s)) := fun _ => []
+  goalsT : List (Nat × List (SFact s × Bool))
+  plansT : List (Nat × List (Plan (A s) (SFact s))) := []
   clock : Nat := 0
   /-- current values of the state atoms that have changed -/
   states : List (Nat × Bool) := []
+  deriving DecidableEq, Repr
+
+/-- A table's entry for `k`, or the default. -/
+def tget {α β : Type} [BEq α] (t : List (α × β)) (k : α) (d : β) : β :=
+  match t.find? (·.1 == k) with
+  | some (_, v) => v
+  | none => d
+
+/-- Set a table's entry (one entry per key). -/
+def tset {α β : Type} [BEq α] (t : List (α × β)) (k : α) (v : β) : List (α × β) :=
+  (k, v) :: t.filter (·.1 != k)
+
+/-- Characters whose place is not given are offstage (a place past the story's own). -/
+def W.loc (w : W s) (c : Ch s) : Pl s := tget w.locT c.i ⟨s.places.length⟩
+def W.holder (w : W s) (o : Ob s) : Option (Ch s) := tget w.holderT o.i none
+def W.objLoc (w : W s) (o : Ob s) : Pl s := tget w.objLocT o.i ⟨0⟩
+def W.beliefs (w : W s) (c : Ch s) : List (Held (Ch s) (SFact s)) := tget w.beliefsT c.i []
+def W.bond (w : W s) (a b : Ch s) (k : Dim) : Nat := tget w.bondT (a.i, b.i, k) 0
+def W.goals (w : W s) (c : Ch s) : List (SFact s × Bool) := tget w.goalsT c.i []
+def W.plans (w : W s) (c : Ch s) : List (Plan (A s) (SFact s)) := tget w.plansT c.i []
 
 def upd {α β : Type} [DecidableEq α] (f : α → β) (a : α) (b : β) : α → β :=
   fun x => if x = a then b else f x
@@ -207,15 +232,15 @@ instance : Inject (SocialFact (Ch s)) (SFact s) where
 
 instance : HasSpace (W s) (Ch s) (Pl s) (Ob s) where
   loc := W.loc
-  setLoc w c p := { w with loc := upd w.loc c p }
+  setLoc w c p := { w with locT := tset w.locT c.i p }
   holder := W.holder
-  setHolder w o h := { w with holder := upd w.holder o h }
+  setHolder w o h := { w with holderT := tset w.holderT o.i h }
   objLoc := W.objLoc
-  setObjLoc w o p := { w with objLoc := upd w.objLoc o p }
+  setObjLoc w o p := { w with objLocT := tset w.objLocT o.i p }
 
 instance : PartialLoc (W s) (Ch s) where
   locKnown w c := w.known.contains c
-  assumeAt w a b := { w with loc := upd w.loc a (w.loc b), known := a :: w.known }
+  assumeAt w a b := { w with locT := tset w.locT a.i (w.loc b), known := a :: w.known }
   markLoc w c := { w with known := c :: w.known }
 
 instance : PartialObj (W s) (Ob s) where
@@ -223,11 +248,11 @@ instance : PartialObj (W s) (Ob s) where
   markObj w o := { w with objKnown := o :: w.objKnown }
 
 instance : HasMinds (W s) (Ch s) (SFact s) :=
-  ⟨W.beliefs, fun w c bs => { w with beliefs := upd w.beliefs c bs }⟩
+  ⟨W.beliefs, fun w c bs => { w with beliefsT := tset w.beliefsT c.i bs }⟩
 
 instance : HasBonds (W s) (Ch s) where
   bond := W.bond
-  setBond w a b k n := { w with bond := fun x y j => if x = a ∧ y = b ∧ j = k then n else w.bond x y j }
+  setBond w a b k n := { w with bondT := tset w.bondT (a.i, b.i, k) n }
   consent := W.consent
   setConsent w cs := { w with consent := cs }
 
@@ -248,9 +273,9 @@ instance : HasDialogue (W s) (Ch s) (SFact s) where
 
 instance : HasGoals (W s) (Ch s) (SFact s) (A s) where
   goals := W.goals
-  setGoals w c g := { w with goals := upd w.goals c g }
+  setGoals w c g := { w with goalsT := tset w.goalsT c.i g }
   plans := W.plans
-  setPlans w c p := { w with plans := upd w.plans c p }
+  setPlans w c p := { w with plansT := tset w.plansT c.i p }
 
 instance : Clock (W s) := ⟨W.clock, fun w => { w with clock := w.clock + 1 }⟩
 
@@ -309,7 +334,7 @@ def StEv.why (w : W s) : StEv s → String
 def StEv.step (w : W s) : StEv s → W s
   | .make c a v =>
     let w := match s.stateWhere a with
-      | some p => if w.known.contains c then w else { w with loc := upd w.loc c ⟨p⟩, known := c :: w.known }
+      | some p => if w.known.contains c then w else { w with locT := tset w.locT c.i ⟨p⟩, known := c :: w.known }
       | none => w
     { w with states := (a, v) :: w.states.filter (·.1 != a) }
   | .become a v => { w with states := (a, v) :: w.states.filter (·.1 != a) }
@@ -429,14 +454,19 @@ def own (l : Fact × Bool) : Held (Ch s) (SFact s) :=
 def Spec.start (s : Spec) : W s where
   -- characters whose place the text has not given are offstage (a place past
   -- the story's own), so they witness and overhear nothing until they appear
-  loc c := ⟨(lookup s.startAt c.i).getD s.places.length⟩
+  locT := s.startAt.map fun (c, p) => (c, ⟨p⟩)
   known := s.startAt.map (⟨·.1⟩)
-  holder o := (lookup s.startHeld o.i).map (⟨·⟩)
-  objLoc o := ⟨(lookup s.startObjAt o.i).getD 0⟩
+  holderT := s.startHeld.map fun (o, c) => (o, some ⟨c⟩)
+  objLocT := s.startObjAt.map fun (o, p) => (o, ⟨p⟩)
   objKnown := (s.startObjAt ++ s.startHeld).map (⟨·.1⟩)
-  beliefs c := (s.knows.filter (·.1 == c.i)).map fun (_, l) => own l
-  bond a b k := ((s.bonds.find? fun (x, y, j, _) => x == a.i && y == b.i && j == k).map
-    (·.2.2.2)).getD 0
-  goals c := (s.goals.filter (·.1 == c.i)).map fun (_, g) => lit g
+  beliefsT := (List.range s.chars.length).filterMap fun c =>
+    match (s.knows.filter (·.1 == c)).map fun (_, l) => own l with
+    | [] => none
+    | bs => some (c, bs)
+  bondT := s.bonds.map fun (x, y, j, n) => ((x, y, j), n)
+  goalsT := (List.range s.chars.length).filterMap fun c =>
+    match (s.goals.filter (·.1 == c)).map fun (_, g) => lit g with
+    | [] => none
+    | gs => some (c, gs)
 
 end LangLib.Studio
