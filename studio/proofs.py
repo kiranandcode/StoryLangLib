@@ -57,6 +57,13 @@ def verdict(d: Path, lean_file: Path, thms: dict, res: procs.Result, t0: float) 
                 thms[owner]["error"] = msg
     guards = [msg for line, msg in errors if "guard" in msg.lower() or not any(v["line"] <= line for v in thms.values())]
     status = "timeout" if res.timed_out else "ok" if res.returncode == 0 else "failed"
+    if status == "failed" and all(v["ok"] for v in thms.values()):
+        # Lean failed before or outside every theorem (a missing import, a bad header):
+        # nothing was checked, so no theorem may be reported as proved
+        for v in thms.values():
+            v["ok"] = None
+        if not errors:
+            guards.insert(0, text.strip()[-1000:] or f"lean exited with {res.returncode}")
     out = {"status": status, "secs": round(time.time() - t0, 1), "theorems": thms,
            "errors": [m for _, m in errors][:20], "guards": guards[:10],
            "file": str(lean_file.relative_to(ROOT)), "at": time.time()}
