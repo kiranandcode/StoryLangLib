@@ -220,6 +220,8 @@ structure TCtx where
   subjTxt : String := ""
   /-- the nearest subject above, when it is a thing of the setting -/
   subjThing : Option Spot := none
+  /-- the clause above is in the present tense (a non-finite clause takes its tense) -/
+  present : Bool := false
 
 /-- Roles of children that are clauses of their own (left out of a clause's words). -/
 def clauseRoles : List Role := [.advcl, .ccomp, .xcomp, .relcl, .acl, .conj, .parataxis, .appos, .csubj]
@@ -276,13 +278,14 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
         args := (kids.filter fun k => roleIs k .obj || roleIs k .iobj || roleIs k .obl).filterMap
           (fun k => (refOf k).bind (wid s R)),
         neg := near.any fun w => negWords.contains (lower w),
-        present := near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres"),
+        present := near.any (fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres")) ||
+          (ctx.present && !near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.any (·.1 == "Tense")),
         genSubj := (nsubjK.map fun k => (refOf k).isNone).getD false,
         modal := ctx.cond || near.any fun w => w.upos == .AUX && modalWords.contains (lower w),
         quoted, said := ctx.said, parent := ctx.parent, parentLemma := ctx.parentLemma }
     let ctx' : TCtx := match me with
       | some p => { subj, parent := some p.at_, parentLemma := p.lemma, quoted, cond := p.modal,
-                    said := ctx.said || speechVerbs.contains p.lemma, subjTxt, subjThing }
+                    said := ctx.said || speechVerbs.contains p.lemma, subjTxt, subjThing, present := p.present }
       | none => { ctx with subj, quoted, subjTxt, subjThing }
     let hereAt := headAt t start
     -- connectives introduced by subordinate clauses, "so", and relating adverbs
