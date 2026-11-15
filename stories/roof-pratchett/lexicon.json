@@ -1,0 +1,908 @@
+{
+"\"": {
+"rel": "quote"
+},
+"accumulate": {
+"reg": "neutral"
+},
+"act": {
+"reg": "neutral"
+},
+"again": {
+"reg": "neutral",
+"rel": "callback"
+},
+"already": {
+"reg": "neutral"
+},
+"always": {
+"reg": "neutral"
+},
+"annoying": {
+"reg": "informal"
+},
+"answer": {
+"reg": "neutral"
+},
+"architect": {
+"reg": "neutral"
+},
+"arrive": {
+"reg": "neutral"
+},
+"ask": {
+"reg": "neutral"
+},
+"asking": {
+"reg": "neutral"
+},
+"back": {
+"reg": "neutral"
+},
+"bait": {
+"reg": "neutral"
+},
+"banana": {
+"reg": "neutral"
+},
+"bare": {
+"reg": "neutral"
+},
+"be": {
+"reg": "neutral"
+},
+"because": {
+"rel": "cause"
+},
+"before": {
+"reg": "neutral"
+},
+"blow": {
+"reg": "informal"
+},
+"borrow": {
+"reg": "technical"
+},
+"bow": {
+"reg": "neutral"
+},
+"box": {
+"reg": "neutral"
+},
+"brace": {
+"reg": "neutral"
+},
+"breath": {
+"reg": "neutral"
+},
+"breathe": {
+"reg": "neutral"
+},
+"build": {
+"reg": "neutral"
+},
+"business": {
+"reg": "neutral"
+},
+"but": {
+"rel": "contrast"
+},
+"butt": {
+"reg": "informal"
+},
+"care": {
+"reg": "neutral"
+},
+"carry": {
+"reg": "neutral"
+},
+"catch": {
+"reg": "neutral"
+},
+"cathedral": {
+"reg": "neutral"
+},
+"chair": {
+"reg": "neutral"
+},
+"change": {
+"reg": "neutral"
+},
+"chest": {
+"reg": "neutral"
+},
+"choir": {
+"reg": "neutral"
+},
+"city": {
+"reg": "neutral"
+},
+"click": {
+"reg": "neutral"
+},
+"climb": {
+"reg": "neutral"
+},
+"close": {
+"reg": "neutral"
+},
+"coffee": {
+"reg": "neutral"
+},
+"come": {
+"reg": "neutral"
+},
+"cool": {
+"reg": "informal"
+},
+"corner": {
+"reg": "neutral"
+},
+"corridor": {
+"reg": "neutral"
+},
+"count": {
+"reg": "neutral"
+},
+"course": {
+"reg": "neutral"
+},
+"cross": {
+"reg": "neutral"
+},
+"cupboard": {
+"reg": "neutral"
+},
+"cut": {
+"reg": "neutral"
+},
+"deadline": {
+"reg": "neutral"
+},
+"deal": {
+"reg": "neutral"
+},
+"decent": {
+"reg": "informal"
+},
+"degree": {
+"reg": "neutral"
+},
+"design": {
+"reg": "neutral"
+},
+"desk": {
+"reg": "neutral"
+},
+"didn't": {
+"rel": "neg"
+},
+"different": {
+"reg": "neutral"
+},
+"distance": {
+"reg": "neutral"
+},
+"do": {
+"reg": "neutral"
+},
+"don't": {
+"rel": "neg"
+},
+"door": {
+"reg": "neutral"
+},
+"down": {
+"reg": "neutral"
+},
+"drop": {
+"reg": "neutral"
+},
+"dull": {
+"reg": "informal"
+},
+"dust": {
+"reg": "neutral"
+},
+"embarrassing": {
+"reg": "informal"
+},
+"empty": {
+"reg": "neutral"
+},
+"enough": {
+"reg": "neutral"
+},
+"even": {
+"reg": "neutral",
+"rel": "concession"
+},
+"ever": {
+"reg": "neutral"
+},
+"exciting": {
+"reg": "neutral"
+},
+"excuse": {
+"reg": "informal"
+},
+"expect": {
+"reg": "neutral"
+},
+"face": {
+"reg": "neutral"
+},
+"faintly": {
+"reg": "formal"
+},
+"family": {
+"reg": "neutral"
+},
+"fast": {
+"reg": "neutral"
+},
+"file": {
+"reg": "neutral"
+},
+"find": {
+"reg": "neutral"
+},
+"first": {
+"reg": "neutral"
+},
+"fish": {
+"reg": "neutral"
+},
+"flashlight": {
+"reg": "neutral"
+},
+"flatter": {
+"reg": "informal"
+},
+"flight": {
+"reg": "neutral"
+},
+"fold": {
+"reg": "neutral"
+},
+"forehead": {
+"reg": "neutral"
+},
+"forget": {
+"reg": "neutral"
+},
+"full": {
+"reg": "neutral"
+},
+"garage": {
+"reg": "neutral"
+},
+"get": {
+"reg": "neutral"
+},
+"go": {
+"reg": "neutral"
+},
+"gone": {
+"reg": "neutral"
+},
+"good": {
+"reg": "neutral"
+},
+"goodbye": {
+"reg": "neutral"
+},
+"great": {
+"reg": "neutral"
+},
+"grey": {
+"reg": "neutral"
+},
+"grin": {
+"reg": "informal"
+},
+"hair": {
+"reg": "neutral"
+},
+"hand": {
+"reg": "neutral"
+},
+"handwriting": {
+"reg": "neutral"
+},
+"happen": {
+"reg": "neutral"
+},
+"have": {
+"reg": "neutral"
+},
+"head": {
+"reg": "neutral"
+},
+"hear": {
+"reg": "neutral"
+},
+"here": {
+"reg": "neutral"
+},
+"heron": {
+"reg": "neutral"
+},
+"hold": {
+"reg": "neutral"
+},
+"hour": {
+"reg": "neutral"
+},
+"human": {
+"reg": "neutral"
+},
+"hurry": {
+"reg": "informal"
+},
+"in": {
+"reg": "neutral"
+},
+"incense": {
+"reg": "neutral"
+},
+"instead": {
+"reg": "neutral",
+"rel": "contrast"
+},
+"jewellery": {
+"reg": "neutral"
+},
+"joke": {
+"reg": "informal"
+},
+"just": {
+"reg": "informal"
+},
+"keep": {
+"reg": "neutral"
+},
+"kettle": {
+"reg": "neutral"
+},
+"keyboard": {
+"reg": "neutral"
+},
+"kick": {
+"reg": "neutral"
+},
+"kind": {
+"reg": "neutral"
+},
+"kiss": {
+"reg": "neutral"
+},
+"kitchen": {
+"reg": "neutral"
+},
+"know": {
+"reg": "neutral"
+},
+"lab": {
+"reg": "neutral"
+},
+"laptop": {
+"reg": "neutral"
+},
+"last": {
+"reg": "neutral"
+},
+"late": {
+"reg": "neutral"
+},
+"later": {
+"reg": "neutral"
+},
+"laugh": {
+"reg": "neutral"
+},
+"learn": {
+"reg": "neutral"
+},
+"leave": {
+"reg": "neutral"
+},
+"lemma": {
+"reg": "technical"
+},
+"less": {
+"reg": "neutral"
+},
+"let": {
+"reg": "neutral"
+},
+"lie": {
+"reg": "neutral"
+},
+"life": {
+"reg": "neutral"
+},
+"lift": {
+"reg": "neutral"
+},
+"light": {
+"reg": "neutral"
+},
+"like": {
+"reg": "neutral"
+},
+"line": {
+"reg": "neutral"
+},
+"lit": {
+"reg": "neutral"
+},
+"little": {
+"reg": "neutral"
+},
+"long": {
+"reg": "neutral"
+},
+"look": {
+"reg": "neutral"
+},
+"love": {
+"reg": "neutral"
+},
+"low": {
+"reg": "neutral"
+},
+"machine": {
+"reg": "neutral"
+},
+"make": {
+"reg": "neutral"
+},
+"man": {
+"reg": "neutral"
+},
+"mean": {
+"reg": "neutral"
+},
+"minute": {
+"reg": "neutral"
+},
+"miss": {
+"reg": "neutral"
+},
+"moment": {
+"reg": "neutral"
+},
+"more": {
+"reg": "neutral"
+},
+"morning": {
+"reg": "neutral"
+},
+"most": {
+"reg": "neutral"
+},
+"mostly": {
+"reg": "neutral"
+},
+"mouth": {
+"reg": "neutral"
+},
+"move": {
+"reg": "technical"
+},
+"mug": {
+"reg": "neutral"
+},
+"need": {
+"reg": "neutral"
+},
+"never": {
+"reg": "neutral",
+"rel": "neg"
+},
+"night": {
+"reg": "neutral"
+},
+"no": {
+"rel": "neg"
+},
+"nobody": {
+"rel": "neg"
+},
+"nonsense": {
+"reg": "informal"
+},
+"not": {
+"rel": "neg"
+},
+"note": {
+"reg": "neutral"
+},
+"notebook": {
+"reg": "neutral"
+},
+"nothing": {
+"rel": "neg"
+},
+"notice": {
+"reg": "neutral"
+},
+"o'clock": {
+"reg": "neutral"
+},
+"old": {
+"reg": "neutral"
+},
+"on": {
+"reg": "neutral"
+},
+"once": {
+"reg": "neutral"
+},
+"only": {
+"reg": "neutral",
+"rel": "focus"
+},
+"open": {
+"reg": "neutral"
+},
+"out": {
+"reg": "neutral"
+},
+"page": {
+"reg": "neutral"
+},
+"parcel": {
+"reg": "neutral"
+},
+"part": {
+"reg": "neutral"
+},
+"pass": {
+"reg": "neutral"
+},
+"people": {
+"reg": "neutral"
+},
+"person": {
+"reg": "neutral"
+},
+"plainly": {
+"reg": "neutral"
+},
+"plan": {
+"reg": "neutral"
+},
+"pocket": {
+"reg": "neutral"
+},
+"point": {
+"reg": "neutral"
+},
+"pond": {
+"reg": "neutral"
+},
+"printer": {
+"reg": "neutral"
+},
+"pull": {
+"reg": "neutral"
+},
+"punchline": {
+"reg": "informal"
+},
+"purpose": {
+"reg": "neutral"
+},
+"push": {
+"reg": "neutral"
+},
+"put": {
+"reg": "neutral"
+},
+"question": {
+"reg": "neutral",
+"rel": "question"
+},
+"rain": {
+"reg": "neutral"
+},
+"rare": {
+"reg": "neutral"
+},
+"reach": {
+"reg": "neutral"
+},
+"read": {
+"reg": "neutral"
+},
+"ready": {
+"reg": "neutral"
+},
+"real": {
+"reg": "neutral"
+},
+"roof": {
+"reg": "neutral"
+},
+"room": {
+"reg": "neutral"
+},
+"rude": {
+"reg": "informal"
+},
+"run": {
+"reg": "neutral"
+},
+"same": {
+"reg": "neutral"
+},
+"save": {
+"reg": "neutral"
+},
+"say": {
+"reg": "neutral"
+},
+"scarf": {
+"reg": "neutral"
+},
+"see": {
+"reg": "neutral"
+},
+"sell": {
+"reg": "neutral"
+},
+"set": {
+"reg": "neutral"
+},
+"shoulder": {
+"reg": "neutral"
+},
+"sideways": {
+"reg": "neutral"
+},
+"sign": {
+"reg": "neutral"
+},
+"skin": {
+"reg": "neutral"
+},
+"sky": {
+"reg": "neutral"
+},
+"slow": {
+"reg": "neutral"
+},
+"slowly": {
+"reg": "neutral"
+},
+"small": {
+"reg": "neutral"
+},
+"smell": {
+"reg": "neutral"
+},
+"smile": {
+"reg": "neutral"
+},
+"snort": {
+"reg": "informal"
+},
+"soaked": {
+"reg": "neutral"
+},
+"softly": {
+"reg": "neutral"
+},
+"sort": {
+"reg": "neutral"
+},
+"sound": {
+"reg": "technical"
+},
+"spend": {
+"reg": "neutral"
+},
+"square": {
+"reg": "neutral"
+},
+"stair": {
+"reg": "neutral"
+},
+"staircase": {
+"reg": "neutral"
+},
+"stairwell": {
+"reg": "neutral"
+},
+"stand": {
+"reg": "neutral"
+},
+"stick": {
+"reg": "neutral"
+},
+"still": {
+"reg": "neutral"
+},
+"stomach": {
+"reg": "neutral"
+},
+"stone": {
+"reg": "neutral"
+},
+"story": {
+"reg": "neutral"
+},
+"stupid": {
+"reg": "informal"
+},
+"such": {
+"reg": "formal"
+},
+"summer": {
+"reg": "neutral"
+},
+"sunrise": {
+"reg": "neutral"
+},
+"sure": {
+"reg": "neutral"
+},
+"surprise": {
+"reg": "neutral"
+},
+"surprised": {
+"reg": "neutral"
+},
+"sympathy": {
+"reg": "neutral"
+},
+"take": {
+"reg": "neutral"
+},
+"talk": {
+"reg": "neutral"
+},
+"taste": {
+"reg": "neutral"
+},
+"tea": {
+"reg": "neutral"
+},
+"tear": {
+"reg": "neutral"
+},
+"tell": {
+"reg": "neutral"
+},
+"then": {
+"reg": "neutral"
+},
+"there": {
+"reg": "neutral"
+},
+"thing": {
+"reg": "neutral"
+},
+"think": {
+"reg": "neutral"
+},
+"third": {
+"reg": "neutral"
+},
+"though": {
+"rel": "concession"
+},
+"tick": {
+"reg": "neutral"
+},
+"time": {
+"reg": "neutral"
+},
+"timing": {
+"reg": "neutral"
+},
+"tip": {
+"reg": "neutral"
+},
+"tomorrow": {
+"reg": "neutral"
+},
+"too": {
+"reg": "neutral"
+},
+"top": {
+"reg": "neutral"
+},
+"touch": {
+"reg": "neutral"
+},
+"tradition": {
+"reg": "neutral"
+},
+"traditional": {
+"reg": "neutral"
+},
+"train": {
+"reg": "neutral"
+},
+"transparency": {
+"reg": "neutral"
+},
+"transparent": {
+"reg": "neutral"
+},
+"treat": {
+"reg": "neutral"
+},
+"truth": {
+"reg": "neutral"
+},
+"turn": {
+"reg": "neutral"
+},
+"twice": {
+"reg": "neutral"
+},
+"type": {
+"reg": "technical"
+},
+"understand": {
+"reg": "neutral"
+},
+"universe": {
+"reg": "neutral"
+},
+"up": {
+"reg": "neutral"
+},
+"use": {
+"reg": "neutral"
+},
+"wait": {
+"reg": "neutral"
+},
+"wall": {
+"reg": "neutral"
+},
+"want": {
+"reg": "neutral"
+},
+"warm": {
+"reg": "neutral"
+},
+"watch": {
+"reg": "neutral"
+},
+"way": {
+"reg": "neutral"
+},
+"week": {
+"reg": "neutral"
+},
+"where": {
+"reg": "neutral"
+},
+"whole": {
+"reg": "neutral"
+},
+"win": {
+"reg": "neutral"
+},
+"window": {
+"reg": "neutral"
+},
+"word": {
+"reg": "neutral"
+},
+"write": {
+"reg": "neutral"
+},
+"wrong": {
+"reg": "neutral"
+},
+"year": {
+"reg": "neutral"
+}
+}

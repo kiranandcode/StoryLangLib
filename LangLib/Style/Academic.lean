@@ -790,7 +790,7 @@ def academicReport (ss : List ASent) (lo : ALore) (problems : List String) : Jso
 
 def leanDef (name : String) (ss : List ASent) (lo : ALore) : String :=
   let body := ",\n   ".intercalate (ss.map fun s => Std.Format.pretty (repr s) 1000)
-  s!"def {name} : List ASent :=\n  [{body}]\n\ndef {name}Lore : ALore :=\n  {Std.Format.pretty (repr lo) 1000}\n"
+  s!"def {name} : List ASent :=\n  [{body}]\n\ndef {name}Lore : ALore :=\n  {Std.Format.pretty (repr lo) 1000000}\n"
 
 def academicMain (dir : String) (opts : List String) : IO String := do
   let (ss, lo, problems) ← loadAll dir
