@@ -10,7 +10,8 @@ def usage : String := "usage:
   langlib story-lean <dir> <namespace>      print the story as a Lean file of theorems
   langlib style <dir> [--pov id] [--lean name]  style features and verdicts (or the records as Lean)
   langlib academic <dir> [--lean name]      academic-style flow features and verdicts (or the records as Lean)
-  langlib consent <dir> [--lean ns]         the refined consent reading (World/Consent), or it as Lean theorems"
+  langlib consent <dir> [--lean ns]         the refined consent reading (World/Consent), or it as Lean theorems
+  langlib ext <dir> [--lean ns]             ties, care and identity (World/Ties, Care, Identity), or as Lean theorems"
 
 def readDoc (p : String) : IO Doc := do
   match docOfString (← IO.FS.readFile p) with
@@ -74,5 +75,11 @@ def main : List String → IO UInt32
     pure 0
   | ["consent", dir, "--lean", ns] => do
     IO.print (← LangLib.Studio.consentLean dir ns)
+    pure 0
+  | ["ext", dir] => do
+    IO.println (← LangLib.Studio.extReport dir).compress
+    pure 0
+  | ["ext", dir, "--lean", ns] => do
+    IO.print (← LangLib.Studio.extLean dir ns)
     pure 0
   | _ => do IO.eprintln usage; pure 64
