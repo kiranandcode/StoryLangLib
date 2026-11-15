@@ -163,10 +163,11 @@ def usable (w : AW T) (t : T) : Bool :=
 def accepted (w : AW T) (k : T) : Bool :=
   w.base.any fun h => h.b == .atom (.holds k) && (h.up == .radical || h.up == .hard)
 
-/-- `k` was put forward: claimed, cited, exemplified or held by the reader
-(as a belief or as background) before. -/
+/-- `k` was put forward: claimed, cited, exemplified, ruled out, or held by
+the reader (as a belief, either way, or as background) before. -/
 def putForward (w : AW T) (k : T) : Bool :=
-  believes w Voice.reader (.atom (AFact.holds k)) || believes w Voice.reader (.atom (AFact.known k))
+  believes w Voice.reader (.atom (AFact.holds k)) || believes w Voice.reader (.neg (AFact.holds k)) ||
+    believes w Voice.reader (.atom (AFact.known k))
 
 def wasMotivated (w : AW T) (k : T) : Bool := believes w Voice.reader (.atom (AFact.motivated k))
 
