@@ -4,3 +4,4 @@ import LangLib.Studio.Claim
 import LangLib.Studio.Refine
 import LangLib.Studio.Report
 import LangLib.Studio.Load
+import LangLib.Studio.Consent

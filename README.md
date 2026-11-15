@@ -120,6 +120,10 @@ python3 studio/workflows.py refine-check    stories/roof     the paragraphs refi
 python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
 ```
 
+A paragraph's reading may also carry a finer `consent` list, checked by
+`langlib consent <dir>` (and `--lean <ns>` for its theorems) against
+`World/Consent` and `World/Relationship`; `docs/gaps/boyremoval.md` says why.
+
 **Edit mode** (`e`): right-click a character, fact, bond, event or paragraph,
 in the prose or the side panel, to inspect it, adjust it directly (traits,
 ranked values, pronouns, start place, starting bonds, a fact's truth;
@@ -222,6 +226,8 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Space   | Places, objects, possession, what each event lets witnesses see             |
 | LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), lore, factive `realise` |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
+| LangLib/World/Consent | Consent refined: finer acts (edge acts named or assumed), how each yes was given, scenes offered and taken with limits, check-ins, withdrawal and safewords that bind, wishes that are not consent, firsts from history |
+| LangLib/World/Relationship | Kinds of relationship (friends, lovers, partners) that change by mutual word or by deed; one-sided declarations stay proposals |
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
 | LangLib/World/Dialogue | Questions under discussion, answers, hints (implicature), sarcasm read by rapport, promises (kept/broken), requests |
 | LangLib/World/Goals   | Goals, plans, `Purpose` of each action; `motives` explains every action or flags it unmotivated; `planWorks` |
