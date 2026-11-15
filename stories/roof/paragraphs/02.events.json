@@ -1,5 +1,5 @@
 {
- "text_sha": "a2c93f4ebc447d53",
+ "text_sha": "b6987e03c0de8c01",
  "world_sha": "74c820042da6c6d5",
  "events": [
   {
@@ -64,7 +64,7 @@
   },
   {
    "at": 27,
-   "w": "hums",
+   "w": "reads",
    "kind": "speech"
   },
   {
