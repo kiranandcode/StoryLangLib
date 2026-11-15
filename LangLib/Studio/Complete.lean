@@ -79,6 +79,8 @@ structure Pred where
   thing : Option Spot := none
   /-- its verb, copula or auxiliary is marked present tense -/
   present : Bool := false
+  /-- it has a subject of its own that refers to nothing in the world ("people", "a cat that ...") -/
+  genSubj : Bool := false
   /-- the kinds of fact its subject, object and obliques name ("weather", "light", "sound") -/
   kinds : List String := []
   deriving DecidableEq, Repr
@@ -275,6 +277,7 @@ partial def factsOf (ctx : TCtx) : Tree → Nat → TreeFacts
           (fun k => (refOf k).bind (wid s R)),
         neg := near.any fun w => negWords.contains (lower w),
         present := near.any fun w => (w.upos == .VERB || w.upos == .AUX) && w.feats.contains ("Tense", "Pres"),
+        genSubj := (nsubjK.map fun k => (refOf k).isNone).getD false,
         modal := ctx.cond || near.any fun w => w.upos == .AUX && modalWords.contains (lower w),
         quoted, said := ctx.said, parent := ctx.parent, parentLemma := ctx.parentLemma }
     let ctx' : TCtx := match me with
@@ -597,7 +600,7 @@ def completeIssues (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : Lis
       | .generic =>
         if !p.present then [s!"the clause at {tok p.at_} is read as generic, but it is not in the present tense"]
         else if p.quoted || p.said then [s!"the clause at {tok p.at_} is read as generic, but it is speech"]
-        else if (match p.subj with | some (.ch _) => true | _ => false) || p.thing.isSome then
+        else if (!p.genSubj && (match p.subj with | some (.ch _) => true | _ => false)) || p.thing.isSome then
           [s!"the clause at {tok p.at_} is read as generic, but its subject is in the story: judge it by the world"]
         else []
       | .external _ => []
@@ -908,7 +911,7 @@ def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List St
     .mk "hypothetical" "not asserted" p.modal [leaf "modal" "under a modal or a condition" p.modal]
   | .generic =>
     let charSubj := match p.subj with | some (.ch _) => true | _ => false
-    let ok := p.present && !p.quoted && !p.said && !charSubj && p.thing.isNone
+    let ok := p.present && !p.quoted && !p.said && (p.genSubj || !charSubj) && p.thing.isNone
     .mk "generic" "the narrator's generalisation, not an event" ok
       [leaf "present" "in the present tense" p.present,
        leaf "narrator" "outside speech, about no one in the story" (ok || !p.present)]

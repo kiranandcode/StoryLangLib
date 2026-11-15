@@ -10,7 +10,8 @@ Every noun in a paragraph's annotation must be accounted for, closed-world:
 * it names an entity (its own `ref`, or, as the head or a compound of a
   phrase, the phrase's `ref`), or
 * it carries a `sense` saying what it is instead: `abstract time event body
-  weather light sound substance digital figurative part person offstage`
+  weather light sound substance digital figurative part person offstage kind`
+  (`kind`: a kind of thing in general, as in a generalisation: "Printers know")
   (`offstage` only inside a quote: something named in speech that is not in
   the scene, like "the hotel bar").
 
@@ -77,7 +78,7 @@ instance : Inhabited Uses := ⟨{}⟩
 
 def senses : List String :=
   ["abstract", "time", "event", "body", "weather", "light", "sound", "substance", "digital",
-   "figurative", "part", "person", "offstage"]
+   "figurative", "part", "person", "offstage", "kind"]
 
 def numberWord : String → Option Nat
   | "one" => some 1 | "two" => some 2 | "three" => some 3 | "four" => some 4 | "five" => some 5
