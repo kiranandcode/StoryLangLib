@@ -1,6 +1,6 @@
 {
- "text_sha": "88c683a7c33214ec",
- "world_sha": "0364d195ae4a9f9b",
+ "text_sha": "0f485513f850a03e",
+ "world_sha": "c3c7750dd11313b2",
  "events": [
   {
    "e": "notice kiran noteOldTimes assumed",
@@ -11,7 +11,7 @@
   },
   {
    "e": "adopt kiran at(kiran,roof)",
-   "at": 98,
+   "at": 109,
    "w": "told",
    "phase": "main",
    "src": "text"
@@ -34,18 +34,23 @@
    "w": "left"
   },
   {
-   "c": "true kiranLikesRan",
+   "c": "knows kiran kiranUnrequited",
    "at": 77,
-   "w": "done"
+   "w": "built"
+  },
+  {
+   "c": "knows kiran kiranUnrequited",
+   "at": 91,
+   "w": "noticed"
   },
   {
    "c": "knows kiran ranLeaving",
-   "at": 86,
+   "at": 97,
    "w": "his"
   },
   {
    "c": "goal kiran at(kiran,roof)",
-   "at": 98,
+   "at": 109,
    "w": "told"
   }
  ],
@@ -96,17 +101,17 @@
    "kind": "act"
   },
   {
-   "at": 91,
+   "at": 102,
    "w": "folded",
    "kind": "act"
   },
   {
-   "at": 103,
+   "at": 114,
    "w": "going",
    "kind": "speech"
   },
   {
-   "at": 109,
+   "at": 120,
    "w": "rude",
    "kind": "hypothetical"
   }

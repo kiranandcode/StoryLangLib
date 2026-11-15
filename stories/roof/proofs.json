@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 9.4,
+ "secs": 13.5,
  "theorems": {
   "story_valid": {
    "line": 63,
@@ -109,7 +109,7 @@
   },
   "p05_complete": {
    "line": 192,
-   "statement": "p05_complete : completeOk (\u27e8story.upTo owner 3, p05.zip [34, 98]\u27e9 : ParaCtx spec) p05tree p05judges = true",
+   "statement": "p05_complete : completeOk (\u27e8story.upTo owner 3, p05.zip [34, 109]\u27e9 : ParaCtx spec) p05tree p05judges = true",
    "ok": true
   },
   "p05_realises": {
@@ -221,5 +221,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof/Proofs.lean",
- "at": 1794721258.514125
+ "at": 1794721334.122376
 }

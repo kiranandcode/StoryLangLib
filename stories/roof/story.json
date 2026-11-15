@@ -418,6 +418,14 @@
       "who": [
         "ran"
       ]
+    },
+    {
+      "id": "kiranUnrequited",
+      "label": "Kiran has fallen for people before who never wanted her back",
+      "truth": true,
+      "who": [
+        "kiran"
+      ]
     }
   ],
   "lore": [
@@ -475,7 +483,8 @@
         "kiranLabLife",
         "ranMovedAway",
         "childhoodFriends",
-        "ranLeaving"
+        "ranLeaving",
+        "kiranUnrequited"
       ],
       "ran": [
         "ranLikesKiran",
