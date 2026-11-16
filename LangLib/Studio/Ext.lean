@@ -894,9 +894,13 @@ def extLean (dir : String) (ns : String) : IO String := do
     out := out ++ s!"\n/-- {XEv.str x e}: they never start this tie; it is allowed because the other already holds it toward them. -/\n" ++
       s!"theorem answers_{i} : TieSight.aloof ({rs a} : XCh xspec) ({rs r} : XR xspec) = true ∧ " ++
       s!"HasTies.tie xspec.start ({rs r} : XR xspec) ({rs b} : XCh xspec) ({rs a} : XCh xspec) > 0 := by decide +kernel\n"
-  for (e, i) in gated.zipIdx do
+  -- a chapter that continues another can open with the trust already earned: say which
+  for (e, i) in (gated.filter fun e => !Domain.ok x.start e).zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: not allowed at the opening, before any trust was earned. -/\n" ++
       s!"theorem gated_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
+  for (e, i) in (gated.filter fun e => Domain.ok x.start e).zipIdx do
+    out := out ++ s!"\n/-- {XEv.str x e}: already allowed at the opening; the trust it needs was earned before (an earlier chapter). -/\n" ++
+      s!"theorem earned_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = true := by decide +kernel\n"
   -- every intimate act the ties gate was out of character at the opening: the burn is what allows it
   let acts := ((paras.flatMap (·.acts)).filter fun a => x.gates.any (·.1 == a.2.2)).eraseDups
   for (a, i) in (acts.filter fun a => !actOk x x.start a).zipIdx do
