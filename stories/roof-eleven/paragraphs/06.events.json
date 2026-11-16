@@ -1,0 +1,193 @@
+{
+ "text_sha": "b23d3c593749ab66",
+ "world_sha": "1d34e4a07f121afa",
+ "events": [
+  {
+   "e": "tell theo mara noteForKiran",
+   "at": 33,
+   "w": "told",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt mara at(mara,lab)",
+   "at": 5,
+   "w": "back",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move mara lab",
+   "at": 5,
+   "w": "back",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell mara kiran noteForKiran",
+   "at": 29,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt mara holds(kiran,note)",
+   "at": 48,
+   "w": "put",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "give mara kiran note",
+   "at": 48,
+   "w": "put",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell mara kiran kiranAlone",
+   "at": 96,
+   "w": "eaten",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at mara lab",
+   "at": 12,
+   "w": "laughing"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 64,
+   "w": "read"
+  },
+  {
+   "c": "at mara lab",
+   "at": 140,
+   "w": "pink"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 155,
+   "w": "considered"
+  },
+  {
+   "c": "at theo roof",
+   "at": 33,
+   "w": "told"
+  },
+  {
+   "c": "thinks mara noteForKiran",
+   "at": 64,
+   "w": "read"
+  }
+ ],
+ "judge": [
+  {
+   "at": 19,
+   "w": "for",
+   "kind": "speech"
+  },
+  {
+   "at": 44,
+   "w": "for",
+   "kind": "content",
+   "lit": "noteForKiran"
+  },
+  {
+   "at": 82,
+   "w": "rejected",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 92,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 109,
+   "w": "need",
+   "kind": "speech"
+  },
+  {
+   "at": 114,
+   "w": "Go",
+   "kind": "speech"
+  },
+  {
+   "at": 119,
+   "w": "filed",
+   "kind": "act"
+  },
+  {
+   "at": 133,
+   "w": "check",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 147,
+   "w": "Say",
+   "kind": "speech"
+  },
+  {
+   "at": 159,
+   "w": "read",
+   "kind": "speech"
+  },
+  {
+   "at": 170,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 175,
+   "w": "foolish",
+   "kind": "speech"
+  },
+  {
+   "at": 178,
+   "w": "Bayes",
+   "kind": "speech"
+  },
+  {
+   "at": 182,
+   "w": "laughed",
+   "kind": "act"
+  },
+  {
+   "at": 187,
+   "w": "pushed",
+   "kind": "act"
+  }
+ ],
+ "staging": [],
+ "ext": [
+  {
+   "e": "harm mara mara comfort",
+   "at": 5,
+   "w": "back"
+  },
+  {
+   "e": "feel mara embarrassment",
+   "at": 5,
+   "w": "back"
+  },
+  {
+   "e": "point mara kiran kiran company",
+   "at": 109,
+   "w": "need"
+  },
+  {
+   "e": "seek mara kiran comfort",
+   "at": 147,
+   "w": "Say"
+  },
+  {
+   "e": "tend kiran mara comfort",
+   "at": 170,
+   "w": "said"
+  }
+ ]
+}

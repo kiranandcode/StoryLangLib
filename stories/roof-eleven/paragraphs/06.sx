@@ -1,0 +1,90 @@
+ent kiran "Kiran" person she
+ent mara "Mara" person she
+ent theo "Theo" person he
+ent roof "the roof" place it
+ent note "the note" object it
+ent kdesk "that desk" object it
+ent stairs "the stairs" place they
+topic t1 "Mara comes down with the truth" kiran mara theo
+(S root topic=t1
+  (NP obl Ten|NUM|nummod minutes|NOUN|head|sense=time later|ADV|advmod|sense=time)
+  (NP nsubj ref=mara Mara|PROPN|head) was|AUX|cop|l=be back|ADV|head|sense=direction
+  ,|PUNCT|punct
+  (ADJP advcl red|ADJ|head|sense=impression (PP obl to|ADP|case the|DET|det ears|NOUN|head|sense=body))
+  and|CCONJ|cc
+  (VP conj laughing|VERB|head|l=laugh (PP obl at|ADP|case herself|PRON|head|ref=mara))
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=mara "|PUNCT|punct
+    (S head It|PRON|expl wasn't|AUX|cop|l=be (PP head for|ADP|case me|PRON|head|ref=mara))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (PP obl Up|ADV|advmod|sense=direction on|ADP|case (NP head ref=roof the|DET|det roof|NOUN|head))
+  ,|PUNCT|punct
+  (PRN parataxis (NP nsubj ref=mara she|PRON|head) said|VERB|head|l=say)
+  ,|PUNCT|punct
+  (NP nsubj ref=theo Theo|PROPN|head) had|AUX|aux|l=have told|VERB|head|l=tell (NP iobj ref=mara her|PRON|head)
+  (ADVP advmod as|ADV|advmod|sense=degree kindly|ADV|head|sense=manner (SBAR advcl as|SCONJ|mark (S head anyone|PRON|nsubj could|AUX|head)))
+  (SBAR ccomp that|SCONJ|mark (S head (NP nsubj ref=note the|DET|det note|NOUN|head) was|AUX|cop|l=be (PP head for|ADP|case Kiran|PROPN|head|ref=kiran)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=mara She|PRON|head) put|VERB|head|l=put (NP obj ref=note it|PRON|head)
+  (PP obl in|ADP|case Kiran's|PROPN|poss|ref=kiran hand|NOUN|head|sense=body) .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=mara "|PUNCT|punct
+    (FRAG head For|ADP|case you|PRON|head|ref=kiran ,|PUNCT|punct (NP vocative ref=kiran you|PRON|det absolute|ADJ|amod|sense=impression empiricist|NOUN|head))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=kiran Kiran|PROPN|head) read|VERB|head|l=read (NP obj ref=note it|PRON|head)
+  :|PUNCT|punct
+  (NP appos no|DET|det name|NOUN|head|sense=abstract ,|PUNCT|punct (NP conj only|ADV|advmod|sense=degree the|DET|det initial|NOUN|head|sense=abstract))
+  .|PUNCT|punct)
+(S root topic=t1
+  (FRAG head A|DET|det badly|ADV|advmod|sense=degree specified|ADJ|amod|sense=impression message|NOUN|head|sense=abstract)
+  ;|PUNCT|punct
+  (S parataxis (NP nsubj ref=kiran she|PRON|head) would|AUX|aux have|AUX|aux rejected|VERB|head|l=reject (NP obj ref=note it|PRON|head)
+    (PP obl in|ADP|case review|NOUN|head|sense=abstract))
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=mara "|PUNCT|punct Also|ADV|advmod|sense=order ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=mara Mara|PROPN|head) said|VERB|head|l=say ,|PUNCT|punct
+  (QUOTE parataxis spk=mara "|PUNCT|punct
+    (S head (NP nsubj ref=kiran you've|PRON|head) eaten|VERB|head|l=eat (NP obj dinner|NOUN|head|sense=event) alone|ADV|advmod|sense=manner
+      (PP obl at|ADP|case (NP head ref=kdesk that|DET|det desk|NOUN|head))
+      (NP obl every|DET|det night|NOUN|head|sense=time) (PP obl for|ADP|case three|NUM|nummod years|NOUN|head|sense=time) .|PUNCT|punct)
+    (S head (NP nsubj ref=kiran You|PRON|head) need|VERB|head|l=need (NP obj people|NOUN|head|sense=person) ,|PUNCT|punct (NP vocative ref=kiran Kiran|PROPN|head) .|PUNCT|punct)
+    (S head Go|VERB|head|l=go up|ADV|advmod|sense=direction .|PUNCT|punct)
+    "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=kiran Kiran|PROPN|head) filed|VERB|head|l=file (NP obj that|PRON|head)
+  (PP obl as|ADP|case a|DET|det claim|NOUN|head|sense=abstract (PP nmod from|ADP|case a|DET|det reliable|ADJ|amod|sense=impression source|NOUN|head|sense=abstract))
+  ,|PUNCT|punct
+  (NP appos not|PART|advmod something|PRON|head
+    (S relcl (NP nsubj ref=kiran she|PRON|head) could|AUX|aux check|VERB|head|l=check (PP obl from|ADP|case inside|ADV|head|sense=place)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=mara Mara|PROPN|head) was|AUX|cop|l=be still|ADV|advmod|sense=aspect pink|ADJ|head|sense=impression .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=mara "|PUNCT|punct
+    (S head And|CCONJ|cc (NP nsubj ref=mara I'm|PRON|head) mortified|ADJ|head|sense=impression .|PUNCT|punct)
+    (S head Say|VERB|head|l=say (NP obj something|PRON|head nice|ADJ|amod|sense=impression) (PP obl to|ADP|case me|PRON|head|ref=mara) .|PUNCT|punct)
+    "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=kiran Kiran|PROPN|head) considered|VERB|head|l=consider .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=kiran "|PUNCT|punct
+    (S head (NP nsubj ref=mara You|PRON|head) read|VERB|head|l=read
+      (NP obj an|DET|det ambiguous|ADJ|amod|sense=impression message|NOUN|head|sense=abstract)
+      (PP obl under|ADP|case a|DET|det plausible|ADJ|amod|sense=impression prior|NOUN|head|sense=abstract))
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=kiran she|PRON|head) said|VERB|head|l=say .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=kiran "|PUNCT|punct
+    (S head That's|AUX|cop|l=be not|PART|advmod foolish|ADJ|head|sense=impression .|PUNCT|punct)
+    (S head That's|AUX|cop|l=be Bayes|PROPN|head|sense=abstract .|PUNCT|punct)
+    "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=mara Mara|PROPN|head) laughed|VERB|head|l=laugh properly|ADV|advmod|sense=manner then|ADV|advmod|sense=time
+  ,|PUNCT|punct and|CCONJ|cc
+  (VP conj pushed|VERB|head|l=push (NP obj ref=kiran her|PRON|head) (PP obl toward|ADP|case (NP head ref=stairs the|DET|det stairs|NOUN|head)))
+  .|PUNCT|punct)
