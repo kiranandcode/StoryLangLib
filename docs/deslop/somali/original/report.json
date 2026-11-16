@@ -3,9 +3,7 @@
  "paragraphs": 3,
  "sentences": 5,
  "annotation": [],
- "lexiconOverrides": [
-  "influence: drops vague"
- ],
+ "lexiconOverrides": [],
  "rules": [
   {
    "style": "clarity",

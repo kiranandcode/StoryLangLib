@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deslop</title>
+<style>
+:root {
+  --bg: #f7f5f0; --panel: #ffffff; --ink: #1f2328; --muted: #6a6f76; --line: #e3dfd6;
+  --accent: #3b5bdb; --bad: #d6336c; --ok: #2b8a3e; --warn: #e8590c; --chip: #efece5;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #16171a; --panel: #1e2024; --ink: #e6e6e3; --muted: #9a9ea6; --line: #2e3137;
+    --accent: #7b93ff; --bad: #ff6b9a; --ok: #69db7c; --warn: #ffa94d; --chip: #2a2c31; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--sans); }
+header { position: sticky; top: 0; z-index: 5; display: flex; gap: 12px; align-items: center;
+  padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+header h1 { font: 600 17px var(--sans); margin: 0 8px 0 0; letter-spacing: .2px; }
+select, input, textarea, button { font: inherit; color: inherit; }
+select, input, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+button { background: var(--chip); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 12px; background: var(--chip); color: var(--muted); }
+.pill.ok { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.pill.bad { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+.pill.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+nav.tabs { display: flex; gap: 4px; }
+nav.tabs button { border-radius: 6px 6px 0 0; }
+nav.tabs button.on { background: var(--panel); border-bottom-color: var(--panel); font-weight: 600; }
+main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding: 16px; }
+@media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
+section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+h2 { font: 600 15px var(--sans); margin: 0 0 8px; }
+h3 { font: 600 13px var(--sans); margin: 14px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.muted { color: var(--muted); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.para { padding: 10px 0 12px; border-top: 1px solid var(--line); }
+.para:first-child { border-top: 0; }
+.para .heading { font: 600 13px var(--sans); color: var(--accent); margin-bottom: 4px; }
+.para .prose { font: 17px/1.62 var(--serif); }
+.para .foot { margin-top: 6px; font-size: 12px; }
+.sent { cursor: pointer; border-radius: 3px; }
+.sent:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.sent.flagged { text-decoration: underline wavy var(--bad); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.sent.sel { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.tok { border-radius: 2px; }
+.dropped { color: var(--muted); font-style: italic; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
+.legend label { display: inline-flex; gap: 4px; align-items: center; margin-right: 10px; font-size: 12px; cursor: pointer; }
+.sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+aside { position: sticky; top: 70px; align-self: start; max-height: calc(100vh - 86px); overflow: auto; }
+.flag { margin: 6px 0; padding: 6px 8px; border-left: 3px solid var(--bad); background: var(--chip); border-radius: 4px; }
+.flag b { display: block; }
+.flag.within { border-left-color: var(--warn); }
+.treewrap { overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+svg text { fill: var(--ink); font-family: var(--sans); }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+td, th { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+.req { padding: 8px 0; border-top: 1px solid var(--line); }
+.req pre { white-space: pre-wrap; margin: 4px 0 0; font: 12px var(--mono); color: var(--muted); }
+dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); width: min(760px, 92vw); }
+dialog textarea { width: 100%; height: 340px; font: 13px var(--mono); }
+.kbd { font: 12px var(--mono); background: var(--chip); padding: 1px 5px; border-radius: 4px; }
+.small { font-size: 12px; }
+.note-in { width: 260px; }
+/* reader view */
+main.reading { grid-template-columns: 1fr; }
+main.reading aside { position: fixed; top: 0; right: 0; height: 100vh; max-height: none; width: min(440px, 92vw);
+  z-index: 20; padding: 12px; background: var(--bg); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.18);
+  display: none; }
+main.reading aside.open { display: block; }
+.diff del { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1px; background: color-mix(in srgb, var(--bad) 10%, transparent); }
+.diff ins { color: var(--ok); text-decoration: none; background: color-mix(in srgb, var(--ok) 14%, transparent); border-radius: 2px; }
+.prow { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+@media (max-width: 900px) { .prow { grid-template-columns: 1fr; } }
+.readbar { max-width: 1000px; margin: 0 auto 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.seg button { border-radius: 0; margin-left: -1px; }
+.seg button:first-child { border-radius: 6px 0 0 6px; } .seg button:last-child { border-radius: 0 6px 6px 0; }
+.seg button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.quiet { background: none; border-color: transparent; color: var(--muted); }
+.quiet:hover { color: var(--ink); }
+article.reader { max-width: 1000px; margin: 0 auto; padding: 28px 0 80px; }
+article.reader .doc-title { font: 600 32px/1.2 var(--serif); margin: 0 0 6px; max-width: 680px; }
+article.reader .byline { color: var(--muted); font-size: 13px; margin-bottom: 30px; max-width: 680px; }
+.rp { display: grid; grid-template-columns: minmax(0, 680px) 260px; column-gap: 36px; }
+@media (max-width: 1000px) { .rp { grid-template-columns: 1fr; } .rp .margin { margin: -0.6em 0 1em; } }
+.rp h2.rh { font: 600 22px/1.3 var(--serif); margin: 1.5em 0 .45em; grid-column: 1; }
+.rp p.prose { font: 19px/1.72 var(--serif); margin: 0 0 1.15em; hyphens: auto; text-wrap: pretty; }
+.rp p.prose.drop { font-style: italic; color: var(--muted); font-size: 16px; }
+.margin { font-size: 12px; color: var(--muted); padding-top: 6px; line-height: 1.4; }
+.margin .mflag { color: var(--bad); }
+.margin .mrule { display: block; }
+.margin .acts { margin-top: 6px; opacity: 0; transition: opacity .12s; display: flex; gap: 6px; flex-wrap: wrap; }
+.rp:hover .margin .acts, .margin .acts:focus-within { opacity: 1; }
+.margin .acts button { font-size: 12px; padding: 2px 8px; }
+.margin .acts input { font-size: 12px; padding: 2px 6px; width: 100%; }
+body.nomarks .sent.flagged { text-decoration: none; }
+body.nohl .tok { background: none !important; box-shadow: none !important; }
+.parallel { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 24px 0 80px; }
+.parallel .col h1 { font: 600 24px/1.25 var(--serif); margin: 0 0 4px; }
+.parallel .col h2.rh { font: 600 19px/1.3 var(--serif); margin: 1.3em 0 .35em; }
+.parallel .col p.prose { font: 17px/1.66 var(--serif); margin: 0 0 1em; }
+.parallel .col .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+@media (max-width: 900px) { .parallel { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Deslop</h1>
+  <select id="docsel" aria-label="document"></select>
+  <button id="newbtn">New from text…</button>
+  <span id="scores" class="row"></span>
+  <span style="flex:1"></span>
+  <span id="worker" class="pill"></span>
+</header>
+<div style="padding: 10px 16px 0">
+  <nav class="tabs" id="tabs"></nav>
+</div>
+<main>
+  <div id="view"></div>
+  <aside id="inspector"><section class="card"><h2>Inspector</h2><p class="muted">Click a sentence to see why it was flagged, its word classes, its entities and its parse tree.</p></section></aside>
+</main>
+
+<dialog id="treedlg" style="width:96vw;max-width:none"><div class="row" style="justify-content:space-between"><h2 id="treetitle"></h2><button id="treeclose">×</button></div><div class="treewrap" id="treebig"></div></dialog>
+<dialog id="newdlg">
+  <h2>New document</h2>
+  <p class="muted small">Paste the text. Blank-line or line-separated paragraphs; a short line with no closing punctuation becomes a heading. It is saved under <span class="kbd">stories/private-deslop/</span> (ignored by git).</p>
+  <p><input id="newtitle" placeholder="Title" style="width:100%"></p>
+  <textarea id="newtext" placeholder="Paste LLM-written text here"></textarea>
+  <div class="row" style="margin-top:10px">
+    <label class="small"><input type="checkbox" id="newgo" checked> queue “annotate” and “rewrite all” for the worker</label>
+    <span style="flex:1"></span>
+    <button id="newcancel">Cancel</button><button class="primary" id="newok">Create</button>
+  </div>
+</dialog>
+
+<script>
+const CLASS = {
+  buzz: ["#e64980", "AI vocabulary (tapestry, delve, underscore)"],
+  significance: ["#f08c00", "significance words (pivotal, crucial, key)"],
+  vague: ["#c9a227", "vague nouns that significance attaches to (role, moment, shift)"],
+  hype: ["#d6336c", "manufactured enthusiasm (thrilled, guru)"],
+  filler: ["#845ef7", "filler phrases (a multitude of, the importance of)"],
+  intensifier: ["#fd7e14", "empty intensifiers (truly, very)"],
+  us: ["#1c7ed6", "American spellings"],
+  weasel: ["#12b886", "weasel phrases (experts say)"],
+  attribution: ["#0ca678", "verbs of reputation (seen as, regarded)"],
+  inflation: ["#ae3ec9", "understated inflation (more than, not just)"],
+  throat: ["#868e96", "throat-clearing (it is worth noting)"],
+  deontic: ["#2f9e44", "must / should / let us"],
+  scope: ["#15aabf", "broader, wider, growing"],
+  trend: ["#1098ad", "movement, trend, landscape"],
+  animate: ["#5c7cfa", "verbs only people do (with an inanimate subject, a fault)"],
+  nominal: ["#a9a9a9", "nouns hiding an action"],
+};
+const DEFAULT_ON = new Set(["buzz", "significance", "hype", "filler", "intensifier", "us", "weasel", "attribution", "inflation", "throat", "scope", "trend"]);
+const RULE = {
+  "characters: few agentless passives": "A passive with no 'by' phrase hides who acted. At most one clause in ten.",
+  "actions: few hidden in nouns": "A subject whose head noun is an action ('the incorporation of', 'a request') with a light verb or 'is'.",
+  "no inanimate actors": "A thing, idea or place doing what only people do ('the temple fosters', 'Douera captivates').",
+  "few noun stacks": "Three nouns in a row that name nothing the text tracks.",
+  "point first": "The subject starts twelve or more words in.",
+  "no stacked asides": "A sentence of 35+ words carrying both a parenthetical and a relative clause.",
+  "no non-sequitur stacks": "Neighbouring sentences that share no entity and are joined by no connective.",
+  "no slop emphasis": "A short sentence asserting significance ('This matters.').",
+  "no throat-clearing": "Announcing instead of saying ('It is worth noting', 'let us').",
+  "no understated inflation": "'This is more than X', 'not just X' in a copular sentence.",
+  "no tricolon with semicolons": "Three parts joined by semicolons for cadence.",
+  "no deferred assertion": "'What is needed is X'.",
+  "no emphatic cleft": "'It is X that ...'.",
+  "few observation-and-response joins": "', and' before a second clause with its own subject.",
+  "no mechanical tetracolon": "Four or more coordinated clauses.",
+  "no sentence-initial conjunctions": "Starting a sentence with And or But.",
+  "no buzz words": "Words from the AI vocabulary list.",
+  "no empty intensifiers": "truly, really, very, actually.",
+  "British spelling": "American spellings (color, analyze, fiber).",
+  "no appositive-trailing cadence": "An appositive, then a trailing adverbial clause.",
+  "no dramatic terminal sentences": "A short last sentence that negates or asserts significance.",
+  "no summarising pivots": "A short sentence narrating the argument ('The problem compounds').",
+  "no summary closers": "A paragraph's last sentence adds nothing new.",
+  "no bare pivot bridges": "Opening a paragraph on 'However' without restating the last one.",
+  "no spurious contrasts": "A contrast connective with nothing to contrast.",
+  "no bare relative clauses": "A restrictive relative clause that stops at the noun ('code that AI writes').",
+  "no not-X-dash-Y": "'isn't just X—it's Y'.",
+  "no abstract significance": "'a pivotal moment', 'an important role', 'Its significance extends'.",
+  "no vague attributions": "Reputation with no source ('is seen as', 'widely considered', 'experts say').",
+  "no filler phrases": "'a multitude of', 'the importance of', 'a direct result of'.",
+  "no manufactured enthusiasm": "'thrilled to bring you', 'guru'.",
+  "few exhortations": "'We must ...', 'let us ...'. At most one sentence in twenty.",
+  "no broader-trend claims": "'part of a broader movement', 'a growing trend'.",
+  "no em-dashes": "Kiran's rule: no em-dashes at all.",
+  "no dramatic colons": "A colon introducing a clause for effect.",
+  "no rhetorical questions": "A question nothing answers.",
+  "no not-X-but-Y (unless it denies what the text put forward)": "Denying what nobody claimed, to set up what you claim.",
+  "every word class the rules read is decided": "The annotation decided every verb, likely nominalisation and -ize spelling.",
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let state = { docs: [], id: null, doc: null, tab: "read", side: "original", sel: null, on: new Set(DEFAULT_ON), version: 0, marks: true, hl: false };
+try { const s = JSON.parse(localStorage.getItem("deslop-ui") || "{}"); if (s.on) state.on = new Set(s.on); if (s.tab) state.tab = s.tab; if ("marks" in s) state.marks = s.marks; if ("hl" in s) state.hl = s.hl; } catch {}
+const save = () => { try { localStorage.setItem("deslop-ui", JSON.stringify({ on: [...state.on], tab: state.tab, id: state.id, marks: state.marks, hl: state.hl })); } catch {} };
+const api = async (p, body) => { const r = await fetch(p, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : {}); const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status); return j; };
+
+async function loadDocs(pick) {
+  state.docs = await api("/api/docs");
+  const sel = $("#docsel");
+  const groups = { mine: "Mine", demos: "Demos" };
+  sel.innerHTML = Object.entries(groups).map(([g, label]) => {
+    const ds = state.docs.filter(d => d.group === g);
+    return ds.length ? `<optgroup label="${label}">${ds.map(d => `<option value="${esc(d.id)}">${esc(d.title)}</option>`).join("")}</optgroup>` : "";
+  }).join("");
+  let last = null; try { last = JSON.parse(localStorage.getItem("deslop-ui") || "{}").id; } catch {}
+  const id = pick || (state.docs.find(d => d.id === last) ? last : state.docs[0]?.id);
+  if (id) { sel.value = id; await openDoc(id); }
+}
+async function openDoc(id) {
+  state.id = id; state.sel = null; save();
+  state.doc = await api("/api/doc?id=" + encodeURIComponent(id));
+  state.version = state.doc.version;
+  if (!state.doc.rewrite && state.side !== "original") state.side = "original";
+  else if (state.doc.rewrite && !state.sidePicked) state.side = "both";
+  render();
+}
+async function poll() {
+  if (state.id) {
+    try {
+      const v = await api("/api/version?id=" + encodeURIComponent(state.id));
+      if (v.version !== state.version) {
+        const keep = state.sel;
+        state.doc = await api("/api/doc?id=" + encodeURIComponent(state.id));
+        state.version = state.doc.version; state.sel = keep; render();
+      }
+      const w = await api("/api/worker");
+      const open = state.doc.requests.filter(r => r.status === "open").length;
+      const busy = state.doc.requests.filter(r => r.status === "claimed" || r.status === "working").length;
+      const el = $("#worker");
+      el.className = "pill " + (busy ? "warn" : open ? "bad" : "ok");
+      el.textContent = busy ? `worker on ${busy} request${busy > 1 ? "s" : ""}` : open ? `${open} waiting for a worker` : (w.last ? "queue empty" : "no worker has run yet");
+      el.title = "Requests are claimed by an interactive Claude session running /verified-deslopify worker (studio MCP await_request kind=deslop).";
+    } catch (e) { /* server restarting */ }
+  }
+  setTimeout(poll, 2000);
+}
+
+// ------------------------------------------------------------ rendering
+function score(rep) {
+  if (!rep || !rep.rules?.length) return null;
+  return { holds: rep.rules.filter(r => r.holds).length, of: rep.rules.length, cert: rep.certified };
+}
+function scorePill(label, rep) {
+  const s = score(rep);
+  if (!s) return `<span class="pill">${label}: not certified yet</span>`;
+  return `<span class="pill ${s.cert ? "ok" : "bad"}">${label}: ${s.holds}/${s.of}${s.cert ? " certified" : ""}</span>`;
+}
+function render() {
+  const d = state.doc;
+  $("#scores").innerHTML = scorePill("before", d.original?.report) + scorePill("after", d.rewrite?.report);
+  const tabs = [["read", "Read"], ["analysis", "Analysis"], ["requests", `Requests (${d.requests.length})`], ["source", "Source"]];
+  if (state.tab === "compare") state.tab = "read";
+  document.querySelector("main").classList.toggle("reading", state.tab === "read");
+  document.body.classList.toggle("nomarks", !state.marks);
+  document.body.classList.toggle("nohl", !state.hl);
+  $("#tabs").innerHTML = tabs.map(([k, l]) => `<button class="${state.tab === k ? "on" : ""}" data-tab="${k}">${l}</button>`).join("");
+  const v = $("#view");
+  if (state.tab === "read") v.innerHTML = readView();
+  else if (state.tab === "compare") v.innerHTML = compareView();
+  else if (state.tab === "analysis") v.innerHTML = analysisView();
+  else if (state.tab === "requests") v.innerHTML = requestsView();
+  else v.innerHTML = `<section class="card"><h2>Source</h2><pre style="white-space:pre-wrap">${esc(d.source)}</pre></section>`;
+  renderInspector();
+}
+function legend() {
+  return `<div class="legend">${Object.entries(CLASS).map(([k, [c, t]]) =>
+    `<label title="${esc(t)}"><input type="checkbox" data-cls="${k}" ${state.on.has(k) ? "checked" : ""}><span class="sw" style="background:${c}"></span>${k}</label>`).join("")}</div>`;
+}
+function tokStyle(cls) {
+  const on = cls.filter(c => state.on.has(c) && CLASS[c]);
+  if (!on.length) return "";
+  const c = CLASS[on[0]][0];
+  return ` style="background:color-mix(in srgb, ${c} 26%, transparent); box-shadow: inset 0 -2px ${c}" title="${esc(on.join(", "))}"`;
+}
+function paraHTML(side, p) {
+  if (p.dropped) return `<div class="para"><div class="heading">${esc(p.heading || "")}</div><div class="dropped">¶${p.nn} dropped: ${esc(p.dropped)}</div></div>`;
+  let html = "";
+  if (!p.sentences.length) html = esc(p.text);
+  else {
+    let pos = 0;
+    for (const s of p.sentences) {
+      html += esc(p.text.slice(pos, s.a));
+      let inner = "", q = s.a;
+      for (const t of s.tokens) {
+        inner += esc(p.text.slice(q, t.a)) + `<span class="tok"${tokStyle(t.cls || [])}>${esc(p.text.slice(t.a, t.b))}</span>`;
+        q = t.b;
+      }
+      const hard = s.flags.filter(f => !f.endsWith("(within limits)")).length;
+      const sel = state.sel && state.sel.side === side && state.sel.at === s.at;
+      html += `<span class="sent ${hard ? "flagged" : ""} ${sel ? "sel" : ""}" data-side="${side}" data-at="${s.at}" title="${esc(s.flags.join("\n"))}">${inner}</span>`;
+      pos = s.b;
+    }
+    html += esc(p.text.slice(pos));
+  }
+  const flags = p.sentences.reduce((n, s) => n + s.flags.filter(f => !f.endsWith("(within limits)")).length, 0);
+  const reqs = state.doc.requests.filter(r => r.para === p.nn);
+  const lastReq = reqs[reqs.length - 1];
+  const reqPill = lastReq ? `<span class="pill ${lastReq.status === "done" ? "ok" : lastReq.status === "declined" ? "bad" : "warn"}" title="${esc(lastReq.reply || lastReq.text)}">${esc(lastReq.target)}: ${lastReq.status}</span>` : "";
+  const annot = p.annotated ? "" : `<span class="pill warn">not annotated</span>`;
+  const note = p.note?.dropped_claims ? `<div class="small muted">dropped claims: ${p.note.dropped_claims.map(esc).join("; ")}</div>` : "";
+  return `<div class="para">
+    ${p.heading ? `<div class="heading">${esc(p.heading)}</div>` : ""}
+    <div class="prose">${html}</div>${note}
+    <div class="foot row"><span class="muted">¶${p.nn}</span>
+      <span class="pill ${flags ? "bad" : p.sentences.length ? "ok" : ""}">${p.sentences.length ? (flags ? `${flags} flag${flags > 1 ? "s" : ""}` : "clean") : "unchecked"}</span>${annot}${reqPill}
+      <span style="flex:1"></span>
+      ${side === "original" ? `<input class="note-in" placeholder="note for the rewrite (optional)" data-note="${p.nn}">
+      <button data-act="rewrite" data-para="${p.nn}" title="Queue: rewrite this paragraph until it certifies">Rewrite ¶</button>
+      ${p.annotated ? "" : `<button data-act="annotate" data-para="${p.nn}">Annotate ¶</button>`}` :
+      `<input class="note-in" placeholder="what to change (optional)" data-note="${p.nn}">
+      <button data-act="rewrite" data-para="${p.nn}" title="Queue: redo this paragraph's rewrite">Redo ¶</button>`}
+    </div></div>`;
+}
+function sideBlock(side) {
+  const s = state.doc[side];
+  if (!s) return `<p class="muted">No ${side === "rewrite" ? "rewrite" : "original"} yet. ${side === "rewrite" ? "Queue “Rewrite all” and a worker will write it paragraph by paragraph." : ""}</p>`;
+  return s.paragraphs.map(p => paraHTML(side, p)).join("");
+}
+function docActions() {
+  return `<div class="row">
+    <button data-act="annotate" data-para="">Annotate original</button>
+    <button class="primary" data-act="rewrite" data-para="">Rewrite all</button>
+    <button data-cert="original">Certify before</button>
+    <button data-cert="rewrite" ${state.doc.rewrite ? "" : "disabled"}>Certify after</button>
+    <input class="note-in" placeholder="note for the worker (whole document)" data-note="">
+  </div>`;
+}
+function readerOpts() {
+  return `<div class="readbar">
+    <div class="seg"><button class="${state.side === "original" ? "on" : ""}" data-side-btn="original">Before</button><button class="${state.side === "rewrite" ? "on" : ""}" data-side-btn="rewrite" ${state.doc.rewrite ? "" : "disabled"}>After</button><button class="${state.side === "both" ? "on" : ""}" data-side-btn="both" ${state.doc.rewrite ? "" : "disabled"}>Side by side</button><button class="${state.side === "diff" ? "on" : ""}" data-side-btn="diff" ${state.doc.rewrite ? "" : "disabled"}>Diff</button></div>
+    <label class="small"><input type="checkbox" data-pref="marks" ${state.marks ? "checked" : ""}> underline flagged sentences</label>
+    <label class="small"><input type="checkbox" data-pref="hl" ${state.hl ? "checked" : ""}> highlight slop words</label>
+    <span style="flex:1"></span>
+    <button class="quiet" data-act="annotate" data-para="">Annotate</button>
+    <button class="quiet" data-act="rewrite" data-para="">Rewrite all</button>
+    <button class="quiet" data-cert="original">Certify before</button>
+    <button class="quiet" data-cert="rewrite" ${state.doc.rewrite ? "" : "disabled"}>Certify after</button>
+  </div>${state.hl ? `<div class="readbar">${legend()}</div>` : ""}`;
+}
+function proseHTML(side, p) {
+  if (!p.sentences.length) return esc(p.text);
+  let html = "", pos = 0;
+  for (const s of p.sentences) {
+    html += esc(p.text.slice(pos, s.a));
+    let inner = "", q = s.a;
+    for (const t of s.tokens) { inner += esc(p.text.slice(q, t.a)) + `<span class="tok"${tokStyle(t.cls || [])}>${esc(p.text.slice(t.a, t.b))}</span>`; q = t.b; }
+    inner += esc(p.text.slice(q, s.b));
+    const hard = s.flags.filter(f => !f.endsWith("(within limits)")).length;
+    const sel = state.sel && state.sel.side === side && state.sel.at === s.at;
+    html += `<span class="sent ${hard ? "flagged" : ""} ${sel ? "sel" : ""}" data-side="${side}" data-at="${s.at}">${inner}</span>`;
+    pos = s.b;
+  }
+  return html + esc(p.text.slice(pos));
+}
+function marginHTML(side, p) {
+  const hard = [...new Set(p.sentences.flatMap(s => s.flags.filter(f => !f.endsWith("(within limits)"))))];
+  const reqs = state.doc.requests.filter(r => r.para === p.nn), last = reqs[reqs.length - 1];
+  let m = "";
+  if (hard.length) m += `<span class="mflag">${hard.length} rule${hard.length > 1 ? "s" : ""} flag this</span>` + hard.map(r => `<span class="mrule">${esc(r)}</span>`).join("");
+  else if (p.sentences.length) m += `<span style="color:var(--ok)">clean</span>`;
+  else if (!p.dropped) m += `<span>not annotated</span>`;
+  if (p.note?.dropped_claims) m += `<span class="mrule">dropped: ${p.note.dropped_claims.map(esc).join("; ")}</span>`;
+  if (last) m += `<span class="mrule">${esc(last.target)} ${esc(last.status)}${last.reply ? ": " + esc(last.reply.slice(0, 140)) : ""}</span>`;
+  m += `<div class="acts"><input placeholder="${side === "original" ? "note for the rewrite" : "what to change"}" data-note="${p.nn}">
+    <button data-act="rewrite" data-para="${p.nn}">${side === "original" ? "Rewrite ¶" + p.n : "Redo ¶" + p.n}</button>
+    ${p.annotated || p.dropped ? "" : `<button data-act="annotate" data-para="${p.nn}">Annotate</button>`}</div>`;
+  return `<div class="margin">${m}</div>`;
+}
+function articleHTML(side, withMargin) {
+  const sd = state.doc[side];
+  if (!sd) return `<p class="muted">No rewrite yet. “Rewrite all” queues it for a worker.</p>`;
+  const sc = score(sd.report);
+  const title = sd.title || state.doc.title;
+  let h = `<h1 class="doc-title">${esc(title)}</h1><div class="byline">${side === "original" ? "Before" : "After"} · ${sc ? `${sc.holds}/${sc.of} rules hold${sc.cert ? " · certified" : ""}` : "not certified yet"}</div>`;
+  for (const p of sd.paragraphs) {
+    const head = p.heading ? `<h2 class="rh">${esc(p.heading)}</h2>` : "";
+    const body = p.dropped ? `<p class="prose drop">Paragraph ${p.n} dropped: ${esc(p.dropped)}</p>` : `<p class="prose">${proseHTML(side, p)}</p>`;
+    h += withMargin ? `<div class="rp">${head}${head ? "<div></div>" : ""}${body}${marginHTML(side, p)}</div>` : head + body;
+  }
+  return h;
+}
+function aligned() {
+  // paragraphs line up when the rewrite keeps the original's numbering (each rewrite NN is an original NN)
+  const o = state.doc.original?.paragraphs || [], r = state.doc.rewrite?.paragraphs || [];
+  const on = new Set(o.map(p => p.nn));
+  return r.length && r.every(p => on.has(p.nn)) && !state.doc.rewrite.unaligned;
+}
+function colHead(side) {
+  const sd = state.doc[side], sc = score(sd?.report);
+  return `<h1>${esc(sd?.title || state.doc.title)}</h1><div class="byline">${side === "original" ? "Before" : "After"} · ${sc ? `${sc.holds}/${sc.of} rules hold${sc.cert ? " · certified" : ""}` : "not certified yet"}</div>`;
+}
+function pBlock(side, p) {
+  if (!p) return `<p class="prose drop"></p>`;
+  const head = p.heading ? `<h2 class="rh">${esc(p.heading)}</h2>` : "";
+  return head + (p.dropped ? `<p class="prose drop">Dropped: ${esc(p.dropped)}</p>` : `<p class="prose">${proseHTML(side, p)}</p>`);
+}
+function sideBySide() {
+  if (!aligned()) return `<div class="parallel"><div class="col">${articleHTML("original", false).replace('class="doc-title"', "")}</div><div class="col">${articleHTML("rewrite", false).replace('class="doc-title"', "")}</div></div>`;
+  const o = Object.fromEntries(state.doc.original.paragraphs.map(p => [p.nn, p]));
+  const r = Object.fromEntries(state.doc.rewrite.paragraphs.map(p => [p.nn, p]));
+  const nns = [...new Set([...Object.keys(o), ...Object.keys(r)])].sort();
+  return `<div class="parallel" style="display:block"><div class="prow"><div class="col">${colHead("original")}</div><div class="col">${colHead("rewrite")}</div></div>
+    ${nns.map(nn => `<div class="prow"><div class="col">${pBlock("original", o[nn])}</div><div class="col">${pBlock("rewrite", r[nn] || { nn, dropped: "no rewrite yet", heading: o[nn]?.heading })}</div></div>`).join("")}</div>`;
+}
+function words(t) { return t.match(/\s+|[^\s]+/g) || []; }
+function diffTokens(a, b) {
+  const A = a.filter(x => !/^\s+$/.test(x) || x.includes("\n\n")), B = b.filter(x => !/^\s+$/.test(x) || x.includes("\n\n"));
+  const n = A.length, m = B.length, key = x => x.toLowerCase().replace(/[^\p{L}\p{N}¶]+/gu, "") || x;
+  const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+    L[i][j] = key(A[i]) === key(B[j]) ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const out = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (key(A[i]) === key(B[j])) { out.push(["=", B[j]]); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) out.push(["-", A[i++]]);
+    else out.push(["+", B[j++]]);
+  }
+  while (i < n) out.push(["-", A[i++]]);
+  while (j < m) out.push(["+", B[j++]]);
+  return out;
+}
+function diffView() {
+  const txt = side => (state.doc[side]?.paragraphs || []).filter(p => !p.dropped).map(p => (p.heading ? "¶§" + p.heading.replace(/\s+/g, "_") + " " : "") + p.text).join("\n\n");
+  const ops = diffTokens(words(txt("original")), words(txt("rewrite")));
+  let html = `<article class="reader diff"><h1 class="doc-title">${esc(state.doc.title)}</h1><div class="byline">Diff · struck through: cut from the original · highlighted: written for the rewrite</div><div style="max-width:680px"><p class="prose" style="font:19px/1.72 var(--serif)">`;
+  // group each changed run: what was cut, then what was written in its place
+  const grouped = [];
+  for (let k = 0; k < ops.length;) {
+    if (ops[k][0] === "=" || ops[k][1].includes("\n\n") || ops[k][1].startsWith("¶§")) { grouped.push(ops[k++]); continue; }
+    const del = [], ins = [];
+    while (k < ops.length && ops[k][0] !== "=" && !ops[k][1].includes("\n\n") && !ops[k][1].startsWith("¶§")) (ops[k][0] === "-" ? del : ins).push(ops[k++][1]);
+    if (del.length) grouped.push(["-", del.join(" ")]);
+    if (ins.length) grouped.push(["+", ins.join(" ")]);
+  }
+  let prev = null;
+  for (const [op, w] of grouped) {
+    if (w.includes("\n\n")) { html += `</p><p class="prose" style="font:19px/1.72 var(--serif)">`; prev = null; continue; }
+    if (w.startsWith("¶§")) { const h = esc(w.slice(2).replace(/_/g, " ")); html += op === "=" ? `</p><h2 class="rh" style="font:600 22px var(--serif)">${h}</h2><p class="prose" style="font:19px/1.72 var(--serif)">` : op === "+" ? `</p><h2 class="rh" style="font:600 22px var(--serif)"><ins>${h}</ins></h2><p class="prose" style="font:19px/1.72 var(--serif)">` : `</p><h2 class="rh" style="font:600 22px var(--serif)"><del>${h}</del></h2><p class="prose" style="font:19px/1.72 var(--serif)">`; continue; }
+    const t = (prev ? " " : "") + esc(w);
+    html += op === "=" ? t : op === "-" ? ` <del>${esc(w)}</del>` : ` <ins>${esc(w)}</ins>`;
+    prev = op;
+  }
+  return html + "</p></div></article>";
+}
+function readView() {
+  if (state.side === "both" && state.doc.rewrite) return readerOpts() + sideBySide();
+  if (state.side === "diff" && state.doc.rewrite) return readerOpts() + diffView();
+  const side = state.side === "rewrite" && state.doc.rewrite ? "rewrite" : "original";
+  return readerOpts() + `<article class="reader">${articleHTML(side, true)}</article>`;
+}
+function compareView() { state.side = "both"; return readView(); }
+
+// ------------------------------------------------------------ analysis
+function sents(side) { return (state.doc[side]?.paragraphs || []).flatMap(p => p.sentences.map(s => ({ ...s, p: p.n }))); }
+function ruleTable() {
+  const a = state.doc.original?.report?.rules || [], b = state.doc.rewrite?.report?.rules || [];
+  const bmap = Object.fromEntries(b.map(r => [r.name, r]));
+  const styles = {};
+  for (const r of a) (styles[r.style] ||= []).push(r);
+  const cell = r => !r ? `<span class="muted">·</span>` : r.holds ? `<span style="color:var(--ok)">✓</span>` : `<span style="color:var(--bad)">✗ ${r.at.filter(x => x.at !== "lexicon").length || ""}</span>`;
+  return Object.entries(styles).map(([st, rs]) => {
+    const hb = rs.filter(r => r.holds).length, ha = rs.filter(r => bmap[r.name]?.holds).length;
+    return `<h3>${esc(st)} <span class="pill">${hb}/${rs.length} → ${b.length ? ha + "/" + rs.length : "?"}</span></h3>
+    <table><tr><th>rule</th><th>before</th><th>after</th></tr>${rs.map(r => `<tr><td title="${esc(RULE[r.name] || r.rule)}">${esc(r.name)} <span class="muted small">${esc(r.rule)}</span></td><td>${cell(r)}</td><td>${cell(bmap[r.name])}</td></tr>`).join("")}</table>`;
+  }).join("");
+}
+function heatmap(side) {
+  const rep = state.doc[side]?.report; const paras = state.doc[side]?.paragraphs?.filter(p => !p.dropped) || [];
+  if (!rep?.rules) return `<p class="muted">not certified yet</p>`;
+  const rules = [...new Set([...(state.doc.original?.report?.rules || []), ...(state.doc.rewrite?.report?.rules || [])]
+    .filter(r => r.at?.some(x => x.at !== "lexicon")).map(r => r.name))];
+  if (!rules.length) return `<p class="muted">no rule flags a sentence</p>`;
+  const byName = Object.fromEntries(rep.rules.map(r => [r.name, r]));
+  const cw = 22, ch = 18, lw = 250, W = lw + paras.length * cw + 10, H = 24 + rules.length * ch;
+  let svg = `<svg width="${W}" height="${H}" role="img" aria-label="rules by paragraph">`;
+  paras.forEach((p, j) => svg += `<text x="${lw + j * cw + cw / 2}" y="14" font-size="10" text-anchor="middle" fill="currentColor">${p.n}</text>`);
+  rules.forEach((name, i) => {
+    const r = byName[name]; const y = 22 + i * ch;
+    svg += `<text x="${lw - 6}" y="${y + 12}" font-size="11" text-anchor="end">${esc(name.length > 40 ? name.slice(0, 39) + "…" : name)}</text>`;
+    paras.forEach((p, j) => {
+      const n = (r?.at || []).filter(x => x.at.split(":")[0] == p.n).length;
+      const col = !n ? "var(--chip)" : r.holds ? "var(--warn)" : "var(--bad)";
+      svg += `<rect x="${lw + j * cw + 2}" y="${y + 1}" width="${cw - 4}" height="${ch - 4}" rx="3" fill="${col}" opacity="${n ? Math.min(1, .45 + .25 * n) : 1}"><title>${esc(name)}, ¶${p.n}: ${n}</title></rect>`;
+    });
+  });
+  return `<div class="treewrap">${svg}</svg></div>`;
+}
+function rhythm(side) {
+  const ss = sents(side); if (!ss.length) return `<p class="muted">not annotated yet</p>`;
+  const bw = 9, H = 120, max = Math.max(40, ...ss.map(s => s.words)), W = ss.length * bw + 30;
+  let svg = `<svg width="${W}" height="${H + 18}">`;
+  svg += `<line x1="0" x2="${W}" y1="${H - 25 / max * H}" y2="${H - 25 / max * H}" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="${W - 2}" y="${H - 25 / max * H - 3}" font-size="9" text-anchor="end" fill="var(--muted)">25 words</text>`;
+  let prevP = null;
+  ss.forEach((s, i) => {
+    const h = s.words / max * H, flagged = s.flags.some(f => !f.endsWith("(within limits)"));
+    if (prevP !== null && s.p !== prevP) svg += `<line x1="${i * bw}" x2="${i * bw}" y1="0" y2="${H}" stroke="var(--line)"/>`;
+    prevP = s.p;
+    svg += `<rect x="${i * bw + 1}" y="${H - h}" width="${bw - 2}" height="${h}" fill="${flagged ? "var(--bad)" : "var(--accent)"}" opacity=".8" data-side="${side}" data-at="${s.at}" style="cursor:pointer"><title>${s.at}: ${s.words} words${flagged ? "\n" + s.flags.join("\n") : ""}</title></rect>`;
+  });
+  const ws = ss.map(s => s.words), mean = ws.reduce((a, b) => a + b, 0) / ws.length;
+  const sd = Math.sqrt(ws.reduce((a, b) => a + (b - mean) ** 2, 0) / ws.length);
+  return `<div class="treewrap">${svg}</svg></div><p class="small muted">${ss.length} sentences, mean ${mean.toFixed(1)} words, sd ${sd.toFixed(1)} (variation ${(sd / mean).toFixed(2)}). Red: flagged. Vertical rules: paragraph breaks.</p>`;
+}
+function classCounts(side) {
+  const c = {};
+  for (const s of sents(side)) for (const t of s.tokens) for (const k of t.cls || []) if (CLASS[k]) c[k] = (c[k] || 0) + 1;
+  return c;
+}
+function classBars() {
+  const a = classCounts("original"), b = classCounts("rewrite");
+  const keys = Object.keys(CLASS).filter(k => (a[k] || 0) + (b[k] || 0) > 0 && k !== "nominal");
+  if (!keys.length) return `<p class="muted">no classified words</p>`;
+  const max = Math.max(...keys.map(k => Math.max(a[k] || 0, b[k] || 0)));
+  return `<table>${keys.map(k => `<tr><td style="width:110px"><span class="sw" style="background:${CLASS[k][0]}"></span> ${k}</td>
+    <td><div title="before" style="height:8px;width:${(a[k] || 0) / max * 100}%;background:${CLASS[k][0]};border-radius:2px"></div>
+    <div title="after" style="height:8px;margin-top:2px;width:${(b[k] || 0) / max * 100}%;background:${CLASS[k][0]};opacity:.4;border-radius:2px"></div></td>
+    <td style="width:70px" class="small">${a[k] || 0} → ${b[k] || 0}</td></tr>`).join("")}</table>
+    <p class="small muted">Solid: before. Faded: after. Counts of words in each class the rules read (a word counts once per class; an animate verb is a fault only with an inanimate subject).</p>`;
+}
+function entityThread(side) {
+  const sd = state.doc[side]; if (!sd) return `<p class="muted">nothing yet</p>`;
+  const ss = sents(side); if (!ss.length) return `<p class="muted">not annotated yet</p>`;
+  const names = {};
+  sd.paragraphs.forEach(p => Object.entries(p.entities || {}).forEach(([k, v]) => names[k] ||= v.name));
+  const ents = [...new Set(ss.flatMap(s => s.refs))].filter(e => !["authors", "reader"].includes(e));
+  ents.sort((x, y) => ss.findIndex(s => s.refs.includes(x)) - ss.findIndex(s => s.refs.includes(y)));
+  const cw = 18, rh = 16, lw = 170, W = lw + ss.length * cw + 10, H = 26 + ents.length * rh + 18;
+  let svg = `<svg width="${W}" height="${H}">`;
+  ss.forEach((s, j) => {
+    const x = lw + j * cw + cw / 2;
+    if (j && ss[j - 1].p !== s.p) svg += `<line x1="${x - cw / 2}" x2="${x - cw / 2}" y1="14" y2="${H - 14}" stroke="var(--line)"/>`;
+    const ns = s.flags.some(f => f.startsWith("no non-sequitur"));
+    svg += `<text x="${x}" y="12" font-size="9" text-anchor="middle" fill="${ns ? "var(--bad)" : "var(--muted)"}">${s.i}</text>`;
+    if (ns) svg += `<text x="${x - cw / 2}" y="${H - 4}" font-size="11" text-anchor="middle" fill="var(--bad)">✂<title>non-sequitur: ${s.at} shares no entity with the sentence before</title></text>`;
+  });
+  ents.forEach((e, i) => {
+    const y = 26 + i * rh;
+    svg += `<text x="${lw - 6}" y="${y + 4}" font-size="11" text-anchor="end">${esc((names[e] || e).slice(0, 26))}</text>`;
+    let prev = null;
+    ss.forEach((s, j) => {
+      if (!s.refs.includes(e)) return;
+      const x = lw + j * cw + cw / 2;
+      if (prev !== null && prev === j - 1 && ss[prev].p === s.p) svg += `<line x1="${lw + prev * cw + cw / 2}" x2="${x}" y1="${y}" y2="${y}" stroke="var(--accent)" stroke-width="3" opacity=".5"/>`;
+      svg += `<circle cx="${x}" cy="${y}" r="4.5" fill="var(--accent)" data-side="${side}" data-at="${s.at}" style="cursor:pointer"><title>${s.at} mentions ${esc(names[e] || e)}</title></circle>`;
+      prev = j;
+    });
+  });
+  return `<div class="treewrap">${svg}</svg></div><p class="small muted">Rows: entities the text tracks. Columns: sentences (paragraph breaks marked). A bar joins neighbouring sentences in a paragraph that share an entity; ✂ marks a sentence the non-sequitur rule flags (no shared entity, no connective).</p>`;
+}
+function analysisView() {
+  const has = s => !!state.doc[s];
+  return `<section class="card"><h2>Rules, before and after</h2>${ruleTable()}</section>
+  <section class="card"><h2>Where the rules bite</h2><p class="small muted">Rules × paragraphs. Red: a failing rule flags a sentence there; orange: flagged but within the rule's limit.</p>
+    <h3>Before</h3>${heatmap("original")}${has("rewrite") ? `<h3>After</h3>${heatmap("rewrite")}` : ""}</section>
+  <section class="card"><h2>Slop vocabulary</h2>${classBars()}</section>
+  <section class="card"><h2>Rhythm</h2><p class="small muted">Words per sentence. Kiran's papers average about 30 with a coefficient of variation near 0.4–0.5; LLM prose tends to be even.</p>
+    <h3>Before</h3>${rhythm("original")}${has("rewrite") ? `<h3>After</h3>${rhythm("rewrite")}` : ""}</section>
+  <section class="card"><h2>Entity thread</h2><p class="small muted">What each sentence is about, and whether neighbours connect. The non-sequitur, summary-closer and bare-pivot rules read this.</p>
+    <h3>Before</h3>${entityThread("original")}${has("rewrite") ? `<h3>After</h3>${entityThread("rewrite")}` : ""}</section>
+  <section class="card"><h2>Raw features</h2>${features()}</section>`;
+}
+function features() {
+  const a = state.doc.original?.report?.counts || {}, b = state.doc.rewrite?.report?.counts || {};
+  const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])];
+  const audit = state.doc.original?.report?.lexiconOverrides || [];
+  return `<table><tr><th></th><th>before</th><th>after</th></tr>${keys.map(k => `<tr><td>${esc(k)}</td><td>${a[k] ?? ""}</td><td>${b[k] ?? ""}</td></tr>`).join("")}</table>
+  ${audit.length ? `<p class="small">Base lexicon overridden (before): ${audit.map(esc).join("; ")}</p>` : ""}`;
+}
+
+// ------------------------------------------------------------ requests
+function requestsView() {
+  const rs = [...state.doc.requests].reverse();
+  return `<section class="card"><div class="row" style="justify-content:space-between"><h2>Requests</h2>${docActions()}</div>
+  <p class="small muted">Buttons queue requests in the Studio's request log. An interactive Claude session works them: in a terminal in the langlib repo, start <span class="kbd">claude</span> and say <span class="kbd">/verified-deslopify worker</span>. It claims each request with the studio MCP, writes and annotates the paragraph, and its reply is accepted only when certify.py no longer flags that paragraph. Certify buttons run here, at once, without a model.</p>
+  ${rs.length ? rs.map(r => `<div class="req"><div class="row"><span class="pill ${r.status === "done" ? "ok" : r.status === "declined" ? "bad" : "warn"}">${r.status}</span>
+    <b>${esc(r.target)}</b> ${r.para ? "¶" + esc(r.para) : "whole document"} <span class="muted small">${new Date(r.at * 1000).toLocaleString()}</span></div>
+    <div>${esc(r.text)}</div>${r.reply ? `<pre>${esc(r.reply)}</pre>` : ""}
+    ${(r.checks || []).map(c => `<div class="small"><span class="pill ${c.ok ? "ok" : "bad"}">${esc(c.check)}</span> ${c.detail.map(esc).join("; ")}</div>`).join("")}</div>`).join("") : `<p class="muted">No requests yet.</p>`}</section>`;
+}
+
+// ------------------------------------------------------------ inspector
+function findSent(side, at) {
+  for (const p of state.doc[side]?.paragraphs || []) for (const s of p.sentences) if (s.at === at) return { p, s };
+  return null;
+}
+function treeSVG(t) {
+  let leafX = 0; const NODES = [], EDGES = [];
+  const lh = 34;
+  const wOf = l => Math.max(34, 7 * Math.max(l.w.length, (l.p + (l.r ? "." + l.r : "")).length * 0.75) + 10);
+  function lay(n, d) {
+    if (n.w !== undefined) { const w = wOf(n), x = leafX + w / 2; leafX += w; NODES.push({ x, y: d, leaf: n }); return x; }
+    const xs = (n.k || []).map(k => lay(k, d + 1));
+    const x = xs.length ? (xs[0] + xs[xs.length - 1]) / 2 : (leafX += 30) - 15;
+    const me = { x, y: d, node: n }; NODES.push(me);
+    (n.k || []).forEach((k, i) => EDGES.push([x, d, xs[i], null, k]));
+    return x;
+  }
+  lay(t, 0);
+  const maxD = Math.max(...NODES.map(n => n.y));
+  NODES.forEach(n => { if (n.leaf) n.y = maxD; });
+  const yOf = n => 18 + n * lh;
+  const childDepth = k => NODES.find(n => (n.leaf === k || n.node === k)).y;
+  let svg = `<svg width="${leafX + 10}" height="${yOf(maxD) + 30}" font-size="11">`;
+  for (const [x1, d1, x2, , k] of EDGES) svg += `<line x1="${x1}" y1="${yOf(d1) + 4}" x2="${x2}" y2="${yOf(childDepth(k)) - 12}" stroke="var(--line)"/>`;
+  for (const n of NODES) {
+    if (n.leaf) {
+      const l = n.leaf, cls = (l.cls || []).filter(c => CLASS[c]);
+      const col = cls.length ? CLASS[cls[0]][0] : "var(--ink)";
+      svg += `<text x="${n.x}" y="${yOf(n.y)}" text-anchor="middle" font-weight="600" fill="${col}">${esc(l.w)}</text>
+        <text x="${n.x}" y="${yOf(n.y) + 13}" text-anchor="middle" font-size="9" fill="var(--muted)">${esc(l.p)}${l.r ? "." + esc(l.r) : ""}${l.ref ? " @" + esc(l.ref) : ""}</text>`;
+    } else {
+      const k = n.node;
+      svg += `<text x="${n.x}" y="${yOf(n.y)}" text-anchor="middle" fill="var(--accent)">${esc(k.c)}${k.r && k.r !== "head" ? "." + esc(k.r) : ""}</text>`
+        + (k.ref ? `<text x="${n.x}" y="${yOf(n.y) + 11}" text-anchor="middle" font-size="9" fill="var(--muted)">@${esc(k.ref)}</text>` : "");
+    }
+  }
+  return svg + "</svg>";
+}
+function withCls(tree, tokens) {
+  let i = 0;
+  const walk = n => n.w !== undefined ? { ...n, cls: tokens[i++]?.cls || [] } : { ...n, k: (n.k || []).map(walk) };
+  return walk(tree);
+}
+function renderInspector() {
+  const el = $("#inspector");
+  el.classList.toggle("open", !!state.sel);
+  if (!state.sel) { el.innerHTML = `<section class="card"><h2>Inspector</h2><p class="muted">Click a sentence (or a bar or dot in Analysis) to see which rules flag it and why, its word classes, its entities and its parse tree.</p>${legendHelp()}</section>`; return; }
+  const f = findSent(state.sel.side, state.sel.at);
+  if (!f) { state.sel = null; return renderInspector(); }
+  const { p, s } = f;
+  const words = s.tokens.filter(t => (t.cls || []).some(c => CLASS[c]));
+  el.innerHTML = `<section class="card">
+    <div class="row" style="justify-content:space-between"><h2>${state.sel.side === "original" ? "Before" : "After"} ${s.at}</h2><button id="closeinsp">×</button></div>
+    <p style="font:16px/1.5 var(--serif)">${esc(p.text.slice(s.a, s.b))}</p>
+    <p class="small muted">${s.words} words · paragraph ${p.nn}</p>
+    <h3>Rules</h3>${s.flags.length ? s.flags.map(fl => { const name = fl.replace(" (within limits)", ""); return `<div class="flag ${fl.endsWith("(within limits)") ? "within" : ""}"><b>${esc(fl)}</b>${esc(RULE[name] || "")}</div>`; }).join("") : `<p class="muted">No rule flags this sentence.</p>`}
+    <h3>Word classes</h3>${words.length ? `<table>${words.map(t => `<tr><td><b>${esc(t.w)}</b></td><td class="small">${(t.cls || []).filter(c => CLASS[c]).map(c => `<span class="sw" style="background:${CLASS[c][0]}"></span> ${c}`).join(" ")}</td></tr>`).join("")}</table>` : `<p class="muted small">none</p>`}
+    <h3>Entities</h3><p class="small">${s.refs.length ? s.refs.map(r => `<span class="pill">${esc(p.entities[r]?.name || r)} <span class="muted">${esc(p.entities[r]?.kind || "")}</span></span>`).join(" ") : `<span class="muted">none tracked</span>`}</p>
+    <h3>Parse tree <button id="bigtree" class="small" style="float:right;text-transform:none">open full size</button></h3><div class="treewrap">${treeSVG(withCls(s.tree, s.tokens))}</div>
+    <p class="small muted">Blue: phrases (category.role). Words show part of speech, role and the entity they refer to; coloured words are in a class the rules read.</p>
+  </section>`;
+}
+function legendHelp() {
+  return `<h3>How to read this</h3><p class="small">Every paragraph is annotated as a langlib document (a parse tree per sentence, with the entities each phrase refers to). <span class="kbd">certify.py</span> runs <span class="kbd">langlib check</span>, then <span class="kbd">langlib house</span> and the LLM-isms of <span class="kbd">langlib academic</span>: 38 rules, each a decidable predicate over the trees and the word classes. What they cannot see is listed in <span class="kbd">docs/deslop/README.md</span>.</p>`;
+}
+
+// ------------------------------------------------------------ events
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-tab],[data-side-btn],[data-at],[data-act],[data-cert],#closeinsp,#newbtn,#newok,#newcancel,#bigtree,#treeclose");
+  if (!t) return;
+  if (t.dataset.tab) { state.tab = t.dataset.tab; save(); render(); }
+  else if (t.dataset.sideBtn) { state.side = t.dataset.sideBtn; state.sidePicked = true; render(); }
+  else if (t.dataset.at) { state.sel = { side: t.dataset.side, at: t.dataset.at }; render(); }
+  else if (t.id === "closeinsp") { state.sel = null; render(); }
+  else if (t.id === "bigtree") {
+    const f = findSent(state.sel.side, state.sel.at);
+    $("#treetitle").textContent = (state.sel.side === "original" ? "Before " : "After ") + state.sel.at + ": " + f.p.text.slice(f.s.a, f.s.b);
+    $("#treebig").innerHTML = treeSVG(withCls(f.s.tree, f.s.tokens)); $("#treedlg").showModal();
+  }
+  else if (t.id === "treeclose") { $("#treedlg").close(); }
+  else if (t.dataset.act) {
+    const para = t.dataset.para || "";
+    const note = document.querySelector(`[data-note="${para}"]`)?.value || "";
+    t.disabled = true;
+    try { await api("/api/request", { id: state.id, action: t.dataset.act, para, note }); }
+    catch (err) { alert(err.message); }
+    await openDoc(state.id);
+  } else if (t.dataset.cert) {
+    t.disabled = true; t.textContent = "certifying…";
+    try { const r = await api("/api/certify", { id: state.id, side: t.dataset.cert }); if (!r.ok && r.err) console.warn(r.err); }
+    catch (err) { alert(err.message); }
+    await openDoc(state.id); await loadDocs(state.id);
+  } else if (t.id === "newbtn") { $("#newdlg").showModal(); }
+  else if (t.id === "newcancel") { $("#newdlg").close(); }
+  else if (t.id === "newok") {
+    const text = $("#newtext").value; if (!text.trim()) return;
+    const r = await api("/api/new", { title: $("#newtitle").value || "Untitled", text });
+    if ($("#newgo").checked) {
+      await api("/api/request", { id: r.id, action: "annotate", para: "", note: "" });
+      await api("/api/request", { id: r.id, action: "rewrite", para: "", note: "" });
+    }
+    $("#newdlg").close(); $("#newtext").value = ""; $("#newtitle").value = "";
+    await loadDocs(r.id);
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "docsel") openDoc(e.target.value);
+  else if (e.target.dataset.pref) { state[e.target.dataset.pref] = e.target.checked; save(); render(); }
+  else if (e.target.dataset.cls) { e.target.checked ? state.on.add(e.target.dataset.cls) : state.on.delete(e.target.dataset.cls); save(); render(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && state.sel && !document.querySelector("dialog[open]")) { state.sel = null; render(); } });
+loadDocs().then(poll);
+</script>
+</body>
+</html>

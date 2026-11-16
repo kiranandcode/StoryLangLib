@@ -4,7 +4,6 @@
  "sentences": 46,
  "annotation": [],
  "lexiconOverrides": [
-  "describe: drops attribution",
   "literally: drops intensifier"
  ],
  "rules": [

@@ -318,7 +318,9 @@
   ]
  },
  "literally": {
-  "cls": []
+  "drop": [
+   "intensifier"
+  ]
  },
  "_why": "literally: the literal sense ('should not be interpreted literally'), not an intensifier. programs: breeding programmes."
 }

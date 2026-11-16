@@ -56,6 +56,5 @@ characters: few agentless passives, actions: few hidden in nouns, few noun stack
 
 ## Base lexicon overridden
 
-- describe: drops attribution
 - literally: drops intensifier
 

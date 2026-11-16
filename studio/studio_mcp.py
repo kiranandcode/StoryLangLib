@@ -57,8 +57,54 @@ def describe(r: dict) -> dict:
                       "stamp text_sha, world_sha, w); after any story.json change re-derive every reading and keep a "
                       "checked NN.plan.json for every unwritten paragraph. Then `paragraph-check`, `plan-check`, "
                       "`refine-check` and `prove` (--log requests); commit; then reply (it reruns these checks).")
+    elif r.get("kind") == "deslop" and r.get("story"):
+        out["doc_dir"] = r["story"]
+        out["how"] = DESLOP_HOW.get(r.get("target") or "", DESLOP_HOW["rewrite"])
     else:
         out["how"] = "A change to the Studio or langlib: make it, check it, commit; then reply."
+    return out
+
+
+# Requests from the deslop UI (tools/house/deslop_ui). `story` is the document
+# directory (repo-relative), `target` the action, `para` the paragraph (NN) or
+# empty for the whole document. The model work is the agent's; certify.py is
+# deterministic and the reply re-runs it.
+DESLOP_HOW = {
+    "annotate": ("Follow ~/.claude/skills/verified-deslopify (Setup, step 2): annotate every paragraph of "
+                 "<doc_dir>/original that has no NN.sx (or only paragraph <para>), decide its word classes in "
+                 "original/lexicon.local.json, then run `python3 tools/house/certify.py <doc_dir>/original`. "
+                 "Reply done with the rule count."),
+    "rewrite": ("Follow ~/.claude/skills/verified-deslopify (step 3): rewrite paragraph <para> of <doc_dir>/original "
+                "(every paragraph when <para> is empty) into <doc_dir>/rewrite/paragraphs/NN.txt with the same NN, "
+                "in Kiran's voice, keeping its facts; annotate it (NN.sx), decide word classes in "
+                "rewrite/lexicon.local.json, and run certify.py on <doc_dir>/rewrite until no rule flags the "
+                "paragraph. To drop a paragraph, write rewrite/notes.json {\"NN\": {\"dropped\": why}}; record "
+                "dropped claims there too ({\"NN\": {\"dropped_claims\": [...]}}). Kiran's note is in `text`. "
+                "Reply done with what changed and what was dropped."),
+    "certify": "Run `python3 tools/house/certify.py <doc_dir>/original` and `.../rewrite`; fix annotation problems; reply.",
+}
+
+
+def deslop_checks(req: dict) -> list[dict]:
+    """certify.py on the rewrite (or the original, for annotate requests): the
+    annotation checks, and which sentences of the requested paragraph a rule flags."""
+    side = "original" if req.get("target") == "annotate" else "rewrite"
+    d = ROOT / req["story"] / side
+    if not (d / "paragraphs").exists():
+        return [{"check": f"{side} exists", "ok": False, "detail": [f"no {d}/paragraphs"]}]
+    p = subprocess.run([sys.executable, str(ROOT / "tools/house/certify.py"), str(d)],
+                       capture_output=True, text=True, timeout=600, env=os.environ)
+    try:
+        rep = json.loads((d / "report.json").read_text())
+    except (OSError, json.JSONDecodeError):
+        return [{"check": "certify", "ok": False, "detail": (p.stdout + p.stderr).splitlines()[-8:]}]
+    out = [{"check": "annotation", "ok": not rep.get("annotation"), "detail": rep.get("annotation", [])[:8]}]
+    para = int(req["para"]) if (req.get("para") or "").isdigit() else None
+    hits = [f"{a['at']} {r['name']}" for r in rep.get("rules", []) if not r["holds"] for a in r.get("at", [])
+            if para is None or a["at"] == "lexicon" or a["at"].split(":")[0] == str(para)]
+    holds = sum(r["holds"] for r in rep.get("rules", []))
+    out.append({"check": f"certify {side}" + (f" paragraph {para}" if para else ""), "ok": not hits,
+                "detail": hits[:12] or [f"{holds}/{len(rep.get('rules', []))} rules hold"]})
     return out
 
 
@@ -123,7 +169,15 @@ def run_checks(req: dict) -> list[dict]:
 def reply(args):
     status = args.get("status") or "done"
     req = store.get(args["id"])
-    checks = run_checks(req) if status in ("done", "working") and req.get("kind") == "story" else None
+    checks = (run_checks(req) if status in ("done", "working") and req.get("kind") == "story" else
+              deslop_checks(req) if status == "done" and req.get("kind") == "deslop" and req.get("target") != "certify"
+              else None)
+    if status == "done" and req.get("kind") == "deslop" and checks and not all(c["ok"] for c in checks) \
+            and not args.get("force"):
+        return {"refused": "a deslop request is done only when certify.py passes the annotation and no rule "
+                           "flags the requested paragraph (or, with no paragraph, the document). Fix them, or "
+                           "reply with force=true and say why in the text.",
+                "failing": [f"{c['check']}: {'; '.join(c['detail'])}" for c in checks if not c["ok"]]}
     if status == "done" and checks and not all(c["ok"] for c in checks if c["check"] != "proofs") and not args.get("force"):
         failing = [f"{c['check']}: {'; '.join(c['detail'])}" for c in checks if not c["ok"]]
         return {"refused": "a story request is done only when its paragraphs pass paragraph-check (the reading "
@@ -148,7 +202,7 @@ TOOLS = {
         "from the terminal.",
         {"type": "object", "properties": {
             "story": {"type": "string", "description": "only requests about this story"},
-            "kind": {"type": "string", "enum": ["story", "tool"]},
+            "kind": {"type": "string", "enum": ["story", "tool", "deslop"]},
             "timeout_s": {"type": "number"}}},
         await_request),
     "reply": (

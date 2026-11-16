@@ -1,7 +1,7 @@
 """Kiran's requests from the Studio: changes to a story or to the tool.
 
 An append-only log, `studio/requests.jsonl`: one line per event, either a
-new request {"op": "new", "id", "kind": "story"|"tool", "story", "para",
+new request {"op": "new", "id", "kind": "story"|"tool"|"deslop", "story", "para",
 "quote", "text", "at"} or a status change {"op": "status", "id", "status",
 "reply", "by", "at"}. A request's state is the fold of its lines. The Studio
 appends `new`; the agent (via studio_mcp.py) claims requests and replies.
@@ -71,8 +71,8 @@ def all_requests() -> list[dict]:
 
 def create(kind: str, text: str, story: str = "", para: str = "", quote: str = "",
            target: str = "", status: str = "open", reply: str = "") -> dict:
-    if kind not in ("story", "tool"):
-        raise ValueError("kind must be story or tool")
+    if kind not in ("story", "tool", "deslop"):
+        raise ValueError("kind must be story, tool or deslop")
     if not text.strip():
         raise ValueError("empty request")
     e = {"op": "new", "id": uuid.uuid4().hex[:8], "kind": kind, "story": story, "para": para,

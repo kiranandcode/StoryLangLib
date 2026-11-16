@@ -3,9 +3,7 @@
  "paragraphs": 3,
  "sentences": 6,
  "annotation": [],
- "lexiconOverrides": [
-  "consider: drops attribution"
- ],
+ "lexiconOverrides": [],
  "rules": [
   {
    "style": "clarity",

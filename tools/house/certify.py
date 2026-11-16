@@ -115,11 +115,14 @@ def merge_lexicon(d, words):
             continue
         v = {"reg": v} if isinstance(v, str) else v
         e = lex.setdefault(k, {})
+        # a text's classes add to the base ones; removing one takes an explicit "drop"
         if "cls" in v:
-            dropped = [c for c in e.get("cls", []) if c not in v["cls"] and c != "ing"]
+            e["cls"] = sorted(set(e.get("cls", [])) | set(v["cls"]))
+        if v.get("drop"):
+            dropped = [c for c in v["drop"] if c in e.get("cls", [])]
             if dropped:
                 overrides.append(f"{k}: drops {', '.join(dropped)}")
-            e["cls"] = sorted(set(v["cls"]) | ({"ing"} & set(e.get("cls", []))))
+            e["cls"] = sorted(set(e.get("cls", [])) - set(v["drop"]))
         for f in ("reg", "rel"):
             if f in v:
                 e[f] = v[f]
