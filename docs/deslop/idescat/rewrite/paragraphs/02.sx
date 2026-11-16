@@ -1,0 +1,32 @@
+entity catalonia place it "Catalonia"
+entity idescat group it "the Statistical Institute of Catalonia"
+entity system abstract it "a statistical system of Catalonia's own"
+entity spain place it "Spain"
+entity regions place they "Spain's regions"
+topic t1 "what the institute gave Catalonia" idescat
+(S%t1
+  (NP.nsubj@idescat The/DET.det institute/NOUN.head)
+  (VP.head gave/VERB.head=give{Fin,Past}
+     (NP.iobj@catalonia Catalonia/PROPN.head)
+     (NP.obj@system a/DET.det statistical/ADJ.amod system/NOUN.head
+        (PP.nmod of/ADP.case its/PRON.poss@catalonia own/ADJ.head)
+        ,/PUNCT
+        (VP.acl designed/VERB.head=design{Part}
+           (PP.obl around/ADP.case the/DET.det region's/NOUN.poss@catalonia
+              (COORD.head economy/NOUN.conj and/CCONJ.cc society/NOUN.conj)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@catalonia Catalonia/PROPN.head)
+  (VP.head created/VERB.head=create{Fin,Past} (NP.obj@idescat it/PRON.head)
+     (SBAR.advcl while/SCONJ.mark
+        (S.head (NP.nsubj@spain Spain/PROPN.head)
+           (VP.head was/AUX.aux=be{Fin,Past}
+              (COORD.head
+                 (VP.conj moving/VERB.head=move{Part,Pres}
+                    (NP.obj administrative/ADJ.amod functions/NOUN.head)
+                    (PP.obl from/ADP.case the/DET.det central/ADJ.amod state/NOUN.head)
+                    (PP.obl@regions to/ADP.case the/DET.det regions/NOUN.head))
+                 and/CCONJ.cc
+                 (VP.conj strengthening/VERB.head=strengthen{Part,Pres}
+                    (NP.obj regional/ADJ.amod government/NOUN.head)))))))
+  ./PUNCT)

@@ -1,0 +1,16 @@
+entity cuisine abstract it "Somali cuisine"
+entity meat object they "camel meat and milk"
+entity somalis group they "Somalis"
+topic t1 "camel meat and milk" meat
+(S%t1
+  (COORD.nsubj@meat Camel/NOUN.compound meat/NOUN.conj and/CCONJ.cc milk/NOUN.conj)
+  (VP.head set/VERB.head{Fin,Pres}
+     (NP.obj@cuisine Somali/ADJ.amod cooking/NOUN.head)
+     apart/ADV.advmod)
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@somalis Somalis/PROPN.head)
+  (VP.head consider/VERB.head{Fin,Pres}
+     (NP.obj@meat both/PRON.head)
+     (NP.xcomp a/DET.det delicacy/NOUN.head))
+  ./PUNCT)

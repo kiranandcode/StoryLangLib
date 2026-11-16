@@ -1,0 +1,25 @@
+entity cuisine abstract it "Somali cuisine"
+entity somalia place it "Somalia"
+entity flavours abstract they "Arab, Indian and Italian flavours"
+topic t1 "the influences on Somali cuisine" cuisine
+(S%t1
+  (NP.nsubj@cuisine Somali/ADJ.amod cuisine/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head an/DET.det (ADJP.amod intricate/ADJ.conj and/CCONJ.cc diverse/ADJ.conj) fusion/NOUN.head
+        (PP.nmod of/ADP.case a/DET.det multitude/NOUN.head
+           (PP.nmod of/ADP.case culinary/ADJ.amod influences/NOUN.head))
+        ,/PUNCT
+        (VP.acl drawing/VERB.head=draw{Ger}
+           (PP.obl from/ADP.case the/DET.det rich/ADJ.amod tapestry/NOUN.head
+              (PP.nmod@flavours of/ADP.case
+                 (COORD.amod Arab/ADJ.conj ,/PUNCT Indian/ADJ.conj ,/PUNCT and/CCONJ.cc Italian/ADJ.conj)
+                 flavours/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@cuisine This/DET.det culinary/ADJ.amod tapestry/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head a/DET.det direct/ADJ.amod result/NOUN.head
+        (PP.nmod of/ADP.case Somalia's/PROPN.poss@somalia longstanding/ADJ.amod heritage/NOUN.head
+           (PP.nmod of/ADP.case
+              (COORD.head (NP.conj vibrant/ADJ.amod trade/NOUN.head) and/CCONJ.cc (NP.conj bustling/ADJ.amod commerce/NOUN.head))))))
+  ./PUNCT)

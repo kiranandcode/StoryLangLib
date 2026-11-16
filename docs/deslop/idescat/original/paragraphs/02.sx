@@ -1,0 +1,31 @@
+entity idescat group it "the Statistical Institute of Catalonia"
+entity catalonia place it "Catalonia"
+entity founding event it "the founding of Idescat"
+entity spain place it "Spain"
+topic t1 "what the founding meant" founding
+(S%t1
+  (NP.nsubj@founding The/DET.det founding/NOUN.head=found
+     (PP.nmod of/ADP.case Idescat/PROPN.head@idescat))
+  (VP.head represented/VERB.head=represent{Fin,Past}
+     (NP.obj a/DET.det significant/ADJ.amod shift/NOUN.head
+        (PP.nmod toward/ADP.case regional/ADJ.amod statistical/ADJ.amod independence/NOUN.head))
+     ,/PUNCT
+     (VP.advcl enabling/VERB.head=enable{Ger}
+        (NP.obj Catalonia/PROPN.head@catalonia)
+        (VP.xcomp to/PART.mark develop/VERB.head{Inf}
+           (NP.obj a/DET.det statistical/ADJ.amod system/NOUN.head
+              (VP.acl tailored/VERB.head=tailor{Part}
+                 (PP.obl to/ADP.case its/PRON.poss@catalonia unique/ADJ.amod socio-economic/ADJ.amod context/NOUN.head))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@founding This/DET.det initiative/NOUN.head)
+  (VP.head was/AUX.cop=be{Fin,Past}
+     (NP.head part/NOUN.head
+        (PP.nmod of/ADP.case a/DET.det broader/ADJ.amod movement/NOUN.head
+           (PP.nmod across/ADP.case Spain/PROPN.head@spain)
+           (VP.acl to/PART.mark
+              (COORD.head
+                 (VP.conj decentralize/VERB.head{Inf} (NP.obj administrative/ADJ.amod functions/NOUN.head))
+                 and/CCONJ.cc
+                 (VP.conj enhance/VERB.head{Inf} (NP.obj regional/ADJ.amod governance/NOUN.head)))))))
+  ./PUNCT)

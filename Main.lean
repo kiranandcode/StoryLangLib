@@ -10,6 +10,7 @@ def usage : String := "usage:
   langlib story-lean <dir> <namespace>      print the story as a Lean file of theorems
   langlib style <dir> [--pov id] [--lean name]  style features and verdicts (or the records as Lean)
   langlib academic <dir> [--lean name]      academic-style flow features and verdicts (or the records as Lean)
+  langlib house <dir> [--lean name]         house style (/writelikeme) and clarity verdicts, flagged sentences
   langlib consent <dir> [--lean ns]         the refined consent reading (World/Consent), or it as Lean theorems
   langlib ext <dir> [--lean ns]             ties, care and identity (World/Ties, Care, Identity), or as Lean theorems"
 

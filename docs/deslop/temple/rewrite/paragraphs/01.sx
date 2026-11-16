@@ -1,0 +1,33 @@
+entity temple object it "the McAllen Texas Temple"
+entity border place it "the U.S.-Mexico border"
+entity families group they "families in the region"
+entity region place it "the surrounding region"
+entity saints group they "Latter-day Saints"
+entity sign object it "the monument sign"
+topic t1 "the temple and the border" temple
+(S%t1
+  (NP.nsubj@temple The/DET.det McAllen/PROPN.compound Texas/PROPN.compound Temple/PROPN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head a/DET.det few/ADJ.amod miles/NOUN.head
+        (PP.nmod@border from/ADP.case the/DET.det U/PROPN.compound ./PUNCT S/PROPN.compound ./PUNCT -/PUNCT Mexico/PROPN.compound border/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@families Many/ADJ.amod families/NOUN.head
+     (PP.nmod@region in/ADP.case the/DET.det surrounding/ADJ.amod region/NOUN.head))
+  (VP.head live/VERB.head{Fin,Pres}
+     (PP.obl on/ADP.case both/DET.det sides/NOUN.head
+        (PP.nmod@border of/ADP.case the/DET.det border/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@saints Latter-day/PROPN.compound Saints/PROPN.head
+     (PP.nmod from/ADP.case both/DET.det sides/NOUN.head
+        (PP.nmod@border of/ADP.case the/DET.det border/NOUN.head)))
+  (VP.head worship/VERB.head{Fin,Pres}
+     (PP.obl@temple at/ADP.case the/DET.det temple/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sign Its/PRON.poss@temple monument/NOUN.compound sign/NOUN.head)
+  (VP.head has/VERB.head=have{Fin,Pres}
+     (NP.obj inscriptions/NOUN.head
+        (PP.nmod in/ADP.case both/CCONJ.cc English/PROPN.conj and/CCONJ.cc Spanish/PROPN.conj)))
+  ./PUNCT)

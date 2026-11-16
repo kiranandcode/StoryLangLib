@@ -1,0 +1,22 @@
+entity rule event it "Italian colonial rule in Somalia"
+entity dishes object they "pasta and lasagne"
+entity diet abstract it "the traditional diet"
+topic t1 "pasta in Somalia" dishes
+(S%t1
+  (NP.nsubj An/DET.det enduring/ADJ.amod testament/NOUN.head
+     (PP.nmod to/ADP.case the/DET.det influence/NOUN.head
+        (PP.nmod@rule of/ADP.case Italian/ADJ.amod colonial/ADJ.amod rule/NOUN.head (PP.nmod in/ADP.case Somalia/PROPN.head))))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head the/DET.det widespread/ADJ.amod adoption/NOUN.head
+        (PP.nmod@dishes of/ADP.case (COORD.head pasta/NOUN.conj and/CCONJ.cc lasagne/NOUN.conj))
+        (PP.nmod in/ADP.case the/DET.det local/ADJ.amod culinary/ADJ.amod landscape/NOUN.head))
+     ,/PUNCT
+     (PP.obl espicially/ADV.advmod in/ADP.case the/DET.det south/NOUN.head)
+     ,/PUNCT
+     (VP.advcl showcasing/VERB.head=showcase{Ger}
+        (SBAR.ccomp how/ADV.advmod
+           (S.head (NP.nsubj@dishes these/DET.det dishes/NOUN.head)
+              (VP.head have/AUX.aux{Fin,Pres} integrated/VERB.head=integrate{Part}
+                 (PP.obl@diet into/ADP.case the/DET.det traditional/ADJ.amod diet/NOUN.head)
+                 (PP.obl alongside/ADP.case rice/NOUN.head))))))
+  ./PUNCT)

@@ -1,0 +1,25 @@
+entity dishes object they "pasta and lasagne"
+entity somalia place it "Somalia"
+entity rule event it "Italian colonial rule"
+entity diet abstract it "the traditional diet"
+entity south place it "southern Somalia"
+entity somalis group they "Somalis"
+topic t1 "pasta in Somalia" dishes
+(S%t1
+  (COORD.nsubj@dishes Pasta/NOUN.conj and/CCONJ.cc lasagne/NOUN.conj)
+  (VP.head came/VERB.head=come{Fin,Past}
+     (PP.obl@somalia to/ADP.case Somalia/PROPN.head)
+     (PP.obl@rule with/ADP.case Italian/ADJ.amod colonial/ADJ.amod rule/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@dishes They/PRON.head)
+  (VP.head are/AUX.cop=be{Fin,Pres} now/ADV.advmod
+     (NP.head part/NOUN.head (PP.nmod@diet of/ADP.case the/DET.det traditional/ADJ.amod diet/NOUN.head))
+     ,/PUNCT
+     (PP.obl@south especially/ADV.advmod in/ADP.case the/DET.det south/NOUN.head
+        ,/PUNCT
+        (SBAR.relcl where/ADV.advmod
+           (S.head (NP.nsubj@somalis Somalis/PROPN.head)
+              (VP.head eat/VERB.head{Fin,Pres} (NP.obj@dishes them/PRON.head)
+                 (PP.obl alongside/ADP.case rice/NOUN.head))))))
+  ./PUNCT)

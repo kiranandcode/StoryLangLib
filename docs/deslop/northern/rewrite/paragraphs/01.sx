@@ -1,0 +1,18 @@
+entity authors person they "the commenter"
+entity feedback abstract it "the feedback"
+entity article object it "the article"
+entity sourcing abstract it "the article's sourcing"
+topic t1 "framing is the bigger problem" article
+(S%t1
+  (NP.nsubj@authors I/PRON.head)
+  (VP.head appreciate/VERB.head{Fin,Pres}
+     (NP.obj@feedback the/DET.det feedback/NOUN.head)
+     (ADVP.advmod so/ADV.head far/ADV.fixed))
+  ./PUNCT)
+(S%t1
+  (S.head (NP.nsubj@feedback It/PRON.head)
+     (VP.head focuses/VERB.head=focus{Fin,Pres} (PP.obl@sourcing on/ADP.case sourcing/NOUN.head)))
+  ,/PUNCT but/CCONJ.cc
+  (S.conj (NP.nsubj the/DET.det article's/NOUN.poss@article framing/NOUN.head)
+     (VP.head is/AUX.cop=be{Fin,Pres} (NP.head the/DET.det bigger/ADJ.amod problem/NOUN.head)))
+  ./PUNCT)

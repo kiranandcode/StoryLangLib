@@ -259,7 +259,7 @@ declared by hand. `langlib house <dir>` reports them.
 |:--|:--|
 | agentless passives (*hidden characters*) | a `be` auxiliary and a participle head (not an `ing` form) with no `by` phrase; at most one clause in ten |
 | hidden actions | a subject whose head noun is `nominal` with a `light` verb or a copula ("the implementations ... make widespread use of unsafe operations") |
-| inanimate actors | an `object` or `abstract` entity as the subject of an active `animate` verb ("a closed-world method, which assumes ...") |
+| inanimate actors | an `object` or `abstract` entity as the subject of an active `animate` verb, or of one of several coordinated predicates ("a closed-world method, which assumes ...") |
 | noun stacks | three nouns in a row in a phrase that names no tracked entity |
 | point first | the subject starts twelve or more words in |
 | stacked asides | a sentence of 35 words or more with a parenthetical and a relative clause |
@@ -272,6 +272,8 @@ declared by hand. `langlib house <dir>` reports them.
 | appositive-trailing cadence | an appositive, then a trailing adverbial clause |
 | dramatic terminal, summarising pivot, summary closer | a short last sentence that negates or asserts significance; a short sentence whose subject is a composite; a last sentence that adds no entity |
 | bare pivot, spurious contrast | a paragraph opening on a contrast connective without the last paragraph's entities; a contrast connective with no entity shared with the previous sentence |
+| not-X-dash-Y | a negation, then a dash before a clause's subject ("isn't just sourcing—it's framing"), which has no contrast connective for the academic not-X-but-Y rule |
+| abstract significance | a `significance` modifier on a `vague` head noun ("a pivotal moment", "a significant shift", "fundamental elements") |
 | bare relative clause (Kiran, 2026-11-15) | a noun phrase post-modified by a relative clause (`relcl`, or `acl` with a finite verb; "that", "which" or no relativiser) whose verb has nothing past its subject and the gap: no object, complement, purpose, PP or adverbial. It reads as the start of a description and drops it ("code that AI writes"). Extended clauses ("code that AI writes to kill puppies", "the tools we use every day"), clefts, existentials and quotations are exempt |
 
 Unsupported claims, antitheses and coined terms used before they are defined
@@ -320,6 +322,18 @@ and every rule whose word class a tagger misjudged (the classes are declared,
 not inferred). Tone, the "punchy" register Kiran asks for and the choice of
 what to leave out are not formalised.
 
+
+### Certifying new text
+
+`tools/house/` runs these rules on any text. `sx.py` compiles a compact
+bracket notation for annotations into langlib documents; `base-lexicon.json`
+holds the closed word classes every text shares (including the AI vocabulary
+from Wikipedia's *Signs of AI writing*); `certify.py <dir>` checks every
+paragraph, runs `house` and `academic`, audits the word classes the text has
+not decided, and writes a report; `compare.py` prints a before and after.
+`docs/deslop/` runs them on four passages from Wikipedia's guide. Neither the
+papers nor the stories above have `vague` in their lexicons, so their
+numbers are unchanged by the two rules added for it.
 
 ## Reproducing
 

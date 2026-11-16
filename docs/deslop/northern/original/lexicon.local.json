@@ -1,0 +1,6 @@
+{"identity": {"reg": "neutral"}, "inconsistency": {"reg": "neutral"}, "literature": {"reg": "neutral"},
+ "movement": {"reg": "neutral"}, "movements": {"reg": "neutral"}, "pages": {"reg": "neutral"},
+ "revival": {"cls": ["nominal"]}, "appreciate": {"cls": ["animate"]}, "clarify": {"cls": ["animate"]},
+ "document": {"reg": "neutral"}, "evolve": {"reg": "neutral"}, "exist": {"reg": "neutral"},
+ "label": {"reg": "neutral"}, "mean": {"reg": "neutral"}, "overlook": {"cls": ["animate"]},
+ "suggest": {"cls": ["animate"]}, "treat": {"reg": "neutral"}, "use": {"reg": "neutral"}}

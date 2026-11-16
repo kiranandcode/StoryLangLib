@@ -1,0 +1,63 @@
+entity temple object it "the McAllen Texas Temple"
+entity border place it "the U.S.-Mexico border"
+entity region place it "the region"
+entity countries group they "the United States and Mexico"
+entity unity abstract it "unity"
+entity sign object it "the monument sign"
+entity saints group they "Latter-day Saints"
+topic t1 "the temple as a symbol of unity" temple
+(S%t1
+  (VP.advcl Situated/VERB.head=situate{Part}
+     (PP.obl just/ADV.advmod (NP.head a/DET.det few/ADJ.amod miles/NOUN.head) from/ADP.case
+        (NP.head@border the/DET.det U/PROPN.compound ./PUNCT S/PROPN.compound ./PUNCT -/PUNCT Mexico/PROPN.compound border/NOUN.head
+           —/PUNCT
+           (NP.appos a/DET.det line/NOUN.head
+              (SBAR.relcl that/PRON.nsubj often/ADV.advmod represents/VERB.head=represent{Fin,Pres}
+                 (COORD.obj separation/NOUN.conj and/CCONJ.cc division/NOUN.conj)))
+           —/PUNCT)))
+  (NP.nsubj@temple the/DET.det temple/NOUN.head)
+  (VP.head stands/VERB.head=stand{Fin,Pres}
+     (PP.obl as/ADP.case a/DET.det counter-symbol/NOUN.head)
+     ,/PUNCT
+     (VP.advcl emphasizing/VERB.head=emphasize{Ger}
+        (COORD.obj unity/NOUN.conj@unity ,/PUNCT togetherness/NOUN.conj ,/PUNCT and/CCONJ.cc
+           (NP.conj transcendent/ADJ.amod faith/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (PP.obl In/ADP.case a/DET.det region/NOUN.head@region
+     (SBAR.relcl where/ADV.advmod
+        (S.head (COORD.nsubj many/ADJ.amod families/NOUN.conj and/CCONJ.cc communities/NOUN.conj)
+           (VP.head span/VERB.head{Fin,Pres} (NP.obj@countries both/DET.det countries/NOUN.head)))))
+  ,/PUNCT
+  (NP.nsubj@temple the/DET.det temple/NOUN.head)
+  (VP.head fosters/VERB.head=foster{Fin,Pres}
+     (NP.obj a/DET.det sense/NOUN.head
+        (PP.nmod of/ADP.case (COORD.head connection/NOUN.conj and/CCONJ.cc (NP.conj shared/ADJ.amod purpose/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (PP.obl Through/ADP.case its/PRON.poss@temple
+     (COORD.head (NP.conj inclusive/ADJ.amod design/NOUN.head) and/CCONJ.cc (NP.conj symbolic/ADJ.amod features/NOUN.head)))
+  ,/PUNCT
+  (NP.nsubj@temple the/DET.det McAllen/PROPN.compound Texas/PROPN.compound Temple/PROPN.head)
+  (VP.head is/AUX.aux=be{Fin,Pres} seen/VERB.head=see{Part}
+     (PP.obl as/ADP.case a/DET.det bridge/NOUN.head (PP.nmod across/ADP.case divides/NOUN.head))
+     ,/PUNCT
+     (VP.advcl embodying/VERB.head=embody{Ger}
+        (NP.obj the/DET.det spirit/NOUN.head
+           (PP.nmod@unity of/ADP.case unity/NOUN.head)
+           (SBAR.relcl that/PRON.nsubj underlies/VERB.head=underlie{Fin,Pres}
+              (NP.obj its/PRON.poss@temple sacred/ADJ.amod purpose/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sign Its/PRON.poss@temple bilingual/ADJ.amod monument/NOUN.compound sign/NOUN.head
+     ,/PUNCT
+     (PP.nmod with/ADP.case inscriptions/NOUN.head
+        (PP.nmod in/ADP.case both/CCONJ.cc English/PROPN.conj and/CCONJ.cc Spanish/PROPN.conj))
+     ,/PUNCT)
+  (VP.head underscores/VERB.head=underscore{Fin,Pres}
+     (NP.obj its/PRON.poss@temple role/NOUN.head
+        (PP.nmod in/ADP.case
+           (VP.head bringing/VERB.head=bring{Ger} together/ADV.advmod
+              (NP.obj@saints Latter-day/PROPN.compound Saints/PROPN.head
+                 (PP.nmod@countries from/ADP.case the/DET.det United/PROPN.compound States/PROPN.conj and/CCONJ.cc Mexico/PROPN.conj))))))
+  ./PUNCT)

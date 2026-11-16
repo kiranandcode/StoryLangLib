@@ -1,0 +1,18 @@
+entity cuisine abstract it "Somali cuisine"
+entity flavours abstract they "Arab, Indian and Italian influences"
+entity somalia place it "Somalia"
+topic t1 "the influences on Somali cuisine" cuisine
+(S%t1
+  (NP.nsubj@cuisine Somali/ADJ.amod cuisine/NOUN.head)
+  (VP.head draws/VERB.head=draw{Fin,Pres}
+     (PP.obl@flavours on/ADP.case
+        (COORD.amod Arab/ADJ.conj ,/PUNCT Indian/ADJ.conj and/CCONJ.cc Italian/ADJ.conj)
+        cooking/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@flavours These/DET.det influences/NOUN.head)
+  (VP.head came/VERB.head=come{Fin,Past}
+     (PP.obl@somalia to/ADP.case Somalia/PROPN.head)
+     (PP.obl through/ADP.case its/PRON.poss@somalia long/ADJ.amod history/NOUN.head
+        (PP.nmod of/ADP.case trade/NOUN.head)))
+  ./PUNCT)

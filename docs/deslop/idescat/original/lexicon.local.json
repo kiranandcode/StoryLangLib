@@ -1,0 +1,7 @@
+{
+ "evolution": {"cls": ["nominal"]}, "functions": {"reg": "neutral"}, "governance": {"cls": ["nominal"]},
+ "independence": {"reg": "neutral"}, "moment": {"reg": "neutral"}, "movement": {"cls": ["nominal"]},
+ "founding": {"cls": ["nominal"]}, "initiative": {"cls": ["nominal"]},
+ "decentralize": {"cls": ["us"]}, "develop": {"reg": "neutral"}, "enhance": {"reg": "neutral"},
+ "establish": {"reg": "neutral"}, "represent": {"reg": "neutral"}, "tailor": {"reg": "neutral"}
+}

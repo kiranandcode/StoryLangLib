@@ -1,0 +1,49 @@
+entity authors person they "the commenter"
+entity feedback abstract it "the feedback"
+entity issue abstract it "the issue"
+entity movement group it "the Northern English movement"
+entity phrase abstract it "the phrase Northern English nationalism"
+entity movements group they "movements" generic
+topic t1 "the movement exists" movement
+(S%t1
+  (S.head (NP.nsubj@authors I/PRON.head)
+     (VP.head appreciate/VERB.head{Fin,Pres} (NP.obj@feedback the/DET.det feedback/NOUN.head) (ADVP.advmod so/ADV.head far/ADV.fixed)))
+  ,/PUNCT but/CCONJ.cc
+  (S.conj (NP.nsubj@authors I/PRON.head)
+     (VP.head want/VERB.head{Fin,Pres}
+        (VP.xcomp to/PART.mark clarify/VERB.head{Inf}
+           (NP.obj something/PRON.head
+              (SBAR.relcl that's/PRON.nsubj being/AUX.aux=be{Ger} overlooked/VERB.head=overlook{Part})))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@issue The/DET.det issue/NOUN.head here/ADV.advmod)
+  (VP.head isn't/AUX.cop=be{Fin,Pres} just/ADV.advmod sourcing/NOUN.head)
+  —/PUNCT
+  (S.parataxis it's/PRON.nsubj@issue framing/NOUN.head)
+  ./PUNCT)
+(S%t1
+  There's/PRON.expl
+  (NP.nsubj@movement a/DET.det visible/ADJ.amod ,/PUNCT growing/ADJ.amod movement/NOUN.head
+     (PP.nmod around/ADP.case Northern/ADJ.amod English/ADJ.amod identity/NOUN.head)
+     ,/PUNCT
+     (VP.acl documented/VERB.head=document{Part}
+        (PP.obl across/ADP.case
+           (COORD.head (NP.conj academic/ADJ.amod literature/NOUN.head) ,/PUNCT (NP.conj social/ADJ.amod media/NOUN.head) ,/PUNCT and/CCONJ.cc
+              (NP.conj grassroots/NOUN.compound activism/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj The/DET.det fact/NOUN.head
+     (SBAR.acl that/SCONJ.mark
+        (S.head (NP.nsubj@movement it/PRON.head)
+           (VP.head doesn't/AUX.aux=do{Fin,Pres} always/ADV.advmod use/VERB.head{Inf}
+              (NP.obj@phrase the/DET.det exact/ADJ.amod phrase/NOUN.head
+                 (QUOTE.appos "/PUNCT Northern/ADJ.amod English/ADJ.amod nationalism/NOUN.head "/PUNCT))))))
+  (VP.head doesn't/AUX.aux=do{Fin,Pres} mean/VERB.head{Inf}
+     (S.ccomp (NP.nsubj@movement it/PRON.head) (VP.head doesn't/AUX.aux=do{Fin,Pres} exist/VERB.head{Inf})))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@movements Movements/NOUN.head)
+  (VP.head evolve/VERB.head{Fin,Pres}
+     (SBAR.advcl before/SCONJ.mark
+        (S.head they're/PRON.nsubj@movements neatly/ADV.advmod labelled/VERB.head=label{Part})))
+  ./PUNCT)

@@ -23,7 +23,8 @@ the records, the academic records and the lore, so the verdicts are proved by
 * *hidden actions*: a subject whose head noun is a `nominal` (an action with
   a verb behind it) with a `light` verb or a copula ("A request was made");
 * *inanimate actors*: an `object` or `abstract` entity as the subject of an
-  active `animate` verb ("8 stages will close it");
+  active `animate` verb, including one of several coordinated predicates
+  ("8 stages will close it");
 * *vague wording*: noun stacks (three nouns in a row in a phrase that names no
   tracked entity: "grape availability request", not "proof repair tool");
 * *misplaced emphasis*: the subject starts twelve or more words in, or a
@@ -54,7 +55,12 @@ subject and the gap ("code that AI writes", "papers people cite"), so the
 clause sets up a description and drops it. A clause with an object, a
 complement, a purpose, a PP or an adverbial is extended, not bare ("code that
 AI writes to kill puppies", "the tools we use every day"); clefts,
-existentials and quotations are exempt. Non-restrictive clauses ("X, which
+existentials and quotations are exempt. Two more from Wikipedia's "Signs of
+AI writing" (negative parallelisms; undue emphasis on significance): a
+negation followed by a dash and a fresh clause's subject ("isn't just
+sourcing—it's framing"), which has no contrast connective for the academic
+not-X-but-Y rule to see, and a `significance` modifier on a `vague` head noun
+("marking a pivotal moment", "a significant shift"). Non-restrictive clauses ("X, which
 people use,") are counted apart and not judged: set off by a comma or bracket
 they assert a second proposition about a noun already identified, rather
 than restricting it and leaving the description unsaid. Em-dashes, colon
@@ -94,6 +100,10 @@ structure HSent where
   bareRelatives : Nat := 0
   /-- non-restrictive ones that are equally bare (counted, not judged) -/
   bareAsides : Nat := 0
+  /-- "not just X—it's Y": a negation, then a dash before a clause's subject -/
+  negDash : Bool := false
+  /-- "a pivotal moment": a `significance` modifier on a `vague` head noun -/
+  abstractSig : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-! ## Reading one sentence -/
@@ -177,11 +187,20 @@ private partial def counts (lx : Lex) (kinds : List (String × EntityKind)) : Tr
       | some sn => ((headNoun sn).map (lx.has · "nominal")).getD false &&
           (cop || (subjVerb.map (lx.has · "light")).getD false)
       | none => false
+    -- the verbs of coordinated active predicates ("They are considered X and serve as Y")
+    let conjVerbs : List Word := kids.flatMap fun k => match k with
+      | .node j kk => if j.role == some .head && j.cat == .COORD then
+          kk.filterMap fun c => match c with
+            | .node _ ck => if roleIs c .conj && !ck.any (fun x => roleIs x .aux && leafHas lx "be" x)
+                then headVerb c else none
+            | _ => none
+        else []
+      | _ => []
     -- the subject of a passive is not its actor
-    let inanimateHere : Bool := !passive && match subj.bind refOf, subjVerb with
-      | some e, some v => ((kinds.lookup e).map (fun k => k == .object || k == .abstract)).getD false &&
-          lx.has v "animate"
-      | _, _ => false
+    let inanimateHere : Bool := !passive && match subj.bind refOf with
+      | some e => ((kinds.lookup e).map (fun k => k == .object || k == .abstract)).getD false &&
+          ((subjVerb.toList ++ conjVerbs).any (lx.has · "animate"))
+      | none => false
     let nouns := kids.foldl (fun (run, best) k => match k with
       | .leaf w => if w.upos == .NOUN || w.upos == .PROPN then (run + 1, max best (run + 1)) else (0, best)
       | _ => (0, best)) (0, 0)
@@ -281,6 +300,33 @@ def mweCount (lx : Lex) (c : String) (forms : List String) : Nat :=
 
 private def firstLeaf? (t : Tree) : Option Word := ((leavesOf t).filter isWord).head?
 
+/-- Leaves outside quotations. -/
+private partial def unquotedLeaves : Tree → List Word
+  | .leaf w => [w]
+  | .node i kids => if i.cat == .QUOTE then [] else kids.flatMap unquotedLeaves
+
+/-- A negation, later a dash, and right after the dash a clause's subject:
+"isn't just sourcing—it's framing". -/
+def negDashIn (lx : Lex) (ls : List Word) : Bool :=
+  let arr := ls.toArray
+  let isDash (w : Word) := w.form == "—" || w.form == "–" || w.form == "--"
+  (List.range arr.size).any fun i => lx.is arr[i]! "neg" &&
+    (List.range arr.size).any fun j => i < j && isDash arr[j]! &&
+      ((arr[j + 1]?.map fun w => w.role == some .nsubj || w.role == some .expl).getD false)
+
+/-- Noun phrases whose head is a `vague` noun modified by a `significance`
+word: "a pivotal moment", "a significant shift", "a crucial role". -/
+private partial def abstractSigIn (lx : Lex) : Tree → Nat
+  | .leaf _ => 0
+  | .node i kids =>
+    -- a PP whose object noun is a direct kid counts as that noun phrase
+    let here := if i.cat != .NP && i.cat != .PP then 0 else
+      match headNoun (.node i kids) with
+      | some n => if lx.has n "vague" && kids.any (fun k => roleIs k .amod &&
+            (leavesOf k).any (lx.has · "significance")) then 1 else 0
+      | none => 0
+    here + kids.foldl (fun a k => a + abstractSigIn lx k) 0
+
 def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : Tree) : HSent :=
   let ls := leavesOf t
   let ws := ls.filter isWord
@@ -322,6 +368,8 @@ def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : T
     -- clefts ("it is X that ...") and existentials ("there is X that ...") are exempt
     bareRelatives := if rootKids.any (roleIs · .expl) then 0 else (bareRelativesIn lx t).1,
     bareAsides := if rootKids.any (roleIs · .expl) then 0 else (bareRelativesIn lx t).2,
+    negDash := negDashIn lx (unquotedLeaves t),
+    abstractSig := abstractSigIn lx t,
     trailingCadence := rootKids.any (roleIs · .appos) &&
       ((lastContent.map fun k => roleIs k .advcl || (roleIs k .obl && isClauseNode k)).getD false) }
 
@@ -373,6 +421,8 @@ structure HFeatures where
   nonSequiturs : Nat
   bareRelatives : Nat
   bareAsides : Nat
+  negDashes : Nat
+  abstractSig : Nat
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatures :=
@@ -419,7 +469,8 @@ def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatur
     nonSequiturs := (inPara.filter fun ((a, _), (b, hb)) =>
       !shares a b && !b.frame && !b.causal && !b.recalls && !hb.opensContrast &&
       !(b.subj.map isComposite).getD false).length,
-    bareRelatives := sumH (·.bareRelatives) hs, bareAsides := sumH (·.bareAsides) hs }
+    bareRelatives := sumH (·.bareRelatives) hs, bareAsides := sumH (·.bareAsides) hs,
+    negDashes := countH (·.negDash) hs, abstractSig := sumH (·.abstractSig) hs }
 
 /-! ## Rules and styles -/
 
@@ -428,7 +479,7 @@ inductive HFeat where
   | slopEmphasis | throat | inflation | tricolons | pseudoClefts | itClefts | andJoins | tetracola
   | initialConj | buzz | intensifiers | usSpelling | trailingCadence | dramaticTerminal
   | summarisingPivots | summaryClosers | barePivots | spuriousContrasts | nonSequiturs
-  | bareRelatives | bareAsides
+  | bareRelatives | bareAsides | negDashes | abstractSig
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.get (f : HFeatures) : HFeat → Nat
@@ -444,6 +495,7 @@ def HFeatures.get (f : HFeatures) : HFeat → Nat
   | .barePivots => f.barePivots | .spuriousContrasts => f.spuriousContrasts
   | .nonSequiturs => f.nonSequiturs
   | .bareRelatives => f.bareRelatives | .bareAsides => f.bareAsides
+  | .negDashes => f.negDashes | .abstractSig => f.abstractSig
 
 def HFeat.name : HFeat → String
   | .sents => "sents" | .clauses => "clauses" | .agentless => "agentless" | .passives => "passives"
@@ -458,13 +510,14 @@ def HFeat.name : HFeat → String
   | .barePivots => "barePivots" | .spuriousContrasts => "spuriousContrasts"
   | .nonSequiturs => "nonSequiturs"
   | .bareRelatives => "bareRelatives" | .bareAsides => "bareAsides"
+  | .negDashes => "negDashes" | .abstractSig => "abstractSig"
 
 def HFeat.all : List HFeat :=
   [.sents, .clauses, .agentless, .passives, .hiddenAction, .inanimate, .nounStacks, .buried, .stacked,
    .slopEmphasis, .throat, .inflation, .tricolons, .pseudoClefts, .itClefts, .andJoins, .tetracola,
    .initialConj, .buzz, .intensifiers, .usSpelling, .trailingCadence, .dramaticTerminal,
    .summarisingPivots, .summaryClosers, .barePivots, .spuriousContrasts, .nonSequiturs,
-   .bareRelatives, .bareAsides]
+   .bareRelatives, .bareAsides, .negDashes, .abstractSig]
 
 inductive HRule where
   | atMost (f : HFeat) (n : Nat)
@@ -522,7 +575,9 @@ def writeLikeMe : HStyle where
     ("no summary closers", .atMost .summaryClosers 0),
     ("no bare pivot bridges", .atMost .barePivots 0),
     ("no spurious contrasts", .atMost .spuriousContrasts 0),
-    ("no bare relative clauses", .atMost .bareRelatives 0)]
+    ("no bare relative clauses", .atMost .bareRelatives 0),
+    ("no not-X-dash-Y", .atMost .negDashes 0),
+    ("no abstract significance", .atMost .abstractSig 0)]
 
 def houseStyles : List HStyle := [clarity, writeLikeMe]
 
@@ -543,12 +598,38 @@ def loadHSents (dir : String) : IO (List HSent) := do
     | .error e => throw (IO.userError s!"{n}: {e}")
   pure out
 
-/-- Where each rule bites (paragraph, sentence in it). -/
-def hflagged (as : List ASent) (hs : List HSent) : Json :=
+/-- Where each rule bites (paragraph, sentence in it). The paragraph and
+neighbour rules restate `HFeatures.ofSents` per sentence. -/
+def hflagged (lo : ALore) (as : List ASent) (hs : List HSent) : Json :=
   let idx := (groupParas as).flatMap fun p => p.zipIdx.map fun (s, i) => (s.para, i + 1)
   let at_ (x : Nat × Nat) : Json := Json.arr #[toJson x.1, toJson x.2]
   let pick (p : HSent → Bool) := ((hs.zip idx).filter (p ·.1)).map (at_ ·.2)
+  let both := (as.zip hs).zip idx
+  let isComposite (e : String) : Bool := lo.comps.any (·.1 == e)
+  let grp := (groupParas as).map fun p =>
+    let n := (p.head?.map (·.para)).getD 0
+    both.filter (·.1.1.para == n)
+  let body (p : List ((ASent × HSent) × (Nat × Nat))) := p.filter (!·.1.2.heading)
+  let pos (xs : List ((ASent × HSent) × (Nat × Nat))) : Json := Json.arr (xs.map (at_ ·.2)).toArray
+  let nb := grp.flatMap fun p => (body p).zip ((body p).drop 1)
+  let prevEnts := [] :: grp.map fun p => p.flatMap fun x => names x.1.1
   Json.mkObj [
+    ("buried", pos (both.filter fun ((a, h), _) => !h.heading && a.subj.isSome && a.subjAt ≥ 12)),
+    ("dramaticTerminal", pos (grp.filterMap fun p => if (body p).length < 2 then none else
+      (body p).getLast?.filter fun ((a, h), _) => h.words ≤ 8 && (a.negated || h.significance > 0))),
+    ("summarisingPivots", pos (both.filter fun ((a, h), _) => !h.heading && h.words ≤ 10 &&
+      ((a.subj.map isComposite).getD false))),
+    ("summaryClosers", pos (grp.filterMap fun p => if (body p).length < 3 then none else
+      (body p).getLast?.filter fun ((a, _), _) =>
+        let earlier := ((body p).dropLast).flatMap fun x => names x.1.1
+        let own := (names a).filter (!given.contains ·)
+        !own.isEmpty && own.all earlier.contains)),
+    ("barePivots", pos ((grp.zip prevEnts).filterMap fun (p, prev) => (body p).head?.filter fun ((a, h), _) =>
+      h.opensContrast && !prev.isEmpty && !(names a).any fun e => !given.contains e && prev.contains e)),
+    ("spuriousContrasts", pos ((nb.filter fun ((x, _), ((b, hb), _)) => hb.opensContrast && !shares x.1 b).map (·.2))),
+    ("nonSequiturs", pos ((nb.filter fun ((x, _), ((b, hb), _)) =>
+      !shares x.1 b && !b.frame && !b.causal && !b.recalls && !hb.opensContrast &&
+      !(b.subj.map isComposite).getD false).map (·.2))),
     ("agentless", Json.arr (pick (·.agentless > 0)).toArray),
     ("hiddenAction", Json.arr (pick (·.hiddenAction > 0)).toArray),
     ("inanimate", Json.arr (pick (·.inanimate > 0)).toArray),
@@ -569,7 +650,9 @@ def hflagged (as : List ASent) (hs : List HSent) : Json :=
     ("trailingCadence", Json.arr (pick (·.trailingCadence)).toArray),
     ("opensContrast", Json.arr (pick (·.opensContrast)).toArray),
     ("bareRelatives", Json.arr (pick (·.bareRelatives > 0)).toArray),
-    ("bareAsides", Json.arr (pick (·.bareAsides > 0)).toArray)]
+    ("bareAsides", Json.arr (pick (·.bareAsides > 0)).toArray),
+    ("negDashes", Json.arr (pick (·.negDash)).toArray),
+    ("abstractSig", Json.arr (pick (·.abstractSig > 0)).toArray)]
 
 def HFeatures.toJson (f : HFeatures) : Json :=
   Json.mkObj (HFeat.all.map fun x => (x.name, Lean.toJson (f.get x)))
@@ -585,7 +668,7 @@ def houseMain (dir : String) (opts : List String) : IO String := do
     let f := HFeatures.ofSents lo as hs
     pure (Json.mkObj [
       ("features", f.toJson),
-      ("flagged", hflagged as hs),
+      ("flagged", hflagged lo as hs),
       ("styles", Json.arr (houseStyles.map fun st =>
         Json.mkObj [("name", st.name), ("failing", Json.arr ((st.failing f).map Json.str).toArray),
           ("rules", Json.arr (st.rules.map fun (n, r) =>

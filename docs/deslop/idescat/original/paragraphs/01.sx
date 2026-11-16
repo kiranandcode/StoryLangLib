@@ -1,0 +1,17 @@
+entity idescat group it "the Statistical Institute of Catalonia"
+entity catalonia place it "Catalonia"
+entity stats abstract it "regional statistics"
+entity spain place it "Spain"
+topic t1 "the founding of Idescat" idescat
+(S%t1
+  (NP.nsubj@idescat The/DET.det Statistical/PROPN.compound Institute/PROPN.head
+     (PP.nmod of/ADP.case Catalonia/PROPN.head@catalonia))
+  (VP.head was/AUX.aux=be{Fin,Past} officially/ADV.advmod established/VERB.head=establish{Part}
+     (PP.obl in/ADP.case 1989/NUM.head)
+     ,/PUNCT
+     (VP.advcl marking/VERB.head=mark{Ger}
+        (NP.obj a/DET.det pivotal/ADJ.amod moment/NOUN.head
+           (PP.nmod in/ADP.case the/DET.det evolution/NOUN.head
+              (PP.nmod@stats of/ADP.case regional/ADJ.amod statistics/NOUN.head
+                 (PP.nmod in/ADP.case Spain/PROPN.head@spain))))))
+  ./PUNCT)

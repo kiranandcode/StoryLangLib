@@ -1,0 +1,38 @@
+entity authors person they "the commenter"
+entity signs abstract they "TikTok campaigns, dialect revival and regional symbolism"
+entity shift event it "a broader cultural shift"
+entity pages object they "pages on other regional movements"
+entity identity abstract it "regional identity"
+topic t1 "the treatment is inconsistent" signs
+(S%t1
+  (COORD.nsubj@signs (NP.conj TikTok/PROPN.compound campaigns/NOUN.head) ,/PUNCT (NP.conj dialect/NOUN.compound revival/NOUN.head) ,/PUNCT and/CCONJ.cc
+     (NP.conj regional/ADJ.amod symbolism/NOUN.head
+        (PRN.appos \(/PUNCT (PP.head like/ADP.case St/PROPN.compound Oswald's/PROPN.poss stripes/NOUN.head) \)/PUNCT)))
+  (VP.head are/AUX.cop=be{Fin,Pres}
+     (NP.head part/NOUN.head (PP.nmod@shift of/ADP.case a/DET.det broader/ADJ.amod cultural/ADJ.amod shift/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (S.csubj
+     (VP.head Dismissing/VERB.head=dismiss{Ger} (NP.obj@signs these/PRON.head)
+        (PP.obl as/ADP.case
+           (COORD.head (QUOTE.conj "/PUNCT not/PART.advmod notable/ADJ.head "/PUNCT) or/CCONJ.cc
+              (QUOTE.conj "/PUNCT original/ADJ.amod research/NOUN.head "/PUNCT)))
+        (SBAR.advcl while/SCONJ.mark
+           (VP.head allowing/VERB.head=allow{Ger}
+              (NP.obj@pages pages/NOUN.head
+                 (PP.nmod on/ADP.case
+                    (COORD.head (NP.conj Cornish/ADJ.amod nationalism/NOUN.head) ,/PUNCT (NP.conj Wessex/PROPN.compound regionalism/NOUN.head) ,/PUNCT and/CCONJ.cc
+                       (NP.conj Yorkshire/PROPN.compound separatism/NOUN.head))))))))
+  (VP.head suggests/VERB.head=suggest{Fin,Pres}
+     (NP.obj an/DET.det inconsistency/NOUN.head
+        (PP.nmod in/ADP.case
+           (SBAR.head how/ADV.advmod
+              (S.head (NP.nsubj@identity regional/ADJ.amod identity/NOUN.head)
+                 (VP.head is/AUX.aux=be{Fin,Pres} treated/VERB.head=treat{Part}))))))
+  ./PUNCT)
+(S%t1
+  That's/PRON.nsubj@signs not/PART.advmod just/ADV.advmod
+  (NP.head a/DET.det sourcing/NOUN.compound issue/NOUN.head)
+  —/PUNCT
+  (S.parataxis it's/PRON.nsubj@signs (NP.head a/DET.det systemic/ADJ.amod bias/NOUN.head))
+  ./PUNCT)

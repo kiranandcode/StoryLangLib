@@ -1,0 +1,39 @@
+entity signs abstract they "TikTok campaigns, dialect revival and regional symbols"
+entity shift event it "a wider cultural shift"
+entity editors group they "other editors"
+entity wikipedia object it "Wikipedia"
+entity pages object they "pages on other regional movements"
+entity identity abstract it "regional identity"
+topic t1 "the treatment is inconsistent" signs
+(S%t1
+  (COORD.nsubj@signs (NP.conj TikTok/PROPN.compound campaigns/NOUN.head) ,/PUNCT (NP.conj dialect/NOUN.compound revival/NOUN.head) and/CCONJ.cc
+     (NP.conj regional/ADJ.amod symbols/NOUN.head
+        (PP.nmod such/ADJ.case as/ADP.fixed St/PROPN.compound Oswald's/PROPN.poss stripes/NOUN.head)))
+  (VP.head all/ADV.advmod belong/VERB.head{Fin,Pres}
+     (PP.obl@shift to/ADP.case a/DET.det wider/ADJ.amod cultural/ADJ.amod shift/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (S.head (NP.nsubj@editors Editors/NOUN.head)
+     (VP.head have/AUX.aux=have{Fin,Pres} dismissed/VERB.head=dismiss{Part}
+        (NP.obj@signs these/PRON.head)
+        (COORD.obl (ADJP.conj as/ADP.case non-notable/ADJ.head) or/CCONJ.cc
+           (PP.conj as/ADP.case original/ADJ.amod research/NOUN.head))))
+  ,/PUNCT yet/CCONJ.cc
+  (S.conj (NP.nsubj@wikipedia Wikipedia/PROPN.head)
+     (VP.head keeps/VERB.head=keep{Fin,Pres}
+        (NP.obj@pages pages/NOUN.head
+           (PP.nmod on/ADP.case
+              (COORD.head (NP.conj Cornish/ADJ.amod nationalism/NOUN.head) ,/PUNCT (NP.conj Wessex/PROPN.compound regionalism/NOUN.head) and/CCONJ.cc
+                 (NP.conj Yorkshire/PROPN.compound separatism/NOUN.head))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj That/DET.det inconsistency/NOUN.head)
+  (VP.head points/VERB.head=point{Fin,Pres}
+     (PP.obl to/ADP.case a/DET.det systemic/ADJ.amod bias/NOUN.head
+        (PP.nmod in/ADP.case
+           (SBAR.head how/ADV.advmod
+              (S.head (NP.nsubj@wikipedia Wikipedia/PROPN.head)
+                 (VP.head treats/VERB.head=treat{Fin,Pres} (NP.obj@identity regional/ADJ.amod identity/NOUN.head))))))
+     ,/PUNCT
+     (PP.obl beyond/ADP.case any/DET.det problem/NOUN.head (PP.nmod with/ADP.case sourcing/NOUN.head)))
+  ./PUNCT)

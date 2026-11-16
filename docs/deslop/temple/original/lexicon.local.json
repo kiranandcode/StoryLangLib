@@ -1,0 +1,8 @@
+{
+ "connection": {"reg": "neutral"}, "division": {"cls": ["nominal"]}, "features": {"reg": "neutral"},
+ "inscriptions": {"reg": "neutral"}, "monument": {"reg": "neutral"}, "separation": {"cls": ["nominal"]},
+ "unity": {"reg": "neutral"}, "represent": {"reg": "neutral"}, "see": {"reg": "neutral"},
+ "situate": {"reg": "neutral"}, "span": {"reg": "neutral"}, "underlie": {"reg": "neutral"},
+ "sense": {"reg": "neutral"}, "emphasizing": {"cls": ["us"]}, "foster": {"cls": ["buzz", "animate"]},
+ "fosters": {"cls": ["buzz", "animate"]}
+}

@@ -1,0 +1,5 @@
+{"identity": {"reg": "neutral"}, "inconsistency": {"reg": "neutral"}, "literature": {"reg": "neutral"},
+ "movement": {"reg": "neutral"}, "movements": {"reg": "neutral"}, "pages": {"reg": "neutral"},
+ "revival": {"cls": ["nominal"]}, "appreciate": {"cls": ["animate"]}, "belong": {"reg": "neutral"},
+ "dismiss": {"cls": ["animate"]}, "document": {"reg": "neutral"}, "focus": {"reg": "neutral"},
+ "go": {"reg": "neutral"}, "keep": {"reg": "neutral"}, "settle": {"reg": "neutral"}, "treat": {"reg": "neutral"}}
