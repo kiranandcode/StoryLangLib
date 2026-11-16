@@ -4,6 +4,7 @@ import LangLib.Studio.Parse
 import LangLib.World.Care
 import LangLib.World.Identity
 import LangLib.World.Affect
+import LangLib.World.Conviction
 import LangLib.Studio.Complete
 
 /-!
@@ -80,6 +81,22 @@ structure XSpec where
   signals : List (Nat × Nat) := []
   /-- (character, tie): the character never starts that kind of tie, only answers one -/
   aloof : List (Nat × Nat) := []
+  /-- (character, proposition, n): the character holds out against the proposition until `n` signs of it -/
+  convictions : List (Nat × String × Nat) := []
+  /-- (character, emotion, tie, n): the emotion arises in the character only while they hold the tie
+  at level `n` toward someone (desire for a demisexual character) -/
+  bondNeeds : List (Nat × Nat × Nat × Nat) := []
+  /-- ties that rise at most one level per beat in each direction: a slow burn is earned scene by scene -/
+  slow : List Nat := []
+  /-- (intimate act, tie, n): the act (from the paragraph's consent reading) needs the tie at level `n`
+  both ways -/
+  gates : List (String × Nat × Nat) := []
+  startExamined : List (Nat × Nat × Nat) := []
+  startRecognised : List (Nat × Nat) := []
+  /-- (character, proposition, signs registered) at the opening -/
+  startData : List (Nat × String × Nat) := []
+  startDismissed : List (Nat × String × Nat) := []
+  startConceded : List (Nat × String) := []
   deriving Repr, DecidableEq
 
 structure XCh (x : XSpec) where i : Nat deriving DecidableEq, Repr
@@ -110,6 +127,12 @@ instance : AffectReading (XCh x) (XE x) (XK x) where
   anomaly c e := ((x.anomaly.find? fun (c', e', _) => c' == c.i && e' == e.i).map (·.2.2))
   signals e := (lookup x.signals e.i).map (⟨·⟩)
 
+instance : ConvictionSight (XCh x) String where
+  holdout c p := (x.convictions.find? fun (c', p', _) => c' == c.i && p' == p).map (·.2.2)
+
+instance : AffectBond (XCh x) (XE x) (XR x) where
+  needs c e := (x.bondNeeds.find? fun (c', e', _, _) => c' == c.i && e' == e.i).map fun (_, _, r, n) => (⟨r⟩, n)
+
 instance : IdentityLaws (XCh x) String String (XR x) where
   pron c := x.pron.getD c.i .they
   names c := (lookup x.names c.i).getD []
@@ -130,7 +153,20 @@ structure XW (x : XSpec) where
   registered : List (XCh x × XCh x × XK x × Bool) := []
   examined : List (XCh x × XE x × Nat) := []
   recognised : List (XCh x × XE x) := []
+  data : List (XCh x × String × Nat) := []
+  dismissed : List (XCh x × String × Nat) := []
+  conceded : List (XCh x × String) := []
+  /-- (tie, from, to, beat): a slow tie that has risen in that beat -/
+  raised : List (Nat × Nat × Nat × String) := []
   deriving DecidableEq, Repr
+
+instance : HasConvictions (XW x) (XCh x) String where
+  data := XW.data
+  setData w l := { w with data := l }
+  dismissed := XW.dismissed
+  setDismissed w l := { w with dismissed := l }
+  conceded := XW.conceded
+  setConceded w l := { w with conceded := l }
 
 instance : HasTies (XW x) (XCh x) (XR x) where
   tie w r a b := ((w.ties.find? fun (r', a', b', _) => r' == r.i && a' == a.i && b' == b.i).map (·.2.2.2)).getD 0
@@ -172,6 +208,7 @@ inductive XEv (x : XSpec) where
   | id (e : IdEv (XCh x) String String)
   | aff (e : AffEv (XCh x) (XE x))
   | read (e : ReadEv (XCh x) (XE x))
+  | conv (e : ConvEv (XCh x) String)
   deriving DecidableEq, Repr
 
 def XSpec.rules (x : XSpec) : List (AffectRule (XK x) (XR x) (XE x)) :=
@@ -186,9 +223,17 @@ def affSignOk (w : XW x) : AffEv (XCh x) (XE x) → Bool
   | .feel c e => signOk w c e
   | .calm _ _ => true
 
+def XSpec.cast (x : XSpec) : List (XCh x) := (List.range x.chars.length).map (⟨·⟩)
+
+/-- A feeling that needs a bond arises only once the bond is there (`Affect.bondOk`). -/
+def affBondOk (w : XW x) : AffEv (XCh x) (XE x) → Bool
+  | .feel c e => bondOk (R := XR x) x.cast w c e
+  | .calm _ _ => true
+
 instance : Domain (XW x) (XEv x) where
   ok w | .tie e => Domain.ok w e | .care e => Domain.ok w e | .id e => Domain.ok w e
-       | .aff e => Domain.ok w e && affSignOk w e | .read e => Domain.ok w e
+       | .aff e => Domain.ok w e && affSignOk w e && affBondOk w e | .read e => Domain.ok w e
+       | .conv e => Domain.ok w e
   -- care and ties are appraised: what they make their target feel
   step w
     | .tie e => applyAffect (Domain.step w e) (appraise x.rules (.inr e))
@@ -196,12 +241,18 @@ instance : Domain (XW x) (XEv x) where
     | .id e => Domain.step w e
     | .aff e => Domain.step w e
     | .read e => Domain.step w e
+    | .conv e => Domain.step w e
   why w
     | .tie e => Domain.why w e | .care e => Domain.why w e | .id e => Domain.why w e
-    | .aff e => if affSignOk w e then Domain.why w e else
+    | .aff e => if !affSignOk w e then
         "out of character: this feeling is the felt sign of a need they do not register in themselves " ++
         "(being told they have it is knowing, not feeling)"
+      else if !affBondOk w e then
+        "out of character: this feeling arises in them only out of a bond, and the bond is not there yet; " ++
+        "to justify it, first establish: the tie it needs, raised scene by scene"
+      else Domain.why w e
     | .read e => Domain.why w e
+    | .conv e => Domain.why w e
 
 instance : Perceive (XW x) (XEv x) := Perceive.none
 
@@ -213,6 +264,41 @@ def XSpec.start (x : XSpec) : XW x where
   pron := x.startPron.map fun (a, b, p) => (⟨a⟩, ⟨b⟩, p)
   secrets := x.startSecrets.map fun (a, b, s) => (⟨a⟩, ⟨b⟩, s)
   affect := x.startFeels
+  examined := x.startExamined.map fun (c, e, n) => (⟨c⟩, ⟨e⟩, n)
+  recognised := x.startRecognised.map fun (c, e) => (⟨c⟩, ⟨e⟩)
+  data := x.startData.map fun (c, p, n) => (⟨c⟩, p, n)
+  dismissed := x.startDismissed.map fun (c, p, n) => (⟨c⟩, p, n)
+  conceded := x.startConceded.map fun (c, p) => (⟨c⟩, p)
+
+/-! ## A slow burn: ties that rise a level per beat, acts that need ties -/
+
+/-- The slow ties an event may raise: (tie, from, to), both directions for a symmetric tie
+(`slowNote` keeps only the ones that really rose). -/
+def slowRaises (x : XSpec) : XEv x → List (Nat × Nat × Nat)
+  | .tie (.raise a r b) | .tie (.relate a r b) =>
+    if !x.slow.contains r.i then [] else
+    [(r.i, a.i, b.i)] ++ (if TieLaws.symmetric r then [(r.i, b.i, a.i)] else [])
+  | _ => []
+
+/-- A slow tie may rise once per beat in each direction (no beat: no limit). -/
+def slowOk (x : XSpec) (w : XW x) (beat : String) (e : XEv x) : Bool :=
+  beat == "" || (slowRaises x e).all fun (r, a, b) => !w.raised.contains (r, a, b, beat)
+
+def slowNote (x : XSpec) (w w' : XW x) (beat : String) (e : XEv x) : XW x :=
+  if beat == "" then w' else
+  -- only a real rise counts (a `relate` of a tie already held changes nothing)
+  let rose := (slowRaises x e).filter fun (r, a, b) =>
+    HasTies.tie w' (⟨r⟩ : XR x) (⟨a⟩ : XCh x) (⟨b⟩ : XCh x) > HasTies.tie w (⟨r⟩ : XR x) (⟨a⟩ : XCh x) (⟨b⟩ : XCh x)
+  { w' with raised := rose.map (fun (r, a, b) => (r, a, b, beat)) ++ w'.raised }
+
+/-- An intimate act of the consent reading: (from, with, act). -/
+abbrev XAct := Nat × Nat × String
+
+/-- The act is allowed by the ties it needs (`gates`), both ways. -/
+def actOk (x : XSpec) (w : XW x) (a : XAct) : Bool :=
+  (x.gates.filter (·.1 == a.2.2)).all fun (_, r, n) =>
+    HasTies.tie w (⟨r⟩ : XR x) (⟨a.1⟩ : XCh x) (⟨a.2.1⟩ : XCh x) ≥ n &&
+    HasTies.tie w (⟨r⟩ : XR x) (⟨a.2.1⟩ : XCh x) (⟨a.1⟩ : XCh x) ≥ n
 
 /-! ## References in the text -/
 
@@ -332,6 +418,10 @@ structure XPara (x : XSpec) where
   events : List (Nat × XEv x)
   mentions : List XMention
   feels : List XFeel := []
+  /-- the beat the paragraph belongs to (story.json's outline), for slow ties -/
+  beat : String := ""
+  /-- the intimate acts of its consent reading, held to the ties they need at its end -/
+  acts : List XAct := []
   deriving DecidableEq, Repr
 
 /-- Is reference `m` allowed in state `w`, given the paragraph's events? -/
@@ -360,13 +450,14 @@ event at or before a word's token takes effect first). `none` if an event is
 not allowed, or a reference or a feeling is not backed by the state. -/
 def XPara.run (p : XPara x) (w : XW x) : Option (XW x) :=
   let rec go (w : XW x) : List (Nat × XEv x) → List XMention → List XFeel → Option (XW x)
-    | [], ms, fs => if ms.all (mentionOk x w p.events) && fs.all (feelOk w) then some w else none
+    | [], ms, fs => if ms.all (mentionOk x w p.events) && fs.all (feelOk w) && p.acts.all (actOk x w)
+        then some w else none
     | (a, e) :: es, ms, fs =>
       let (before, after) := ms.partition (·.at_ < a)
       let (fb, fa) := fs.partition (·.at_ < a)
       if !before.all (mentionOk x w p.events) || !fb.all (feelOk w) then none
-      else if !Domain.ok w e then none
-      else go (Domain.step w e) es after fa
+      else if !(Domain.ok w e && slowOk x w p.beat e) then none
+      else go (slowNote x w (Domain.step w e) p.beat e) es after fa
   go w p.events p.mentions p.feels
 
 def runParas (w : XW x) : List (XPara x) → Option (XW x)
@@ -487,7 +578,40 @@ def xspecOfJson (s : Spec) (j : Json) : Except String XSpec := do
     match strsOf t with
     | [c, r] => pure (← ch c, ← tieOf r)
     | _ => throw "an aloof entry is [character, tie]"
+  -- a slow burn: convictions, feelings that need a bond, slow ties, acts gated by ties
+  let convictions ← (arr e "convictions").mapM fun t => do
+    match strsOf t with
+    | [c, q, n] => pure (← ch c, q, n.toNat?.getD 1)
+    | _ => throw "a conviction is [character, proposition, signs]"
+  let bondNeeds ← (arr e "bondNeeds").mapM fun t => do
+    match strsOf t with
+    | [c, em, r, n] => pure (← ch c, ← emo em, ← tieOf r, n.toNat?.getD 1)
+    | _ => throw "a bond need is [character, emotion, tie, level]"
+  let slow ← (strsOf ((e.getObjVal? "slow").toOption.getD (Json.arr #[]))).mapM tieOf
+  let gates ← (obj e "gates").mapM fun (act, v) => do
+    match strsOf v with
+    | [r, n] => pure (act, ← tieOf r, n.toNat?.getD 1)
+    | _ => throw "a gate is \"act\": [tie, level]"
+  let startExamined ← (arr st "examined").mapM fun t => do
+    match strsOf t with
+    | [c, em, n] => pure (← ch c, ← emo em, n.toNat?.getD 1)
+    | _ => throw "an examined feeling is [character, emotion, times]"
+  let startRecognised ← (arr st "recognised").mapM fun t => do
+    match strsOf t with
+    | [c, em] => pure (← ch c, ← emo em)
+    | _ => throw "a recognised feeling is [character, emotion]"
+  let triple (k : String) : Except String (List (Nat × String × Nat)) := (arr st k).mapM fun t => do
+    match strsOf t with
+    | [c, q, n] => pure (← ch c, q, n.toNat?.getD 1)
+    | _ => throw s!"an entry of {k} is [character, proposition, count]"
+  let startData ← triple "data"
+  let startDismissed ← triple "dismissed"
+  let startConceded ← (arr st "conceded").mapM fun t => do
+    match strsOf t with
+    | [c, q] => pure (← ch c, q)
+    | _ => throw "a concession is [character, proposition]"
   pure { chars, pron := s.chars.map fun c => (Pron.ofString? c.pron).getD .they, blind, anomaly, signals, aloof,
+         convictions, bondNeeds, slow, gates, startExamined, startRecognised, startData, startDismissed, startConceded,
          emotions, lexicon, appraise, startFeels,
          ties, needs := needIds, consent, builds := ← optTie "builds", threat := ← optTie "threat",
          protects := ← optTie "protects", trust := ← optTie "trust", names, secrets,
@@ -530,16 +654,34 @@ def XSpec.ev (x : XSpec) (str : String) : Except String (XEv x) := do
   | ["examine", c, e] => return .read (.examine (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
   | ["recognise", c, e] => return .read (.recognise (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
   | ["own", c, e] => return .read (.own (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
+  | ["datum", c, q] => return .conv (.datum (← ch c) q)
+  | ["dismiss", c, q] => return .conv (.dismiss (← ch c) q)
+  | ["concede", c, q] => return .conv (.concede (← ch c) q)
   | _ => throw s!"cannot read ext event \"{str}\""
 
-/-- A paragraph's ext reading, from its events file and annotation. -/
-def xparaOf (s : Spec) (x : XSpec) (ej : Option Json) (d : Option Doc) : Except String (XPara x) := do
+/-- The intimate acts of a consent reading (`"consent": ["act a b x", ...]`). -/
+def actsOf (x : XSpec) (ej : Option Json) : Except String (List XAct) :=
+  ((ej.map fun j => arr j "consent").getD []).filterMapM fun (it : Json) =>
+    match it.getStr?.toOption.map (fun t => (t.splitOn " ").filter (· != "")) with
+    | some ["act", a, b, act] => do pure (some (← idxOf "character" x.chars a, ← idxOf "character" x.chars b, act))
+    | _ => pure none
+
+/-- A paragraph's ext reading, from its events file (or, for a paragraph not yet written, its plan,
+whose entries may be bare strings in story order) and annotation, in its beat. -/
+def xparaOfAt (s : Spec) (x : XSpec) (beat : String) (ej : Option Json) (d : Option Doc) : Except String (XPara x) := do
   let evs ← ((ej.map fun j => arr j "ext").getD []).mapM fun it => do
-    let some e := str it "e" | throw "ext event without e"
-    pure ((it.getObjValAs? Nat "at").toOption.getD 0, ← x.ev e)
+    match it.getStr?.toOption with
+    | some e => pure (0, ← x.ev e)
+    | none =>
+      let some e := str it "e" | throw "ext event without e"
+      pure ((it.getObjValAs? Nat "at").toOption.getD 0, ← x.ev e)
   -- stable sort by token, so the walk is in text order
   let evs := sortBy (fun a b => a.1 ≤ b.1) evs
-  pure { events := evs, mentions := (d.map (mentionsOf x.chars)).getD [], feels := (d.map (feelsOf s x)).getD [] }
+  pure { events := evs, mentions := (d.map (mentionsOf x.chars)).getD [], feels := (d.map (feelsOf s x)).getD [],
+         beat, acts := ← actsOf x ej }
+
+def xparaOf (s : Spec) (x : XSpec) (ej : Option Json) (d : Option Doc) : Except String (XPara x) :=
+  xparaOfAt s x "" ej d
 
 /-! ## The report -/
 
@@ -574,6 +716,9 @@ def XEv.str (x : XSpec) : XEv x → String
   | .read (.examine c e) => s!"examine {x.chS c.i} {x.emotions.getD e.i "?"}"
   | .read (.recognise c e) => s!"recognise {x.chS c.i} {x.emotions.getD e.i "?"}"
   | .read (.own c e) => s!"own {x.chS c.i} {x.emotions.getD e.i "?"}"
+  | .conv (.datum c q) => s!"datum {x.chS c.i} {q}"
+  | .conv (.dismiss c q) => s!"dismiss {x.chS c.i} {q}"
+  | .conv (.concede c q) => s!"concede {x.chS c.i} {q}"
 
 def harmS (x : XSpec) : IdHarm (XCh x) String String → String
   | .misgender a b p d => s!"{x.chS a.i} misgenders {x.chS b.i} ('{p.name}'){if d then ", knowing better" else ", having assumed"}"
@@ -609,15 +754,22 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
       for m in before do
         if !mentionOk x w p.events m then issues := issues.push s!"{mentionS x m}, which they do not know (or, in speech, a misgendering not read as a `refer` event)"
       ms := after
-      let good := Domain.ok w e
-      evJ := evJ.push (Json.mkObj [("e", XEv.str x e), ("at", a), ("ok", good),
-        ("why", if good then "" else Domain.why w e)])
-      if !good then issues := issues.push s!"'{XEv.str x e}' (token {a}) cannot happen: {Domain.why w e}"
-      w := Domain.step w e
+      let good := Domain.ok w e && slowOk x w p.beat e
+      let why := if !Domain.ok w e then Domain.why w e else if good then "" else
+        s!"out of character for a slow burn: this tie already rose in this beat ('{p.beat}'); " ++
+        "to justify it, first establish: another scene between them"
+      evJ := evJ.push (Json.mkObj [("e", XEv.str x e), ("at", a), ("ok", good), ("why", why)])
+      if !good then issues := issues.push s!"'{XEv.str x e}' (token {a}) cannot happen: {why}"
+      w := slowNote x w (Domain.step w e) p.beat e
     for f in fs do
       if !feelOk w f then issues := issues.push (feelIssue w f)
     for m in ms do
       if !mentionOk x w p.events m then issues := issues.push s!"{mentionS x m}, which they do not know (or, in speech, a misgendering not read as a `refer` event)"
+    for act in p.acts do
+      if !actOk x w act then
+        issues := issues.push (s!"consent act '{act.2.2}' between {x.chS act.1} and {x.chS act.2.1} is out of character " ++
+          s!"for where they are: it needs " ++ ", ".intercalate ((x.gates.filter (·.1 == act.2.2)).map fun (_, r, n) =>
+            s!"{(x.ties[r]?.map (·.id)).getD "?"} at {n} both ways (has {HasTies.tie w (⟨r⟩ : XR x) (⟨act.1⟩ : XCh x) (⟨act.2.1⟩ : XCh x)} and {HasTies.tie w (⟨r⟩ : XR x) (⟨act.2.1⟩ : XCh x) (⟨act.1⟩ : XCh x)})"))
     if !issues.isEmpty then ok := false
     out := out.push (Json.mkObj [("name", nm), ("events", Json.arr evJ), ("issues", Json.arr (issues.map Json.str)),
       ("mentions", p.mentions.length),
@@ -632,6 +784,8 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
         Json.str s!"{x.chS a.i} {if f then "feels" else "has been told of"} {x.chS c.i}'s need: {x.needs.getD k.i "?"}").toArray),
       ("examined", Json.arr (w.examined.map fun (c, e, n) =>
         Json.str s!"{x.chS c.i} {x.emotions.getD e.i "?"} {n}{if readAs w c e then " (recognised)" else ""}").toArray),
+      ("convictions", Json.arr (x.convictions.map fun (c, q, n) =>
+        Json.str s!"{x.chS c} holds out against {q}: {countOf w.data (⟨c⟩ : XCh x) q} of {n} signs, {countOf w.dismissed (⟨c⟩ : XCh x) q} explained away{if w.conceded.contains (⟨c⟩, q) then ", conceded" else ""}").toArray),
       -- who knows what of whom (World/Identity): names, pronouns, private facts
       ("knows", Json.arr ((w.names.map fun ((a, b, n) : XCh x × XCh x × String) => Json.mkObj [("who", x.chS a.i), ("of", x.chS b.i), ("kind", "name"), ("v", n)]) ++
         (w.pron.map fun ((a, b, p) : XCh x × XCh x × Pron) => Json.mkObj [("who", x.chS a.i), ("of", x.chS b.i), ("kind", "pron"), ("v", p.name),
@@ -645,6 +799,12 @@ private def readJson (p : System.FilePath) : IO (Option Json) := do
     | .ok j => pure (some j) | .error _ => pure none
   else pure none
 
+/-- The beat of paragraph `nm` ("07") in story.json's outline, or "". -/
+def beatOf (sj : Json) (nm : String) : String :=
+  match nm.toNat? with
+  | some k => if k == 0 then "" else (((arr sj "outline")[k - 1]?).bind (str · "beat")).getD ""
+  | none => ""
+
 def extInputs (dir : String) : IO (Spec × XSpec × List (String × Option Json × Option Doc)) := do
   let sj ← match Json.parse (← IO.FS.readFile (System.FilePath.mk dir / "story.json")) with
     | .ok j => pure j | .error e => throw (IO.userError e)
@@ -652,20 +812,31 @@ def extInputs (dir : String) : IO (Spec × XSpec × List (String × Option Json 
   let x ← match xspecOfJson s sj with | .ok x => pure x | .error e => throw (IO.userError e)
   let pdir := System.FilePath.mk dir / "paragraphs"
   let files ← pdir.readDir
+  -- written paragraphs are read from their readings; the rest from their plans, so a plot is
+  -- checked against the personas before any prose
   let names := (files.toList.filterMap fun f =>
-    if f.fileName.endsWith ".txt" then some (f.fileName.dropEnd 4).toString else none)
+    if f.fileName.endsWith ".txt" then some (f.fileName.dropEnd 4).toString
+    else if f.fileName.endsWith ".plan.json" then some (f.fileName.dropEnd 10).toString else none).eraseDups
   let names := sortBy (fun a b => decide (a ≤ b)) names
   let ps ← names.mapM fun nm => do
-    let ej ← readJson (pdir / s!"{nm}.events.json")
+    let ej ← if ← (pdir / s!"{nm}.txt").pathExists then readJson (pdir / s!"{nm}.events.json")
+      else readJson (pdir / s!"{nm}.plan.json")
     let dj ← if ← (pdir / s!"{nm}.json").pathExists then
         pure (match docOfString (← IO.FS.readFile (pdir / s!"{nm}.json")) with | .ok d => some d | .error _ => none)
       else pure none
     pure (nm, ej, dj)
   pure (s, x, ps)
 
+def extParas (dir : String) : IO (Spec × XSpec × List String × List String) := do
+  let (s, x, ps) ← extInputs dir
+  let sj ← match Json.parse (← IO.FS.readFile (System.FilePath.mk dir / "story.json")) with
+    | .ok j => pure j | .error e => throw (IO.userError e)
+  pure (s, x, ps.map (·.1), ps.map fun (nm, _, _) => beatOf sj nm)
+
 def extReport (dir : String) : IO Json := do
   let (s, x, ps) ← extInputs dir
-  let paras ← ps.mapM fun (_, ej, d) => match xparaOf s x ej d with
+  let (_, _, _, beats) ← extParas dir
+  let paras ← (ps.zip beats).mapM fun ((_, ej, d), b) => match xparaOfAt s x b ej d with
     | .ok p => pure p | .error e => throw (IO.userError e)
   pure (xreport x (ps.map (·.1)) paras)
 
@@ -675,7 +846,8 @@ private def rs {α : Type} [Repr α] (a : α) : String := (repr a).pretty 100000
 /-- The reading as a Lean file of theorems, each proved by `decide +kernel`. -/
 def extLean (dir : String) (ns : String) : IO String := do
   let (s, x, ps) ← extInputs dir
-  let paras ← ps.mapM fun (_, ej, d) => match xparaOf s x ej d with
+  let (_, _, _, beats) ← extParas dir
+  let paras ← (ps.zip beats).mapM fun ((_, ej, d), b) => match xparaOfAt s x b ej d with
     | .ok p => pure p | .error e => throw (IO.userError e)
   let valid := XValid x paras
   let mut out := s!"import LangLib.Studio.Ext\n\n/-!\n# {ns}: ties, care and identity, generated by `langlib ext --lean`\n\n" ++
@@ -683,10 +855,10 @@ def extLean (dir : String) (ns : String) : IO String := do
     s!"namespace {ns}\nopen LangLib.World LangLib.Studio\n\n" ++
     s!"def xspec : XSpec := {rs x}\n\n" ++
     "#guard xspecMatches (include_str \"story.json\") xspec\n\n"
-  for ((nm, ej, d), p) in ps.zip paras do
+  for (((nm, ej, d), p), b) in (ps.zip paras).zip beats do
     out := out ++ s!"def p{nm} : XPara xspec := {rs p}\n" ++
       (if ej.isSome && d.isSome then
-        s!"#guard xparaMatches xspec (include_str \"story.json\") (include_str \"paragraphs/{nm}.events.json\") (include_str \"paragraphs/{nm}.json\") p{nm}\n\n"
+        s!"#guard xparaMatchesAt xspec (include_str \"story.json\") {rs b} (include_str \"paragraphs/{nm}.events.json\") (include_str \"paragraphs/{nm}.json\") p{nm}\n\n"
       else "\n")
   let all := "[" ++ ", ".intercalate (ps.map fun (nm, _, _) => s!"p{nm}") ++ "]"
   out := out ++ s!"def story : List (XPara xspec) := {all}\n\n"
@@ -707,11 +879,13 @@ def extLean (dir : String) (ns : String) : IO String := do
     | .care (.offer a c k) | .care (.tend a c k) => if x.blind.contains (a.i, c.i, k.i) then some e else none
     | .read (.recognise c em) | .read (.own c em) => if (x.anomaly.any fun (c', e', _) => c' == c.i && e' == em.i) then some e else none
     | .tie (.relate a r _) | .tie (.raise a r _) => if x.aloof.contains (a.i, r.i) then some e else none
+    | .conv (.concede c q) => if (x.convictions.any fun (c', q', _) => c' == c.i && q' == q) then some e else none
+    | .aff (.feel c em) => if (x.bondNeeds.any fun (c', e', _, _) => c' == c.i && e' == em.i) then some e else none
     | _ => none
   -- an aloof move that is allowed already answers a tie the other holds: say that instead
   let gatedP := persona.eraseDups.filter fun e => !Domain.ok x.start e
   for (e, i) in gatedP.zipIdx do
-    out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, a feeling still an anomaly, or a tie they never start). -/\n" ++
+    out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, a feeling still an anomaly or one that needs a bond, a tie they never start, or a conviction not yet outrun). -/\n" ++
       s!"theorem persona_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
   let answers := (persona.eraseDups.filter fun e => Domain.ok x.start e).filterMap fun e => match e with
     | .tie (.relate a r b) | .tie (.raise a r b) => some (e, a, r, b)
@@ -723,6 +897,11 @@ def extLean (dir : String) (ns : String) : IO String := do
   for (e, i) in gated.zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: not allowed at the opening, before any trust was earned. -/\n" ++
       s!"theorem gated_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
+  -- every intimate act the ties gate was out of character at the opening: the burn is what allows it
+  let acts := ((paras.flatMap (·.acts)).filter fun a => x.gates.any (·.1 == a.2.2)).eraseDups
+  for (a, i) in (acts.filter fun a => !actOk x x.start a).zipIdx do
+    out := out ++ s!"\n/-- {a.2.2} between {x.chS a.1} and {x.chS a.2.1}: out of character at the opening, before the ties it needs. -/\n" ++
+      s!"theorem act_gated_{i} : actOk xspec xspec.start {rs a} = false := by decide +kernel\n"
   pure (out ++ s!"\nend {ns}\n")
 
 /-- `story.json` still declares `x`. -/
@@ -732,6 +911,12 @@ def xspecMatches (str : String) (x : XSpec) : Bool :=
     | .ok s => match xspecOfJson s j with | .ok x' => x' == x | .error _ => false
     | .error _ => false
   | .error _ => false
+
+/-- A paragraph's files, in its beat, still give `p`. -/
+def xparaMatchesAt (x : XSpec) (story beat evs doc : String) (p : XPara x) : Bool :=
+  match Json.parse story >>= specOfJson, Json.parse evs, docOfString doc with
+  | .ok s, .ok j, .ok d => match xparaOfAt s x beat (some j) (some d) with | .ok p' => p' == p | .error _ => false
+  | _, _, _ => false
 
 /-- A paragraph's files still give `p`. -/
 def xparaMatches (x : XSpec) (story evs doc : String) (p : XPara x) : Bool :=

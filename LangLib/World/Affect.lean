@@ -177,4 +177,42 @@ theorem feel_sign_blind [HasNeeds W C K] [CareSight C K]
 
 end reading
 
+/-! ## Feelings that need a bond first
+
+Some feelings arise only out of a bond: for a demisexual character, desire
+appears only toward someone she is already close to. `AffectBond.needs c e =
+some (r, n)` says `c` can feel `e` only while she holds tie `r` at level `n` or
+more toward someone. Nobody's feelings need a bond by default (`bondOk_free`);
+where one does, a feeling shown before the bond is out of character
+(`bond_no_feel`), whatever else is happening. -/
+
+class AffectBond (C E R : Type) where
+  needs : C → E → Option (R × Nat) := fun _ _ => none
+
+instance (priority := low) {C E R : Type} : AffectBond C E R := {}
+
+section bond
+variable [HasTies W C R] [AffectBond C E R]
+
+/-- `c` may feel `e`: no bond needed, or `c` holds the tie at the level toward one of `others`. -/
+def bondOk (others : List C) (w : W) (c : C) (e : E) : Bool :=
+  match AffectBond.needs c e with
+  | some (r, n) => others.any fun d => d != c && HasTies.tie w r c d ≥ n
+  | none => true
+
+theorem bondOk_free (others : List C) (w : W) (c : C) (e : E)
+    (h : AffectBond.needs (R := R) c e = none) : bondOk (R := R) others w c e = true := by
+  simp [bondOk, h]
+
+/-- Before the bond, the feeling is ruled out. -/
+theorem bond_no_feel (others : List C) (w : W) (c : C) (e : E) (r : R) (n : Nat)
+    (h : AffectBond.needs c e = some (r, n)) (hlow : ∀ d ∈ others, HasTies.tie w r c d < n) :
+    bondOk others w c e = false := by
+  simp only [bondOk, h, List.any_eq_false]
+  intro d hd
+  have := hlow d hd
+  simp; omega
+
+end bond
+
 end LangLib.World

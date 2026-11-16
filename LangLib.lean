@@ -37,4 +37,5 @@ import LangLib.Style
 import LangLib.World.Argument
 import LangLib.World.Consent
 import LangLib.World.Relationship
+import LangLib.World.Conviction
 import LangLib.World.Examples.Scene

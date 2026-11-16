@@ -118,7 +118,15 @@ python3 studio/workflows.py paragraph-check stories/roof 3   annotation, events,
 python3 studio/workflows.py plan-check      stories/roof     beats and paragraph plans (top-down)
 python3 studio/workflows.py refine-check    stories/roof     the paragraphs refine the beat story (so far)
 python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
+python3 studio/workflows.py chain           <prev> <next>    open a chapter where the one before ends (`langlib end`)
+python3 studio/workflows.py chain-check     <story>          its opening is still where the chapter before ends
 ```
+
+A story longer than one directory is written as chained chapters: `langlib end
+<dir>` prints the end state of every reading in story.json's opening vocabulary,
+and a chapter whose story.json says `"after": "<prev>"` must open there
+(`docs/gaps/slow-burn.md`). Paragraphs not yet written are read from their
+plans by every reading, so a series can be chained and checked before prose.
 
 A paragraph's reading may also carry a finer `consent` list, checked by
 `langlib consent <dir>` (and `--lean <ns>` for its theorems) against
@@ -227,6 +235,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), lore, factive `realise` |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
 | LangLib/World/Consent | Consent refined: finer acts (edge acts named or assumed), how each yes was given, scenes offered and taken with limits, check-ins, withdrawal and safewords that bind, wishes that are not consent, firsts from history |
+| LangLib/World/Conviction | A belief held against the evidence: signs registered and explained away, conceded only once enough are in |
 | LangLib/World/Relationship | Kinds of relationship (friends, lovers, partners) that change by mutual word or by deed; one-sided declarations stay proposals |
 | LangLib/World/Magic   | An example story-specific module: spells and mana                           |
 | LangLib/World/Dialogue | Questions under discussion, answers, hints (implicature), sarcasm read by rapport, promises (kept/broken), requests |

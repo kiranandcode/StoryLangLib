@@ -143,10 +143,13 @@ def loadConsent (dir : System.FilePath) : IO ConsentStory := do
     | _ => pure []
   let pdir := dir / "paragraphs"
   let files ← if ← pdir.pathExists then pdir.readDir else pure #[]
+  -- a paragraph's reading, or, before it is written, its plan
   let names := (files.toList.filterMap fun e =>
-    if e.fileName.endsWith ".events.json" then some ((e.fileName.splitOn ".").head!) else none).mergeSort (· ≤ ·)
+    if e.fileName.endsWith ".events.json" || e.fileName.endsWith ".plan.json" then some ((e.fileName.splitOn ".").head!)
+    else none).eraseDups.mergeSort (· ≤ ·)
   let paras ← names.mapM fun nm => do
-    let some ej ← readJ (pdir / s!"{nm}.events.json") | pure (nm, [])
+    let src := if ← (pdir / s!"{nm}.events.json").pathExists then pdir / s!"{nm}.events.json" else pdir / s!"{nm}.plan.json"
+    let some ej ← readJ src | pure (nm, [])
     let lines := match ej.getObjVal? "consent" with
       | .ok (.arr a) => a.toList.filterMap fun (j : Json) => j.getStr?.toOption <|> (j.getObjValAs? String "e").toOption
       | _ => []

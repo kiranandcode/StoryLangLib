@@ -5,6 +5,7 @@ import LangLib.Style.Report
 import LangLib.Style.Theorems
 import LangLib.Style.Ao3
 import LangLib.Style.Ao3Theorems
+import LangLib.Style.Fixpoint
 import LangLib.Style.Academic
 import LangLib.Style.AcademicTheorems
 import LangLib.Style.House

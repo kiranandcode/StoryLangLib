@@ -14,6 +14,7 @@ def usage : String := "usage:
   langlib house <dir> [--lean name]         house style (/writelikeme) and clarity verdicts, flagged sentences
   langlib consent <dir> [--lean ns]         the refined consent reading (World/Consent), or it as Lean theorems
   langlib ext <dir> [--lean ns]             ties, care and identity (World/Ties, Care, Identity), or as Lean theorems
+  langlib end <dir>                         the end state of every reading, as the next chapter's opening (JSON)
   langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling"
 
 def readDoc (p : String) : IO Doc := do
@@ -87,6 +88,9 @@ def main : List String → IO UInt32
     pure 0
   | ["ext", dir, "--lean", ns] => do
     IO.print (← LangLib.Studio.extLean dir ns)
+    pure 0
+  | ["end", dir] => do
+    IO.println (← LangLib.Studio.endReport dir).pretty
     pure 0
   | ["argument", dir, lore] => do
     IO.println (← LangLib.Studio.PaperArg.argumentMain dir lore).compress

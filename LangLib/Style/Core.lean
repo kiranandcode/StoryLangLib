@@ -159,6 +159,8 @@ structure Sent where
   checkIns : Nat := 0
   /-- clauses outside quotes in which the point-of-view character logs, tests, measures... -/
   clinical : Nat := 0
+  /-- play in talk: interjections and exclamation marks inside quotes ("Ooh", "wait", "yes!") -/
+  playful : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-- Counts one tree contributes (merged bottom-up). -/
@@ -312,6 +314,11 @@ partial def checkInsOf : Tree → Nat
       if words ≥ 1 && words ≤ 5 && ws.any (·.form == "?") then 1 else 0
     else (kids.map checkInsOf).foldl (· + ·) 0
 
+/-- Interjections and exclamation marks inside quotes. -/
+partial def playfulOf (quoted : Bool) : Tree → Nat
+  | .leaf w => if quoted && (w.upos == .INTJ || w.form == "!") then 1 else 0
+  | .node i kids => (kids.map (playfulOf (quoted || i.cat == .QUOTE))).foldl (· + ·) 0
+
 /-- Leaves outside quotes. -/
 partial def narrLeaves : Tree → List Word
   | .leaf w => [w]
@@ -356,7 +363,7 @@ def sentOf (cx : Ctx) (para : Nat) (t : Tree) : Sent :=
     firstPerson := ((narrLeaves t).filter fun w => w.upos == .PRON && firstPersonForms.contains (lower w.form)).length,
     intens := (ls.filter fun w => w.upos == .ADV && intensifierWords.contains (lower w.form)).length,
     repeats := repeatsOf ls,
-    checkIns := checkInsOf t, clinical := a.clinical }
+    checkIns := checkInsOf t, clinical := a.clinical, playful := playfulOf false t }
 
 /-- Read a paragraph's document. -/
 def sentsOfDoc (cx : Ctx) (para : Nat) (d : Doc) : List Sent :=
@@ -438,6 +445,7 @@ structure Features where
   repeats : Nat := 0
   checkIns : Nat := 0
   clinical : Nat := 0
+  playful : Nat := 0
   /-- short sentences (at most 6 words) right after a long one (at least 15) in the same paragraph -/
   punches : Nat := 0
   /-- words and quoted words in the first and second halves of the story, by paragraph -/
@@ -496,6 +504,7 @@ def Features.ofSents (ss : List Sent) : Features :=
     repeats := sumBy (·.repeats) ss
     checkIns := sumBy (·.checkIns) ss
     clinical := sumBy (·.clinical) ss
+    playful := sumBy (·.playful) ss
     punches := punchCount ss
     wordsEarly := sumBy (fun s => if 2 * s.para ≤ lastPara ss then s.words else 0) ss
     quoteEarly := sumBy (fun s => if 2 * s.para ≤ lastPara ss then s.quoteWords else 0) ss
@@ -507,7 +516,7 @@ inductive Feat where
   | paras | sents | words | clauses | depthSum | maxDepth | short | long | prn | anchors
   | footnotes | footnoteWords | generics | likeSimiles | asIf | asAs | similes | concepts
   | quoteWords | tags | tagKinds | fancyTags | openers | openerKinds | interior | choreo | povClauses | charClauses | asides
-  | frags | firstPerson | intensifiers | repeats | checkIns | punches | wordsEarly | quoteEarly | wordsLate | quoteLate | clinical
+  | frags | firstPerson | intensifiers | repeats | checkIns | punches | wordsEarly | quoteEarly | wordsLate | quoteLate | clinical | playful
   deriving Repr, DecidableEq, Inhabited
 
 def Features.get (f : Features) : Feat → Nat
@@ -524,7 +533,7 @@ def Features.get (f : Features) : Feat → Nat
   | .frags => f.frags | .firstPerson => f.firstPerson | .intensifiers => f.intensifiers
   | .repeats => f.repeats | .checkIns => f.checkIns | .punches => f.punches
   | .wordsEarly => f.wordsEarly | .quoteEarly => f.quoteEarly | .wordsLate => f.wordsLate | .quoteLate => f.quoteLate
-  | .clinical => f.clinical
+  | .clinical => f.clinical | .playful => f.playful
 
 def Feat.name : Feat → String
   | .paras => "paras" | .sents => "sents" | .words => "words" | .clauses => "clauses"
@@ -539,13 +548,13 @@ def Feat.name : Feat → String
   | .frags => "frags" | .firstPerson => "firstPerson" | .intensifiers => "intensifiers"
   | .repeats => "repeats" | .checkIns => "checkIns" | .punches => "punches"
   | .wordsEarly => "wordsEarly" | .quoteEarly => "quoteEarly" | .wordsLate => "wordsLate" | .quoteLate => "quoteLate"
-  | .clinical => "clinical"
+  | .clinical => "clinical" | .playful => "playful"
 
 def Feat.all : List Feat :=
   [.paras, .sents, .words, .clauses, .depthSum, .maxDepth, .short, .long, .prn, .anchors,
    .footnotes, .footnoteWords, .generics, .likeSimiles, .asIf, .asAs, .similes, .concepts,
    .quoteWords, .tags, .tagKinds, .fancyTags, .openers, .openerKinds, .interior, .choreo, .povClauses, .charClauses, .asides,
-   .frags, .firstPerson, .intensifiers, .repeats, .checkIns, .punches, .wordsEarly, .quoteEarly, .wordsLate, .quoteLate, .clinical]
+   .frags, .firstPerson, .intensifiers, .repeats, .checkIns, .punches, .wordsEarly, .quoteEarly, .wordsLate, .quoteLate, .clinical, .playful]
 
 /-! ## Rules and styles -/
 

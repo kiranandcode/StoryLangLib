@@ -10,6 +10,8 @@ event readings, and drives these checks; the Studio shows the results live.
     python3 studio/workflows.py plan-check      <story> [n]   beats valid; paragraph plans (NN.plan.json) valid
     python3 studio/workflows.py refine-check    <story>       plans and prose refine the beats
     python3 studio/workflows.py prove           <story>       Proofs.lean regenerated and checked
+    python3 studio/workflows.py chain           <prev> <next> open <next> where <prev> ends (`langlib end`)
+    python3 studio/workflows.py chain-check     <story>       its opening is still where the chapter before ends
     python3 studio/workflows.py log             <story> <workflow> <stage> [--para NN] [--ok|--fail] [--note ...]
     python3 studio/workflows.py summary         <story> <workflow>
     python3 studio/workflows.py compare         <story> <story> ...
@@ -413,11 +415,38 @@ def cmd_extract(a) -> int:
     return 0
 
 
+def reading_of(st: Story, k: int) -> dict:
+    """Paragraph k's reading: its events file once written, else its plan."""
+    src = st.f(k, "events.json") if st.f(k, "txt").exists() and st.f(k, "events.json").exists() else st.f(k, "plan.json")
+    return json.loads(src.read_text()) if src.exists() else {}
+
+
+def conviction_objections(st: Story, k: int) -> list[str]:
+    """A conviction (story.json ext "convictions") is conceded in two readings at once: the
+    Mind's belief flips by the character's own conclusion (`notice C q self`) exactly where the
+    ext reading concedes (`concede C q`), which the signs gate."""
+    held = {(c, q) for c, q, _ in st.spec.get("ext", {}).get("convictions", [])}
+    if not held:
+        return []
+    r = reading_of(st, k)
+    evs = [e["e"] if isinstance(e, dict) else e for e in r.get("events", [])]
+    ext = [e["e"] if isinstance(e, dict) else e for e in r.get("ext", [])]
+    flips = {(w[1], w[2]) for w in (e.split() for e in evs) if len(w) == 4 and w[0] == "notice"
+             and w[3] == "self" and (w[1], w[2]) in held}
+    concessions = {(w[1], w[2]) for w in (e.split() for e in ext) if len(w) == 3 and w[0] == "concede"}
+    out = [f"conviction: {c} comes to believe {q} by her own conclusion (`notice {c} {q} self`) without conceding it "
+           f"in the ext reading (`concede {c} {q}`, which needs the signs)" for c, q in sorted(flips - concessions)]
+    out += [f"conviction: {c} concedes {q} but the Mind reading never flips it (`notice {c} {q} self`)"
+            for c, q in sorted(concessions - flips)]
+    return out
+
+
 def persona_objections(st: Story, k: int) -> list[str]:
     """When the story declares them, paragraph k's ext reading (ties, care,
-    identity, affect: the persona's blind spots and anomalies) and its consent
-    reading must hold too; a consent act resting on an assumption is an objection."""
-    out: list[str] = []
+    identity, affect: the persona's blind spots and anomalies; a slow burn's
+    gates) and its consent reading must hold too; a consent act resting on an
+    assumption is an objection. Before the prose, both are read from the plan."""
+    out: list[str] = conviction_objections(st, k)
     if "ext" in st.spec:
         r = langlib("ext", str(st.d), timeout=300)
         try:
@@ -425,8 +454,7 @@ def persona_objections(st: Story, k: int) -> list[str]:
             out += [f"ext: {i}" for p in rep["paragraphs"] if p["name"] == f"{k:02}" for i in p["issues"]]
         except json.JSONDecodeError:
             out.append(f"langlib ext failed: {(r.stderr or r.stdout)[-500:]}")
-    ev = st.f(k, "events.json")
-    if "consent" in st.spec and ev.exists() and json.loads(ev.read_text()).get("consent"):
+    if "consent" in st.spec and reading_of(st, k).get("consent"):
         r = langlib("consent", str(st.d), timeout=300)
         try:
             rep = json.loads(r.stdout)
@@ -480,6 +508,9 @@ def cmd_plan_check(a) -> int:
                 if not st.f(k, "plan.json").exists() and not st.f(k, "events.json").exists()]
     for k in ks:
         out += [f"{k:02} plan: {o}" for o in objections(r, k)]
+        if not st.f(k, "txt").exists():
+            out += [f"{k:02} plan: {o}" for o in persona_objections(st, k)]
+    out += chain_objections(st)
     log(a.story, a.log, stage="plan-check", para=f"{a.n:02}" if a.n else "", ok=not out, note=" | ".join(out)[:1000])
     return verdict_out(out, f"ok: beats valid; plans {', '.join(f'{k:02}' for k in ks) or '(none)'} valid")
 
@@ -533,6 +564,83 @@ def cmd_refine_check(a) -> int:
     print(f"beats: {'valid' if b.get('valid') else 'invalid'}; abstracted so far: {' '.join(abstracted) or '(none)'}")
     log(a.story, a.log, stage="refine-check", ok=not out, note=" | ".join(out)[:1000])
     return verdict_out(out, "ok: the layers refine " + ("the beat story" if complete else "a prefix of the beat story"))
+
+
+# ---------------------------------------------------------------------------- chained chapters
+
+def end_state(d: Path) -> dict:
+    r = langlib("end", str(d), timeout=600)
+    return json.loads(r.stdout)
+
+
+def opening_of(spec: dict) -> dict:
+    """A story's opening in the shape `langlib end` prints, for comparison."""
+    st, x, c = spec.get("start", {}), spec.get("ext", {}).get("start", {}), spec.get("consent", {})
+    norm = lambda xs: sorted(map(json.dumps, xs))
+    return {"at": st.get("at", {}), "holds": st.get("holds", {}), "objAt": st.get("objAt", {}),
+            "bonds": {k: {d: n for d, n in v.items() if n} for k, v in st.get("bonds", {}).items()},
+            "knows": {k: sorted(set(v)) for k, v in st.get("knows", {}).items()},
+            "goals": {k: sorted(v) for k, v in st.get("goals", {}).items()},
+            "states": {a["id"]: a.get("truth", False) for a in spec.get("atoms", []) if a.get("state")},
+            "ext": {k: (sorted(map(json.dumps, [[c_, sorted(v)] for c_, v in x.get(k, {}).items()]))
+                        if k == "needs" else norm(x.get(k, [])))
+                    for k in ["needs", "ties", "names", "pron", "secrets", "feels", "examined", "recognised",
+                              "data", "dismissed", "conceded"]},
+            "never": {k: sorted(v) for k, v in c.get("never", {}).items()},
+            "relations": norm(c.get("relations", []))}
+
+
+def end_as_opening(e: dict) -> dict:
+    st = e["start"]
+    return opening_of({"start": st, "atoms": [{"id": k, "state": True, "truth": v} for k, v in e["states"].items()],
+                       "ext": {"start": e["ext"]}, "consent": e["consent"]})
+
+
+def chain_objections(st: Story) -> list[str]:
+    """A chapter that continues another (story.json "after") must open exactly where it ends."""
+    prev = st.spec.get("after")
+    if not prev:
+        return []
+    pd = (st.d.parent / prev).resolve()
+    try:
+        want = end_as_opening(end_state(pd))
+    except (json.JSONDecodeError, FileNotFoundError, KeyError) as e:
+        return [f"chain: cannot read the end of {prev}: {e}"]
+    got = opening_of(st.spec)
+    got["states"] = {k: v for k, v in got["states"].items() if k in want["states"]}
+    out = []
+    for k in want:
+        if want[k] != got[k]:
+            out.append(f"chain: the opening's {k} is not where {prev} ends: it should be {json.dumps(want[k])[:600]}, "
+                       f"it is {json.dumps(got[k])[:600]} (`chain {prev} {st.d.name}` rewrites it)")
+    return out
+
+
+def cmd_chain(a) -> int:
+    """Open `next` where `prev` ends: its start, state atoms, ext opening and consent history."""
+    e = end_state(a.prev)
+    f = a.next / "story.json"
+    spec = json.loads(f.read_text())
+    st = e["start"]
+    spec["after"] = a.prev.name
+    spec["start"] = {k: v for k, v in {**spec.get("start", {}), **st}.items() if v or k in st}
+    for at in spec.get("atoms", []):
+        if at.get("state") and at["id"] in e["states"]:
+            at["truth"] = e["states"][at["id"]]
+    spec.setdefault("ext", {})["start"] = e["ext"]
+    spec["consent"] = {**spec.get("consent", {}), **e["consent"]}
+    f.write_text(json.dumps(spec, indent=1, ensure_ascii=False) + "\n")
+    out = chain_objections(Story(a.next))
+    return verdict_out(out, f"ok: {a.next.name} opens where {a.prev.name} ends")
+
+
+def cmd_chain_check(a) -> int:
+    st = Story(a.story)
+    if not st.spec.get("after"):
+        return verdict_out([], "ok: not a continuation")
+    out = chain_objections(st)
+    log(a.story, a.log, stage="chain-check", ok=not out, note=" | ".join(out)[:1000])
+    return verdict_out(out, f"ok: opens where {st.spec['after']} ends")
 
 
 def server_prove(d: Path, timeout: float) -> dict | None:
@@ -662,6 +770,11 @@ def main() -> int:
         "--local", action="store_true", help="prove here even if the Studio is running")
     story_cmd("ext-prove", cmd_ext_prove, help="ties, care and identity (story.json \"ext\"): check and prove Ext.lean")
     story_cmd("summary", cmd_summary, help="summarise a workflow's run log").add_argument("workflow")
+    story_cmd("chain-check", cmd_chain_check, help="the opening is where the chapter before ends")
+    chp = sub.add_parser("chain", help="open the next chapter where the previous one ends")
+    chp.add_argument("prev", type=lambda s: Path(s).resolve())
+    chp.add_argument("next", type=lambda s: Path(s).resolve())
+    chp.set_defaults(fn=cmd_chain, log=None)
     lp = story_cmd("log", cmd_log, help="append a step to runs/WORKFLOW.jsonl")
     lp.add_argument("workflow")
     lp.add_argument("stage")
