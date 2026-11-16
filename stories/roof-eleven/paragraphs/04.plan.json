@@ -1,0 +1,29 @@
+{
+ "beat": "misread",
+ "events": [
+  "move kiran lab",
+  "adopt mara at(mara,lab)",
+  "move mara lab",
+  "adopt mara holds(mara,note)",
+  "take mara note",
+  "notice mara noteForMara inferred",
+  "tell mara kiran theoLikesMara"
+ ],
+ "claims": [
+  "falseBelief mara noteForMara",
+  "holds mara note"
+ ],
+ "setting": [
+  "lab",
+  "shelf",
+  "note",
+  "charger",
+  "mdesk"
+ ],
+ "ext": [
+  "feel kiran hurt",
+  "examine kiran hurt",
+  "seek mara kiran reassurance",
+  "tend kiran mara reassurance"
+ ]
+}

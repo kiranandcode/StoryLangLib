@@ -1,0 +1,22 @@
+{
+ "beat": "note",
+ "events": [
+  "intend kiran coffeeRun",
+  "move kiran kitchen",
+  "intend theo theNote",
+  "drop theo note",
+  "move theo roof"
+ ],
+ "claims": [
+  "at kiran kitchen",
+  "at theo roof"
+ ],
+ "setting": [
+  "kitchen",
+  "coffeemachine",
+  "mug",
+  "shelf",
+  "note",
+  "stairs"
+ ]
+}

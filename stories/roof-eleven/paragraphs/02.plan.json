@@ -1,0 +1,18 @@
+{
+ "beat": "spark",
+ "events": [
+  "flirt theo kiran"
+ ],
+ "claims": [
+  "bond kiran theo attraction >= 2"
+ ],
+ "setting": [
+  "tdesk",
+  "whiteboard",
+  "mug"
+ ],
+ "ext": [
+  "feel kiran affection",
+  "examine kiran affection"
+ ]
+}

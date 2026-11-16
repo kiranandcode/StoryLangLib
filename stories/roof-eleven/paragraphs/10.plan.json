@@ -1,0 +1,26 @@
+{
+ "beat": "kiss",
+ "events": [
+  "act kiran theo kiss",
+  "notice kiran kiranLikesTheo sensed",
+  "tell kiran theo kiranLikesTheo"
+ ],
+ "claims": [
+  "knows kiran kiranLikesTheo",
+  "knows theo kiranLikesTheo"
+ ],
+ "setting": [
+  "tank"
+ ],
+ "ext": [
+  "feel kiran desire",
+  "examine kiran desire",
+  "recognise kiran desire",
+  "recognise kiran affection",
+  "own kiran desire"
+ ],
+ "consent": [
+  "act kiran theo kiss",
+  "act theo kiran kiss"
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "beat": "maraUp",
+ "events": [
+  "adopt mara at(mara,roof)",
+  "move mara roof"
+ ],
+ "claims": [
+  "at mara roof",
+  "at kiran lab"
+ ],
+ "setting": [
+  "window",
+  "laptop"
+ ],
+ "ext": [
+  "examine kiran hurt",
+  "examine kiran hurt"
+ ]
+}

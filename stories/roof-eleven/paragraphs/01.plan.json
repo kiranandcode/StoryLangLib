@@ -1,0 +1,30 @@
+{
+ "beat": "lingers",
+ "events": [
+  "adopt theo at(theo,lab)",
+  "move theo lab",
+  "notice kiran theoReturns inferred",
+  "tell theo kiran kiranUnfed",
+  "adopt kiran !kiranUnfed",
+  "make kiran !kiranUnfed"
+ ],
+ "claims": [
+  "at kiran lab",
+  "true clusterHum",
+  "knows kiran theoReturns"
+ ],
+ "setting": [
+  "lab",
+  "kdesk",
+  "rack",
+  "labdoor",
+  "noodles",
+  "whiteboard"
+ ],
+ "ext": [
+  "point theo kiran kiran food",
+  "offer theo kiran food",
+  "accept kiran theo food",
+  "tend theo kiran food"
+ ]
+}
