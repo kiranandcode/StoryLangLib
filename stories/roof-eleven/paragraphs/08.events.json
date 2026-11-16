@@ -1,0 +1,175 @@
+{
+ "text_sha": "9a9ea11dc47819f5",
+ "world_sha": "1d34e4a07f121afa",
+ "events": [
+  {
+   "e": "ask kiran theo noteForKiran",
+   "at": 24,
+   "w": "for",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "answer theo kiran noteForKiran",
+   "at": 31,
+   "w": "for",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell theo kiran theoLikesKiran",
+   "at": 61,
+   "w": "want",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell theo kiran theoReturns",
+   "at": 67,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran theoLikesKiran sensed",
+   "at": 77,
+   "w": "watched",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "confide kiran theo",
+   "at": 101,
+   "w": "gave",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "holds kiran note",
+   "at": 11,
+   "w": "holding"
+  },
+  {
+   "c": "knows kiran theoLikesKiran",
+   "at": 96,
+   "w": "came"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 3,
+   "w": "had"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 24,
+   "w": "for"
+  },
+  {
+   "c": "holds kiran note",
+   "at": 31,
+   "w": "for"
+  }
+ ],
+ "judge": [
+  {
+   "at": 9,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 17,
+   "w": "read",
+   "kind": "speech"
+  },
+  {
+   "at": 36,
+   "w": "winced",
+   "kind": "act"
+  },
+  {
+   "at": 40,
+   "w": "told",
+   "kind": "speech"
+  },
+  {
+   "at": 46,
+   "w": "got",
+   "kind": "speech"
+  },
+  {
+   "at": 56,
+   "w": "look",
+   "kind": "act"
+  },
+  {
+   "at": 82,
+   "w": "spoke",
+   "kind": "act"
+  },
+  {
+   "at": 88,
+   "w": "watch",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 112,
+   "w": "leaned",
+   "kind": "act"
+  },
+  {
+   "at": 120,
+   "w": "lost",
+   "kind": "act"
+  },
+  {
+   "at": 130,
+   "w": "wants",
+   "kind": "speech"
+  },
+  {
+   "at": 137,
+   "w": "make",
+   "kind": "speech"
+  },
+  {
+   "at": 140,
+   "w": "go",
+   "kind": "speech"
+  },
+  {
+   "at": 143,
+   "w": "explaining",
+   "kind": "speech"
+  },
+  {
+   "at": 148,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 152,
+   "w": "tried",
+   "kind": "speech"
+  },
+  {
+   "at": 159,
+   "w": "got",
+   "kind": "speech"
+  },
+  {
+   "at": 165,
+   "w": "said",
+   "kind": "act"
+  }
+ ],
+ "staging": [],
+ "ext": [
+  {
+   "e": "examine kiran affection",
+   "at": 101,
+   "w": "gave"
+  }
+ ]
+}

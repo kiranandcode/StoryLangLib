@@ -2,6 +2,7 @@
  "beat": "confess",
  "events": [
   "ask kiran theo noteForKiran",
+  "answer theo kiran noteForKiran",
   "tell theo kiran theoLikesKiran",
   "tell theo kiran theoReturns",
   "notice kiran theoLikesKiran sensed",
