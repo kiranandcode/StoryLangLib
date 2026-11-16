@@ -19,6 +19,7 @@ if [ ! -x .venv/bin/uvicorn ]; then
 fi
 [ -d web/node_modules ] || (cd web && npm install --silent)
 
+echo "$STUDIO_API_PORT" > .api-port
 .venv/bin/uvicorn server:app --reload --reload-exclude 'workflows.py' --reload-exclude '.pgids' --reload-exclude 'web/*' --reload-exclude '.venv/*' --timeout-graceful-shutdown 1 --port "$STUDIO_API_PORT" --log-level warning &
 API=$!
 (cd web && exec npx vite --port "$STUDIO_PORT" --strictPort --clearScreen false) &

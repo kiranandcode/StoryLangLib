@@ -49,7 +49,15 @@ import freshness  # noqa: E402
 import proofs  # noqa: E402
 from procs import ROOT  # noqa: E402
 
-SERVER = "http://127.0.0.1:8765"
+def _api_port() -> str:
+    """The running Studio's API port: studio/run.sh records it (8765 can be taken)."""
+    try:
+        return (Path(__file__).resolve().parent / ".api-port").read_text().strip() or "8765"
+    except OSError:
+        return "8765"
+
+
+SERVER = f"http://127.0.0.1:{_api_port()}"
 
 EVENT_SYNTAX = """\
 Events are one line each: a verb, then ids.
