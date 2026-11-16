@@ -1,0 +1,22 @@
+entity apple object it "the apple" generic
+entity saying abstract it "the saying"
+topic t1 "the saying" saying
+(S%t1
+  (NP.nsubj@saying The/DET.det saying/NOUN.head
+     (QUOTE.appos "/PUNCT
+        (S.head (NP.nsubj@apple An/DET.det apple/NOUN.head (NP.nmod a/DET.det day/NOUN.head))
+           (VP.head keeps/VERB.head=keep{Fin,Pres} (NP.obj the/DET.det doctor/NOUN.head) away/ADV.advmod))
+        "/PUNCT))
+  (VP.head is/AUX.cop=be{Fin,Pres} (NP.head an/DET.det exaggeration/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (S.head (NP.nsubj@apple Apples/NOUN.head)
+     (VP.head can/AUX.aux be/AUX.cop{Inf}
+        (NP.head part/NOUN.head (PP.nmod of/ADP.case a/DET.det balanced/ADJ.amod diet/NOUN.head))))
+  ,/PUNCT but/CCONJ.cc
+  (S.conj (NP.nsubj no/DET.det single/ADJ.amod fruit/NOUN.head)
+     (COORD.head
+        (VP.conj guarantees/VERB.head=guarantee{Fin,Pres} (NP.obj good/ADJ.amod health/NOUN.head))
+        or/CCONJ.cc
+        (VP.conj prevents/VERB.head=prevent{Fin,Pres} (NP.obj disease/NOUN.head))))
+  ./PUNCT)

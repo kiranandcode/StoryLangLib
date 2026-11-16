@@ -1,0 +1,25 @@
+entity apple object it "the apple" generic
+entity growers group they "growers"
+entity orchards place they "apple orchards"
+topic t1 "growing apples" growers
+(S%t1
+  (NP.nsubj@growers Growers/NOUN.head)
+  (VP.head fight/VERB.head{Fin,Pres}
+     (NP.obj diseases/NOUN.head
+        (PP.nmod such/ADJ.case as/ADP.fixed
+           (COORD.head (NP.conj apple/NOUN.compound scab/NOUN.head) and/CCONJ.cc (NP.conj fire/NOUN.compound blight/NOUN.head))))
+     (PP.obl@orchards in/ADP.case their/PRON.poss@growers orchards/NOUN.head)
+     ,/PUNCT
+     (PP.obl as/ADV.cc well/ADV.fixed as/ADP.fixed insect/NOUN.compound pests/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@growers They/PRON.head)
+  (VP.head have/VERB.head{Fin,Pres}
+     (VP.xcomp to/PART.mark keep/VERB.head{Inf} (NP.obj yields/NOUN.head) up/ADV.advmod
+        (SBAR.advcl while/SCONJ.mark
+           (COORD.head
+              (VP.conj limiting/VERB.head=limit{Ger} (NP.obj pesticide/NOUN.compound use/NOUN.head))
+              and/CCONJ.cc
+              (VP.conj looking/VERB.head=look{Ger}
+                 (PP.obl after/ADP.case their/PRON.poss@growers (COORD.head soil/NOUN.conj and/CCONJ.cc water/NOUN.conj)))))))
+  ./PUNCT)

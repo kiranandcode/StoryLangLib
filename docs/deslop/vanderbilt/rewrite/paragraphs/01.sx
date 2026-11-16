@@ -1,0 +1,16 @@
+entity authors group they "the Peabody EDI office"
+entity shootings event they "the Michigan State shootings"
+entity everyone group they "everyone at Peabody"
+entity care abstract it "taking care of each other"
+topic t1 "responding to the shootings" shootings
+(S%t1
+  (PP.obl@shootings After/ADP.case the/DET.det recent/ADJ.amod shootings/NOUN.head
+     (PP.nmod in/ADP.case Michigan/PROPN.head))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head want/VERB.head{Fin,Pres}
+     (VP.xcomp to/PART.mark ask/VERB.head{Inf}
+        (NP.obj@everyone everyone/PRON.head (PP.nmod at/ADP.case Peabody/PROPN.head))
+        (VP.xcomp@care to/PART.mark take/VERB.head{Inf} care/NOUN.obj
+           (PP.obl of/ADP.case each/DET.det other/PRON.head))))
+  ./PUNCT)

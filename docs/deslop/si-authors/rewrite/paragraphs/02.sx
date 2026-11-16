@@ -1,0 +1,15 @@
+entity sora person she "Sora Tanaka"
+entity team group it "the Product Reviews Team"
+topic t1 "Sora" sora
+(S%t1
+  (NP.nsubj@sora Sora/PROPN.head Tanaka/PROPN.flat)
+  (VP.head covers/VERB.head=cover{Fin,Pres}
+     (COORD.obj fitness/NOUN.conj and/CCONJ.cc nutrition/NOUN.conj)
+     (PP.obl@team for/ADP.case the/DET.det Product/PROPN.compound Reviews/PROPN.compound Team/PROPN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sora She/PRON.head)
+  (VP.head likes/VERB.head=like{Fin,Pres}
+     (VP.xcomp trying/VERB.head=try{Ger}
+        (NP.obj new/ADJ.amod (COORD.head foods/NOUN.conj and/CCONJ.cc drinks/NOUN.conj))))
+  ./PUNCT)

@@ -1,0 +1,23 @@
+entity apple object it "the apple" generic
+entity china place it "China"
+entity production abstract it "apple production"
+topic t1 "who grows apples" production
+(S%t1
+  (NP.nsubj@production Apple/NOUN.compound production/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head a/DET.det major/ADJ.amod component/NOUN.head
+        (PP.nmod of/ADP.case the/DET.det global/ADJ.amod fruit/NOUN.compound industry/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (S.head (NP.nsubj@china China/PROPN.head)
+     (VP.head is/AUX.cop=be{Fin,Pres}
+        (NP.head the/DET.det world's/NOUN.poss largest/ADJ.amod producer/NOUN.head)))
+  ,/PUNCT
+  (SBAR.advcl while/SCONJ.mark
+     (S.head
+        (NP.nsubj countries/NOUN.head
+           (PP.nmod including/ADP.case
+              (COORD.head (NP.conj the/DET.det United/PROPN.compound States/PROPN.head) ,/PUNCT Türkiye/PROPN.conj ,/PUNCT Poland/PROPN.conj ,/PUNCT and/CCONJ.cc India/PROPN.conj)))
+        (VP.head also/ADV.advmod maintain/VERB.head{Fin,Pres}
+           (NP.obj substantial/ADJ.amod apple-growing/ADJ.amod industries/NOUN.head))))
+  ./PUNCT)

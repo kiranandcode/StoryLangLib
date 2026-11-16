@@ -1,0 +1,57 @@
+{
+ "assumptions": {
+  "reg": "neutral"
+ },
+ "community": {
+  "reg": "neutral"
+ },
+ "experiences": {
+  "reg": "neutral"
+ },
+ "shootings": {
+  "reg": "neutral"
+ },
+ "differ": {
+  "reg": "neutral"
+ },
+ "keep": {
+  "reg": "neutral"
+ },
+ "mean": {
+  "reg": "neutral"
+ },
+ "reach": {
+  "reg": "neutral"
+ },
+ "show": {
+  "reg": "neutral"
+ },
+ "start": {
+  "reg": "neutral"
+ },
+ "feel": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "join": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "listen": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "talk": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "watch": {
+  "cls": [
+   "animate"
+  ]
+ }
+}

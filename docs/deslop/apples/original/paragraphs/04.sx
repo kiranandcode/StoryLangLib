@@ -1,0 +1,35 @@
+entity apple object it "the apple" generic
+entity grafting abstract it "grafting"
+entity trees object they "apple trees"
+entity growers group they "growers"
+topic t1 "grafting" grafting
+(S%t1
+  (NP.nsubj Modern/ADJ.amod apple/NOUN.compound cultivation/NOUN.head)
+  (VP.head relies/VERB.head=rely{Fin,Pres} heavily/ADV.advmod
+     (PP.obl@grafting on/ADP.case grafting/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (PP.obl Unlike/ADP.case many/ADJ.amod agricultural/ADJ.amod crops/NOUN.head)
+  ,/PUNCT
+  (NP.nsubj@trees apple/NOUN.compound trees/NOUN.head
+     (VP.acl grown/VERB.head=grow{Part} (PP.obl from/ADP.case seeds/NOUN.head)))
+  (VP.head do/AUX.aux{Fin,Pres} not/PART.advmod reliably/ADV.advmod reproduce/VERB.head{Inf}
+     (NP.obj the/DET.det characteristics/NOUN.head
+        (PP.nmod of/ADP.case their/PRON.poss@trees parents/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  Consequently/ADV.advmod ,/PUNCT
+  (NP.nsubj@growers growers/NOUN.head)
+  (VP.head propagate/VERB.head{Fin,Pres}
+     (NP.obj desirable/ADJ.amod varieties/NOUN.head)
+     (PP.obl by/ADP.mark
+        (VP.head attaching/VERB.head=attach{Ger} (NP.obj branches/NOUN.head)
+           (PP.obl to/ADP.case compatible/ADJ.amod rootstocks/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@grafting This/DET.det technique/NOUN.head)
+  (VP.head preserves/VERB.head=preserve{Fin,Pres}
+     (NP.obj particular/ADJ.amod combinations/NOUN.head
+        (PP.nmod of/ADP.case (COORD.head flavor/NOUN.conj ,/PUNCT texture/NOUN.conj ,/PUNCT and/CCONJ.cc appearance/NOUN.conj)))
+     (PP.obl across/ADP.case generations/NOUN.head))
+  ./PUNCT)

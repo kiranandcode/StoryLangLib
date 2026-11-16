@@ -1,0 +1,27 @@
+entity apple object it "the apple" generic
+entity humans group they "humans"
+entity routes object they "trade routes"
+entity silkroad object it "the Silk Road"
+topic t1 "how apples spread" apple
+(S%t1
+  (SBAR.advcl As/SCONJ.mark
+     (S.head (NP.nsubj@humans humans/NOUN.head)
+        (COORD.head (VP.conj migrated/VERB.head=migrate{Fin,Past}) and/CCONJ.cc
+           (VP.conj established/VERB.head=establish{Fin,Past} (NP.obj@routes trade/NOUN.compound routes/NOUN.head)))))
+  ,/PUNCT
+  (NP.nsubj@apple apples/NOUN.head)
+  (VP.head spread/VERB.head{Fin,Past}
+     (COORD.obl (ADVP.conj westward/ADV.head (PP.obl into/ADP.case Europe/PROPN.head)) and/CCONJ.cc
+        (ADVP.conj eastward/ADV.head (PP.obl across/ADP.case Asia/PROPN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@silkroad The/DET.det Silk/PROPN.compound Road/PROPN.head)
+  (VP.head facilitated/VERB.head=facilitate{Fin,Past}
+     (NP.obj their/PRON.poss@apple dispersal/NOUN.head)
+     ,/PUNCT
+     (VP.advcl allowing/VERB.head=allow{Ger}
+        (NP.obj different/ADJ.amod apple/NOUN.compound populations/NOUN.head)
+        (VP.xcomp to/PART.mark
+           (COORD.head (VP.conj hybridize/VERB.head{Inf}) and/CCONJ.cc
+              (VP.conj develop/VERB.head{Inf} (NP.obj new/ADJ.amod characteristics/NOUN.head))))))
+  ./PUNCT)

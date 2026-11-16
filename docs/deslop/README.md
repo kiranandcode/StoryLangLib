@@ -1,15 +1,23 @@
-# Verified deslopify: four examples from Wikipedia
+# Verified deslopify: eight examples of LLM text
 
-Four passages of real LLM-written text, quoted as examples in Wikipedia's
-guide [Signs of AI writing](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1385890265),
-were each annotated as a langlib document, checked against Kiran's house
-style, rewritten until every rule held, and checked again. The
+Seven passages of real, published LLM-written text were each annotated as a
+langlib document, checked against Kiran's house style, rewritten until every
+rule held, and checked again. Three are notorious: the email Vanderbilt's
+Peabody College sent after the 2023 Michigan State shooting (it credited
+ChatGPT at the bottom), a Wikipedia paragraph about the Algerian town of
+Douera, and the bios of Sports Illustrated's AI-generated product reviewers.
+Four milder ones are quoted in Wikipedia's guide
+[Signs of AI writing](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1385890265). The
 `verified-deslopify` skill (`~/.claude/skills/verified-deslopify`) runs the
 same loop on any text.
 
 | example | source | words before / after | rules holding before | after |
 |:--|:--|--:|--:|--:|
-| [Statistical Institute of Catalonia](idescat/comparison.md) | article, Sept 2024 | 65 / 47 | 29/33 | 33/33 |
+| [Vanderbilt's email after the Michigan State shooting](vanderbilt/comparison.md) | university email, Feb 2023 | 294 / 137 | 28/33 | 33/33 |
+| [Douera](douera/comparison.md) | Wikipedia article, June 2023 | 79 / 23 | 30/33 | 33/33 |
+| [Sports Illustrated's AI author bios](si-authors/comparison.md) | magazine website, 2023 | 98 / 35 | 32/33 | 33/33 |
+| [Apples](apples/comparison.md) | LLM explainer pasted by Kiran, Nov 2026 | 692 / 462 | 27/33 | 33/33 |
+| [Statistical Institute of Catalonia](idescat/comparison.md) | article, Sept 2024 | 65 / 50 | 29/33 | 33/33 |
 | [McAllen Texas Temple](temple/comparison.md) | article, Nov 2024 | 105 / 49 | 28/33 | 33/33 |
 | [Somali cuisine](somali/comparison.md) | article, May 2025 | 118 / 61 | 28/33 | 33/33 |
 | [Northern English nationalism](northern/comparison.md) | deletion discussion, Aug 2025 | 121 / 126 | 25/33 | 33/33 |
@@ -43,14 +51,27 @@ rule that failed with the sentences it flagged).
 
 The originals were annotated before any rewriting, with the same conventions
 as the rewrites. Each rewrite was drafted against the rules and passed on its
-first run, once its word classes were decided and one missing pronoun
-referent was added.
+first run, once its word classes were decided and two missing pronoun
+referents were added. Extending the inanimate-actor rule to places (below)
+later failed the Idescat rewrite, whose "Catalonia founded" made a place the
+founder; it now names Catalonia's regional government.
 
 ## What the rewrites dropped
 
 Deslopping these texts mostly means deleting claims, because most of the slop
 is significance asserted without a source. The rewrites keep every concrete
 fact and drop:
+
+- Vanderbilt: "a tragic reminder of the importance of", "one of the key
+  ways", "another important aspect", "an ongoing process that requires
+  ongoing effort", "a safer, more compassionate future for all". Every
+  request the email makes of its readers survives, as a request.
+- Douera: "a lively community", "a dynamic hub of activity and culture",
+  "coastal charm", "captivates both residents and visitors alike", "stunning
+  natural beauty". What is left is the census figure and the location.
+- Sports Illustrated: "never-ending list", "perils of nature", "fitness
+  guru", "thrilled", "the best of the best". The rewrite cannot remove the
+  fabrication: neither author exists.
 
 - Idescat: "a pivotal moment", "a significant shift" and "regional
   statistical independence" (puffery). The decentralisation context stays.
@@ -65,13 +86,13 @@ fact and drop:
   survives, restated without the negative parallelisms ("isn't just X—it's
   Y"), and the rewrite is slightly longer.
 
-The rewrites name actors the originals left implicit: "Catalonia founded",
-"Somalis consider", "Editors have dismissed". Each actor is the one the
+The rewrites name actors the originals left implicit: "Catalonia's regional
+government founded", "Somalis consider", "Editors have dismissed". Each actor is the one the
 original's passive or nominalisation implies.
 
 ## What the rules missed, and what was added
 
-Annotating the originals showed what the rules missed. Four of those gaps are now closed:
+Annotating the originals showed what the rules missed. Five of those gaps are now closed:
 
 | escape | example | now |
 |:--|:--|:--|
@@ -79,6 +100,7 @@ Annotating the originals showed what the rules missed. Four of those gaps are no
 | significance words counted only in sentences of six words or fewer | "marking a pivotal moment", "represented a significant shift" | `abstractSig`: a `significance` modifier on a `vague` head noun (`moment`, `shift`, `role`, `elements`, ...) |
 | an inanimate subject of the second of two coordinated verbs | "They are considered a delicacy and serve as ... elements" | the inanimate-actor rule reads every active conjunct |
 | copula avoidance ("serves as", "stands as") is never copular, so the inflation rule could not fire | "the temple stands as a counter-symbol" | `serve`, `stand`, `boast`, `underscore` and similar are `animate`, so an inanimate subject fails "no inanimate actors" |
+| places doing what people do | "Douera enjoys close proximity", "Douera captivates both residents and visitors alike" | a `place` entity counts as inanimate, like `object` and `abstract` |
 
 Still missed:
 
@@ -94,7 +116,14 @@ Still missed:
   `langlib academic` ("Dismissing these as "not notable" ... while ..."). The
   rewrite removed it, so no justification was needed.
 - Empty phrases built from neutral words ("a multitude of", "a direct
-  result of", "symbolic features").
+  result of", "symbolic features", "a tragic reminder of the importance of").
+- Manufactured enthusiasm: "is excited to guide you", "is thrilled to bring
+  her expertise", "promises to bring you nothing but". The Sports Illustrated
+  bios fail only on vocabulary ("never-ending", "the best of the best"),
+  which is why they score highest of the seven before rewriting.
+- Platitudes with a person as subject: the Vanderbilt email's "We must
+  continue to engage in conversations about how we can do better" breaks no
+  rule. Its actors are people, its verbs are actions, and it says nothing.
 
 ## Reproducing
 

@@ -1,0 +1,395 @@
+{
+ "title": "original",
+ "paragraphs": 23,
+ "sentences": 46,
+ "annotation": [],
+ "lexiconOverrides": [
+  "literally: drops intensifier"
+ ],
+ "rules": [
+  {
+   "style": "clarity",
+   "name": "characters: few agentless passives",
+   "rule": "agentless / clauses ≤ 1/10",
+   "holds": true,
+   "at": [
+    {
+     "at": "7:1",
+     "sentence": "However, the familiar saying, \"An apple a day keeps the doctor away,\" should not be interpreted literally."
+    },
+    {
+     "at": "10:1",
+     "sentence": "In European Christian art, the forbidden fruit from the Garden of Eden is commonly represented as an apple, although the biblical text does not identify its species."
+    }
+   ]
+  },
+  {
+   "style": "clarity",
+   "name": "actions: few hidden in nouns",
+   "rule": "hiddenAction / sents ≤ 1/20",
+   "holds": true,
+   "at": [
+    {
+     "at": "23:1",
+     "sentence": "A deeper examination of apple domestication and genetics would provide a particularly interesting extension of this subject."
+    }
+   ]
+  },
+  {
+   "style": "clarity",
+   "name": "no inanimate actors",
+   "rule": "inanimate ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "7:1",
+     "sentence": "However, the familiar saying, \"An apple a day keeps the doctor away,\" should not be interpreted literally."
+    },
+    {
+     "at": "12:1",
+     "sentence": "These examples demonstrate how an ordinary agricultural product can become a powerful cultural symbol."
+    },
+    {
+     "at": "21:1",
+     "sentence": "The apple illustrates the complex relationship between human societies and cultivated plants."
+    }
+   ]
+  },
+  {
+   "style": "clarity",
+   "name": "few noun stacks",
+   "rule": "nounStacks / sents ≤ 1/10",
+   "holds": true,
+   "at": [
+    {
+     "at": "15:3",
+     "sentence": "Changes in winter temperatures, spring frost patterns, and rainfall may affect the suitability of established growing regions."
+    }
+   ]
+  },
+  {
+   "style": "clarity",
+   "name": "point first",
+   "rule": "buried / sents ≤ 1/20",
+   "holds": true,
+   "at": [
+    {
+     "at": "1:3",
+     "sentence": "From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization."
+    }
+   ]
+  },
+  {
+   "style": "clarity",
+   "name": "no stacked asides",
+   "rule": "stacked / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no non-sequitur stacks",
+   "rule": "nonSequiturs / sents ≤ 1/10",
+   "holds": false,
+   "at": [
+    {
+     "at": "4:4",
+     "sentence": "This technique preserves particular combinations of flavor, texture, and appearance across generations."
+    },
+    {
+     "at": "14:2",
+     "sentence": "Apple orchards are vulnerable to diseases such as apple scab and fire blight, as well as insect pests."
+    },
+    {
+     "at": "14:3",
+     "sentence": "Growers must balance productivity with environmental considerations, including pesticide use, soil health, and water consumption."
+    },
+    {
+     "at": "15:2",
+     "sentence": "Apple trees require particular temperature conditions for flowering and fruit development."
+    },
+    {
+     "at": "15:3",
+     "sentence": "Changes in winter temperatures, spring frost patterns, and rainfall may affect the suitability of established growing regions."
+    },
+    {
+     "at": "17:2",
+     "sentence": "Thousands of named cultivars exist, exhibiting substantial variation in sweetness, acidity, firmness, color, and aroma."
+    },
+    {
+     "at": "19:2",
+     "sentence": "Wild apple populations are particularly valuable reservoirs of resistance to diseases and tolerance of environmental stress."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no slop emphasis",
+   "rule": "slopEmphasis ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no throat-clearing",
+   "rule": "throat ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no understated inflation",
+   "rule": "inflation ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no tricolon with semicolons",
+   "rule": "tricolons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no deferred assertion",
+   "rule": "pseudoClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no emphatic cleft",
+   "rule": "itClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few observation-and-response joins",
+   "rule": "andJoins / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no mechanical tetracolon",
+   "rule": "tetracola ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no sentence-initial conjunctions",
+   "rule": "initialConj ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no buzz words",
+   "rule": "buzz ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no empty intensifiers",
+   "rule": "intensifiers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "British spelling",
+   "rule": "usSpelling ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:1",
+     "sentence": "The apple is one of the most widely cultivated and recognizable fruits in the world."
+    },
+    {
+     "at": "1:3",
+     "sentence": "From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization."
+    },
+    {
+     "at": "3:2",
+     "sentence": "The Silk Road facilitated their dispersal, allowing different apple populations to hybridize and develop new characteristics."
+    },
+    {
+     "at": "4:4",
+     "sentence": "This technique preserves particular combinations of flavor, texture, and appearance across generations."
+    },
+    {
+     "at": "5:1",
+     "sentence": "Apples provide dietary fiber, vitamin C, and various plant compounds, including polyphenols."
+    },
+    {
+     "at": "5:2",
+     "sentence": "Their soluble fiber, particularly pectin, contributes to digestive health and may help regulate cholesterol levels."
+    },
+    {
+     "at": "6:2",
+     "sentence": "Its high water content and fiber contribute to satiety."
+    },
+    {
+     "at": "9:1",
+     "sentence": "In Greek mythology, golden apples appear in several stories, including the judgment of Paris and the labors of Heracles."
+    },
+    {
+     "at": "9:2",
+     "sentence": "They frequently symbolize beauty, desire, immortality, or conflict."
+    },
+    {
+     "at": "16:1",
+     "sentence": "Breeding programs increasingly seek varieties that combine disease resistance, climate resilience, desirable flavor, and long storage life."
+    },
+    {
+     "at": "17:2",
+     "sentence": "Thousands of named cultivars exist, exhibiting substantial variation in sweetness, acidity, firmness, color, and aroma."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no appositive-trailing cadence",
+   "rule": "trailingCadence ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no dramatic terminal sentences",
+   "rule": "dramaticTerminal ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summarising pivots",
+   "rule": "summarisingPivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summary closers",
+   "rule": "summaryClosers ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "4:4",
+     "sentence": "This technique preserves particular combinations of flavor, texture, and appearance across generations."
+    },
+    {
+     "at": "11:3",
+     "sentence": "Although popular retellings embellish the incident, Newton himself reportedly described an apple falling as an inspiration for his thinking."
+    },
+    {
+     "at": "21:3",
+     "sentence": "Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare pivot bridges",
+   "rule": "barePivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no spurious contrasts",
+   "rule": "spuriousContrasts ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "4:2",
+     "sentence": "Unlike many agricultural crops, apple trees grown from seeds do not reliably reproduce the characteristics of their parents."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare relative clauses",
+   "rule": "bareRelatives ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no not-X-dash-Y",
+   "rule": "negDashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no abstract significance",
+   "rule": "abstractSig ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:3",
+     "sentence": "From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization."
+    },
+    {
+     "at": "17:1",
+     "sentence": "One of the most remarkable features of apples is their genetic diversity."
+    }
+   ]
+  },
+  {
+   "style": "llmisms",
+   "name": "no em-dashes",
+   "rule": "dashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no dramatic colons",
+   "rule": "dramaticColons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no rhetorical questions",
+   "rule": "rhetorical ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no not-X-but-Y (unless it denies what the text put forward)",
+   "rule": "negTurns not in contrasts.json ≤ 0",
+   "holds": true,
+   "at": [],
+   "justified": {}
+  },
+  {
+   "style": "annotation",
+   "name": "every word class the rules read is decided",
+   "rule": "audit items ≤ 0",
+   "holds": true,
+   "at": []
+  }
+ ],
+ "audit": {
+  "nouns that may hide an action (nominal?)": [],
+  "verbs (animate: only a person does it?)": [],
+  "spellings to confirm British": [],
+  "verbs without VerbForm": []
+ },
+ "certified": false,
+ "counts": {
+  "sents": 46,
+  "clauses": 76,
+  "agentless": 2,
+  "bareAsides": 0,
+  "words": 692
+ }
+}

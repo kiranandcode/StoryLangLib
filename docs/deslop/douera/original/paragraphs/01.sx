@@ -1,0 +1,45 @@
+entity douera place it "Douera"
+entity population abstract it "the population of Douera"
+entity algiers place it "Algiers"
+topic t1 "Douera" douera
+(S%t1
+  (PP.obl As/ADP.case of/ADP.fixed the/DET.det April/PROPN.compound 2008/NUM.compound census/NOUN.head)
+  ,/PUNCT
+  (NP.nsubj@population the/DET.det population/NOUN.head (PP.nmod@douera of/ADP.case Douera/PROPN.head))
+  (VP.head stood/VERB.head=stand{Fin,Past}
+     (PP.obl at/ADP.case approximately/ADV.advmod 56,998/NUM.nummod inhabitants/NOUN.head)
+     ,/PUNCT
+     (VP.advcl creating/VERB.head=create{Ger}
+        (NP.obj a/DET.det lively/ADJ.amod community/NOUN.head
+           (PP.nmod within/ADP.case its/PRON.poss@douera borders/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (VP.advcl Situated/VERB.head=situate{Part}
+     (PP.obl in/ADP.case the/DET.det central-north/ADJ.amod region/NOUN.head
+        (PP.nmod of/ADP.case the/DET.det country/NOUN.head)))
+  ,/PUNCT
+  (NP.nsubj@douera Douera/PROPN.head)
+  (VP.head enjoys/VERB.head=enjoy{Fin,Pres}
+     (NP.obj close/ADJ.amod proximity/NOUN.head
+        (PP.nmod to/ADP.case the/DET.det capital/NOUN.compound city/NOUN.head
+           ,/PUNCT (NP.appos@algiers Algiers/PROPN.head)))
+     ,/PUNCT
+     (VP.advcl further/ADV.advmod enhancing/VERB.head=enhance{Ger}
+        (NP.obj its/PRON.poss@douera significance/NOUN.head
+           (PP.nmod as/ADP.case a/DET.det dynamic/ADJ.amod hub/NOUN.head
+              (PP.nmod of/ADP.case (COORD.head activity/NOUN.conj and/CCONJ.cc culture/NOUN.conj))))))
+  ./PUNCT)
+(S%t1
+  (PP.obl With/ADP.case its/PRON.poss@douera
+     (COORD.head (NP.conj coastal/ADJ.amod charm/NOUN.head) and/CCONJ.cc (NP.conj convenient/ADJ.amod location/NOUN.head)))
+  ,/PUNCT
+  (NP.nsubj@douera Douera/PROPN.head)
+  (VP.head captivates/VERB.head=captivate{Fin,Pres}
+     (COORD.obj both/CCONJ.cc residents/NOUN.conj and/CCONJ.cc visitors/NOUN.conj)
+     alike/ADV.advmod
+     ,/PUNCT
+     (VP.advcl offering/VERB.head=offer{Ger}
+        (NP.obj a/DET.det diverse/ADJ.amod range/NOUN.head (PP.nmod of/ADP.case experiences/NOUN.head))
+        (PP.obl against/ADP.case the/DET.det backdrop/NOUN.head
+           (PP.nmod of/ADP.case Algeria's/PROPN.poss stunning/ADJ.amod natural/ADJ.amod beauty/NOUN.head))))
+  ./PUNCT)

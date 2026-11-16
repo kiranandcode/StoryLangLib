@@ -1,0 +1,36 @@
+entity authors group they "the Peabody EDI office"
+entity shootings event they "the Michigan State shootings"
+entity culture abstract it "a culture of inclusivity"
+entity campus place it "the campus"
+entity victims group they "the victims"
+topic t1 "coming together" authors
+(S%t1
+  (PP.obl In/ADP.case the/DET.det wake/NOUN.head
+     (PP.nmod@shootings of/ADP.case the/DET.det Michigan/PROPN.compound shootings/NOUN.head))
+  ,/PUNCT
+  (VP.head let/VERB.head{Fin,Pres} (NP.obj@authors us/PRON.head)
+     (VP.xcomp come/VERB.head{Inf} together/ADV.advmod
+        (PP.obl as/ADP.case a/DET.det community/NOUN.head)
+        (VP.advcl to/PART.mark reaffirm/VERB.head{Inf}
+           (NP.obj our/PRON.poss@authors commitment/NOUN.head
+              (PP.nmod to/ADP.case
+                 (COORD.head
+                    (VP.conj caring/VERB.head=care{Ger} (PP.obl for/ADP.case one/NUM.head another/DET.fixed))
+                    and/CCONJ.cc
+                    (VP.conj promoting/VERB.head=promote{Ger}
+                       (NP.obj@culture a/DET.det culture/NOUN.head (PP.nmod of/ADP.case inclusivity/NOUN.head))
+                       (PP.obl@campus on/ADP.case our/PRON.poss@authors campus/NOUN.head))))))))
+  ./PUNCT)
+(S%t1
+  (PP.obl By/ADP.mark (VP.head doing/VERB.head=do{Ger} so/ADV.advmod))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head can/AUX.aux
+     (COORD.head
+        (VP.conj honor/VERB.head{Inf}
+           (NP.obj@victims the/DET.det victims/NOUN.head (PP.nmod@shootings of/ADP.case this/DET.det tragedy/NOUN.head)))
+        and/CCONJ.cc
+        (VP.conj work/VERB.head{Inf}
+           (PP.obl towards/ADP.case a/DET.det (ADJP.amod safer/ADJ.conj ,/PUNCT (ADJP.conj more/ADV.advmod compassionate/ADJ.head)) future/NOUN.head
+              (PP.nmod for/ADP.case all/PRON.head)))))
+  ./PUNCT)

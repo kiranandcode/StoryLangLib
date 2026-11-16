@@ -1,6 +1,6 @@
-# Certification: idescat (rewrite)
+# Certification: rewrite
 
-2 paragraphs, 3 sentences, 47 words. Every paragraph's annotation passes `langlib check`.
+2 paragraphs, 3 sentences, 50 words. Every paragraph's annotation passes `langlib check`.
 
 **CERTIFIED**: 33/33 rules hold.
 

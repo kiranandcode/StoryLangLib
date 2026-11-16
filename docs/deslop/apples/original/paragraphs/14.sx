@@ -1,0 +1,29 @@
+entity apple object it "the apple" generic
+entity cultivation abstract it "commercial cultivation"
+entity orchards place they "apple orchards"
+entity growers group they "growers"
+topic t1 "growing apples commercially" cultivation
+(S%t1
+  (NP.nsubj@cultivation Commercial/ADJ.amod cultivation/NOUN.head)
+  (VP.head presents/VERB.head=present{Fin,Pres} (NP.obj several/ADJ.amod challenges/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@orchards Apple/NOUN.compound orchards/NOUN.head)
+  (VP.head are/AUX.cop=be{Fin,Pres}
+     (ADJP.head vulnerable/ADJ.head
+        (PP.obl to/ADP.case diseases/NOUN.head
+           (PP.nmod such/ADJ.case as/ADP.fixed
+              (COORD.head (NP.conj apple/NOUN.compound scab/NOUN.head) and/CCONJ.cc (NP.conj fire/NOUN.compound blight/NOUN.head)))
+           ,/PUNCT
+           (PP.conj as/ADV.cc well/ADV.fixed as/ADP.fixed insect/NOUN.compound pests/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@growers Growers/NOUN.head)
+  (VP.head must/AUX.aux balance/VERB.head{Inf}
+     (NP.obj productivity/NOUN.head)
+     (PP.obl with/ADP.case environmental/ADJ.amod considerations/NOUN.head
+        ,/PUNCT
+        (PP.nmod including/ADP.case
+           (COORD.head (NP.conj pesticide/NOUN.compound use/NOUN.head) ,/PUNCT (NP.conj soil/NOUN.compound health/NOUN.head) ,/PUNCT and/CCONJ.cc
+              (NP.conj water/NOUN.compound consumption/NOUN.head)))))
+  ./PUNCT)

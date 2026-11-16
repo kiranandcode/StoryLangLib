@@ -1,0 +1,24 @@
+entity apple object it "the apple" generic
+entity fruit object it "the forbidden fruit"
+entity text object it "the biblical text"
+topic t1 "the forbidden fruit" fruit
+(S%t1
+  (PP.obl In/ADP.case European/ADJ.amod Christian/ADJ.amod art/NOUN.head)
+  ,/PUNCT
+  (NP.nsubj@fruit the/DET.det forbidden/ADJ.amod fruit/NOUN.head
+     (PP.nmod from/ADP.case the/DET.det Garden/PROPN.head (PP.nmod of/ADP.case Eden/PROPN.head)))
+  (VP.head is/AUX.aux=be{Fin,Pres} commonly/ADV.advmod represented/VERB.head=represent{Part}
+     (PP.obl@apple as/ADP.case an/DET.det apple/NOUN.head)
+     ,/PUNCT
+     (SBAR.advcl although/SCONJ.mark
+        (S.head (NP.nsubj@text the/DET.det biblical/ADJ.amod text/NOUN.head)
+           (VP.head does/AUX.aux=do{Fin,Pres} not/PART.advmod identify/VERB.head{Inf}
+              (NP.obj its/PRON.poss@fruit species/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj This/DET.det association/NOUN.head)
+  (VP.head helped/VERB.head=help{Fin,Past}
+     (VP.xcomp establish/VERB.head{Inf} (NP.obj@apple the/DET.det apple/NOUN.head)
+        (PP.obl as/ADP.case a/DET.det symbol/NOUN.head
+           (PP.nmod of/ADP.case (COORD.head temptation/NOUN.conj and/CCONJ.cc knowledge/NOUN.conj)))))
+  ./PUNCT)

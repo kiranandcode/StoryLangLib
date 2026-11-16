@@ -1,0 +1,292 @@
+{
+ "title": "original",
+ "paragraphs": 5,
+ "sentences": 12,
+ "annotation": [],
+ "lexiconOverrides": [],
+ "rules": [
+  {
+   "style": "clarity",
+   "name": "characters: few agentless passives",
+   "rule": "agentless / clauses ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "actions: few hidden in nouns",
+   "rule": "hiddenAction / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no inanimate actors",
+   "rule": "inanimate ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "few noun stacks",
+   "rule": "nounStacks / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "point first",
+   "rule": "buried / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no stacked asides",
+   "rule": "stacked / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no non-sequitur stacks",
+   "rule": "nonSequiturs / sents ≤ 1/10",
+   "holds": false,
+   "at": [
+    {
+     "at": "2:3",
+     "sentence": "We can also look out for one another by noticing signs of distress and offering support to those who may be struggling with mental health issues."
+    },
+    {
+     "at": "4:2",
+     "sentence": "We must continue to engage in conversations about how we can do better, learn from our mistakes, and work together to build a stronger, more inclusive community."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no slop emphasis",
+   "rule": "slopEmphasis ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no throat-clearing",
+   "rule": "throat ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "5:1",
+     "sentence": "In the wake of the Michigan shootings, let us come together as a community to reaffirm our commitment to caring for one another and promoting a culture of inclusivity on our campus."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no understated inflation",
+   "rule": "inflation ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no tricolon with semicolons",
+   "rule": "tricolons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no deferred assertion",
+   "rule": "pseudoClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no emphatic cleft",
+   "rule": "itClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few observation-and-response joins",
+   "rule": "andJoins / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no mechanical tetracolon",
+   "rule": "tetracola ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no sentence-initial conjunctions",
+   "rule": "initialConj ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no buzz words",
+   "rule": "buzz ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no empty intensifiers",
+   "rule": "intensifiers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "British spelling",
+   "rule": "usSpelling ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "4:1",
+     "sentence": "Finally, we must recognize that creating a safe and inclusive environment is an ongoing process that requires ongoing effort and commitment."
+    },
+    {
+     "at": "5:2",
+     "sentence": "By doing so, we can honor the victims of this tragedy and work towards a safer, more compassionate future for all."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no appositive-trailing cadence",
+   "rule": "trailingCadence ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no dramatic terminal sentences",
+   "rule": "dramaticTerminal ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summarising pivots",
+   "rule": "summarisingPivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summary closers",
+   "rule": "summaryClosers ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "3:3",
+     "sentence": "We can do this by listening to one another, seeking out new perspectives, and challenging our own assumptions and biases."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare pivot bridges",
+   "rule": "barePivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no spurious contrasts",
+   "rule": "spuriousContrasts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare relative clauses",
+   "rule": "bareRelatives ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no not-X-dash-Y",
+   "rule": "negDashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no abstract significance",
+   "rule": "abstractSig ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "2:1",
+     "sentence": "One of the key ways to promote a culture of care on our campus is through building strong relationships with one another."
+    },
+    {
+     "at": "3:1",
+     "sentence": "Another important aspect of creating an inclusive environment is to promote a culture of respect and understanding."
+    }
+   ]
+  },
+  {
+   "style": "llmisms",
+   "name": "no em-dashes",
+   "rule": "dashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no dramatic colons",
+   "rule": "dramaticColons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no rhetorical questions",
+   "rule": "rhetorical ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no not-X-but-Y (unless it denies what the text put forward)",
+   "rule": "negTurns not in contrasts.json ≤ 0",
+   "holds": true,
+   "at": [],
+   "justified": {}
+  },
+  {
+   "style": "annotation",
+   "name": "every word class the rules read is decided",
+   "rule": "audit items ≤ 0",
+   "holds": true,
+   "at": []
+  }
+ ],
+ "audit": {
+  "nouns that may hide an action (nominal?)": [],
+  "verbs (animate: only a person does it?)": [],
+  "spellings to confirm British": [],
+  "verbs without VerbForm": []
+ },
+ "certified": false,
+ "counts": {
+  "sents": 12,
+  "clauses": 49,
+  "agentless": 0,
+  "bareAsides": 0,
+  "words": 294
+ }
+}

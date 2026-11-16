@@ -1,0 +1,21 @@
+entity apple object it "the apple" generic
+entity painters group they "European Christian painters"
+entity fruit object it "the forbidden fruit"
+entity bible object it "the Bible"
+topic t1 "the forbidden fruit" fruit
+(S%t1
+  (NP.nsubj@painters European/ADJ.amod Christian/ADJ.amod painters/NOUN.head)
+  (VP.head usually/ADV.advmod showed/VERB.head=show{Fin,Past}
+     (NP.obj@fruit the/DET.det forbidden/ADJ.amod fruit/NOUN.head (PP.nmod of/ADP.case Eden/PROPN.head))
+     (PP.obl@apple as/ADP.case an/DET.det apple/NOUN.head)
+     ,/PUNCT
+     (SBAR.advcl although/SCONJ.mark
+        (S.head (NP.nsubj the/DET.det Bible's/PROPN.poss@bible account/NOUN.head)
+           (VP.head leaves/VERB.head=leave{Fin,Pres} (NP.obj the/DET.det species/NOUN.head) unnamed/ADJ.xcomp))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj Their/PRON.poss@painters paintings/NOUN.head)
+  (VP.head made/VERB.head=make{Fin,Past} (NP.obj@apple the/DET.det apple/NOUN.head)
+     (NP.xcomp a/DET.det symbol/NOUN.head
+        (PP.nmod of/ADP.case (COORD.head temptation/NOUN.conj and/CCONJ.cc knowledge/NOUN.conj))))
+  ./PUNCT)

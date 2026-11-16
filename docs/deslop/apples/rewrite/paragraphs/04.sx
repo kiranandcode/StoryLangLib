@@ -1,0 +1,34 @@
+entity apple object it "the apple" generic
+entity growers group they "growers"
+entity seedling object it "an apple tree grown from seed"
+entity variety object it "a variety a grower wants to keep"
+entity grafted object it "the grafted tree"
+topic t1 "grafting" growers
+(S%t1
+  (NP.nsubj@growers Growers/NOUN.head)
+  (VP.head propagate/VERB.head{Fin,Pres} (NP.obj@apple apples/NOUN.head)
+     (PP.obl by/ADP.mark (VP.head grafting/VERB.head=graft{Ger}))
+     ,/PUNCT
+     (SBAR.advcl because/SCONJ.mark
+        (S.head
+           (NP.nsubj@seedling an/DET.det apple/NOUN.compound tree/NOUN.head
+              (VP.acl grown/VERB.head=grow{Part} (PP.obl from/ADP.case seed/NOUN.head)))
+           (VP.head does/AUX.aux=do{Fin,Pres} not/PART.advmod reliably/ADV.advmod resemble/VERB.head{Inf}
+              (NP.obj its/PRON.poss@seedling parents/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@growers They/PRON.head)
+  (VP.head attach/VERB.head{Fin,Pres}
+     (NP.obj a/DET.det branch/NOUN.head
+        (PP.nmod@variety of/ADP.case a/DET.det variety/NOUN.head
+           (SBAR.relcl (NP.nsubj@growers they/PRON.head)
+              (VP.head want/VERB.head{Fin,Pres} (VP.xcomp to/PART.mark keep/VERB.head{Inf})))))
+     (PP.obl onto/ADP.case a/DET.det compatible/ADJ.amod rootstock/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@grafted The/DET.det grafted/ADJ.amod tree/NOUN.head)
+  (VP.head keeps/VERB.head=keep{Fin,Pres}
+     (NP.obj that/DET.det variety's/NOUN.poss@variety
+        (COORD.head flavour/NOUN.conj ,/PUNCT texture/NOUN.conj and/CCONJ.cc appearance/NOUN.conj))
+     (PP.obl from/ADP.case one/NUM.nummod generation/NOUN.head (PP.nmod to/ADP.case the/DET.det next/ADJ.head)))
+  ./PUNCT)

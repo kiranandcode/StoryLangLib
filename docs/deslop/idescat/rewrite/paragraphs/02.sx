@@ -3,6 +3,7 @@ entity idescat group it "the Statistical Institute of Catalonia"
 entity system abstract it "a statistical system of Catalonia's own"
 entity spain place it "Spain"
 entity regions place they "Spain's regions"
+entity gov group it "Catalonia's regional government"
 topic t1 "what the institute gave Catalonia" idescat
 (S%t1
   (NP.nsubj@idescat The/DET.det institute/NOUN.head)
@@ -16,7 +17,7 @@ topic t1 "what the institute gave Catalonia" idescat
               (COORD.head economy/NOUN.conj and/CCONJ.cc society/NOUN.conj)))))
   ./PUNCT)
 (S%t1
-  (NP.nsubj@catalonia Catalonia/PROPN.head)
+  (NP.nsubj@gov The/DET.det government/NOUN.head)
   (VP.head created/VERB.head=create{Fin,Past} (NP.obj@idescat it/PRON.head)
      (SBAR.advcl while/SCONJ.mark
         (S.head (NP.nsubj@spain Spain/PROPN.head)

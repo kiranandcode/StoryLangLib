@@ -1,0 +1,12 @@
+entity apple object it "the apple" generic
+entity diversity abstract it "the apple's genetic diversity"
+entity popular object they "popular varieties"
+topic t1 "popular varieties" popular
+(S%t1
+  (NP.nsubj@popular Popular/ADJ.amod varieties/NOUN.head
+     (PP.nmod such/ADJ.case as/ADP.fixed
+        (COORD.head (NP.conj Granny/PROPN.compound Smith/PROPN.head) ,/PUNCT Fuji/PROPN.conj ,/PUNCT Honeycrisp/PROPN.conj ,/PUNCT and/CCONJ.cc Gala/PROPN.conj)))
+  (VP.head represent/VERB.head{Fin,Pres}
+     (NP.obj only/ADV.advmod a/DET.det small/ADJ.amod fraction/NOUN.head
+        (PP.nmod@diversity of/ADP.case this/DET.det diversity/NOUN.head)))
+  ./PUNCT)

@@ -1,0 +1,43 @@
+entity authors group they "the Peabody EDI office"
+entity env abstract it "a safe and inclusive environment"
+entity culture abstract it "a culture of respect"
+entity campus place it "the campus"
+topic t1 "a culture of respect" culture
+(S%t1
+  (NP.nsubj Another/DET.det important/ADJ.amod aspect/NOUN.head
+     (PP.nmod of/ADP.case
+        (VP.head creating/VERB.head=create{Ger} (NP.obj@env an/DET.det inclusive/ADJ.amod environment/NOUN.head))))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (VP.head to/PART.mark promote/VERB.head{Inf}
+        (NP.obj@culture a/DET.det culture/NOUN.head
+           (PP.nmod of/ADP.case (COORD.head respect/NOUN.conj and/CCONJ.cc understanding/NOUN.conj)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@culture This/PRON.head)
+  (VP.head means/VERB.head=mean{Fin,Pres}
+     (COORD.obj
+        (VP.conj valuing/VERB.head=value{Ger}
+           (NP.obj the/DET.det diversity/NOUN.head
+              (PP.nmod of/ADP.case (COORD.head experiences/NOUN.conj ,/PUNCT perspectives/NOUN.conj ,/PUNCT and/CCONJ.cc identities/NOUN.conj))
+              (PP.nmod@campus on/ADP.case our/PRON.poss@authors campus/NOUN.head)))
+        ,/PUNCT and/CCONJ.cc
+        (VP.conj actively/ADV.advmod working/VERB.head=work{Ger}
+           (VP.xcomp to/PART.mark create/VERB.head{Inf}
+              (NP.obj a/DET.det space/NOUN.head
+                 (SBAR.relcl where/ADV.advmod
+                    (S.head (NP.nsubj everyone/PRON.head)
+                       (VP.head feels/VERB.head=feel{Fin,Pres}
+                          (ADJP.xcomp welcomed/ADJ.conj and/CCONJ.cc supported/ADJ.conj)))))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@authors We/PRON.head)
+  (VP.head can/AUX.aux do/VERB.head{Inf} (NP.obj@culture this/PRON.head)
+     (PP.obl by/ADP.mark
+        (COORD.head
+           (VP.conj listening/VERB.head=listen{Ger} (PP.obl to/ADP.case one/NUM.head another/DET.fixed))
+           ,/PUNCT
+           (VP.conj seeking/VERB.head=seek{Ger} out/ADV.advmod (NP.obj new/ADJ.amod perspectives/NOUN.head))
+           ,/PUNCT and/CCONJ.cc
+           (VP.conj challenging/VERB.head=challenge{Ger}
+              (NP.obj our/PRON.poss@authors own/ADJ.amod (COORD.head assumptions/NOUN.conj and/CCONJ.cc biases/NOUN.conj))))))
+  ./PUNCT)

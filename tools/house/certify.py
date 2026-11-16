@@ -63,7 +63,7 @@ HOUSE_FLAG = {  # rule name -> key in house "flagged"
 }
 NOMINAL = re.compile(r"(tion|sion|ment|ance|ence|ancy|ency|ity|ure|al|ing|sis|age)s?$")
 # -ize/-yze forms; -or, -er and -og spellings are listed in the base lexicon's `us` class
-AMERICAN = re.compile(r"(iz(e|es|ed|ing|ation|ations)|yz(e|es|ed|ing))$")
+AMERICAN = re.compile(r"(iz(e|es|ed|ing|ation|ations|able)|yz(e|es|ed|ing))$")
 NOT_AMERICAN = {"size", "sizes", "sized", "prize", "prizes", "seize", "seized", "citizen", "capsize"}
 
 

@@ -1,0 +1,45 @@
+entity authors group they "the Peabody EDI office"
+entity culture abstract it "a culture of care"
+entity campus place it "the campus"
+entity relationships abstract it "building strong relationships"
+entity people group they "people from different backgrounds"
+entity struggling group they "those who may be struggling"
+topic t1 "building relationships" relationships
+(S%t1
+  (NP.nsubj One/NUM.head
+     (PP.nmod of/ADP.case the/DET.det key/ADJ.amod ways/NOUN.head
+        (VP.acl to/PART.mark promote/VERB.head{Inf}
+           (NP.obj@culture a/DET.det culture/NOUN.head (PP.nmod of/ADP.case care/NOUN.head))
+           (PP.obl@campus on/ADP.case our/PRON.poss@authors campus/NOUN.head))))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (PP.head@relationships through/ADP.case
+        (VP.head building/VERB.head=build{Ger} (NP.obj strong/ADJ.amod relationships/NOUN.head)
+           (PP.obl with/ADP.case one/NUM.head another/DET.fixed))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@relationships This/PRON.head)
+  (VP.head involves/VERB.head=involve{Fin,Pres}
+     (COORD.obj
+        (VP.conj actively/ADV.advmod engaging/VERB.head=engage{Ger}
+           (PP.obl@people with/ADP.case people/NOUN.head
+              (PP.nmod from/ADP.case different/ADJ.amod (COORD.head backgrounds/NOUN.conj and/CCONJ.cc perspectives/NOUN.conj))))
+        ,/PUNCT
+        (VP.conj listening/VERB.head=listen{Ger}
+           (PP.obl to/ADP.case their/PRON.poss@people stories/NOUN.head))
+        ,/PUNCT and/CCONJ.cc
+        (VP.conj showing/VERB.head=show{Ger}
+           (COORD.obj empathy/NOUN.conj and/CCONJ.cc support/NOUN.conj))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@authors We/PRON.head)
+  (VP.head can/AUX.aux also/ADV.advmod look/VERB.head{Inf} out/ADV.advmod
+     (PP.obl for/ADP.case one/NUM.head another/DET.fixed)
+     (PP.obl by/ADP.mark
+        (COORD.head
+           (VP.conj noticing/VERB.head=notice{Ger} (NP.obj signs/NOUN.head (PP.nmod of/ADP.case distress/NOUN.head)))
+           and/CCONJ.cc
+           (VP.conj offering/VERB.head=offer{Ger} (NP.obj support/NOUN.head)
+              (PP.obl@struggling to/ADP.case those/PRON.head
+                 (SBAR.relcl who/PRON.nsubj may/AUX.aux be/AUX.aux{Inf} struggling/VERB.head=struggle{Part,Pres}
+                    (PP.obl with/ADP.case mental/ADJ.amod health/NOUN.compound issues/NOUN.head)))))))
+  ./PUNCT)

@@ -1,0 +1,17 @@
+entity apple object it "the apple" generic
+entity breeders group they "breeders"
+topic t1 "breeding" breeders
+(S%t1
+  (NP.nsubj@breeders Breeders/NOUN.head)
+  (VP.head are/AUX.aux=be{Fin,Pres} looking/VERB.head=look{Part,Pres}
+     (PP.obl for/ADP.case varieties/NOUN.head
+        (SBAR.relcl that/PRON.nsubj
+           (COORD.head
+              (VP.conj resist/VERB.head{Fin,Pres} (NP.obj disease/NOUN.head))
+              ,/PUNCT
+              (VP.conj cope/VERB.head{Fin,Pres} (PP.obl with/ADP.case a/DET.det changing/ADJ.amod climate/NOUN.head))
+              ,/PUNCT
+              (VP.conj taste/VERB.head{Fin,Pres} good/ADJ.xcomp)
+              and/CCONJ.cc
+              (VP.conj store/VERB.head{Fin,Pres} well/ADV.advmod)))))
+  ./PUNCT)

@@ -1,0 +1,31 @@
+entity apple object it "the apple" generic
+entity asia place it "Central Asia"
+topic t1 "the apple" apple
+(S%t1
+  (NP.nsubj@apple The/DET.det apple/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head one/NUM.head
+        (PP.nmod of/ADP.case the/DET.det
+           (ADJP.amod most/ADV.advmod widely/ADV.advmod (COORD.head cultivated/ADJ.conj and/CCONJ.cc recognizable/ADJ.conj))
+           fruits/NOUN.head
+           (PP.nmod in/ADP.case the/DET.det world/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj Its/PRON.poss@apple significance/NOUN.head)
+  (VP.head extends/VERB.head=extend{Fin,Pres}
+     (PP.obl beyond/ADP.case its/PRON.poss@apple nutritional/ADJ.amod value/NOUN.head)
+     ,/PUNCT
+     (VP.advcl encompassing/VERB.head=encompass{Ger}
+        (COORD.obj agriculture/NOUN.conj ,/PUNCT economics/NOUN.conj ,/PUNCT mythology/NOUN.conj ,/PUNCT and/CCONJ.cc
+           (NP.conj scientific/ADJ.amod discovery/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (PP.obl From/ADP.case its/PRON.poss@apple origins/NOUN.head (PP.nmod@asia in/ADP.case Central/PROPN.compound Asia/PROPN.head)
+     (PP.nmod to/ADP.case its/PRON.poss@apple cultivation/NOUN.head
+        (PP.nmod across/ADP.case nearly/ADV.advmod every/DET.det temperate/ADJ.amod region/NOUN.head)))
+  ,/PUNCT
+  (NP.nsubj@apple the/DET.det apple/NOUN.head)
+  (VP.head has/AUX.aux=have{Fin,Pres} played/VERB.head=play{Part}
+     (NP.obj an/DET.det important/ADJ.amod role/NOUN.head
+        (PP.nmod in/ADP.case human/ADJ.amod civilization/NOUN.head)))
+  ./PUNCT)

@@ -1,0 +1,27 @@
+entity apple object it "the apple" generic
+entity people group they "people" generic
+entity routes object they "trade routes"
+topic t1 "how apples spread" apple
+(S%t1
+  (SBAR.advcl As/SCONJ.mark
+     (S.head (NP.nsubj@people people/NOUN.head)
+        (COORD.head (VP.conj migrated/VERB.head=migrate{Fin,Past}) and/CCONJ.cc
+           (VP.conj opened/VERB.head=open{Fin,Past} (NP.obj@routes trade/NOUN.compound routes/NOUN.head)))))
+  ,/PUNCT
+  (NP.nsubj@people they/PRON.head)
+  (VP.head carried/VERB.head=carry{Fin,Past} (NP.obj@apple apples/NOUN.head)
+     (COORD.obl (ADVP.conj west/ADV.head (PP.obl into/ADP.case Europe/PROPN.head)) and/CCONJ.cc
+        (ADVP.conj east/ADV.head (PP.obl across/ADP.case Asia/PROPN.head)))
+     ,/PUNCT
+     (NP.obl much/ADJ.head (PP.nmod of/ADP.case the/DET.det way/NOUN.head)
+        (PP.nmod@routes along/ADP.case the/DET.det Silk/PROPN.compound Road/PROPN.head)))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@apple Apples/NOUN.head (PP.nmod from/ADP.case different/ADJ.amod regions/NOUN.head))
+  (COORD.head
+     (VP.conj met/VERB.head=meet{Fin,Past} (PP.obl@routes along/ADP.case these/DET.det routes/NOUN.head))
+     ,/PUNCT
+     (VP.conj crossed/VERB.head=cross{Fin,Past} (PP.obl with/ADP.case each/DET.det other/PRON.head))
+     and/CCONJ.cc
+     (VP.conj picked/VERB.head=pick{Fin,Past} up/ADV.advmod (NP.obj new/ADJ.amod traits/NOUN.head)))
+  ./PUNCT)

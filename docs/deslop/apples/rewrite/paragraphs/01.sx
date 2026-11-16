@@ -1,0 +1,14 @@
+entity apple object it "the apple" generic
+entity people group they "people" generic
+entity asia place it "Central Asia"
+topic t1 "where apples grow and come from" apple
+(S%t1
+  (S.head (NP.nsubj@people People/NOUN.head)
+     (VP.head grow/VERB.head{Fin,Pres} (NP.obj@apple apples/NOUN.head)
+        (PP.obl in/ADP.case nearly/ADV.advmod every/DET.det temperate/ADJ.amod region/NOUN.head
+           (PP.nmod of/ADP.case the/DET.det world/NOUN.head))))
+  ,/PUNCT but/CCONJ.cc
+  (S.conj (NP.nsubj@apple the/DET.det fruit/NOUN.head)
+     (VP.head comes/VERB.head=come{Fin,Pres}
+        (PP.obl from/ADP.case the/DET.det mountains/NOUN.head (PP.nmod@asia of/ADP.case Central/PROPN.compound Asia/PROPN.head))))
+  ./PUNCT)

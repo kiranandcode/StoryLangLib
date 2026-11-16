@@ -1,0 +1,25 @@
+entity apple object it "the apple" generic
+entity climate event it "climate change"
+entity trees object they "apple trees"
+entity regions place they "established growing regions"
+topic t1 "climate change" climate
+(S%t1
+  (NP.nsubj@climate Climate/NOUN.compound change/NOUN.head)
+  (VP.head introduces/VERB.head=introduce{Fin,Pres} (NP.obj further/ADJ.amod uncertainty/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@trees Apple/NOUN.compound trees/NOUN.head)
+  (VP.head require/VERB.head{Fin,Pres}
+     (NP.obj particular/ADJ.amod temperature/NOUN.compound conditions/NOUN.head
+        (PP.nmod for/ADP.case
+           (COORD.head flowering/NOUN.conj and/CCONJ.cc (NP.conj fruit/NOUN.compound development/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj Changes/NOUN.head
+     (PP.nmod in/ADP.case
+        (COORD.head (NP.conj winter/NOUN.compound temperatures/NOUN.head) ,/PUNCT
+           (NP.conj spring/NOUN.compound frost/NOUN.compound patterns/NOUN.head) ,/PUNCT and/CCONJ.cc rainfall/NOUN.conj)))
+  (VP.head may/AUX.aux affect/VERB.head{Inf}
+     (NP.obj the/DET.det suitability/NOUN.head
+        (PP.nmod@regions of/ADP.case established/ADJ.amod growing/NOUN.compound regions/NOUN.head)))
+  ./PUNCT)

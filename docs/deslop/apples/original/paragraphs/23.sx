@@ -1,0 +1,10 @@
+entity apple object it "the apple" generic
+topic t1 "further reading" apple
+(S%t1
+  (NP.nsubj A/DET.det deeper/ADJ.amod examination/NOUN.head
+     (PP.nmod of/ADP.case
+        (COORD.head (NP.conj apple/NOUN.compound domestication/NOUN.head) and/CCONJ.cc genetics/NOUN.conj)))
+  (VP.head would/AUX.aux provide/VERB.head{Inf}
+     (NP.obj a/DET.det (ADJP.amod particularly/ADV.advmod interesting/ADJ.head) extension/NOUN.head
+        (PP.nmod of/ADP.case this/DET.det subject/NOUN.head)))
+  ./PUNCT)

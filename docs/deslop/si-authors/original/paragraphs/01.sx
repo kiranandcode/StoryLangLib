@@ -1,0 +1,35 @@
+entity drew person he "Drew Ortiz"
+entity list object it "Drew's list of products"
+topic t1 "Drew" drew
+(S%t1
+  (NP.nsubj@drew Drew/PROPN.head)
+  (COORD.head
+     (VP.conj has/AUX.aux=have{Fin,Pres} spent/VERB.head=spend{Part}
+        (NP.obj much/ADJ.head (PP.nmod of/ADP.case his/PRON.poss@drew life/NOUN.head))
+        outdoors/ADV.advmod)
+     ,/PUNCT and/CCONJ.cc
+     (VP.conj is/AUX.cop=be{Fin,Pres} excited/ADJ.head
+        (VP.xcomp to/PART.mark guide/VERB.head{Inf} (NP.obj you/PRON.head)
+           (PP.obl@list through/ADP.case his/PRON.poss@drew never-ending/ADJ.amod list/NOUN.head
+              (PP.nmod of/ADP.case the/DET.det best/ADJ.amod products/NOUN.head
+                 (VP.acl to/PART.mark keep/VERB.head{Inf} (NP.obj you/PRON.head)
+                    (PP.obl from/ADP.case
+                       (VP.head falling/VERB.head=fall{Ger}
+                          (PP.obl to/ADP.case the/DET.det perils/NOUN.head (PP.nmod of/ADP.case nature/NOUN.head))))))))))
+  ./PUNCT)
+(S%t1
+  Nowadays/ADV.advmod ,/PUNCT
+  there/PRON.expl
+  (VP.head is/VERB.head=be{Fin,Pres} rarely/ADV.advmod
+     (NP.nsubj a/DET.det weekend/NOUN.head
+        (SBAR.relcl that/PRON.nsubj goes/VERB.head=go{Fin,Pres} by/ADV.advmod)
+        (SBAR.relcl where/ADV.advmod
+           (S.head (NP.nsubj@drew Drew/PROPN.head)
+              (VP.head isn't/AUX.cop=be{Fin,Pres}
+                 (COORD.head
+                    (VP.conj out/ADV.advmod camping/VERB.head=camp{Ger})
+                    ,/PUNCT (VP.conj hiking/VERB.head=hike{Ger})
+                    ,/PUNCT or/CCONJ.cc
+                    (ADVP.conj just/ADV.advmod back/ADV.head
+                       (PP.obl on/ADP.case (NP.poss his/PRON.poss@drew parents/NOUN.head '/PART.case) farm/NOUN.head))))))))
+  ./PUNCT)

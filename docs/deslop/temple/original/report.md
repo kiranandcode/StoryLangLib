@@ -1,4 +1,4 @@
-# Certification: temple (original)
+# Certification: original
 
 1 paragraphs, 4 sentences, 105 words. Every paragraph's annotation passes `langlib check`.
 

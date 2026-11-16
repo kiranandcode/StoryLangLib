@@ -1,4 +1,4 @@
-# Certification: northern (rewrite)
+# Certification: rewrite
 
 3 paragraphs, 9 sentences, 126 words. Every paragraph's annotation passes `langlib check`.
 

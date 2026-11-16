@@ -10,9 +10,9 @@ Before: 29/33 rules hold (not certified). After: 33/33 (certified).
 
 **After**
 
-> In 1989 Catalonia founded the Statistical Institute of Catalonia (Idescat).
+> In 1989 Catalonia's regional government founded the Statistical Institute of Catalonia (Idescat).
 >
-> The institute gave Catalonia a statistical system of its own, designed around the region's economy and society. Catalonia created it while Spain was moving administrative functions from the central state to the regions and strengthening regional government.
+> The institute gave Catalonia a statistical system of its own, designed around the region's economy and society. The government created it while Spain was moving administrative functions from the central state to the regions and strengthening regional government.
 
 | rule | before | after |
 |:--|:--|:--|

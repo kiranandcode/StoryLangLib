@@ -1,5 +1,5 @@
 {
- "title": "idescat (rewrite)",
+ "title": "rewrite",
  "paragraphs": 2,
  "sentences": 3,
  "annotation": [],
@@ -250,6 +250,6 @@
   "clauses": 6,
   "agentless": 0,
   "bareAsides": 0,
-  "words": 47
+  "words": 50
  }
 }

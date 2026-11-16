@@ -1,0 +1,20 @@
+entity apple object it "the apple" generic
+entity diversity abstract it "the apple's genetic diversity"
+entity cultivars object they "named cultivars"
+topic t1 "genetic diversity" diversity
+(S%t1
+  (NP.nsubj One/NUM.head
+     (PP.nmod of/ADP.case the/DET.det (ADJP.amod most/ADV.advmod remarkable/ADJ.head) features/NOUN.head
+        (PP.nmod@apple of/ADP.case apples/NOUN.head)))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head@diversity their/PRON.poss@apple genetic/ADJ.amod diversity/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@cultivars Thousands/NOUN.head (PP.nmod of/ADP.case named/ADJ.amod cultivars/NOUN.head))
+  (VP.head exist/VERB.head{Fin,Pres}
+     ,/PUNCT
+     (VP.advcl exhibiting/VERB.head=exhibit{Ger}
+        (NP.obj substantial/ADJ.amod variation/NOUN.head
+           (PP.nmod in/ADP.case
+              (COORD.head sweetness/NOUN.conj ,/PUNCT acidity/NOUN.conj ,/PUNCT firmness/NOUN.conj ,/PUNCT color/NOUN.conj ,/PUNCT and/CCONJ.cc aroma/NOUN.conj)))))
+  ./PUNCT)

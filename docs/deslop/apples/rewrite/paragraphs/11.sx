@@ -1,0 +1,14 @@
+entity apple object it "the apple" generic
+entity china place it "China"
+topic t1 "who grows apples" apple
+(S%t1
+  (NP.nsubj@china China/PROPN.head)
+  (VP.head grows/VERB.head=grow{Fin,Pres}
+     (NP.obj more/ADJ.amod apples/NOUN.head@apple)
+     (PP.obl than/ADP.case any/DET.det other/ADJ.amod country/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (COORD.nsubj (NP.conj The/DET.det United/PROPN.compound States/PROPN.head) ,/PUNCT Türkiye/PROPN.conj ,/PUNCT Poland/PROPN.conj and/CCONJ.cc India/PROPN.conj)
+  (VP.head also/ADV.advmod grow/VERB.head{Fin,Pres} (NP.obj@apple them/PRON.head)
+     (PP.obl on/ADP.case a/DET.det large/ADJ.amod scale/NOUN.head))
+  ./PUNCT)

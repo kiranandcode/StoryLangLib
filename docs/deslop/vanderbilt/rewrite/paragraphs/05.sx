@@ -1,0 +1,14 @@
+entity authors group they "the Peabody EDI office"
+entity shootings event they "the Michigan State shootings"
+entity victims group they "the victims"
+topic t1 "honouring the victims" victims
+(S%t1
+  Please/INTJ.discourse
+  (VP.head join/VERB.head{Fin,Pres} (NP.obj@authors us/PRON.head)
+     (COORD.obl
+        (PP.conj in/ADP.mark (VP.head caring/VERB.head=care{Ger} (PP.obl for/ADP.case one/NUM.head another/DET.fixed)))
+        and/CCONJ.cc
+        (PP.conj in/ADP.mark
+           (VP.head honouring/VERB.head=honour{Ger}
+              (NP.obj@victims the/DET.det victims/NOUN.head (PP.nmod@shootings of/ADP.case this/DET.det tragedy/NOUN.head))))))
+  ./PUNCT)

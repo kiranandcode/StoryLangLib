@@ -1,0 +1,35 @@
+entity care abstract it "taking care of each other"
+entity people group they "people whose backgrounds differ" generic
+entity anyone person they "anyone who may be struggling" generic
+topic t1 "getting to know people" people
+(S%t1
+  (S.csubj@care Taking/VERB.head=take{Ger} care/NOUN.obj (PP.obl of/ADP.case each/DET.det other/PRON.head))
+  (VP.head starts/VERB.head=start{Fin,Pres}
+     (PP.obl with/ADP.case
+        (VP.head getting/VERB.head=get{Ger}
+           (VP.xcomp to/PART.mark know/VERB.head{Inf} (NP.obj@people people/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (COORD.head
+     (VP.conj Talk/VERB.head{Fin,Pres}
+        (PP.obl@people with/ADP.case people/NOUN.head
+           (SBAR.relcl (NP.nsubj whose/PRON.poss (COORD.head backgrounds/NOUN.conj and/CCONJ.cc views/NOUN.conj))
+              (VP.head differ/VERB.head{Fin,Pres} (PP.obl from/ADP.case yours/PRON.head)))))
+     ,/PUNCT
+     (VP.conj listen/VERB.head{Fin,Pres} (PP.obl to/ADP.case their/PRON.poss@people stories/NOUN.head))
+     ,/PUNCT and/CCONJ.cc
+     (VP.conj show/VERB.head{Fin,Pres} (NP.iobj@people them/PRON.head) (NP.obj support/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (COORD.head
+     (VP.conj Watch/VERB.head{Fin,Pres}
+        (PP.obl for/ADP.case signs/NOUN.head
+           (PP.nmod of/ADP.case distress/NOUN.head)
+           (PP.nmod in/ADP.case them/PRON.head@people))
+        too/ADV.advmod)
+     ,/PUNCT and/CCONJ.cc
+     (VP.conj reach/VERB.head{Fin,Pres} out/ADV.advmod
+        (PP.obl@anyone to/ADP.case anyone/PRON.head
+           (SBAR.relcl who/PRON.nsubj may/AUX.aux be/AUX.aux{Inf} struggling/VERB.head=struggle{Part,Pres}
+              (PP.obl with/ADP.case their/PRON.poss@anyone mental/ADJ.amod health/NOUN.head)))))
+  ./PUNCT)

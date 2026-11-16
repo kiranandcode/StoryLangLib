@@ -1,0 +1,18 @@
+entity apple object it "the apple" generic
+entity fibre object it "the fibre in apples"
+topic t1 "what apples contain" apple
+(S%t1
+  (NP.nsubj@apple Apples/NOUN.head)
+  (VP.head contain/VERB.head{Fin,Pres}
+     (COORD.obj fibre/NOUN.conj@fibre ,/PUNCT (NP.conj vitamin/NOUN.head C/PROPN.flat) and/CCONJ.cc
+        (NP.conj plant/NOUN.compound compounds/NOUN.head
+           (PP.nmod such/ADJ.case as/ADP.fixed polyphenols/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@fibre Their/PRON.poss@apple soluble/ADJ.amod fibre/NOUN.head ,/PUNCT
+     (NP.appos particularly/ADV.advmod pectin/NOUN.head) ,/PUNCT)
+  (COORD.head
+     (VP.conj helps/VERB.head=help{Fin,Pres} (NP.obj digestion/NOUN.head))
+     and/CCONJ.cc
+     (VP.conj may/AUX.aux help/VERB.head{Inf} (VP.xcomp regulate/VERB.head{Inf} (NP.obj cholesterol/NOUN.head))))
+  ./PUNCT)

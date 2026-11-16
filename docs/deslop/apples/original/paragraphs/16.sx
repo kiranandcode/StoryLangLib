@@ -1,0 +1,12 @@
+entity apple object it "the apple" generic
+entity programs group they "breeding programmes"
+topic t1 "breeding" programs
+(S%t1
+  (NP.nsubj@programs Breeding/NOUN.compound programs/NOUN.head)
+  (VP.head increasingly/ADV.advmod seek/VERB.head{Fin,Pres}
+     (NP.obj varieties/NOUN.head
+        (SBAR.relcl that/PRON.nsubj combine/VERB.head{Fin,Pres}
+           (COORD.obj (NP.conj disease/NOUN.compound resistance/NOUN.head) ,/PUNCT (NP.conj climate/NOUN.compound resilience/NOUN.head) ,/PUNCT
+              (NP.conj desirable/ADJ.amod flavor/NOUN.head) ,/PUNCT and/CCONJ.cc
+              (NP.conj long/ADJ.amod storage/NOUN.compound life/NOUN.head)))))
+  ./PUNCT)

@@ -1,0 +1,255 @@
+{
+ "title": "rewrite",
+ "paragraphs": 5,
+ "sentences": 8,
+ "annotation": [],
+ "lexiconOverrides": [],
+ "rules": [
+  {
+   "style": "clarity",
+   "name": "characters: few agentless passives",
+   "rule": "agentless / clauses ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "actions: few hidden in nouns",
+   "rule": "hiddenAction / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no inanimate actors",
+   "rule": "inanimate ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "few noun stacks",
+   "rule": "nounStacks / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "point first",
+   "rule": "buried / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no stacked asides",
+   "rule": "stacked / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "clarity",
+   "name": "no non-sequitur stacks",
+   "rule": "nonSequiturs / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no slop emphasis",
+   "rule": "slopEmphasis ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no throat-clearing",
+   "rule": "throat ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no understated inflation",
+   "rule": "inflation ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no tricolon with semicolons",
+   "rule": "tricolons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no deferred assertion",
+   "rule": "pseudoClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no emphatic cleft",
+   "rule": "itClefts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few observation-and-response joins",
+   "rule": "andJoins / sents ≤ 1/10",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no mechanical tetracolon",
+   "rule": "tetracola ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no sentence-initial conjunctions",
+   "rule": "initialConj ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no buzz words",
+   "rule": "buzz ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no empty intensifiers",
+   "rule": "intensifiers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "British spelling",
+   "rule": "usSpelling ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no appositive-trailing cadence",
+   "rule": "trailingCadence ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no dramatic terminal sentences",
+   "rule": "dramaticTerminal ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summarising pivots",
+   "rule": "summarisingPivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no summary closers",
+   "rule": "summaryClosers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare pivot bridges",
+   "rule": "barePivots ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no spurious contrasts",
+   "rule": "spuriousContrasts ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no bare relative clauses",
+   "rule": "bareRelatives ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no not-X-dash-Y",
+   "rule": "negDashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no abstract significance",
+   "rule": "abstractSig ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no em-dashes",
+   "rule": "dashes ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no dramatic colons",
+   "rule": "dramaticColons ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no rhetorical questions",
+   "rule": "rhetorical ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "llmisms",
+   "name": "no not-X-but-Y (unless it denies what the text put forward)",
+   "rule": "negTurns not in contrasts.json ≤ 0",
+   "holds": true,
+   "at": [],
+   "justified": {}
+  },
+  {
+   "style": "annotation",
+   "name": "every word class the rules read is decided",
+   "rule": "audit items ≤ 0",
+   "holds": true,
+   "at": []
+  }
+ ],
+ "audit": {
+  "nouns that may hide an action (nominal?)": [],
+  "verbs (animate: only a person does it?)": [],
+  "spellings to confirm British": [],
+  "verbs without VerbForm": []
+ },
+ "certified": true,
+ "counts": {
+  "sents": 8,
+  "clauses": 29,
+  "agentless": 0,
+  "bareAsides": 0,
+  "words": 137
+ }
+}

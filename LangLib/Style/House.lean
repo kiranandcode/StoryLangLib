@@ -22,7 +22,7 @@ the records, the academic records and the lore, so the verdicts are proved by
   participle head that is not an `ing` form, and no `by` agent);
 * *hidden actions*: a subject whose head noun is a `nominal` (an action with
   a verb behind it) with a `light` verb or a copula ("A request was made");
-* *inanimate actors*: an `object` or `abstract` entity as the subject of an
+* *inanimate actors*: an `object`, `abstract` or `place` entity as the subject of an
   active `animate` verb, including one of several coordinated predicates
   ("8 stages will close it");
 * *vague wording*: noun stacks (three nouns in a row in a phrase that names no
@@ -196,9 +196,16 @@ private partial def counts (lx : Lex) (kinds : List (String × EntityKind)) : Tr
             | _ => none
         else []
       | _ => []
+    -- a passive one level down, in the head verb phrase ("X should not be interpreted")
+    let headPassive := kids.any fun k => match k with
+      | .node j kk => j.role == some .head && kk.any (fun x => roleIs x .aux && leafHas lx "be" x) &&
+          (match headVerb k with
+            | some w => feat' w "VerbForm" == some "Part" && !lx.has w "ing"
+            | none => false)
+      | _ => false
     -- the subject of a passive is not its actor
-    let inanimateHere : Bool := !passive && match subj.bind refOf with
-      | some e => ((kinds.lookup e).map (fun k => k == .object || k == .abstract)).getD false &&
+    let inanimateHere : Bool := !passive && !headPassive && match subj.bind refOf with
+      | some e => ((kinds.lookup e).map (fun k => k == .object || k == .abstract || k == .place)).getD false &&
           ((subjVerb.toList ++ conjVerbs).any (lx.has · "animate"))
       | none => false
     let nouns := kids.foldl (fun (run, best) k => match k with

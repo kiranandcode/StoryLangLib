@@ -1,4 +1,4 @@
-# Certification: northern (original)
+# Certification: original
 
 2 paragraphs, 8 sentences, 121 words. Every paragraph's annotation passes `langlib check`.
 

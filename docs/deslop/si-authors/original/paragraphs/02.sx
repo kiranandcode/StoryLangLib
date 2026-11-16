@@ -1,0 +1,26 @@
+entity sora person she "Sora Tanaka"
+entity team group it "the Product Reviews Team"
+topic t1 "Sora" sora
+(S%t1
+  (NP.nsubj@sora Sora/PROPN.head)
+  (COORD.head
+     (VP.conj has/AUX.aux=have{Fin,Pres} always/ADV.advmod been/AUX.cop=be{Part}
+        (NP.head a/DET.det fitness/NOUN.compound guru/NOUN.head))
+     ,/PUNCT and/CCONJ.cc
+     (VP.conj loves/VERB.head=love{Fin,Pres}
+        (VP.xcomp to/PART.mark try/VERB.head{Inf}
+           (NP.obj different/ADJ.amod (COORD.head foods/NOUN.conj and/CCONJ.cc drinks/NOUN.conj)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sora Ms/PROPN.compound ./PUNCT Tanaka/PROPN.head)
+  (COORD.head
+     (VP.conj is/AUX.cop=be{Fin,Pres} thrilled/ADJ.head
+        (VP.xcomp to/PART.mark bring/VERB.head{Inf}
+           (NP.obj her/PRON.poss@sora (COORD.amod fitness/NOUN.conj and/CCONJ.cc nutritional/ADJ.conj) expertise/NOUN.head)
+           (PP.obl@team to/ADP.case the/DET.det Product/PROPN.compound Reviews/PROPN.compound Team/PROPN.head)))
+     ,/PUNCT and/CCONJ.cc
+     (VP.conj promises/VERB.head=promise{Fin,Pres}
+        (VP.xcomp to/PART.mark bring/VERB.head{Inf} (NP.iobj you/PRON.head)
+           (NP.obj nothing/PRON.head
+              (PP.nmod but/ADP.case the/DET.det best/ADJ.head (PP.nmod of/ADP.case the/DET.det best/ADJ.head))))))
+  ./PUNCT)

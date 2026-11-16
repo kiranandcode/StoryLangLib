@@ -1,0 +1,21 @@
+entity apple object it "the apple" generic
+entity cultivars object they "named apple cultivars"
+topic t1 "cultivars" cultivars
+(S%t1
+  There/PRON.expl
+  (VP.head are/VERB.head=be{Fin,Pres}
+     (NP.nsubj@cultivars thousands/NOUN.head
+        (PP.nmod of/ADP.case named/ADJ.amod apple/NOUN.compound cultivars/NOUN.head)
+        ,/PUNCT
+        (SBAR.relcl which/PRON.nsubj
+           (VP.head differ/VERB.head{Fin,Pres}
+              (PP.obl in/ADP.case
+                 (COORD.head sweetness/NOUN.conj ,/PUNCT acidity/NOUN.conj ,/PUNCT firmness/NOUN.conj ,/PUNCT colour/NOUN.conj and/CCONJ.cc aroma/NOUN.conj))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj Popular/ADJ.amod varieties/NOUN.head
+     (PP.nmod such/ADJ.case as/ADP.fixed
+        (COORD.head (NP.conj Granny/PROPN.compound Smith/PROPN.head) ,/PUNCT Fuji/PROPN.conj ,/PUNCT Honeycrisp/PROPN.conj and/CCONJ.cc Gala/PROPN.conj)))
+  (VP.head are/AUX.cop=be{Fin,Pres}
+     (NP.head a/DET.det small/ADJ.amod fraction/NOUN.head (PP.nmod of/ADP.case them/PRON.head@cultivars)))
+  ./PUNCT)

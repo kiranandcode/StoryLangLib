@@ -1,0 +1,16 @@
+entity apple object it "the apple" generic
+entity sieversii object it "Malus sieversii"
+entity mountains place they "the mountains of Kazakhstan"
+topic t1 "the apple's ancestor" apple
+(S%t1
+  (NP.nsubj@apple The/DET.det domesticated/ADJ.amod apple/NOUN.head ,/PUNCT (NP.appos Malus/PROPN.head domestica/PROPN.flat) ,/PUNCT)
+  (VP.head descends/VERB.head=descend{Fin,Pres} mainly/ADV.advmod
+     (PP.obl from/ADP.case wild/ADJ.amod apples/NOUN.head
+        (PP.nmod@mountains in/ADP.case the/DET.det mountains/NOUN.head
+           (PP.nmod of/ADP.case present-day/ADJ.amod Kazakhstan/PROPN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sieversii Its/PRON.poss@apple main/ADJ.amod wild/ADJ.amod ancestor/NOUN.head ,/PUNCT
+     (NP.appos Malus/PROPN.head sieversii/PROPN.flat) ,/PUNCT)
+  (VP.head still/ADV.advmod grows/VERB.head=grow{Fin,Pres} there/ADV.advmod)
+  ./PUNCT)

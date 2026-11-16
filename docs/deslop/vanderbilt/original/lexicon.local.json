@@ -1,0 +1,95 @@
+{
+ "assumptions": {
+  "reg": "neutral"
+ },
+ "commitment": {
+  "reg": "neutral"
+ },
+ "community": {
+  "reg": "neutral"
+ },
+ "conversations": {
+  "reg": "neutral"
+ },
+ "culture": {
+  "reg": "neutral"
+ },
+ "diversity": {
+  "reg": "neutral"
+ },
+ "environment": {
+  "reg": "neutral"
+ },
+ "environments": {
+  "reg": "neutral"
+ },
+ "experiences": {
+  "reg": "neutral"
+ },
+ "future": {
+  "reg": "neutral"
+ },
+ "inclusivity": {
+  "reg": "neutral"
+ },
+ "shootings": {
+  "reg": "neutral"
+ },
+ "build": {
+  "reg": "neutral"
+ },
+ "come": {
+  "reg": "neutral"
+ },
+ "continue": {
+  "reg": "neutral"
+ },
+ "create": {
+  "reg": "neutral"
+ },
+ "engage": {
+  "reg": "neutral"
+ },
+ "ensure": {
+  "reg": "neutral"
+ },
+ "involve": {
+  "reg": "neutral"
+ },
+ "learn": {
+  "reg": "neutral"
+ },
+ "let": {
+  "reg": "neutral"
+ },
+ "look": {
+  "reg": "neutral"
+ },
+ "mean": {
+  "reg": "neutral"
+ },
+ "promote": {
+  "reg": "neutral"
+ },
+ "require": {
+  "reg": "neutral"
+ },
+ "work": {
+  "reg": "neutral"
+ },
+ "feel": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "reaffirm": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "recognize": {
+  "cls": [
+   "us"
+  ]
+ }
+}

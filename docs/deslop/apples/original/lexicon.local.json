@@ -1,0 +1,324 @@
+{
+ "association": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "combinations": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "conservation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "considerations": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "consumption": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "cultivation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "development": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "dispersal": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "domestication": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "examination": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "extension": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "innovation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "interaction": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "investment": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "migration": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "production": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "productivity": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "resistance": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "retellings": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "storage": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "variation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "judgment": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "inspiration": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "temptation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "tolerance": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "acidity": {
+  "reg": "neutral"
+ },
+ "agriculture": {
+  "reg": "neutral"
+ },
+ "appearance": {
+  "reg": "neutral"
+ },
+ "conditions": {
+  "reg": "neutral"
+ },
+ "diversity": {
+  "reg": "neutral"
+ },
+ "fraction": {
+  "reg": "neutral"
+ },
+ "generations": {
+  "reg": "neutral"
+ },
+ "gravity": {
+  "reg": "neutral"
+ },
+ "humanity": {
+  "reg": "neutral"
+ },
+ "immortality": {
+  "reg": "neutral"
+ },
+ "meanings": {
+  "reg": "neutral"
+ },
+ "populations": {
+  "reg": "neutral"
+ },
+ "resilience": {
+  "reg": "neutral"
+ },
+ "responsibility": {
+  "reg": "neutral"
+ },
+ "suitability": {
+  "reg": "neutral"
+ },
+ "temperature": {
+  "reg": "neutral"
+ },
+ "temperatures": {
+  "reg": "neutral"
+ },
+ "texture": {
+  "reg": "neutral"
+ },
+ "medium-sized": {
+  "reg": "neutral"
+ },
+ "acquire": {
+  "reg": "neutral"
+ },
+ "affect": {
+  "reg": "neutral"
+ },
+ "appear": {
+  "reg": "neutral"
+ },
+ "become": {
+  "reg": "neutral"
+ },
+ "combine": {
+  "reg": "neutral"
+ },
+ "contain": {
+  "reg": "neutral"
+ },
+ "continue": {
+  "reg": "neutral"
+ },
+ "contribute": {
+  "reg": "neutral"
+ },
+ "develop": {
+  "reg": "neutral"
+ },
+ "exist": {
+  "reg": "neutral"
+ },
+ "extend": {
+  "reg": "neutral"
+ },
+ "facilitate": {
+  "reg": "neutral"
+ },
+ "grow": {
+  "reg": "neutral"
+ },
+ "guarantee": {
+  "reg": "neutral"
+ },
+ "help": {
+  "reg": "neutral"
+ },
+ "identify": {
+  "reg": "neutral"
+ },
+ "introduce": {
+  "reg": "neutral"
+ },
+ "keep": {
+  "reg": "neutral"
+ },
+ "maintain": {
+  "reg": "neutral"
+ },
+ "migrate": {
+  "reg": "neutral"
+ },
+ "occupy": {
+  "reg": "neutral"
+ },
+ "originate": {
+  "reg": "neutral"
+ },
+ "play": {
+  "reg": "neutral"
+ },
+ "present": {
+  "reg": "neutral"
+ },
+ "preserve": {
+  "reg": "neutral"
+ },
+ "prevent": {
+  "reg": "neutral"
+ },
+ "regulate": {
+  "reg": "neutral"
+ },
+ "rely": {
+  "reg": "neutral"
+ },
+ "represent": {
+  "reg": "neutral"
+ },
+ "reproduce": {
+  "reg": "neutral"
+ },
+ "require": {
+  "reg": "neutral"
+ },
+ "spread": {
+  "reg": "neutral"
+ },
+ "balance": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "describe": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "embellish": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "establish": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "interpret": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "propagate": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "symbolize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "programs": {
+  "cls": [
+   "us"
+  ]
+ },
+ "literally": {
+  "cls": []
+ },
+ "_why": "literally: the literal sense ('should not be interpreted literally'), not an intensifier. programs: breeding programmes."
+}

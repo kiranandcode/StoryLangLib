@@ -1,4 +1,4 @@
-# Certification: temple (rewrite)
+# Certification: rewrite
 
 1 paragraphs, 4 sentences, 49 words. Every paragraph's annotation passes `langlib check`.
 

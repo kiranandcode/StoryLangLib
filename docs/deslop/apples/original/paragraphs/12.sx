@@ -1,0 +1,11 @@
+entity apple object it "the apple" generic
+entity examples abstract they "these examples" of=para:9,para:10,para:11
+topic t1 "what the examples show" examples
+(S%t1
+  (NP.nsubj@examples These/DET.det examples/NOUN.head)
+  (VP.head demonstrate/VERB.head{Fin,Pres}
+     (SBAR.ccomp how/ADV.advmod
+        (S.head (NP.nsubj@apple an/DET.det ordinary/ADJ.amod agricultural/ADJ.amod product/NOUN.head)
+           (VP.head can/AUX.aux become/VERB.head{Inf}
+              (NP.xcomp a/DET.det powerful/ADJ.amod cultural/ADJ.amod symbol/NOUN.head)))))
+  ./PUNCT)

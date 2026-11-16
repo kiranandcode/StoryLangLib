@@ -1,0 +1,12 @@
+entity apple object it "the apple" generic
+entity meanings abstract they "the apple's meanings"
+topic t1 "what apples mean" meanings
+(S%t1
+  (PP.obl Throughout/ADP.case history/NOUN.head)
+  ,/PUNCT
+  (NP.nsubj@apple apples/NOUN.head)
+  (VP.head have/AUX.aux=have{Fin,Pres} acquired/VERB.head=acquire{Part}
+     (NP.obj@meanings meanings/NOUN.head
+        (VP.acl extending/VERB.head=extend{Ger} far/ADV.advmod
+           (PP.obl beyond/ADP.case their/PRON.poss@apple agricultural/ADJ.amod origins/NOUN.head))))
+  ./PUNCT)

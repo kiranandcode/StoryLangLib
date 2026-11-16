@@ -1,0 +1,20 @@
+entity apple object it "the apple" generic
+entity golden object they "golden apples"
+topic t1 "golden apples" golden
+(S%t1
+  (PP.obl In/ADP.case Greek/ADJ.amod mythology/NOUN.head)
+  ,/PUNCT
+  (NP.nsubj@golden golden/ADJ.amod apples/NOUN.head)
+  (VP.head appear/VERB.head{Fin,Pres}
+     (PP.obl in/ADP.case several/ADJ.amod stories/NOUN.head
+        ,/PUNCT
+        (PP.nmod including/ADP.case
+           (COORD.head (NP.conj the/DET.det judgment/NOUN.head (PP.nmod of/ADP.case Paris/PROPN.head))
+              and/CCONJ.cc
+              (NP.conj the/DET.det labors/NOUN.head (PP.nmod of/ADP.case Heracles/PROPN.head))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@golden They/PRON.head)
+  (VP.head frequently/ADV.advmod symbolize/VERB.head{Fin,Pres}
+     (COORD.obj beauty/NOUN.conj ,/PUNCT desire/NOUN.conj ,/PUNCT immortality/NOUN.conj ,/PUNCT or/CCONJ.cc conflict/NOUN.conj))
+  ./PUNCT)

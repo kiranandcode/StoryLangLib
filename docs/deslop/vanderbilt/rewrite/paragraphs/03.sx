@@ -1,0 +1,22 @@
+entity authors group they "the Peabody EDI office"
+entity everyone group they "everyone on campus"
+entity campus place it "the campus"
+topic t1 "welcoming everyone" everyone
+(S%t1
+  (NP.nsubj@authors We/PRON.head)
+  (VP.head also/ADV.advmod want/VERB.head{Fin,Pres}
+     (NP.obj@everyone everyone/PRON.head (PP.nmod@campus on/ADP.case campus/NOUN.head))
+     (VP.xcomp to/PART.mark feel/VERB.head{Inf} welcome/ADJ.xcomp))
+  ./PUNCT)
+(S%t1
+  (S.csubj Welcoming/VERB.head=welcome{Ger} (NP.obj@everyone everyone/PRON.head))
+  (VP.head means/VERB.head=mean{Fin,Pres}
+     (COORD.obj
+        (VP.conj valuing/VERB.head=value{Ger}
+           (NP.obj the/DET.det range/NOUN.head
+              (PP.nmod of/ADP.case (COORD.head experiences/NOUN.conj ,/PUNCT views/NOUN.conj and/CCONJ.cc identities/NOUN.conj))
+              (PP.nmod@campus on/ADP.case campus/NOUN.head)))
+        and/CCONJ.cc
+        (VP.conj questioning/VERB.head=question{Ger}
+           (NP.obj our/PRON.poss@authors own/ADJ.amod (COORD.head assumptions/NOUN.conj and/CCONJ.cc biases/NOUN.conj)))))
+  ./PUNCT)

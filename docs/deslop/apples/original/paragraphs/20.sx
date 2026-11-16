@@ -1,0 +1,11 @@
+entity apple object it "the apple" generic
+entity conservation abstract it "conserving apple diversity"
+topic t1 "conservation" conservation
+(S%t1
+  (NP.nsubj@conservation The/DET.det conservation/NOUN.head
+     (PP.nmod of/ADP.case apple/NOUN.compound diversity/NOUN.head))
+  (VP.head therefore/ADV.advmod represents/VERB.head=represent{Fin,Pres}
+     (COORD.obj both/CCONJ.cc (NP.conj a/DET.det cultural/ADJ.amod responsibility/NOUN.head) and/CCONJ.cc
+        (NP.conj a/DET.det practical/ADJ.amod investment/NOUN.head
+           (PP.nmod in/ADP.case agricultural/ADJ.amod resilience/NOUN.head))))
+  ./PUNCT)

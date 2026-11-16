@@ -259,7 +259,7 @@ declared by hand. `langlib house <dir>` reports them.
 |:--|:--|
 | agentless passives (*hidden characters*) | a `be` auxiliary and a participle head (not an `ing` form) with no `by` phrase; at most one clause in ten |
 | hidden actions | a subject whose head noun is `nominal` with a `light` verb or a copula ("the implementations ... make widespread use of unsafe operations") |
-| inanimate actors | an `object` or `abstract` entity as the subject of an active `animate` verb, or of one of several coordinated predicates ("a closed-world method, which assumes ...") |
+| inanimate actors | an `object`, `abstract` or `place` entity as the subject of an active `animate` verb, or of one of several coordinated predicates ("a closed-world method, which assumes ...") |
 | noun stacks | three nouns in a row in a phrase that names no tracked entity |
 | point first | the subject starts twelve or more words in |
 | stacked asides | a sentence of 35 words or more with a parenthetical and a relative clause |

@@ -1,0 +1,19 @@
+entity douera place it "Douera"
+entity algiers place it "Algiers"
+entity algeria place it "Algeria"
+topic t1 "Douera" douera
+(S%t1
+  (NP.nsubj@douera Douera/PROPN.head)
+  (VP.head had/VERB.head=have{Fin,Past}
+     (NP.obj 56,998/NUM.nummod inhabitants/NOUN.head)
+     (PP.obl at/ADP.case the/DET.det April/PROPN.compound 2008/NUM.compound census/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@douera The/DET.det town/NOUN.head)
+  (VP.head lies/VERB.head=lie{Fin,Pres}
+     (PP.obl in/ADP.case the/DET.det central-north/ADJ.amod region/NOUN.head
+        (PP.nmod@algeria of/ADP.case Algeria/PROPN.head))
+     ,/PUNCT
+     (ADJP.advmod close/ADJ.head
+        (PP.obl to/ADP.case the/DET.det capital/NOUN.head ,/PUNCT (NP.appos@algiers Algiers/PROPN.head))))
+  ./PUNCT)

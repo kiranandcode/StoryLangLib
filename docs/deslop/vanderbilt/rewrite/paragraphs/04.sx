@@ -1,0 +1,19 @@
+entity authors group they "the Peabody EDI office"
+entity community group it "an inclusive community"
+topic t1 "keeping at it" authors
+(S%t1
+  (NP.nsubj@authors We/PRON.head)
+  (VP.head will/AUX.aux keep/VERB.head{Inf}
+     (COORD.xcomp
+        (VP.conj talking/VERB.head=talk{Ger}
+           (PP.obl about/ADP.case
+              (SBAR.head how/ADV.advmod
+                 (S.head (NP.nsubj@authors we/PRON.head) (VP.head can/AUX.aux do/VERB.head{Inf} better/ADV.advmod)))))
+        and/CCONJ.cc
+        (VP.conj learning/VERB.head=learn{Ger} (PP.obl from/ADP.case our/PRON.poss@authors mistakes/NOUN.head)))
+     ,/PUNCT
+     (SBAR.advcl because/SCONJ.mark
+        (S.head
+           (S.csubj building/VERB.head=build{Ger} (NP.obj@community an/DET.det inclusive/ADJ.amod community/NOUN.head))
+           (VP.head takes/VERB.head=take{Fin,Pres} (NP.obj ongoing/ADJ.amod effort/NOUN.head)))))
+  ./PUNCT)

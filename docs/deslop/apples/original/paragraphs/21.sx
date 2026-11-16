@@ -1,0 +1,27 @@
+entity apple object it "the apple" generic
+topic t1 "what the apple shows" apple
+(S%t1
+  (NP.nsubj@apple The/DET.det apple/NOUN.head)
+  (VP.head illustrates/VERB.head=illustrate{Fin,Pres}
+     (NP.obj the/DET.det complex/ADJ.amod relationship/NOUN.head
+        (PP.nmod between/ADP.case
+           (COORD.head (NP.conj human/ADJ.amod societies/NOUN.head) and/CCONJ.cc (NP.conj cultivated/ADJ.amod plants/NOUN.head)))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj Its/PRON.poss@apple history/NOUN.head)
+  (VP.head reflects/VERB.head=reflect{Fin,Pres}
+     (COORD.obj migration/NOUN.conj ,/PUNCT trade/NOUN.conj ,/PUNCT (NP.conj agricultural/ADJ.amod innovation/NOUN.head) ,/PUNCT and/CCONJ.cc
+        (NP.conj cultural/ADJ.amod exchange/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (S.head (NP.nsubj Its/PRON.poss@apple biological/ADJ.amod characteristics/NOUN.head)
+     (VP.head reveal/VERB.head{Fin,Pres}
+        (NP.obj the/DET.det importance/NOUN.head
+           (PP.nmod of/ADP.case (COORD.head genetics/NOUN.conj and/CCONJ.cc (NP.conj selective/ADJ.amod breeding/NOUN.head))))))
+  ,/PUNCT
+  (SBAR.advcl while/SCONJ.mark
+     (S.head (NP.nsubj its/PRON.poss@apple economic/ADJ.amod significance/NOUN.head)
+        (VP.head demonstrates/VERB.head=demonstrate{Fin,Pres}
+           (NP.obj the/DET.det challenges/NOUN.head
+              (PP.nmod of/ADP.case modern/ADJ.amod food/NOUN.compound production/NOUN.head)))))
+  ./PUNCT)

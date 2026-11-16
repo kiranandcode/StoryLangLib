@@ -1,0 +1,20 @@
+entity apple object it "the apple" generic
+entity asia place it "Central Asia"
+entity sieversii object it "Malus sieversii"
+topic t1 "where apples come from" apple
+(S%t1
+  (NP.nsubj@apple The/DET.det domesticated/ADJ.amod apple/NOUN.head ,/PUNCT (NP.appos Malus/PROPN.head domestica/PROPN.flat) ,/PUNCT)
+  (VP.head originated/VERB.head=originate{Fin,Past} primarily/ADV.advmod
+     (PP.obl from/ADP.case wild/ADJ.amod apple/NOUN.compound populations/NOUN.head
+        (PP.nmod@asia in/ADP.case Central/PROPN.compound Asia/PROPN.head))
+     ,/PUNCT
+     (PP.obl particularly/ADV.advmod in/ADP.case the/DET.det mountains/NOUN.head
+        (PP.nmod of/ADP.case present-day/ADJ.amod Kazakhstan/PROPN.head)))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@sieversii Its/PRON.poss@apple principal/ADJ.amod wild/ADJ.amod ancestor/NOUN.head ,/PUNCT
+     (NP.appos Malus/PROPN.head sieversii/PROPN.flat) ,/PUNCT)
+  (VP.head continues/VERB.head=continue{Fin,Pres}
+     (VP.xcomp to/PART.mark grow/VERB.head{Inf}
+        (PP.obl@asia in/ADP.case this/DET.det region/NOUN.head)))
+  ./PUNCT)

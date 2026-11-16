@@ -1,0 +1,17 @@
+entity apple object it "the apple" generic
+entity newton person he "Isaac Newton"
+entity story abstract it "the story of Newton's apple"
+topic t1 "Newton's apple" newton
+(S%t1
+  (NP.nsubj@newton Isaac/PROPN.head Newton/PROPN.flat)
+  (VP.head reportedly/ADV.advmod said/VERB.head=say{Fin,Past}
+     (SBAR.ccomp that/SCONJ.mark
+        (S.head
+           (S.csubj watching/VERB.head=watch{Ger} (NP.obj@apple an/DET.det apple/NOUN.head) fall/VERB.xcomp{Inf})
+           (VP.head set/VERB.head{Fin,Past} (NP.obj@newton him/PRON.head)
+              (VP.xcomp thinking/VERB.head=think{Ger} (PP.obl about/ADP.case gravity/NOUN.head)))))
+     ,/PUNCT
+     (SBAR.advcl although/SCONJ.mark
+        (S.head (NP.nsubj popular/ADJ.amod retellings/NOUN.head)
+           (VP.head embellish/VERB.head{Fin,Pres} (NP.obj@story the/DET.det story/NOUN.head)))))
+  ./PUNCT)

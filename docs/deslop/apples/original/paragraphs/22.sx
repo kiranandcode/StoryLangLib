@@ -1,0 +1,18 @@
+entity apple object it "the apple" generic
+topic t1 "what the apple offers" apple
+(S%t1
+  (ADVP.advcl Far/ADV.head
+     (PP.obl from/ADP.mark
+        (VP.head being/AUX.cop=be{Ger} merely/ADV.advmod (NP.head an/DET.det everyday/ADJ.amod fruit/NOUN.head))))
+  ,/PUNCT
+  (NP.nsubj@apple the/DET.det apple/NOUN.head)
+  (VP.head provides/VERB.head=provide{Fin,Pres}
+     (NP.obj a/DET.det useful/ADJ.amod perspective/NOUN.head
+        (PP.nmod on/ADP.case
+           (COORD.head
+              (NP.conj the/DET.det development/NOUN.head (PP.nmod of/ADP.case agriculture/NOUN.head))
+              and/CCONJ.cc
+              (NP.conj the/DET.det continuing/ADJ.amod interaction/NOUN.head
+                 (PP.nmod between/ADP.case
+                    (COORD.head humanity/NOUN.conj and/CCONJ.cc (NP.conj the/DET.det natural/ADJ.amod world/NOUN.head))))))))
+  ./PUNCT)

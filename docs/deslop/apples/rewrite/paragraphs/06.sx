@@ -1,0 +1,11 @@
+entity apple object it "the apple" generic
+entity fibre object it "the fibre in apples"
+topic t1 "calories" apple
+(S%t1
+  (NP.nsubj@apple A/DET.det medium-sized/ADJ.amod apple/NOUN.head)
+  (VP.head has/VERB.head=have{Fin,Pres} (NP.obj about/ADV.advmod 95/NUM.nummod calories/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (COORD.nsubj (NP.conj Its/PRON.poss@apple water/NOUN.head) and/CCONJ.cc fibre/NOUN.conj@fibre)
+  (VP.head make/VERB.head{Fin,Pres} (NP.obj@apple it/PRON.head) filling/ADJ.xcomp)
+  ./PUNCT)

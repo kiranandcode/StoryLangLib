@@ -1,4 +1,4 @@
-# Certification: somali (original)
+# Certification: original
 
 3 paragraphs, 5 sentences, 118 words. Every paragraph's annotation passes `langlib check`.
 

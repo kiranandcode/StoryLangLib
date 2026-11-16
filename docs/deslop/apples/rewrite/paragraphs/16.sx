@@ -1,0 +1,26 @@
+entity apple object it "the apple" generic
+entity breeders group they "breeders"
+entity rest object they "less commercially successful varieties"
+entity wild object they "wild apples"
+topic t1 "why keep the other varieties" rest
+(S%t1
+  (NP.nsubj@breeders Breeders/NOUN.head)
+  (VP.head need/VERB.head{Fin,Pres} (NP.obj@rest the/DET.det rest/NOUN.head) too/ADV.advmod)
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@rest (ADJP.amod Less/ADV.advmod commercially/ADV.advmod successful/ADJ.head) varieties/NOUN.head)
+  (VP.head may/AUX.aux carry/VERB.head{Inf}
+     (NP.obj traits/NOUN.head
+        (ADJP.amod useful/ADJ.head (PP.obl for/ADP.case future/ADJ.amod breeding/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@wild Wild/ADJ.amod apples/NOUN.head)
+  (VP.head are/AUX.cop=be{Fin,Pres}
+     (ADJP.head even/ADV.advmod more/ADV.advmod valuable/ADJ.head (PP.obl@breeders to/ADP.case breeders/NOUN.head))
+     ,/PUNCT
+     (PP.obl as/ADP.case a/DET.det source/NOUN.head
+        (PP.nmod of/ADP.case genes/NOUN.head
+           (PP.nmod for/ADP.case
+              (COORD.head (NP.conj resistance/NOUN.head (PP.nmod to/ADP.case disease/NOUN.head)) and/CCONJ.cc
+                 (NP.conj tolerance/NOUN.head (PP.nmod of/ADP.case environmental/ADJ.amod stress/NOUN.head)))))))
+  ./PUNCT)

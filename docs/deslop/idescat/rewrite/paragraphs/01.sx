@@ -1,9 +1,10 @@
 entity catalonia place it "Catalonia"
 entity idescat group it "the Statistical Institute of Catalonia"
+entity gov group it "Catalonia's regional government"
 topic t1 "the founding of Idescat" idescat
 (S%t1
   (PP.obl In/ADP.case 1989/NUM.head)
-  (NP.nsubj@catalonia Catalonia/PROPN.head)
+  (NP.nsubj@gov Catalonia's/PROPN.poss@catalonia regional/ADJ.amod government/NOUN.head)
   (VP.head founded/VERB.head=found{Fin,Past}
      (NP.obj@idescat the/DET.det Statistical/PROPN.compound Institute/PROPN.head
         (PP.nmod@catalonia of/ADP.case Catalonia/PROPN.head)

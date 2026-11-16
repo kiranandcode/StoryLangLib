@@ -1,0 +1,15 @@
+entity apple object it "the apple" generic
+entity fiber object it "the fibre in apples"
+topic t1 "calories" apple
+(S%t1
+  (NP.nsubj@apple A/DET.det medium-sized/ADJ.amod apple/NOUN.head)
+  (VP.head contains/VERB.head=contain{Fin,Pres}
+     (NP.obj approximately/ADV.advmod 95/NUM.nummod calories/NOUN.head)
+     ,/PUNCT
+     (VP.advcl making/VERB.head=make{Ger} (NP.obj@apple it/PRON.head)
+        (NP.xcomp a/DET.det convenient/ADJ.amod source/NOUN.head (PP.nmod of/ADP.case energy/NOUN.head))))
+  ./PUNCT)
+(S%t1
+  (COORD.nsubj (NP.conj Its/PRON.poss@apple high/ADJ.amod water/NOUN.compound content/NOUN.head) and/CCONJ.cc (NP.conj@fiber fiber/NOUN.head))
+  (VP.head contribute/VERB.head{Fin,Pres} (PP.obl to/ADP.case satiety/NOUN.head))
+  ./PUNCT)

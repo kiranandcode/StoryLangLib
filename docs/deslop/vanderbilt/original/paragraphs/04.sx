@@ -1,0 +1,34 @@
+entity authors group they "the Peabody EDI office"
+entity env abstract it "a safe and inclusive environment"
+entity community group it "the Peabody community"
+topic t1 "an ongoing process" env
+(S%t1
+  Finally/ADV.advmod ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head must/AUX.aux recognize/VERB.head{Inf}
+     (SBAR.ccomp that/SCONJ.mark
+        (S.head
+           (S.csubj creating/VERB.head=create{Ger}
+              (NP.obj@env a/DET.det (ADJP.amod safe/ADJ.conj and/CCONJ.cc inclusive/ADJ.conj) environment/NOUN.head))
+           (VP.head is/AUX.cop=be{Fin,Pres}
+              (NP.head an/DET.det ongoing/ADJ.amod process/NOUN.head
+                 (SBAR.relcl that/PRON.nsubj requires/VERB.head=require{Fin,Pres}
+                    (NP.obj ongoing/ADJ.amod (COORD.head effort/NOUN.conj and/CCONJ.cc commitment/NOUN.conj))))))))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@authors We/PRON.head)
+  (VP.head must/AUX.aux continue/VERB.head{Inf}
+     (VP.xcomp to/PART.mark
+        (COORD.head
+           (VP.conj engage/VERB.head{Inf}
+              (PP.obl in/ADP.case conversations/NOUN.head
+                 (PP.nmod about/ADP.case
+                    (SBAR.head how/ADV.advmod
+                       (S.head (NP.nsubj@authors we/PRON.head) (VP.head can/AUX.aux do/VERB.head{Inf} better/ADV.advmod))))))
+           ,/PUNCT
+           (VP.conj learn/VERB.head{Inf} (PP.obl from/ADP.case our/PRON.poss@authors mistakes/NOUN.head))
+           ,/PUNCT and/CCONJ.cc
+           (VP.conj work/VERB.head{Inf} together/ADV.advmod
+              (VP.advcl to/PART.mark build/VERB.head{Inf}
+                 (NP.obj@community a/DET.det (ADJP.amod stronger/ADJ.conj ,/PUNCT (ADJP.conj more/ADV.advmod inclusive/ADJ.head)) community/NOUN.head))))))
+  ./PUNCT)

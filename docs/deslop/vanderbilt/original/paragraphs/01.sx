@@ -1,0 +1,38 @@
+entity authors group they "the Peabody EDI office"
+entity shootings event they "the Michigan State shootings"
+entity env abstract it "a safe and inclusive environment"
+topic t1 "responding to the shootings" shootings
+(S%t1
+  (NP.nsubj@shootings The/DET.det recent/ADJ.amod Michigan/PROPN.compound shootings/NOUN.head)
+  (VP.head are/AUX.cop=be{Fin,Pres}
+     (NP.head a/DET.det tragic/ADJ.amod reminder/NOUN.head
+        (PP.nmod of/ADP.case the/DET.det importance/NOUN.head
+           (PP.nmod of/ADP.case
+              (VP.head taking/VERB.head=take{Ger} (NP.obj care/NOUN.head)
+                 (PP.obl of/ADP.case each/DET.det other/PRON.head))))
+        ,/PUNCT
+        (PP.nmod particularly/ADV.advmod in/ADP.case the/DET.det context/NOUN.head
+           (PP.nmod of/ADP.case
+              (VP.head creating/VERB.head=create{Ger} (NP.obj@env inclusive/ADJ.amod environments/NOUN.head))))))
+  ./PUNCT)
+(S%t1
+  (PP.obl As/ADP.case members/NOUN.head
+     (PP.nmod of/ADP.case the/DET.det Peabody/PROPN.compound campus/NOUN.compound community/NOUN.head))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head must/AUX.aux
+     (COORD.head
+        (VP.conj reflect/VERB.head{Inf}
+           (PP.obl on/ADP.case the/DET.det impact/NOUN.head
+              (PP.nmod@shootings of/ADP.case such/DET.det an/DET.det event/NOUN.head)))
+        and/CCONJ.cc
+        (VP.conj take/VERB.head{Inf} (NP.obj steps/NOUN.head)
+           (VP.advcl to/PART.mark ensure/VERB.head{Inf}
+              (SBAR.ccomp that/SCONJ.mark
+                 (S.head (NP.nsubj@authors we/PRON.head)
+                    (VP.head are/AUX.aux=be{Fin,Pres} doing/VERB.head=do{Part,Pres}
+                       (NP.obj our/PRON.poss@authors best/ADJ.head)
+                       (VP.advcl to/PART.mark create/VERB.head{Inf}
+                          (NP.obj@env a/DET.det (ADJP.amod safe/ADJ.conj and/CCONJ.cc inclusive/ADJ.conj) environment/NOUN.head
+                             (PP.nmod for/ADP.case all/PRON.head))))))))))
+  ./PUNCT)

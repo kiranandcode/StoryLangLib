@@ -1,0 +1,14 @@
+entity drew person he "Drew Ortiz"
+topic t1 "Drew" drew
+(S%t1
+  (NP.nsubj@drew Drew/PROPN.head Ortiz/PROPN.flat)
+  (VP.head reviews/VERB.head=review{Fin,Pres} (NP.obj outdoor/ADJ.amod gear/NOUN.head))
+  ./PUNCT)
+(S%t1
+  (NP.nsubj@drew He/PRON.head)
+  (VP.head spends/VERB.head=spend{Fin,Pres}
+     (NP.obj most/ADJ.amod weekends/NOUN.head)
+     (COORD.xcomp
+        (VP.conj camping/VERB.head=camp{Ger}) ,/PUNCT (VP.conj hiking/VERB.head=hike{Ger}) or/CCONJ.cc
+        (PP.conj on/ADP.case (NP.poss his/PRON.poss@drew parents/NOUN.head '/PART.case) farm/NOUN.head)))
+  ./PUNCT)

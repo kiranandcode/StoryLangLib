@@ -1,0 +1,186 @@
+{
+ "digestion": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "judgment": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "resistance": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "retellings": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "temptation": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "tolerance": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "acidity": {
+  "reg": "neutral"
+ },
+ "appearance": {
+  "reg": "neutral"
+ },
+ "fraction": {
+  "reg": "neutral"
+ },
+ "generation": {
+  "reg": "neutral"
+ },
+ "gravity": {
+  "reg": "neutral"
+ },
+ "immortality": {
+  "reg": "neutral"
+ },
+ "paintings": {
+  "reg": "neutral"
+ },
+ "temperatures": {
+  "reg": "neutral"
+ },
+ "texture": {
+  "reg": "neutral"
+ },
+ "medium-sized": {
+  "reg": "neutral"
+ },
+ "appear": {
+  "reg": "neutral"
+ },
+ "change": {
+  "reg": "neutral"
+ },
+ "come": {
+  "reg": "neutral"
+ },
+ "contain": {
+  "reg": "neutral"
+ },
+ "cope": {
+  "reg": "neutral"
+ },
+ "cross": {
+  "reg": "neutral"
+ },
+ "descend": {
+  "reg": "neutral"
+ },
+ "differ": {
+  "reg": "neutral"
+ },
+ "fall": {
+  "reg": "neutral"
+ },
+ "flower": {
+  "reg": "neutral"
+ },
+ "grow": {
+  "reg": "neutral"
+ },
+ "guarantee": {
+  "reg": "neutral"
+ },
+ "help": {
+  "reg": "neutral"
+ },
+ "keep": {
+  "reg": "neutral"
+ },
+ "meet": {
+  "reg": "neutral"
+ },
+ "migrate": {
+  "reg": "neutral"
+ },
+ "need": {
+  "reg": "neutral"
+ },
+ "open": {
+  "reg": "neutral"
+ },
+ "pick": {
+  "reg": "neutral"
+ },
+ "prevent": {
+  "reg": "neutral"
+ },
+ "regulate": {
+  "reg": "neutral"
+ },
+ "resemble": {
+  "reg": "neutral"
+ },
+ "resist": {
+  "reg": "neutral"
+ },
+ "set": {
+  "reg": "neutral"
+ },
+ "store": {
+  "reg": "neutral"
+ },
+ "symbolise": {
+  "reg": "neutral"
+ },
+ "taste": {
+  "reg": "neutral"
+ },
+ "attach": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "embellish": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "fight": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "name": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "propagate": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "say": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "show": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "exaggeration": {
+  "cls": [
+   "nominal"
+  ]
+ },
+ "leave": {
+  "reg": "neutral"
+ }
+}

@@ -1,4 +1,4 @@
-# Certification: idescat (original)
+# Certification: original
 
 2 paragraphs, 3 sentences, 65 words. Every paragraph's annotation passes `langlib check`.
 

@@ -1,0 +1,29 @@
+entity apple object it "the apple" generic
+entity newton person he "Isaac Newton"
+entity account abstract it "the famous account"
+topic t1 "Newton's apple" newton
+(S%t1
+  (NP.nsubj@apple The/DET.det apple/NOUN.head)
+  (VP.head also/ADV.advmod occupies/VERB.head=occupy{Fin,Pres}
+     (NP.obj a/DET.det prominent/ADJ.amod position/NOUN.head
+        (PP.nmod in/ADP.case scientific/ADJ.amod folklore/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (PP.obl@account According/ADP.case to/ADP.fixed a/DET.det famous/ADJ.amod account/NOUN.head)
+  ,/PUNCT
+  (S.csubj observing/VERB.head=observe{Ger} (NP.obj@apple a/DET.det falling/ADJ.amod apple/NOUN.head))
+  (VP.head helped/VERB.head=help{Fin,Past}
+     (NP.obj@newton Isaac/PROPN.head Newton/PROPN.flat)
+     (VP.xcomp reflect/VERB.head{Inf} (PP.obl on/ADP.case gravity/NOUN.head)))
+  ./PUNCT)
+(S%t1
+  (SBAR.advcl Although/SCONJ.mark
+     (S.head (NP.nsubj popular/ADJ.amod retellings/NOUN.head)
+        (VP.head embellish/VERB.head{Fin,Pres} (NP.obj@account the/DET.det incident/NOUN.head))))
+  ,/PUNCT
+  (NP.nsubj@newton Newton/PROPN.head himself/PRON.appos@newton)
+  (VP.head reportedly/ADV.advmod described/VERB.head=describe{Fin,Past}
+     (NP.obj@apple an/DET.det apple/NOUN.head (VP.acl falling/VERB.head=fall{Ger}))
+     (PP.obl as/ADP.case an/DET.det inspiration/NOUN.head
+        (PP.nmod for/ADP.case his/PRON.poss@newton thinking/NOUN.head)))
+  ./PUNCT)

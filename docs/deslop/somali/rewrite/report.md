@@ -1,4 +1,4 @@
-# Certification: somali (rewrite)
+# Certification: rewrite
 
 3 paragraphs, 6 sentences, 61 words. Every paragraph's annotation passes `langlib check`.
 
