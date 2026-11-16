@@ -5,7 +5,7 @@ topic t1 "the movement exists" movement
 (S%t1
   (NP.nsubj The/DET.det article's/NOUN.poss@article subject/NOUN.head)
   (VP.head is/AUX.cop=be{Fin,Pres}
-     (NP.head@movement a/DET.det (ADJP.amod visible/ADJ.conj and/CCONJ.cc growing/ADJ.conj) movement/NOUN.head
+     (NP.head@movement a/DET.det visible/ADJ.amod movement/NOUN.head
         (PP.nmod around/ADP.case Northern/ADJ.amod English/ADJ.amod identity/NOUN.head)))
   ./PUNCT)
 (S%t1

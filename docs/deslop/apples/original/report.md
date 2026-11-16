@@ -2,12 +2,11 @@
 
 23 paragraphs, 46 sentences, 692 words. Every paragraph's annotation passes `langlib check`.
 
-**NOT CERTIFIED**: 27/33 rules hold.
+**NOT CERTIFIED**: 31/38 rules hold.
 
 ## Failing
 
 - **no inanimate actors** (clarity, `inanimate ≤ 0`)
-  - 7:1: However, the familiar saying, "An apple a day keeps the doctor away," should not be interpreted literally.
   - 12:1: These examples demonstrate how an ordinary agricultural product can become a powerful cultural symbol.
   - 21:1: The apple illustrates the complex relationship between human societies and cultivated plants.
 - **no non-sequitur stacks** (clarity, `nonSequiturs / sents ≤ 1/10`)
@@ -37,8 +36,12 @@
 - **no spurious contrasts** (writelikeme, `spuriousContrasts ≤ 0`)
   - 4:2: Unlike many agricultural crops, apple trees grown from seeds do not reliably reproduce the characteristics of their parents.
 - **no abstract significance** (writelikeme, `abstractSig ≤ 0`)
+  - 1:2: Its significance extends beyond its nutritional value, encompassing agriculture, economics, mythology, and scientific discovery.
   - 1:3: From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization.
   - 17:1: One of the most remarkable features of apples is their genetic diversity.
+  - 21:3: Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production.
+- **no filler phrases** (writelikeme, `fillers ≤ 0`)
+  - 21:3: Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production.
 
 ## Within limits, still flagged
 
@@ -49,9 +52,10 @@
 
 ## Passing
 
-characters: few agentless passives, actions: few hidden in nouns, few noun stacks, point first, no stacked asides, no slop emphasis, no throat-clearing, no understated inflation, no tricolon with semicolons, no deferred assertion, no emphatic cleft, few observation-and-response joins, no mechanical tetracolon, no sentence-initial conjunctions, no buzz words, no empty intensifiers, no appositive-trailing cadence, no dramatic terminal sentences, no summarising pivots, no bare pivot bridges, no bare relative clauses, no not-X-dash-Y, no em-dashes, no dramatic colons, no rhetorical questions, no not-X-but-Y (unless it denies what the text put forward), every word class the rules read is decided
+characters: few agentless passives, actions: few hidden in nouns, few noun stacks, point first, no stacked asides, no slop emphasis, no throat-clearing, no understated inflation, no tricolon with semicolons, no deferred assertion, no emphatic cleft, few observation-and-response joins, no mechanical tetracolon, no sentence-initial conjunctions, no buzz words, no empty intensifiers, no appositive-trailing cadence, no dramatic terminal sentences, no summarising pivots, no bare pivot bridges, no bare relative clauses, no not-X-dash-Y, no vague attributions, no manufactured enthusiasm, few exhortations, no broader-trend claims, no em-dashes, no dramatic colons, no rhetorical questions, no not-X-but-Y (unless it denies what the text put forward), every word class the rules read is decided
 
 ## Base lexicon overridden
 
+- describe: drops attribution
 - literally: drops intensifier
 

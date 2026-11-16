@@ -2,7 +2,7 @@
 
 2 paragraphs, 3 sentences, 65 words. Every paragraph's annotation passes `langlib check`.
 
-**NOT CERTIFIED**: 29/33 rules hold.
+**NOT CERTIFIED**: 34/38 rules hold.
 
 ## Failing
 
@@ -18,5 +18,10 @@
 
 ## Passing
 
-actions: few hidden in nouns, no inanimate actors, few noun stacks, point first, no stacked asides, no non-sequitur stacks, no slop emphasis, no throat-clearing, no understated inflation, no tricolon with semicolons, no deferred assertion, no emphatic cleft, few observation-and-response joins, no mechanical tetracolon, no sentence-initial conjunctions, no empty intensifiers, no appositive-trailing cadence, no dramatic terminal sentences, no summarising pivots, no summary closers, no bare pivot bridges, no spurious contrasts, no bare relative clauses, no not-X-dash-Y, no em-dashes, no dramatic colons, no rhetorical questions, no not-X-but-Y (unless it denies what the text put forward), every word class the rules read is decided
+actions: few hidden in nouns, no inanimate actors, few noun stacks, point first, no stacked asides, no non-sequitur stacks, no slop emphasis, no throat-clearing, no understated inflation, no tricolon with semicolons, no deferred assertion, no emphatic cleft, few observation-and-response joins, no mechanical tetracolon, no sentence-initial conjunctions, no empty intensifiers, no appositive-trailing cadence, no dramatic terminal sentences, no summarising pivots, no summary closers, no bare pivot bridges, no spurious contrasts, no bare relative clauses, no not-X-dash-Y, no vague attributions, no filler phrases, no manufactured enthusiasm, few exhortations, no broader-trend claims, no em-dashes, no dramatic colons, no rhetorical questions, no not-X-but-Y (unless it denies what the text put forward), every word class the rules read is decided
+
+## Base lexicon overridden
+
+- evolution: drops trend
+- movement: drops trend
 

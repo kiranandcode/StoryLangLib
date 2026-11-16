@@ -259,7 +259,7 @@ declared by hand. `langlib house <dir>` reports them.
 |:--|:--|
 | agentless passives (*hidden characters*) | a `be` auxiliary and a participle head (not an `ing` form) with no `by` phrase; at most one clause in ten |
 | hidden actions | a subject whose head noun is `nominal` with a `light` verb or a copula ("the implementations ... make widespread use of unsafe operations") |
-| inanimate actors | an `object`, `abstract` or `place` entity as the subject of an active `animate` verb, or of one of several coordinated predicates ("a closed-world method, which assumes ...") |
+| inanimate actors | an `object`, `abstract` or `place` entity as the subject of an active `animate` verb, or of one of several coordinated predicates (a contraction in class `fusedbe`, "they're", counts as the passive's auxiliary) ("a closed-world method, which assumes ...") |
 | noun stacks | three nouns in a row in a phrase that names no tracked entity |
 | point first | the subject starts twelve or more words in |
 | stacked asides | a sentence of 35 words or more with a parenthetical and a relative clause |
@@ -273,7 +273,11 @@ declared by hand. `langlib house <dir>` reports them.
 | dramatic terminal, summarising pivot, summary closer | a short last sentence that negates or asserts significance; a short sentence whose subject is a composite; a last sentence that adds no entity |
 | bare pivot, spurious contrast | a paragraph opening on a contrast connective without the last paragraph's entities; a contrast connective with no entity shared with the previous sentence |
 | not-X-dash-Y | a negation, then a dash before a clause's subject ("isn't just sourcing—it's framing"), which has no contrast connective for the academic not-X-but-Y rule |
-| abstract significance | a `significance` modifier on a `vague` head noun ("a pivotal moment", "a significant shift", "fundamental elements") |
+| abstract significance | a `significance` modifier on a `vague` head noun ("a pivotal moment", "a significant shift", "fundamental elements"), or a `significance` noun heading a subject ("Its significance extends beyond ...") |
+| vague attribution | an agentless passive of a verb of reputation (`attribution`: "is seen as", "widely considered") or a `weasel` phrase ("experts say"), in a sentence with no citation |
+| filler phrases, manufactured enthusiasm | `filler` ("a multitude of", "the importance of") and `hype` ("thrilled to", "guru") expressions |
+| exhortations | the authors or the reader as subject with a `deontic` word ("we must continue to ..."); at most one sentence in twenty |
+| broader-trend claims | a `scope` modifier on a `trend` noun ("a broader movement", "a growing trend") |
 | bare relative clause (Kiran, 2026-11-15) | a noun phrase post-modified by a relative clause (`relcl`, or `acl` with a finite verb; "that", "which" or no relativiser) whose verb has nothing past its subject and the gap: no object, complement, purpose, PP or adverbial. It reads as the start of a description and drops it ("code that AI writes"). Extended clauses ("code that AI writes to kill puppies", "the tools we use every day"), clefts, existentials and quotations are exempt |
 
 Unsupported claims, antitheses and coined terms used before they are defined

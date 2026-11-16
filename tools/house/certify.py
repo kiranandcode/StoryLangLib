@@ -27,7 +27,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-LANGLIB = ROOT / ".lake/build/bin/langlib"
+LANGLIB = Path(os.environ.get("LANGLIB_BIN", ROOT / ".lake/build/bin/langlib"))
 sys.path.insert(0, str(HERE))
 from sx import compile_sx  # noqa: E402
 
@@ -60,6 +60,11 @@ HOUSE_FLAG = {  # rule name -> key in house "flagged"
     "no bare relative clauses": "bareRelatives",
     "no not-X-dash-Y": "negDashes",
     "no abstract significance": "abstractSig",
+    "no vague attributions": "weasels",
+    "no filler phrases": "fillers",
+    "no manufactured enthusiasm": "hype",
+    "few exhortations": "exhortations",
+    "no broader-trend claims": "trendClaims",
 }
 NOMINAL = re.compile(r"(tion|sion|ment|ance|ence|ancy|ency|ity|ure|al|ing|sis|age)s?$")
 # -ize/-yze forms; -or, -er and -og spellings are listed in the base lexicon's `us` class

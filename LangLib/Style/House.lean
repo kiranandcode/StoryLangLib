@@ -60,7 +60,18 @@ AI writing" (negative parallelisms; undue emphasis on significance): a
 negation followed by a dash and a fresh clause's subject ("isn't just
 sourcing—it's framing"), which has no contrast connective for the academic
 not-X-but-Y rule to see, and a `significance` modifier on a `vague` head noun
-("marking a pivotal moment", "a significant shift"). Non-restrictive clauses ("X, which
+("marking a pivotal moment", "a significant shift"), or a `significance`
+noun heading a subject ("Its significance extends beyond ..."). From the
+same guide and the Sports Illustrated and Vanderbilt texts in `docs/deslop`:
+vague attributions (an agentless passive of an `attribution` verb of
+reputation, "is seen as a bridge", or a `weasel` phrase, "experts say", in a
+sentence that cites nothing), `filler` phrases ("a
+multitude of", "the importance of"), manufactured enthusiasm (`hype`:
+"thrilled to bring you"), exhortations (the authors or the reader as subject
+with a `deontic` word, "we must continue to engage"; at most one sentence in
+twenty), and broader-trend claims (a `scope` modifier on a `trend` noun, "a
+broader movement"). A contraction in class `fusedbe` ("that's", "they're")
+counts as a copula or a passive auxiliary. Non-restrictive clauses ("X, which
 people use,") are counted apart and not judged: set off by a comma or bracket
 they assert a second proposition about a noun already identified, rather
 than restricting it and leaving the description unsaid. Em-dashes, colon
@@ -104,6 +115,16 @@ structure HSent where
   negDash : Bool := false
   /-- "a pivotal moment": a `significance` modifier on a `vague` head noun -/
   abstractSig : Nat := 0
+  /-- "is seen as a bridge": an agentless passive of an `attribution` verb, or a `weasel` phrase -/
+  weasel : Nat := 0
+  /-- "a multitude of", "the importance of": `filler` phrases -/
+  filler : Nat := 0
+  /-- "thrilled to bring you": `hype` words -/
+  hype : Nat := 0
+  /-- a `deontic` word ("must", "should", "let us"); an exhortation when the subject is the authors or the reader -/
+  deontic : Bool := false
+  /-- "a broader movement": a `scope` modifier on a `trend` head noun -/
+  trend : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-! ## Reading one sentence -/
@@ -146,13 +167,14 @@ structure Counts where
   inanimate : Nat := 0
   nounStacks : Nat := 0
   conjuncts : Nat := 0
+  weasel : Nat := 0
   deriving Inhabited
 
 def Counts.add (a b : Counts) : Counts :=
   { clauses := a.clauses + b.clauses, passives := a.passives + b.passives,
     agentless := a.agentless + b.agentless, hiddenAction := a.hiddenAction + b.hiddenAction,
     inanimate := a.inanimate + b.inanimate, nounStacks := a.nounStacks + b.nounStacks,
-    conjuncts := max a.conjuncts b.conjuncts }
+    conjuncts := max a.conjuncts b.conjuncts, weasel := a.weasel + b.weasel }
 
 private def feat' (w : Word) (k : String) : Option String := (w.feats.find? (·.1 == k)).map (·.2)
 
@@ -174,7 +196,8 @@ private partial def counts (lx : Lex) (kinds : List (String × EntityKind)) : Tr
     let cop := kids.any (roleIs · .cop)
     let clause := verb.isSome || cop
     -- passive: a `be` auxiliary and a participle head here that is not an -ing form
-    let passive := kids.any (fun k => roleIs k .aux && leafHas lx "be" k) &&
+    -- a contraction that carries "be" ("they're labelled") is the auxiliary too
+    let passive := kids.any (fun k => (roleIs k .aux && leafHas lx "be" k) || leafHas lx "fusedbe" k) &&
       (match verb with
         | some w => feat' w "VerbForm" == some "Part" && !lx.has w "ing"
         | none => false)
@@ -221,7 +244,8 @@ private partial def counts (lx : Lex) (kinds : List (String × EntityKind)) : Tr
         hiddenAction := if hidden then 1 else 0,
         inanimate := if inanimateHere then 1 else 0,
         nounStacks := if stack then 1 else 0,
-        conjuncts := if conj > 0 then conj + 1 else 0 }
+        conjuncts := if conj > 0 then conj + 1 else 0,
+        weasel := if passive && !agent && (verb.map (lx.has · "attribution")).getD false then 1 else 0 }
     below.add here
 
 /-- Roles that extend a relative clause past "noun + subject + verb": an object,
@@ -307,6 +331,11 @@ def mweCount (lx : Lex) (c : String) (forms : List String) : Nat :=
 
 private def firstLeaf? (t : Tree) : Option Word := ((leavesOf t).filter isWord).head?
 
+/-- A parenthetical with a number in it: a citation ("(Klein et al. 2009)"). -/
+private partial def cited : Tree → Bool
+  | .leaf _ => false
+  | .node i kids => (i.cat == .PRN && (leavesOf (.node i kids)).any (·.upos == .NUM)) || kids.any cited
+
 /-- Leaves outside quotations. -/
 private partial def unquotedLeaves : Tree → List Word
   | .leaf w => [w]
@@ -329,10 +358,24 @@ private partial def abstractSigIn (lx : Lex) : Tree → Nat
     -- a PP whose object noun is a direct kid counts as that noun phrase
     let here := if i.cat != .NP && i.cat != .PP then 0 else
       match headNoun (.node i kids) with
-      | some n => if lx.has n "vague" && kids.any (fun k => roleIs k .amod &&
-            (leavesOf k).any (lx.has · "significance")) then 1 else 0
+      | some n => if (lx.has n "vague" && kids.any (fun k => roleIs k .amod &&
+            (leavesOf k).any (lx.has · "significance"))) ||
+            -- "Its significance extends beyond ...", "The importance of X is ..."
+            (i.role == some .nsubj && lx.has n "significance") then 1 else 0
       | none => 0
     here + kids.foldl (fun a k => a + abstractSigIn lx k) 0
+
+/-- Noun phrases whose head is a `trend` noun modified by a `scope` word:
+"a broader movement", "a growing trend", "the wider landscape". -/
+private partial def trendIn (lx : Lex) : Tree → Nat
+  | .leaf _ => 0
+  | .node i kids =>
+    let here := if i.cat != .NP && i.cat != .PP then 0 else
+      match headNoun (.node i kids) with
+      | some n => if lx.has n "trend" && kids.any (fun k => roleIs k .amod &&
+            (leavesOf k).any (lx.has · "scope")) then 1 else 0
+      | none => 0
+    here + kids.foldl (fun a k => a + trendIn lx k) 0
 
 def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : Tree) : HSent :=
   let ls := leavesOf t
@@ -342,8 +385,9 @@ def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : T
   let c := counts lx kinds t
   let rootKids := match t with | .node _ kk => kk | .leaf _ => []
   let cls (k : String) := (ws.filter (lx.has · k)).length + mweCount lx k forms
-  let copular := rootKids.any (roleIs · .cop) || rootKids.any fun k => match k with
-    | .node j kk => j.role == some .head && kk.any (roleIs · .cop) | _ => false
+  let copular := rootKids.any (roleIs · .cop) || rootKids.any (leafHas lx "fusedbe") ||
+    rootKids.any fun k => match k with
+    | .node j kk => j.role == some .head && (kk.any (roleIs · .cop) || kk.any (leafHas lx "fusedbe")) | _ => false
   let whClause := rootKids.any fun k => isClauseNode k && ((firstLeaf? k).map (lx.has · "wh")).getD false
   let thatClause := rootKids.any fun k => match k with
     | .node _ kk => kk.any (fun x => isClauseNode x && ((firstLeaf? x).map (lx.has · "that")).getD false) ||
@@ -377,6 +421,12 @@ def hsentOf (lx : Lex) (kinds : List (String × EntityKind)) (para : Nat) (t : T
     bareAsides := if rootKids.any (roleIs · .expl) then 0 else (bareRelativesIn lx t).2,
     negDash := negDashIn lx (unquotedLeaves t),
     abstractSig := abstractSigIn lx t,
+    -- a sentence that cites its source ("(Klein et al. 2009)") attributes, it does not weasel
+    weasel := if cited t then 0 else c.weasel + cls "weasel",
+    filler := cls "filler",
+    hype := cls "hype",
+    deontic := cls "deontic" > 0,
+    trend := trendIn lx t,
     trailingCadence := rootKids.any (roleIs · .appos) &&
       ((lastContent.map fun k => roleIs k .advcl || (roleIs k .obl && isClauseNode k)).getD false) }
 
@@ -430,6 +480,11 @@ structure HFeatures where
   bareAsides : Nat
   negDashes : Nat
   abstractSig : Nat
+  weasels : Nat
+  fillers : Nat
+  hype : Nat
+  exhortations : Nat
+  trendClaims : Nat
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatures :=
@@ -477,7 +532,10 @@ def HFeatures.ofSents (lo : ALore) (as : List ASent) (hs : List HSent) : HFeatur
       !shares a b && !b.frame && !b.causal && !b.recalls && !hb.opensContrast &&
       !(b.subj.map isComposite).getD false).length,
     bareRelatives := sumH (·.bareRelatives) hs, bareAsides := sumH (·.bareAsides) hs,
-    negDashes := countH (·.negDash) hs, abstractSig := sumH (·.abstractSig) hs }
+    negDashes := countH (·.negDash) hs, abstractSig := sumH (·.abstractSig) hs,
+    weasels := sumH (·.weasel) hs, fillers := sumH (·.filler) hs, hype := sumH (·.hype) hs,
+    exhortations := (both.filter fun (a, h) => h.deontic && ((a.subj.map given.contains).getD false)).length,
+    trendClaims := sumH (·.trend) hs }
 
 /-! ## Rules and styles -/
 
@@ -487,6 +545,7 @@ inductive HFeat where
   | initialConj | buzz | intensifiers | usSpelling | trailingCadence | dramaticTerminal
   | summarisingPivots | summaryClosers | barePivots | spuriousContrasts | nonSequiturs
   | bareRelatives | bareAsides | negDashes | abstractSig
+  | weasels | fillers | hype | exhortations | trendClaims
   deriving Repr, DecidableEq, Inhabited
 
 def HFeatures.get (f : HFeatures) : HFeat → Nat
@@ -503,6 +562,8 @@ def HFeatures.get (f : HFeatures) : HFeat → Nat
   | .nonSequiturs => f.nonSequiturs
   | .bareRelatives => f.bareRelatives | .bareAsides => f.bareAsides
   | .negDashes => f.negDashes | .abstractSig => f.abstractSig
+  | .weasels => f.weasels | .fillers => f.fillers | .hype => f.hype
+  | .exhortations => f.exhortations | .trendClaims => f.trendClaims
 
 def HFeat.name : HFeat → String
   | .sents => "sents" | .clauses => "clauses" | .agentless => "agentless" | .passives => "passives"
@@ -518,13 +579,16 @@ def HFeat.name : HFeat → String
   | .nonSequiturs => "nonSequiturs"
   | .bareRelatives => "bareRelatives" | .bareAsides => "bareAsides"
   | .negDashes => "negDashes" | .abstractSig => "abstractSig"
+  | .weasels => "weasels" | .fillers => "fillers" | .hype => "hype"
+  | .exhortations => "exhortations" | .trendClaims => "trendClaims"
 
 def HFeat.all : List HFeat :=
   [.sents, .clauses, .agentless, .passives, .hiddenAction, .inanimate, .nounStacks, .buried, .stacked,
    .slopEmphasis, .throat, .inflation, .tricolons, .pseudoClefts, .itClefts, .andJoins, .tetracola,
    .initialConj, .buzz, .intensifiers, .usSpelling, .trailingCadence, .dramaticTerminal,
    .summarisingPivots, .summaryClosers, .barePivots, .spuriousContrasts, .nonSequiturs,
-   .bareRelatives, .bareAsides, .negDashes, .abstractSig]
+   .bareRelatives, .bareAsides, .negDashes, .abstractSig,
+   .weasels, .fillers, .hype, .exhortations, .trendClaims]
 
 inductive HRule where
   | atMost (f : HFeat) (n : Nat)
@@ -584,7 +648,12 @@ def writeLikeMe : HStyle where
     ("no spurious contrasts", .atMost .spuriousContrasts 0),
     ("no bare relative clauses", .atMost .bareRelatives 0),
     ("no not-X-dash-Y", .atMost .negDashes 0),
-    ("no abstract significance", .atMost .abstractSig 0)]
+    ("no abstract significance", .atMost .abstractSig 0),
+    ("no vague attributions", .atMost .weasels 0),
+    ("no filler phrases", .atMost .fillers 0),
+    ("no manufactured enthusiasm", .atMost .hype 0),
+    ("few exhortations", .ratioAtMost .exhortations .sents 1 20),
+    ("no broader-trend claims", .atMost .trendClaims 0)]
 
 def houseStyles : List HStyle := [clarity, writeLikeMe]
 
@@ -659,7 +728,12 @@ def hflagged (lo : ALore) (as : List ASent) (hs : List HSent) : Json :=
     ("bareRelatives", Json.arr (pick (·.bareRelatives > 0)).toArray),
     ("bareAsides", Json.arr (pick (·.bareAsides > 0)).toArray),
     ("negDashes", Json.arr (pick (·.negDash)).toArray),
-    ("abstractSig", Json.arr (pick (·.abstractSig > 0)).toArray)]
+    ("abstractSig", Json.arr (pick (·.abstractSig > 0)).toArray),
+    ("weasels", Json.arr (pick (·.weasel > 0)).toArray),
+    ("fillers", Json.arr (pick (·.filler > 0)).toArray),
+    ("hype", Json.arr (pick (·.hype > 0)).toArray),
+    ("exhortations", pos (both.filter fun ((a, h), _) => h.deontic && ((a.subj.map given.contains).getD false))),
+    ("trendClaims", Json.arr (pick (·.trend > 0)).toArray)]
 
 def HFeatures.toJson (f : HFeatures) : Json :=
   Json.mkObj (HFeat.all.map fun x => (x.name, Lean.toJson (f.get x)))

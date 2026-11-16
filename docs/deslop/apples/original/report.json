@@ -4,6 +4,7 @@
  "sentences": 46,
  "annotation": [],
  "lexiconOverrides": [
+  "describe: drops attribution",
   "literally: drops intensifier"
  ],
  "rules": [
@@ -41,10 +42,6 @@
    "rule": "inanimate ≤ 0",
    "holds": false,
    "at": [
-    {
-     "at": "7:1",
-     "sentence": "However, the familiar saying, \"An apple a day keeps the doctor away,\" should not be interpreted literally."
-    },
     {
      "at": "12:1",
      "sentence": "These examples demonstrate how an ordinary agricultural product can become a powerful cultural symbol."
@@ -332,14 +329,62 @@
    "holds": false,
    "at": [
     {
+     "at": "1:2",
+     "sentence": "Its significance extends beyond its nutritional value, encompassing agriculture, economics, mythology, and scientific discovery."
+    },
+    {
      "at": "1:3",
      "sentence": "From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization."
     },
     {
      "at": "17:1",
      "sentence": "One of the most remarkable features of apples is their genetic diversity."
+    },
+    {
+     "at": "21:3",
+     "sentence": "Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production."
     }
    ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no vague attributions",
+   "rule": "weasels ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no filler phrases",
+   "rule": "fillers ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "21:3",
+     "sentence": "Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no manufactured enthusiasm",
+   "rule": "hype ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few exhortations",
+   "rule": "exhortations / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no broader-trend claims",
+   "rule": "trendClaims ≤ 0",
+   "holds": true,
+   "at": []
   },
   {
    "style": "llmisms",

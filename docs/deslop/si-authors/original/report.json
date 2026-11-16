@@ -211,6 +211,54 @@
    "at": []
   },
   {
+   "style": "writelikeme",
+   "name": "no vague attributions",
+   "rule": "weasels ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no filler phrases",
+   "rule": "fillers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no manufactured enthusiasm",
+   "rule": "hype ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:1",
+     "sentence": "Drew has spent much of his life outdoors, and is excited to guide you through his never-ending list of the best products to keep you from falling to the perils of nature."
+    },
+    {
+     "at": "2:1",
+     "sentence": "Sora has always been a fitness guru, and loves to try different foods and drinks."
+    },
+    {
+     "at": "2:2",
+     "sentence": "Ms. Tanaka is thrilled to bring her fitness and nutritional expertise to the Product Reviews Team, and promises to bring you nothing but the best of the best."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "few exhortations",
+   "rule": "exhortations / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no broader-trend claims",
+   "rule": "trendClaims ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
    "style": "llmisms",
    "name": "no em-dashes",
    "rule": "dashes ≤ 0",

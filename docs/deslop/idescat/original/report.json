@@ -3,7 +3,10 @@
  "paragraphs": 2,
  "sentences": 3,
  "annotation": [],
- "lexiconOverrides": [],
+ "lexiconOverrides": [
+  "evolution: drops trend",
+  "movement: drops trend"
+ ],
  "rules": [
   {
    "style": "clarity",
@@ -224,6 +227,41 @@
      "sentence": "The founding of Idescat represented a significant shift toward regional statistical independence, enabling Catalonia to develop a statistical system tailored to its unique socio-economic context."
     }
    ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no vague attributions",
+   "rule": "weasels ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no filler phrases",
+   "rule": "fillers ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no manufactured enthusiasm",
+   "rule": "hype ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few exhortations",
+   "rule": "exhortations / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no broader-trend claims",
+   "rule": "trendClaims ≤ 0",
+   "holds": true,
+   "at": []
   },
   {
    "style": "llmisms",

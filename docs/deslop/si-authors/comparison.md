@@ -1,6 +1,6 @@
 ## Sports Illustrated's AI author bios
 
-Before: 32/33 rules hold (not certified). After: 33/33 (certified).
+Before: 36/38 rules hold (not certified). After: 38/38 (certified).
 
 **Before**
 
@@ -17,8 +17,10 @@ Before: 32/33 rules hold (not certified). After: 33/33 (certified).
 | rule | before | after |
 |:--|:--|:--|
 | no buzz words | **fails** (1:1, 2:2) | holds |
+| no manufactured enthusiasm | **fails** (1:1, 2:1, 2:2) | holds |
 
 Sentences flagged before:
 
-- 1:1 (no buzz words): Drew has spent much of his life outdoors, and is excited to guide you through his never-ending list of the best products to keep you from falling to the perils of nature.
-- 2:2 (no buzz words): Ms. Tanaka is thrilled to bring her fitness and nutritional expertise to the Product Reviews Team, and promises to bring you nothing but the best of the best.
+- 1:1 (no buzz words; no manufactured enthusiasm): Drew has spent much of his life outdoors, and is excited to guide you through his never-ending list of the best products to keep you from falling to the perils of nature.
+- 2:1 (no manufactured enthusiasm): Sora has always been a fitness guru, and loves to try different foods and drinks.
+- 2:2 (no buzz words; no manufactured enthusiasm): Ms. Tanaka is thrilled to bring her fitness and nutritional expertise to the Product Reviews Team, and promises to bring you nothing but the best of the best.

@@ -284,6 +284,11 @@ private partial def punctClasses : Tree → PCount
       (padd acc add, dash || openDash)) (((0, 0, 0, 0, 0) : PCount), false)
     kids.foldl (fun a k => padd a (punctClasses k)) here
 
+/-- Leaves outside quotations: a quoted "not notable" is someone else's word. -/
+partial def leavesOutsideQuotes : Tree → List Word
+  | .leaf w => [w]
+  | .node i kids => if i.cat == .QUOTE then [] else kids.flatMap leavesOutsideQuotes
+
 /-- A negation (not "not only") followed by a contrast or concession connective. -/
 private partial def negTurnsIn (lx : Lex) : List Word → Nat
   | [] => 0
@@ -346,7 +351,7 @@ def asentOf (lx : Lex) (para : Nat) (t : Tree) : ASent :=
     frame := hasRel "contrast" || hasRel "concession" || hasRel "callback",
     question, asks := question || questionWords lx t > 0,
     colonsDef := cd, colonsDram := cdr, dashesDef := dd, dashesDram := ddr, unclassified := un,
-    negTurns := negTurnsIn lx ls,
+    negTurns := negTurnsIn lx (leavesOutsideQuotes t),
     formal := regCount "formal", informal := regCount "informal",
     technical := regCount "technical", neutral := regCount "neutral",
     untagged := (content.filter (·.2.1.isNone)).length,

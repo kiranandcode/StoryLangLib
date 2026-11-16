@@ -13,14 +13,14 @@ same loop on any text.
 
 | example | source | words before / after | rules holding before | after |
 |:--|:--|--:|--:|--:|
-| [Vanderbilt's email after the Michigan State shooting](vanderbilt/comparison.md) | university email, Feb 2023 | 294 / 137 | 28/33 | 33/33 |
-| [Douera](douera/comparison.md) | Wikipedia article, June 2023 | 79 / 23 | 30/33 | 33/33 |
-| [Sports Illustrated's AI author bios](si-authors/comparison.md) | magazine website, 2023 | 98 / 35 | 32/33 | 33/33 |
-| [Apples](apples/comparison.md) | LLM explainer pasted by Kiran, Nov 2026 | 692 / 462 | 27/33 | 33/33 |
-| [Statistical Institute of Catalonia](idescat/comparison.md) | article, Sept 2024 | 65 / 50 | 29/33 | 33/33 |
-| [McAllen Texas Temple](temple/comparison.md) | article, Nov 2024 | 105 / 49 | 28/33 | 33/33 |
-| [Somali cuisine](somali/comparison.md) | article, May 2025 | 118 / 61 | 28/33 | 33/33 |
-| [Northern English nationalism](northern/comparison.md) | deletion discussion, Aug 2025 | 121 / 126 | 25/33 | 33/33 |
+| [Vanderbilt's email after the Michigan State shooting](vanderbilt/comparison.md) | university email, Feb 2023 | 294 / 137 | 31/38 | 38/38 |
+| [Douera](douera/comparison.md) | Wikipedia article, June 2023 | 79 / 23 | 34/38 | 38/38 |
+| [Sports Illustrated's AI author bios](si-authors/comparison.md) | magazine website, 2023 | 98 / 35 | 36/38 | 38/38 |
+| [Apples](apples/comparison.md) | LLM explainer pasted by Kiran, Nov 2026 | 692 / 463 | 31/38 | 38/38 |
+| [Statistical Institute of Catalonia](idescat/comparison.md) | article, Sept 2024 | 65 / 50 | 34/38 | 38/38 |
+| [McAllen Texas Temple](temple/comparison.md) | article, Nov 2024 | 105 / 49 | 31/38 | 38/38 |
+| [Somali cuisine](somali/comparison.md) | article, May 2025 | 118 / 61 | 31/38 | 38/38 |
+| [Northern English nationalism](northern/comparison.md) | deletion discussion, Aug 2025 | 121 / 123 | 29/38 | 38/38 |
 
 Each directory holds `source.md` (where the text comes from), `original/` and
 `rewrite/` (the paragraphs, their annotations in `tools/house/sx.py`
@@ -82,9 +82,10 @@ fact and drop:
 - Somali: "intricate and diverse fusion", "rich tapestry" (twice),
   "vibrant trade and bustling commerce", "cherished and fundamental
   elements". The typo "espicially" is gone with its sentence.
-- Northern: nothing. It is an argument rather than puffery, so every claim
-  survives, restated without the negative parallelisms ("isn't just X—it's
-  Y"), and the rewrite is slightly longer.
+- Northern: "growing" (in "a visible, growing movement") and "broader" (in
+  "a broader cultural shift"), unsupported trend claims. The rest is an
+  argument rather than puffery, so every other claim survives, restated
+  without the negative parallelisms ("isn't just X—it's Y").
 
 The rewrites name actors the originals left implicit: "Catalonia's regional
 government founded", "Somalis consider", "Editors have dismissed". Each actor is the one the
@@ -92,7 +93,7 @@ original's passive or nominalisation implies.
 
 ## What the rules missed, and what was added
 
-Annotating the originals showed what the rules missed. Five of those gaps are now closed:
+Annotating the originals showed what the rules missed. Five of those gaps were closed in the first pass:
 
 | escape | example | now |
 |:--|:--|:--|
@@ -102,28 +103,46 @@ Annotating the originals showed what the rules missed. Five of those gaps are no
 | copula avoidance ("serves as", "stands as") is never copular, so the inflation rule could not fire | "the temple stands as a counter-symbol" | `serve`, `stand`, `boast`, `underscore` and similar are `animate`, so an inanimate subject fails "no inanimate actors" |
 | places doing what people do | "Douera enjoys close proximity", "Douera captivates both residents and visitors alike" | a `place` entity counts as inanimate, like `object` and `abstract` |
 
-Still missed:
+A second pass closed the escapes the first one listed:
 
-- Contractions hide the copula or auxiliary inside one token ("That's not
-  just a sourcing issue", "before they're neatly labelled"), so the inflation
-  and passive rules cannot see them. The dash rules caught the first; the
-  second passes.
-- Vague attributions and broader-trend claims with no flagged word: "is seen
-  as a bridge across divides" (counted as a passive, but one in twelve clauses
-  is within the limit), "This initiative was part of a broader movement
-  across Spain".
-- A negation inside a quotation still counts as a not-X-but-Y candidate in
-  `langlib academic` ("Dismissing these as "not notable" ... while ..."). The
-  rewrite removed it, so no justification was needed.
-- Empty phrases built from neutral words ("a multitude of", "a direct
-  result of", "symbolic features", "a tragic reminder of the importance of").
-- Manufactured enthusiasm: "is excited to guide you", "is thrilled to bring
-  her expertise", "promises to bring you nothing but". The Sports Illustrated
-  bios fail only on vocabulary ("never-ending", "the best of the best"),
-  which is why they score highest of the seven before rewriting.
-- Platitudes with a person as subject: the Vanderbilt email's "We must
-  continue to engage in conversations about how we can do better" breaks no
-  rule. Its actors are people, its verbs are actions, and it says nothing.
+| escape | example | now |
+|:--|:--|:--|
+| a contraction hides the copula or auxiliary | "That's not just a sourcing issue", "before they're neatly labelled" | contractions in class `fusedbe` count as "be" for the copular and passive rules |
+| vague attribution | "is seen as a bridge across divides", "experts say" | **no vague attributions**: an agentless passive of a verb of reputation (`attribution`: seen as, regarded, considered, hailed, touted), or a `weasel` phrase, in a sentence that cites nothing |
+| broader-trend claims | "part of a broader movement across Spain", "a visible, growing movement" | **no broader-trend claims**: a `scope` modifier on a `trend` noun |
+| filler built from neutral words | "a multitude of", "a direct result of", "the importance of", "a sense of" | **no filler phrases** |
+| manufactured enthusiasm | "is thrilled to bring her expertise", "fitness guru" | **no manufactured enthusiasm** (`hype`) |
+| platitudes with the writer as subject | "We must continue to engage in conversations about how we can do better" | **few exhortations**: the authors or the reader as subject with must, should, need to or let us; at most one sentence in twenty |
+| a significance noun as the subject | "Its significance extends beyond its nutritional value" | counted under abstract significance |
+| a negation inside a quotation | "Dismissing these as "not notable" ... while ..." | `langlib academic` no longer counts it as a not-X-but-Y candidate |
+
+The second pass also caught phrases the first rewrites had kept from their
+originals ("a wider cultural shift", "a visible and growing movement" in the
+Northern comment), and those rewrites were changed.
+
+On Kiran's Sisyphus paper the new rules flag one sentence, the opening "is
+widely considered prohibitively high", an uncited attribution; two
+exhortations ("we should really prove its correctness") are within the limit.
+On RustBelt they flag "it is considered a badge of honor" and "plays such a
+fundamental role". The first versions of the rules also flagged cited or
+technical passives ("has been acknowledged in several recent efforts
+(Klein et al. 2009)", "is believed to satisfy phi", "deemed a safe
+extension"), so the attribution class was narrowed to verbs of reputation
+and cited sentences were exempted.
+
+Still missed, as far as these eight texts show:
+
+- Anything whose words are in no class: the rules are decided over declared
+  word classes, so a new slop phrase passes until it is added to
+  `base-lexicon.json`. Every phrase above was added after a text showed it.
+- Claims that are false or unsupported but plainly worded ("Isaac Newton
+  reportedly said ..." is fine; "Douera is coastal" would pass too). Truth is
+  not a style property.
+- Selection: what a text should leave out, and whether a paragraph needs to
+  exist at all (the apple article's conclusion broke individual rules, but
+  "this paragraph adds nothing" is not one of them).
+- Tone: whether a condolence email sounds human. The Vanderbilt rewrite
+  passes because its sentences are concrete, not because a rule checks warmth.
 
 ## Reproducing
 

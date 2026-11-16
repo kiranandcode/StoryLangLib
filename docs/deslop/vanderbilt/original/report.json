@@ -239,6 +239,59 @@
    ]
   },
   {
+   "style": "writelikeme",
+   "name": "no vague attributions",
+   "rule": "weasels ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no filler phrases",
+   "rule": "fillers ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:1",
+     "sentence": "The recent Michigan shootings are a tragic reminder of the importance of taking care of each other, particularly in the context of creating inclusive environments."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no manufactured enthusiasm",
+   "rule": "hype ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few exhortations",
+   "rule": "exhortations / sents ≤ 1/20",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:2",
+     "sentence": "As members of the Peabody campus community, we must reflect on the impact of such an event and take steps to ensure that we are doing our best to create a safe and inclusive environment for all."
+    },
+    {
+     "at": "4:1",
+     "sentence": "Finally, we must recognize that creating a safe and inclusive environment is an ongoing process that requires ongoing effort and commitment."
+    },
+    {
+     "at": "4:2",
+     "sentence": "We must continue to engage in conversations about how we can do better, learn from our mistakes, and work together to build a stronger, more inclusive community."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no broader-trend claims",
+   "rule": "trendClaims ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
    "style": "llmisms",
    "name": "no em-dashes",
    "rule": "dashes ≤ 0",

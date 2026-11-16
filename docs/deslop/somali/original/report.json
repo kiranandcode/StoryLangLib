@@ -245,6 +245,55 @@
    ]
   },
   {
+   "style": "writelikeme",
+   "name": "no vague attributions",
+   "rule": "weasels ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "2:2",
+     "sentence": "They are considered a delicacy and serve as cherished and fundamental elements in the rich tapestry of Somali cuisine."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no filler phrases",
+   "rule": "fillers ≤ 0",
+   "holds": false,
+   "at": [
+    {
+     "at": "1:1",
+     "sentence": "Somali cuisine is an intricate and diverse fusion of a multitude of culinary influences, drawing from the rich tapestry of Arab, Indian, and Italian flavours."
+    },
+    {
+     "at": "1:2",
+     "sentence": "This culinary tapestry is a direct result of Somalia's longstanding heritage of vibrant trade and bustling commerce."
+    }
+   ]
+  },
+  {
+   "style": "writelikeme",
+   "name": "no manufactured enthusiasm",
+   "rule": "hype ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "few exhortations",
+   "rule": "exhortations / sents ≤ 1/20",
+   "holds": true,
+   "at": []
+  },
+  {
+   "style": "writelikeme",
+   "name": "no broader-trend claims",
+   "rule": "trendClaims ≤ 0",
+   "holds": true,
+   "at": []
+  },
+  {
    "style": "llmisms",
    "name": "no em-dashes",
    "rule": "dashes ≤ 0",

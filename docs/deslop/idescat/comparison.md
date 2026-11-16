@@ -1,6 +1,6 @@
 ## Statistical Institute of Catalonia
 
-Before: 29/33 rules hold (not certified). After: 33/33 (certified).
+Before: 34/38 rules hold (not certified). After: 38/38 (certified).
 
 **Before**
 

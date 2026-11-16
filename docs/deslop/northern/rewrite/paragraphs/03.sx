@@ -1,5 +1,5 @@
 entity signs abstract they "TikTok campaigns, dialect revival and regional symbols"
-entity shift event it "a wider cultural shift"
+entity shift event it "one cultural shift"
 entity editors group they "other editors"
 entity wikipedia object it "Wikipedia"
 entity pages object they "pages on other regional movements"
@@ -10,7 +10,7 @@ topic t1 "the treatment is inconsistent" signs
      (NP.conj regional/ADJ.amod symbols/NOUN.head
         (PP.nmod such/ADJ.case as/ADP.fixed St/PROPN.compound Oswald's/PROPN.poss stripes/NOUN.head)))
   (VP.head all/ADV.advmod belong/VERB.head{Fin,Pres}
-     (PP.obl@shift to/ADP.case a/DET.det wider/ADJ.amod cultural/ADJ.amod shift/NOUN.head))
+     (PP.obl@shift to/ADP.case one/NUM.nummod cultural/ADJ.amod shift/NOUN.head))
   ./PUNCT)
 (S%t1
   (S.head (NP.nsubj@editors Editors/NOUN.head)

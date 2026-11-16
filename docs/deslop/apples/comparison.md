@@ -1,6 +1,6 @@
 ## Apples (pasted by Kiran)
 
-Before: 27/33 rules hold (not certified). After: 33/33 (certified).
+Before: 31/38 rules hold (not certified). After: 38/38 (certified).
 
 **Before**
 
@@ -86,16 +86,18 @@ Before: 27/33 rules hold (not certified). After: 33/33 (certified).
 
 | rule | before | after |
 |:--|:--|:--|
-| no inanimate actors | **fails** (7:1, 12:1, 21:1) | holds |
+| no inanimate actors | **fails** (12:1, 21:1) | holds |
 | no non-sequitur stacks | **fails** (4:4, 14:2, 14:3, 15:2, 15:3, 17:2, 19:2) | holds |
 | British spelling | **fails** (1:1, 1:3, 3:2, 4:4, 5:1, 5:2, 6:2, 9:1, 9:2, 16:1, 17:2) | holds |
 | no summary closers | **fails** (4:4, 11:3, 21:3) | holds |
 | no spurious contrasts | **fails** (4:2) | holds |
-| no abstract significance | **fails** (1:3, 17:1) | holds |
+| no abstract significance | **fails** (1:2, 1:3, 17:1, 21:3) | holds |
+| no filler phrases | **fails** (21:3) | holds |
 
 Sentences flagged before:
 
 - 1:1 (British spelling): The apple is one of the most widely cultivated and recognizable fruits in the world.
+- 1:2 (no abstract significance): Its significance extends beyond its nutritional value, encompassing agriculture, economics, mythology, and scientific discovery.
 - 1:3 (British spelling; no abstract significance): From its origins in Central Asia to its cultivation across nearly every temperate region, the apple has played an important role in human civilization.
 - 3:2 (British spelling): The Silk Road facilitated their dispersal, allowing different apple populations to hybridize and develop new characteristics.
 - 4:2 (no spurious contrasts): Unlike many agricultural crops, apple trees grown from seeds do not reliably reproduce the characteristics of their parents.
@@ -103,7 +105,6 @@ Sentences flagged before:
 - 5:1 (British spelling): Apples provide dietary fiber, vitamin C, and various plant compounds, including polyphenols.
 - 5:2 (British spelling): Their soluble fiber, particularly pectin, contributes to digestive health and may help regulate cholesterol levels.
 - 6:2 (British spelling): Its high water content and fiber contribute to satiety.
-- 7:1 (no inanimate actors): However, the familiar saying, "An apple a day keeps the doctor away," should not be interpreted literally.
 - 9:1 (British spelling): In Greek mythology, golden apples appear in several stories, including the judgment of Paris and the labors of Heracles.
 - 9:2 (British spelling): They frequently symbolize beauty, desire, immortality, or conflict.
 - 11:3 (no summary closers): Although popular retellings embellish the incident, Newton himself reportedly described an apple falling as an inspiration for his thinking.
@@ -117,4 +118,4 @@ Sentences flagged before:
 - 17:2 (no non-sequitur stacks; British spelling): Thousands of named cultivars exist, exhibiting substantial variation in sweetness, acidity, firmness, color, and aroma.
 - 19:2 (no non-sequitur stacks): Wild apple populations are particularly valuable reservoirs of resistance to diseases and tolerance of environmental stress.
 - 21:1 (no inanimate actors): The apple illustrates the complex relationship between human societies and cultivated plants.
-- 21:3 (no summary closers): Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production.
+- 21:3 (no summary closers; no abstract significance; no filler phrases): Its biological characteristics reveal the importance of genetics and selective breeding, while its economic significance demonstrates the challenges of modern food production.
