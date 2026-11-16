@@ -708,9 +708,18 @@ def extLean (dir : String) (ns : String) : IO String := do
     | .read (.recognise c em) | .read (.own c em) => if (x.anomaly.any fun (c', e', _) => c' == c.i && e' == em.i) then some e else none
     | .tie (.relate a r _) | .tie (.raise a r _) => if x.aloof.contains (a.i, r.i) then some e else none
     | _ => none
-  for (e, i) in persona.eraseDups.zipIdx do
-    out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, or a feeling still an anomaly). -/\n" ++
+  -- an aloof move that is allowed already answers a tie the other holds: say that instead
+  let gatedP := persona.eraseDups.filter fun e => !Domain.ok x.start e
+  for (e, i) in gatedP.zipIdx do
+    out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, a feeling still an anomaly, or a tie they never start). -/\n" ++
       s!"theorem persona_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
+  let answers := (persona.eraseDups.filter fun e => Domain.ok x.start e).filterMap fun e => match e with
+    | .tie (.relate a r b) | .tie (.raise a r b) => some (e, a, r, b)
+    | _ => none
+  for ((e, a, r, b), i) in answers.zipIdx do
+    out := out ++ s!"\n/-- {XEv.str x e}: they never start this tie; it is allowed because the other already holds it toward them. -/\n" ++
+      s!"theorem answers_{i} : TieSight.aloof ({rs a} : XCh xspec) ({rs r} : XR xspec) = true ∧ " ++
+      s!"HasTies.tie xspec.start ({rs r} : XR xspec) ({rs b} : XCh xspec) ({rs a} : XCh xspec) > 0 := by decide +kernel\n"
   for (e, i) in gated.zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: not allowed at the opening, before any trust was earned. -/\n" ++
       s!"theorem gated_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
