@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# deslop: the deslop UI (tools/house/deslop_ui) from anywhere.
+#   deslop                  start the server if needed and open the UI
+#   deslop FILE | -         new document from FILE (or stdin), queue annotate + rewrite, open it
+#   deslop worker           start an interactive Claude in the langlib repo serving the queue
+#   deslop stop             stop the server
+# DESLOP_PORT (default 8790); LANGLIB_ROOT (default ~/Documents/code/langlib).
+set -euo pipefail
+ROOT="${LANGLIB_ROOT:-$HOME/Documents/code/langlib}"
+PORT="${DESLOP_PORT:-8790}"
+URL="http://localhost:$PORT"
+STATE="$HOME/.local/state/deslop"; mkdir -p "$STATE"
+
+up() { curl -fs "$URL/api/docs" >/dev/null 2>&1; }
+start() {
+  up && return 0
+  (cd "$ROOT" && nohup nice -n 10 python3 tools/house/deslop_ui/server.py --port "$PORT" >"$STATE/server.log" 2>&1 & echo $! >"$STATE/server.pid")
+  for _ in $(seq 1 40); do up && return 0; python3 -c 'import time; time.sleep(0.1)'; done
+  echo "deslop: server did not start; see $STATE/server.log" >&2; exit 1
+}
+open_url() { if command -v open >/dev/null; then open "$1"; else xdg-open "$1" >/dev/null 2>&1 || echo "$1"; fi; }
+
+case "${1:-}" in
+  stop)
+    [ -f "$STATE/server.pid" ] && kill "$(cat "$STATE/server.pid")" 2>/dev/null || true
+    pkill -f "deslop_ui/server.py --port $PORT" 2>/dev/null || true
+    rm -f "$STATE/server.pid"; echo "deslop: stopped" ;;
+  worker)
+    cd "$ROOT" && exec claude "/verified-deslopify worker" ;;
+  -h|--help)
+    sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' ;;
+  "")
+    start; open_url "$URL"; echo "$URL" ;;
+  *)
+    start
+    if [ "$1" = "-" ]; then SRC=/dev/stdin; TITLE="${2:-Untitled}"; else SRC="$1"; TITLE="${2:-$(basename "${1%.*}")}"; fi
+    ID=$(python3 -c '
+import json, sys, urllib.request
+url, title = sys.argv[1], sys.argv[2]
+text = sys.stdin.read()
+def post(p, body):
+    r = urllib.request.Request(url + p, json.dumps(body).encode(), {"content-type": "application/json"})
+    return json.load(urllib.request.urlopen(r))
+doc = post("/api/new", {"title": title, "text": text})
+for a in ("annotate", "rewrite"):
+    post("/api/request", {"id": doc["id"], "action": a, "para": "", "note": ""})
+print(doc["id"])
+' "$URL" "$TITLE" < "$SRC")
+    open_url "$URL/?id=$ID"
+    echo "$URL/?id=$ID  (annotate and rewrite queued; run 'deslop worker' if no worker is listening)" ;;
+esac

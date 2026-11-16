@@ -28,7 +28,8 @@ notation, the text's own word classes in `lexicon.local.json`, and the
 certification `report.md`), and `comparison.md` (before, after, and every
 rule that failed with the sentences it flagged).
 
-`python3 tools/house/deslop_ui/server.py` serves a reader for these
+`deslop` (a link in `~/.local/bin` to `tools/house/deslop_ui/deslop`; or
+`python3 tools/house/deslop_ui/server.py`) serves a reader for these
 documents at http://localhost:8790 (before, after, side by side or as a diff,
 with the analysis behind every flag), and queues rewrites for an interactive
 agent running `/verified-deslopify worker`.

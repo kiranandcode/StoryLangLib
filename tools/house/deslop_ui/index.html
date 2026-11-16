@@ -259,7 +259,8 @@ async function loadDocs(pick) {
     return ds.length ? `<optgroup label="${label}">${ds.map(d => `<option value="${esc(d.id)}">${esc(d.title)}</option>`).join("")}</optgroup>` : "";
   }).join("");
   let last = null; try { last = JSON.parse(localStorage.getItem("deslop-ui") || "{}").id; } catch {}
-  const id = pick || (state.docs.find(d => d.id === last) ? last : state.docs[0]?.id);
+  const qid = new URLSearchParams(location.search).get("id");
+  const id = pick || (qid && state.docs.find(d => d.id === qid) ? qid : null) || (state.docs.find(d => d.id === last) ? last : state.docs[0]?.id);
   if (id) { sel.value = id; await openDoc(id); }
 }
 async function openDoc(id) {
