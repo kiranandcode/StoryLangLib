@@ -9,3 +9,12 @@ stories/*/source/
 
 # third-party or private texts: the Studio shows them, git never sees them
 stories/private-*/
+
+# Ran's stories: the model (story.json, plans, readings, proofs) is public, the prose is not;
+# an annotation (NN.json, NN.sx) holds every word of its paragraph, so it stays private too
+stories/roof/paragraphs/[0-9][0-9].txt
+stories/roof/paragraphs/[0-9][0-9].json
+stories/roof/paragraphs/*.sx
+stories/roof-pratchett/paragraphs/[0-9][0-9].txt
+stories/roof-pratchett/paragraphs/[0-9][0-9].json
+stories/roof-pratchett/paragraphs/*.sx
