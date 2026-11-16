@@ -135,7 +135,9 @@ def speechVerbs : List String :=
    "explain", "announce", "reply",
    -- the tags `Style.speechTagVerbs` rewards for variety are verbs of saying too
    "insist", "admit", "add", "agree", "murmur", "mutter", "protest", "remark", "observe",
-   "breathe", "warn", "mention", "repeat", "declare", "cry"]
+   "breathe", "warn", "mention", "repeat", "declare", "cry",
+   -- messages between places: what a text says is said
+   "text", "message", "write", "type", "reply"]
 
 def negWords : List String := ["not", "n't", "never", "no", "nothing", "nobody", "none", "neither", "nor"]
 def modalWords : List String := ["would", "could", "might", "may", "should", "can", "must"]
@@ -431,7 +433,7 @@ def Fact.wids (s : Spec) : Fact → List WId
 def Ev.wids (s : Spec) (e : Ev) : List WId :=
   e.parties.map (.ch ·) ++ match e with
     | .move _ p => [.pl p] | .take _ o | .drop _ o | .give _ _ o => [.ob o]
-    | .tell _ _ l | .whisper _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
+    | .tell _ _ l | .whisper _ _ l | .message _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
     | .hint _ _ l | .sarcasm _ _ l | .promise _ _ l | .request _ _ l | .adopt _ l | .dropGoal _ l
     | .abandon _ l => Fact.wids s l.1
     | .ask _ _ f => Fact.wids s f
@@ -448,7 +450,7 @@ def Claim.wids (s : Spec) : Claim → List WId
 
 /-- The literal a mind event or belief claim is about. -/
 def Ev.content : Ev → Option (Fact × Bool)
-  | .tell _ _ l | .whisper _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
+  | .tell _ _ l | .whisper _ _ l | .message _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
   | .hint _ _ l | .sarcasm _ _ l | .promise _ _ l | .request _ _ l => some l
   | _ => none
 
@@ -887,7 +889,7 @@ def judgeDeriv (c : ParaCtx s) (f : TreeFacts) (js : List Judge) (toks : List St
         | some (Motive.none ag) => [leaf "motive" s!"{s.charName ag.i} has no reason for it" false]
         | none => []
       let pre : List Deriv := match e with
-        | .tell sp _ l | .whisper sp _ l =>
+        | .tell sp _ l | .whisper sp _ l | .message sp _ l =>
           [leaf "sincere" s!"{s.charName sp} believes it: {s.litGloss l}" ((view before (⟨sp⟩ : Ch s)).contains (lit l))]
         | .lie sp _ l =>
           [leaf "a lie" s!"{s.charName sp} does not believe it: {s.litGloss l}" (!(view before (⟨sp⟩ : Ch s)).contains (lit l))]
@@ -1137,7 +1139,7 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
       | .claim (.thinks ch l) | .claim (.knows ch l) | .claim (.falseBelief ch l) =>
         some (belief ch l name (inOut j l))
       | .event i => (c.items[i]?).bind fun (e, _) => match e with
-        | .tell _ d l | .whisper _ d l | .lie _ d l => some (belief d l name (inOut j l))
+        | .tell _ d l | .whisper _ d l | .message _ d l | .lie _ d l => some (belief d l name (inOut j l))
         | .notice ch l _ | .realise ch l => some (belief ch l name (inOut j l))
         | _ => none
       | _ => none
@@ -1157,7 +1159,7 @@ def argumentGraph (s : Spec) (ps : List (ParaData s)) : List ANode × List AEdge
       if let .event i := j.kind then
         if let some (e, _) := c.items[i]? then
           match e with
-          | .tell sp d l | .whisper sp d l | .lie sp d l =>
+          | .tell sp d l | .whisper sp d l | .message sp d l | .lie sp d l =>
             let note := match e with | .lie .. => "a lie" | _ => ""
             let said := ANode.mk s!"S:{n.chS sp}:{n.litS l}" "said" (n.chS sp) (n.litS l) (s.litGloss l) name "in" note
               [(name, j.at_)]

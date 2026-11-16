@@ -162,6 +162,7 @@ def Names.ev (n : Names) (str : String) : Except String Ev := do
   | ["give", c, d, o] => return .give (← n.ch c) (← n.ch d) (← n.ob o)
   | ["tell", c, d, l] => return .tell (← n.ch c) (← n.ch d) (← n.lit l)
   | ["whisper", c, d, l] => return .whisper (← n.ch c) (← n.ch d) (← n.lit l)
+  | ["message", c, d, l] => return .message (← n.ch c) (← n.ch d) (← n.lit l)
   | ["lie", c, d, l] => return .lie (← n.ch c) (← n.ch d) (← n.lit l)
   | ["notice", c, l, e] => return .notice (← n.ch c) (← n.lit l) (← n.evid e)
   | ["realise", c, l] => return .realise (← n.ch c) (← n.lit l)
@@ -215,6 +216,7 @@ def Names.evS (n : Names) : Ev → String
   | .give c d o => s!"give {n.chS c} {n.chS d} {n.obS o}"
   | .tell c d l => s!"tell {n.chS c} {n.chS d} {n.litS l}"
   | .whisper c d l => s!"whisper {n.chS c} {n.chS d} {n.litS l}"
+  | .message c d l => s!"message {n.chS c} {n.chS d} {n.litS l}"
   | .lie c d l => s!"lie {n.chS c} {n.chS d} {n.litS l}"
   | .notice c l e => s!"notice {n.chS c} {n.litS l} {n.evidS e}"
   | .realise c l => s!"realise {n.chS c} {n.litS l}"
@@ -243,7 +245,7 @@ def Ev.parties : Ev → List Nat
   | .move c _ | .take c _ | .drop c _ | .notice c _ _ | .realise c _ | .adopt c _
   | .dropGoal c _ | .intend c _ | .abandon c _ | .make c _ _ => [c]
   | .become _ _ => []
-  | .give c d _ | .tell c d _ | .whisper c d _ | .lie c d _ | .flirt c d | .confide c d
+  | .give c d _ | .tell c d _ | .whisper c d _ | .message c d _ | .lie c d _ | .flirt c d | .confide c d
   | .argue c d | .askAct c d _ | .agree c d _ | .withdraw c d _ | .act c d _ | .ask c d _
   | .answer c d _ | .hint c d _ | .sarcasm c d _ | .promise c d _ | .request c d _ => [c, d]
 
@@ -359,7 +361,12 @@ def specOfJson (j : Json) : Except String Spec := do
     match v with
     | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
     | _ => pure []
-  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, held, goals,
+  -- "kept": [["kiran", "kiranLifeIsWork"]]: held after every paragraph
+  let kept ← (arr j "kept").mapM fun t => do
+    match (match t with | .arr a => a.toList.filterMap (·.getStr?.toOption) | _ => []) with
+    | [c, l] => pure (← n0.ch c, ← n0.lit l)
+    | _ => throw "a kept belief is [character, literal]"
+  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, held, kept, goals,
          placeInfo, things := fixtures ++ scenery, objWords, objOwner, layout,
          pov := ← (str j "pov").mapM n0.ch }
 

@@ -76,6 +76,9 @@ structure Beat where
   del : List Nat := []
   /-- the fine events that are this beat -/
   keys : List Ev := []
+  /-- occurrences that are this beat: `(e, n)` is the `n`-th time `e` happens in the story
+  (1-based), so an event that recurs (a weekly walk) can still key one beat -/
+  keyOcc : List (Ev × Nat) := []
   deriving Repr, DecidableEq
 
 structure Beats where
@@ -112,9 +115,53 @@ def Beats.start (B : Beats) : BeatW := ⟨B.init⟩
 def Beats.abs (B : Beats) (e : Ev) : Option (BeatEv B) :=
   (B.vocab.findIdx? fun b => b.keys.contains e).map (⟨·⟩)
 
+/-- Each event with how many times it has happened so far, itself included (1-based). -/
+def tagOccFrom (seen : List Ev) : List Ev → List (Ev × Nat)
+  | [] => []
+  | e :: es => (e, seen.count e + 1) :: tagOccFrom (e :: seen) es
+
+def tagOcc (es : List Ev) : List (Ev × Nat) := tagOccFrom [] es
+
+/-- An occurrence's beat: a plain key matches every occurrence, an indexed one only its own. -/
+def Beats.absOcc (B : Beats) (p : Ev × Nat) : Option (BeatEv B) :=
+  (B.vocab.findIdx? fun b => b.keys.contains p.1 || b.keyOcc.contains p).map (⟨·⟩)
+
+theorem tagOccFrom_fst (seen es : List Ev) : (tagOccFrom seen es).map Prod.fst = es := by
+  induction es generalizing seen with
+  | nil => rfl
+  | cons e es ih => simp [tagOccFrom, ih]
+
+private theorem findIdx?_congr' {α : Type} {p q : α → Bool} :
+    ∀ (l : List α), (∀ x ∈ l, p x = q x) → l.findIdx? p = l.findIdx? q
+  | [], _ => rfl
+  | x :: xs, h => by
+    simp only [List.findIdx?_cons, h x (by simp), findIdx?_congr' xs (fun y hy => h y (by simp [hy]))]
+
+private theorem filterMap_congr' {α β : Type} {f g : α → Option β} :
+    ∀ (l : List α), (∀ x ∈ l, f x = g x) → l.filterMap f = l.filterMap g
+  | [], _ => rfl
+  | x :: xs, h => by
+    simp only [List.filterMap_cons, h x (by simp), filterMap_congr' xs (fun y hy => h y (by simp [hy]))]
+
+/-- Without indexed keys, abstracting occurrences is abstracting events: old beat stories
+refine exactly as before. -/
+theorem absOcc_plain (B : Beats) (h : B.vocab.all (·.keyOcc.isEmpty)) (fine : List Ev) :
+    (tagOcc fine).filterMap B.absOcc = fine.filterMap B.abs := by
+  have hk : ∀ p : Ev × Nat, B.absOcc p = B.abs p.1 := by
+    intro p
+    simp only [Beats.absOcc, Beats.abs]
+    rw [findIdx?_congr' B.vocab (q := fun b => b.keys.contains p.1)]
+    intro b hb
+    have : b.keyOcc.isEmpty = true := List.all_eq_true.mp h b hb
+    simp [List.isEmpty_iff.mp this]
+  unfold tagOcc
+  conv => rhs; rw [← tagOccFrom_fst [] fine]
+  rw [List.filterMap_map]
+  exact filterMap_congr' _ (fun p _ => hk p)
+
 /-- Refinement plus validity of both layers. -/
 def RefinesValid (s : Spec) (B : Beats) (fine : List Ev) (coarse : List (BeatEv B)) : Prop :=
-  Refines B.abs fine coarse ∧ Valid B.start coarse ∧ Plausible s.start (fine.map (Ev.toE s))
+  Refines B.absOcc (tagOcc fine) coarse ∧ Valid B.start coarse ∧ Plausible s.start (fine.map (Ev.toE s))
 
 instance (s : Spec) (B : Beats) (fine : List Ev) (coarse : List (BeatEv B)) :
     Decidable (RefinesValid s B fine coarse) := by unfold RefinesValid; infer_instance

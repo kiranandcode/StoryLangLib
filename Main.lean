@@ -15,6 +15,7 @@ def usage : String := "usage:
   langlib consent <dir> [--lean ns]         the refined consent reading (World/Consent), or it as Lean theorems
   langlib ext <dir> [--lean ns]             ties, care and identity (World/Ties, Care, Identity), or as Lean theorems
   langlib end <dir>                         the end state of every reading, as the next chapter's opening (JSON)
+  langlib chain-lean <prev> <next> <ns>     the link between two chapters as Lean theorems (Chain.lean)
   langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling"
 
 def readDoc (p : String) : IO Doc := do
@@ -88,6 +89,9 @@ def main : List String → IO UInt32
     pure 0
   | ["ext", dir, "--lean", ns] => do
     IO.print (← LangLib.Studio.extLean dir ns)
+    pure 0
+  | ["chain-lean", prev, next, ns] => do
+    IO.print (← LangLib.Studio.chainLean prev next ns)
     pure 0
   | ["end", dir] => do
     IO.println (← LangLib.Studio.endReport dir).pretty

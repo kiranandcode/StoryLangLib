@@ -40,6 +40,12 @@ private def strs (j : Json) (k : String) : List String :=
 private def arr (j : Json) (k : String) : List Json :=
   match j.getObjVal? k with | .ok (.arr a) => a.toList | _ => []
 
+/-- A key naming an occurrence: `"move kiran errata#2"`. -/
+def occOf (s : String) : Option (String × Nat) :=
+  match s.splitOn "#" with
+  | [e, k] => k.toNat?.map (e, ·)
+  | _ => none
+
 def beatsOfJson (n : Names) (j : Json) : Except String (Beats × List String) := do
   let conds := strs j "conds"
   let ci (c : String) : Except String Nat :=
@@ -48,7 +54,10 @@ def beatsOfJson (n : Names) (j : Json) : Except String (Beats × List String) :=
     let some id := (b.getObjValAs? String "id").toOption | throw "beat needs an id"
     pure ({ id, label := (b.getObjValAs? String "label").toOption.getD "",
             pre := ← (strs b "pre").mapM ci, add := ← (strs b "add").mapM ci,
-            del := ← (strs b "del").mapM ci, keys := ← (strs b "keys").mapM n.ev } : Beat)
+            del := ← (strs b "del").mapM ci,
+            -- "e#n": the n-th occurrence of e in the story; plain "e": any occurrence
+            keys := ← ((strs b "keys").filter (occOf · |>.isNone)).mapM n.ev,
+            keyOcc := ← ((strs b "keys").filterMap occOf).mapM fun (e, k) => do pure (← n.ev e, k) } : Beat)
   pure ({ conds, vocab, init := ← (strs j "init").mapM ci }, strs j "story")
 
 def loadStory (dir : System.FilePath) : IO Loaded := do
@@ -392,6 +401,10 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
         (bundle, alone) := check s!"p{nm}_complete" s!"completeOk (\{ prior := [], items := p{nm}.zip {rs ats}, base := {cPrev} } : ParaCtx spec) p{nm}tree p{nm}judges = true" ""
           (completeOk ({ prior := [], items := p.items.map (fun it => (it.ev, it.at_.getD 0)), base := w } : ParaCtx s) f js)
           bundle alone
+    -- every kept belief still held at this checkpoint
+    for ((c, l), i) in s.kept.zipIdx do
+      (bundle, alone) := check s!"p{nm}_kept{i}" s!"(Claim.thinks {c} {lean (rs l)}).eval c{nm} = true" ""
+        ((Claim.thinks c l).eval w') bundle alone
     if let some plan := p.plan then
       if p.items.any (·.src != "plan") then
         let r := decide (Refines some (p.items.map (·.ev)) plan)
@@ -421,8 +434,8 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     out := out ++ s!"def plans : List Ev := {lean (rs fine)}\n\n"
     let bv := decide (Valid B.start (coarse.map (⟨·⟩ : Nat → BeatEv B)))
     out := out ++ s!"theorem beats_{if bv then "valid" else "invalid"} : {if bv then "" else "¬ "}Valid beats.start beatStory := by decide +kernel\n"
-    let rf := decide (Refines B.abs fine (coarse.map (⟨·⟩ : Nat → BeatEv B)))
-    out := out ++ s!"theorem plans_{if rf then "refine" else "do_not_refine"}_beats : {if rf then "" else "¬ "}Refines beats.abs plans beatStory := by decide +kernel\n\n"
+    let rf := decide (Refines B.absOcc (tagOcc fine) (coarse.map (⟨·⟩ : Nat → BeatEv B)))
+    out := out ++ s!"theorem plans_{if rf then "refine" else "do_not_refine"}_beats : {if rf then "" else "¬ "}Refines beats.absOcc (tagOcc plans) beatStory := by decide +kernel\n\n"
   out := out ++ s!"end {ns}\n"
   return some out
 
@@ -557,8 +570,8 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     out := out ++ s!"def plans : List Ev := {lean (rs fine)}\n\n"
     let bv := decide (Valid B.start (coarse.map (⟨·⟩ : Nat → BeatEv B)))
     out := out ++ s!"theorem beats_{if bv then "valid" else "invalid"} : {if bv then "" else "¬ "}Valid beats.start beatStory := by decide +kernel\n"
-    let rf := decide (Refines B.abs fine (coarse.map (⟨·⟩ : Nat → BeatEv B)))
-    out := out ++ s!"theorem plans_{if rf then "refine" else "do_not_refine"}_beats : {if rf then "" else "¬ "}Refines beats.abs plans beatStory := by decide +kernel\n\n"
+    let rf := decide (Refines B.absOcc (tagOcc fine) (coarse.map (⟨·⟩ : Nat → BeatEv B)))
+    out := out ++ s!"theorem plans_{if rf then "refine" else "do_not_refine"}_beats : {if rf then "" else "¬ "}Refines beats.absOcc (tagOcc plans) beatStory := by decide +kernel\n\n"
   out := out ++ s!"end {ns}\n"
   pure out
 

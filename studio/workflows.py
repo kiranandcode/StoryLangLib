@@ -12,6 +12,7 @@ event readings, and drives these checks; the Studio shows the results live.
     python3 studio/workflows.py prove           <story>       Proofs.lean regenerated and checked
     python3 studio/workflows.py chain           <prev> <next> open <next> where <prev> ends (`langlib end`)
     python3 studio/workflows.py chain-check     <story>       its opening is still where the chapter before ends
+    python3 studio/workflows.py chain-prove     <story>       the same, as theorems (Chain.lean)
     python3 studio/workflows.py log             <story> <workflow> <stage> [--para NN] [--ok|--fail] [--note ...]
     python3 studio/workflows.py summary         <story> <workflow>
     python3 studio/workflows.py compare         <story> <story> ...
@@ -65,6 +66,7 @@ EVENT_SYNTAX = """\
 Events are one line each: a verb, then ids.
   move C P            take C O            drop C O            give C D O
   tell C D L          whisper C D L       lie C D L           (C says L to D; tell = C believes it)
+  message C D L       (C texts or writes L to D: no need to be together; only D learns it)
   notice C L EV       realise C L         (C comes to believe L; EV = seen | sensed | assumed | inferred | rumour | told:X)
                                           (realise only for something C can conclude from what they already believe)
   flirt C D           confide C D         argue C D
@@ -421,32 +423,12 @@ def reading_of(st: Story, k: int) -> dict:
     return json.loads(src.read_text()) if src.exists() else {}
 
 
-def conviction_objections(st: Story, k: int) -> list[str]:
-    """A conviction (story.json ext "convictions") is conceded in two readings at once: the
-    Mind's belief flips by the character's own conclusion (`notice C q self`) exactly where the
-    ext reading concedes (`concede C q`), which the signs gate."""
-    held = {(c, q) for c, q, _ in st.spec.get("ext", {}).get("convictions", [])}
-    if not held:
-        return []
-    r = reading_of(st, k)
-    evs = [e["e"] if isinstance(e, dict) else e for e in r.get("events", [])]
-    ext = [e["e"] if isinstance(e, dict) else e for e in r.get("ext", [])]
-    flips = {(w[1], w[2]) for w in (e.split() for e in evs) if len(w) == 4 and w[0] == "notice"
-             and w[3] == "self" and (w[1], w[2]) in held}
-    concessions = {(w[1], w[2]) for w in (e.split() for e in ext) if len(w) == 3 and w[0] == "concede"}
-    out = [f"conviction: {c} comes to believe {q} by her own conclusion (`notice {c} {q} self`) without conceding it "
-           f"in the ext reading (`concede {c} {q}`, which needs the signs)" for c, q in sorted(flips - concessions)]
-    out += [f"conviction: {c} concedes {q} but the Mind reading never flips it (`notice {c} {q} self`)"
-            for c, q in sorted(concessions - flips)]
-    return out
-
-
 def persona_objections(st: Story, k: int) -> list[str]:
     """When the story declares them, paragraph k's ext reading (ties, care,
     identity, affect: the persona's blind spots and anomalies; a slow burn's
     gates) and its consent reading must hold too; a consent act resting on an
     assumption is an objection. Before the prose, both are read from the plan."""
-    out: list[str] = conviction_objections(st, k)
+    out: list[str] = []
     if "ext" in st.spec:
         r = langlib("ext", str(st.d), timeout=300)
         try:
@@ -517,16 +499,21 @@ def cmd_plan_check(a) -> int:
 
 def refinement_objections(st: Story, ks: list[int]) -> dict[int, list[str]]:
     """Why the plans do not abstract to the beat story: each beat's key event
-    must occur exactly once, in a paragraph of that beat."""
+    must occur exactly once, in a paragraph of that beat. A key "e#n" names the
+    n-th occurrence of e in the story, so a recurring event can key one beat."""
     vocab = st.spec.get("beats", {}).get("vocab", [])
     keys = {e: b["id"] for b in vocab for e in b.get("keys", [])}
     beat_of = {k: st.outline(k).get("beat") for k in ks}
     found: dict[str, list[int]] = {}
     out: dict[int, list[str]] = {}
+    seen: dict[str, int] = {}
     for k in ks:
         src = st.f(k, "events.json") if st.f(k, "events.json").exists() else st.f(k, "plan.json")
         evs = [e["e"] if isinstance(e, dict) else e for e in json.loads(src.read_text()).get("events", [])]
         for e in evs:
+            seen[e] = seen.get(e, 0) + 1
+            if f"{e}#{seen[e]}" in keys:
+                e = f"{e}#{seen[e]}"
             if e in keys:
                 found.setdefault(keys[e], []).append(k)
                 if keys[e] != beat_of[k]:
@@ -632,6 +619,27 @@ def cmd_chain(a) -> int:
     f.write_text(json.dumps(spec, indent=1, ensure_ascii=False) + "\n")
     out = chain_objections(Story(a.next))
     return verdict_out(out, f"ok: {a.next.name} opens where {a.prev.name} ends")
+
+
+def cmd_chain_prove(a) -> int:
+    """The link to the chapter before as theorems: Chain.lean (`langlib chain-lean`), checked by Lean."""
+    st = Story(a.story)
+    prev = st.spec.get("after")
+    if not prev:
+        return verdict_out([], "ok: not a continuation")
+    pd = (a.story.parent / prev).resolve()
+    g = langlib("chain-lean", str(pd), str(a.story), proofs.namespace(a.story.name) + "Chain", timeout=600)
+    if g.returncode != 0:
+        return verdict_out([f"langlib chain-lean failed: {(g.stderr or g.stdout)[-1000:]}"], "")
+    lean_file = a.story / "Chain.lean"
+    lean_file.write_text(g.stdout)
+    res = procs.run(proofs.lean_argv(lean_file), timeout=proofs.LEAN_TIMEOUT)
+    thms = [l.split()[1] for l in g.stdout.splitlines() if l.startswith("theorem ")]
+    print(f"chain: Chain.lean: {len(thms)} theorems {'proved' if res.returncode == 0 else 'NOT proved'} in {res.secs}s "
+          f"({', '.join(thms)}): {a.story.name} opens where {prev} ends")
+    log(a.story, a.log, stage="chain-prove", ok=res.returncode == 0)
+    errs = [] if res.returncode == 0 else [f"Chain.lean: {(res.stdout + res.stderr)[-1500:]}"]
+    return verdict_out(errs, f"ok: the link to {prev} is proved")
 
 
 def cmd_chain_check(a) -> int:
@@ -793,6 +801,7 @@ def main() -> int:
     story_cmd("ext-prove", cmd_ext_prove, help="ties, care and identity (story.json \"ext\"): check and prove Ext.lean")
     story_cmd("summary", cmd_summary, help="summarise a workflow's run log").add_argument("workflow")
     story_cmd("consent-prove", cmd_consent_prove, help="the consent reading (story.json \"consent\"): check and prove Consent.lean")
+    story_cmd("chain-prove", cmd_chain_prove, help="prove the link to the chapter before (Chain.lean)")
     story_cmd("chain-check", cmd_chain_check, help="the opening is where the chapter before ends")
     chp = sub.add_parser("chain", help="open the next chapter where the previous one ends")
     chp.add_argument("prev", type=lambda s: Path(s).resolve())

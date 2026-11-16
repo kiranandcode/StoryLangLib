@@ -163,6 +163,9 @@ instance (priority := low) {Φ : Type} : Lore Φ := ⟨[]⟩
 inductive MindEv (C Φ : Type) where
   | tell (c d : C) (l : Φ × Bool)
   | whisper (c d : C) (l : Φ × Bool)
+  /-- `c` sends `d` a message saying `l` (a text, a letter): `d` learns it as testimony, nobody
+  else hears it, and they need not be together -/
+  | message (c d : C) (l : Φ × Bool)
   | lie (c d : C) (l : Φ × Bool)
   | notice (c : C) (l : Φ × Bool) (e : Evid C)
   | realise (c : C) (l : Φ × Bool)
@@ -556,12 +559,15 @@ def mindOk3 [Perceives W C] (w : W) : MindEv C Φ → Tri
   | .lie c d l =>
     if !Perceives.perceives w c || !Perceives.perceives w d then .no else
     (together3 w c d).and (Tri.ofBool (!(view w c).contains l))
+  | .message c d l =>
+    if !Perceives.perceives w c || !Perceives.perceives w d then .no else
+    Tri.ofBool ((view w c).contains l)
   | .notice c l e => Tri.ofBool (Perceives.perceives w c && (!e.perceptual || truthLit w l))
   | .realise c l => Tri.ofBool (Perceives.perceives w c && truthLit w l && (closure (view w c)).contains l)
 
 /-- Who in a mind event cannot perceive, said as a reason. -/
 def mindDead [Perceives W C] (w : W) : MindEv C Φ → Option String
-  | .tell c d _ | .whisper c d _ | .lie c d _ =>
+  | .tell c d _ | .whisper c d _ | .lie c d _ | .message c d _ =>
     if !Perceives.perceives w c then some "the speaker cannot speak (dead, or no mind)"
     else if !Perceives.perceives w d then some "the listener cannot hear (dead, or no mind)"
     else none
@@ -580,6 +586,7 @@ instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
     | .whisper c d l | .lie c d l =>
       let w := meet w c d
       learn (learn w d (ofLit l) (.told c)) c (.bel d (ofLit l)) .self
+    | .message c d l => learn (learn w d (ofLit l) (.told c)) c (.bel d (ofLit l)) .self
     | .notice c l e => learn w c (ofLit l) e
     | .realise c l => learn w c (ofLit l) .inferred
   why w e := (mindDead w e).getD (match e with
@@ -589,6 +596,7 @@ instance [Cast C] [Perceives W C] : Domain W (MindEv C Φ) where
     | .lie c d _ => if together3 w c d == .unknown then "assumes they were together"
                     else if loc w c != loc w d then "they are not together"
                     else "the speaker thinks it is true, so it is not a lie"
+    | .message _ _ _ => "the sender does not think that"
     | .notice _ _ _ => "a perception must be of something true"
     | .realise _ l => if !truthLit w l then "the text says they know it, but it is false"
                       else "they have no way to know that")

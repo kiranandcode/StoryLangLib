@@ -61,6 +61,17 @@ def mainEnd (l : Loaded) : W l.spec :=
     | none => List.range story.told.length
   (walk s.start (order.filterMap fun i => (story.told[i]?).map (i, ·))).2
 
+/-- A belief as a chapter break carries it: own knowledge plain, anything weaker with the rank
+and evidence of the strongest item that holds it ("lit@rank:evidence"). -/
+def heldShown (s : Spec) (w : W s) (c : Ch s) (l : SFact s × Bool) : String :=
+  let n := s.names
+  let hs := (HasMinds.beliefs w c).filter fun h => litOf h.b == some l && h.up != .note
+  match hs.foldl (fun (best : Option (Held (Ch s) (SFact s))) h =>
+      match best with | some b => if h.rank > b.rank then some h else some b | none => some h) none with
+  | some h => if h.src == .self || h.up == .hard then n.litS (unlit l)
+      else s!"{n.litS (unlit l)}@{h.rank}:{n.evidS (Evid.ofCh h.src)}"
+  | none => n.litS (unlit l)
+
 def mainEndJson (s : Spec) (w : W s) : Json :=
   let n := s.names
   let onstage := s.chs.filter fun c => (w.loc c).i < s.places.length
@@ -79,14 +90,7 @@ def mainEndJson (s : Spec) (w : W s) : Json :=
       -- their rank and evidence ("lit@rank:evidence"), so later evidence weighs against them as before
       ("knows", Json.mkObj (s.chs.filterMap fun c =>
         let ls := ((view w c).filter isAtom).eraseDups
-        let shown (l : SFact s × Bool) : String :=
-          let hs := (HasMinds.beliefs w c).filter fun h => litOf h.b == some l && h.up != .note
-          match hs.foldl (fun (best : Option (Held (Ch s) (SFact s))) h =>
-              match best with | some b => if h.rank > b.rank then some h else some b | none => some h) none with
-          | some h => if h.src == .self || h.up == .hard then n.litS (unlit l)
-              else s!"{n.litS (unlit l)}@{h.rank}:{n.evidS (Evid.ofCh h.src)}"
-          | none => n.litS (unlit l)
-        if ls.isEmpty then none else some (n.chS c.i, sArr (ls.map shown)))),
+        if ls.isEmpty then none else some (n.chS c.i, sArr (ls.map (heldShown s w c))))),
       ("goals", Json.mkObj (s.chs.filterMap fun c =>
         let gs := goalsOf w c
         if gs.isEmpty then none else some (n.chS c.i, sArr (gs.map fun g => n.litS (unlit g)))))]),

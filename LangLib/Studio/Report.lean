@@ -92,6 +92,7 @@ def A.toEv : A s → Ev
   | .space (.move c p) => .move c.i p.i | .space (.take c o) => .take c.i o.i
   | .space (.drop c o) => .drop c.i o.i | .space (.give c d o) => .give c.i d.i o.i
   | .mind (.tell c d l) => .tell c.i d.i (unlit l) | .mind (.whisper c d l) => .whisper c.i d.i (unlit l)
+  | .mind (.message c d l) => .message c.i d.i (unlit l)
   | .mind (.lie c d l) => .lie c.i d.i (unlit l)
   | .mind (.notice c l e) => .notice c.i (unlit l) (Evid.ofCh e)
   | .mind (.realise c l) => .realise c.i (unlit l)
@@ -127,6 +128,7 @@ def Spec.evGloss (s : Spec) : Ev → String
   | .give c d o => s!"{s.charName c} gives {s.charName d} the {s.objects.getD o "?"}"
   | .tell c d l => s!"{s.charName c} tells {s.charName d}: {s.litGloss l}"
   | .whisper c d l => s!"{s.charName c} whispers to {s.charName d}: {s.litGloss l}"
+  | .message c d l => s!"{s.charName c} messages {s.charName d}: {s.litGloss l}"
   | .lie c d l => s!"{s.charName c} lies to {s.charName d}: {s.litGloss l}"
   | .notice c l e => s!"{s.charName c} comes to think ({s.names.evidS e}): {s.litGloss l}"
   | .realise c l => s!"{s.charName c} realises: {s.litGloss l}"
@@ -228,7 +230,7 @@ def litAtoms : Fact × Bool → List Nat
 
 /-- The fact ids an event is about. -/
 def Ev.atoms : Ev → List Nat
-  | .tell _ _ l | .whisper _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
+  | .tell _ _ l | .whisper _ _ l | .message _ _ l | .lie _ _ l | .notice _ l _ | .realise _ l | .answer _ _ l
   | .hint _ _ l | .sarcasm _ _ l | .promise _ _ l | .request _ _ l | .adopt _ l | .dropGoal _ l
   | .abandon _ l => litAtoms l
   | .make _ a _ | .become a _ => [a]
@@ -635,7 +637,9 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
       | none => (Json.null, Json.arr #[])
     out := out.push (Json.mkObj [
       ("name", p.name), ("text", p.text), ("beat", match p.beat with | some b => Json.str b | none => Json.null),
-      ("errors", Json.arr (p.errors.map Json.str).toArray),
+      ("errors", Json.arr ((p.errors ++ s.kept.filterMap fun (c, l) =>
+        if (Claim.thinks c l).eval w then none
+        else some s!"kept: {n.chS c} must still believe {n.litS l} after every paragraph, and no longer does").map Json.str).toArray),
       ("doc", docj), ("lexicon", lexj),
       ("events", Json.arr evs.toArray), ("verdict", verdict),
       ("assumptions", Json.arr ((mine.filter fun (x : Step s) => x.status == .unknown).map fun (st : Step s) =>
@@ -654,7 +658,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
       let ids := B.vocab.map (·.id)
       let coarse : List (BeatEv B) := beatStory.filterMap fun b => (ids.idxOf? b).map (⟨·⟩)
       let fine := ps.flatMap fun p => (p.plan.getD (p.items.map (·.ev)))
-      let absd := fine.filterMap B.abs
+      let absd := (tagOcc fine).filterMap B.absOcc
       let firstBad := firstFailure B.start coarse 0
       Json.mkObj [
         ("conds", Json.arr (B.conds.map Json.str).toArray),
@@ -666,7 +670,7 @@ def report (s : Spec) (B : Option Beats) (beatStory : List String) (lex : List F
         ("valid", decide (Valid B.start coarse)),
         ("failure", match firstBad with | some (i, why) => Json.mkObj [("i", i), ("why", why)] | none => Json.null),
         ("abstracted", Json.arr (absd.map fun b => Json.str (B.beat b.i).id).toArray),
-        ("refines", decide (Refines B.abs fine coarse))]
+        ("refines", decide (Refines B.absOcc (tagOcc fine) coarse))]
   let all := (ps.flatMap (·.items)).map fun it => Ev.toE s it.ev
   let chrono := order.filterMap (story.told[·]?)
   return Json.mkObj [

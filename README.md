@@ -120,6 +120,7 @@ python3 studio/workflows.py refine-check    stories/roof     the paragraphs refi
 python3 studio/workflows.py prove           stories/roof     Proofs.lean regenerated and checked (via the Studio if running)
 python3 studio/workflows.py chain           <prev> <next>    open a chapter where the one before ends (`langlib end`)
 python3 studio/workflows.py chain-check     <story>          its opening is still where the chapter before ends
+python3 studio/workflows.py chain-prove     <story>          the same, proved: Chain.lean (`langlib chain-lean`)
 ```
 
 A story longer than one directory is written as chained chapters: `langlib end

@@ -14,7 +14,10 @@ Laws:
 * `excludes r r'`: holding `r a b` ends `r' a b` (and `r' b a` when `r'` is
   symmetric): "threatens" ends "friends";
 * `requires r = some (r', k)`: `r a b` can only be set while `r' a b ≥ k`
-  (disclosing needs trust; "partners" might need "dating").
+  (disclosing needs trust; "partners" might need "dating");
+* `forbids r = some (r', k)`: `r a b` can only be set while `r' a b < k` and
+  `r' b a < k`: a reason not to act is a gate too (no romance while one of them
+  convenes the other's group) (`forbids_no_start`).
 
 Events: `relate a r b` (set to at least 1), `raise a r b` (one level up),
 `lower a r b`, `unrelate a r b` (to 0). Every event is decidable, so a story's
@@ -32,6 +35,7 @@ class TieLaws (R : Type) where
   symmetric : R → Bool := fun _ => false
   excludes : R → List R := fun _ => []
   requires : R → Option (R × Nat) := fun _ => none
+  forbids : R → Option (R × Nat) := fun _ => none
 
 /-- Tie types a character never starts, only answers. -/
 class TieSight (C R : Type) where
@@ -65,9 +69,12 @@ def setTieLaw (w : W) (r : R) (a b : C) (n : Nat) : W :=
     if TieLaws.symmetric r' then setTie w r' b a 0 else w) w
 
 def tieReady (w : W) (r : R) (a b : C) : Bool :=
-  match TieLaws.requires r with
+  (match TieLaws.requires r with
   | some (r', k) => tie w r' a b ≥ k
-  | none => true
+  | none => true) &&
+  (match TieLaws.forbids r with
+  | some (r', k) => tie w r' a b < k && tie w r' b a < k
+  | none => true)
 
 /-- `a` may start (or raise) `r` toward `b`: not aloof in `r`, or `b` holds `r` toward `a`. -/
 def tieReach (w : W) (r : R) (a b : C) : Bool := !TieSight.aloof a r || tie w r b a > 0
@@ -90,9 +97,17 @@ instance : Domain W (TieEv C R) where
       if a == b then "a tie needs two people" else
       if !tieReach w r a b then "out of character: they never start this kind of tie, only answer one; " ++
         "to justify it, first establish: the other holds it toward them" else
-      match TieLaws.requires r with
-      | some (r', k) => s!"this tie needs another first, at level {k} (has {tie w r' a b})"
-      | none => ""
+      match TieLaws.forbids r with
+      | some (r', k) =>
+        if tie w r' a b ≥ k || tie w r' b a ≥ k then
+          "out of character: another tie between them rules this one out for now; to justify it, first " ++
+          "establish: that tie ended"
+        else match TieLaws.requires r with
+          | some (r', k) => s!"this tie needs another first, at level {k} (has {tie w r' a b})"
+          | none => ""
+      | none => match TieLaws.requires r with
+        | some (r', k) => s!"this tie needs another first, at level {k} (has {tie w r' a b})"
+        | none => ""
     | .lower _ _ _ | .unrelate _ _ _ => "there is no such tie to weaken"
 
 /-- An aloof character cannot start the tie. -/
@@ -104,5 +119,11 @@ theorem aloof_no_start (w : W) (a b : C) (r : R) (h : TieSight.aloof a r = true)
 theorem aloof_answers (w : W) (a b : C) (r : R) (hab : a ≠ b) (hr : tieReady w r a b = true) (h : tie w r b a > 0) :
     TieEv.ok w (.relate a r b) = true := by
   simp [TieEv.ok, tieReach, hab, hr, h]
+
+/-- While the forbidding tie holds (either way), the tie cannot start. -/
+theorem forbids_no_start (w : W) (a b : C) (r r' : R) (k : Nat) (h : TieLaws.forbids r = some (r', k))
+    (hk : tie w r' a b ≥ k ∨ tie w r' b a ≥ k) : TieEv.ok w (.relate a r b) = false := by
+  simp only [TieEv.ok, tieReady, h]
+  rcases hk with hk | hk <;> simp [Nat.not_lt.mpr hk]
 
 end LangLib.World

@@ -170,6 +170,7 @@ theorem mind_grows (w : W s) (x : MindEv (Ch s) (SFact s)) :
     exact Grows.trans (Grows.trans (meet_grows w c d) (learn_grows _ d _ _)) (learn_grows _ c _ _)
   | lie c d l =>
     exact Grows.trans (Grows.trans (meet_grows w c d) (learn_grows _ d _ _)) (learn_grows _ c _ _)
+  | message c d l => exact Grows.trans (learn_grows _ d _ _) (learn_grows _ c _ _)
   | notice c l e => exact learn_grows w c _ _
   | realise c l => exact learn_grows w c _ _
 

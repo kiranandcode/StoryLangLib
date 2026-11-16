@@ -51,11 +51,11 @@ knowledge, so each sign she perceives sits outranked in her base and each tell
 is only noted: the Minds view shows the dramatic irony. The flip is her own
 conclusion (`notice c x self`).
 
-**Still open.** The two readings are coupled by a check in `workflows.py`
-(`conviction_objections`: a `notice c x self` of a held-out `x` must come with
-`concede c x` in the same paragraph, and the other way round), not in the
-kernel. The general fix is the one roof-eleven's gap 6 proposes: let one
-reading's rules read another's state.
+**Coupled in the kernel (implemented).** The ext reading of a paragraph also
+reads the main reading's `notice c x self` events for held-out propositions
+(`XPara.flips`), and the walk requires a `concede c x` exactly where there is a
+flip (`convCoupled`), so `ext_valid` proves the two readings move together. (A
+first version checked this in `workflows.py` only.)
 
 ## 4. Intimacy gated by where they are (implemented: `gates`, `Studio/Ext`)
 
@@ -101,9 +101,15 @@ opening is not where the one before ends. Plans count, so a whole series can be
 chained and checked before any prose. The ext start state gained `examined`,
 `recognised`, `data`, `dismissed`, `conceded` for this.
 
-**Still open.** The link is checked by the CLI (the same Lean definitions
-compute both sides), not proved in one kernel term: each chapter's
-`Proofs.lean` proves its own story from its literal opening.
+**Proved (implemented: `Studio/Chain.lean`, `workflows.py chain-prove`).** Each
+reading's state projects to sorted lines of plain names (`mainLines`, `xLines`,
+`consentLines`). `langlib chain-lean <prev> <next>` writes `Chain.lean` into the
+next chapter: the previous chapter's spec, events, ext paragraphs and consent
+events as literals, each `#guard`ed against the previous directory's files
+through `include_str`, and three theorems by `decide +kernel` that replay the
+previous chapter once and equate its end with the next chapter's opening
+(`chain_main`, `chain_ext`, `chain_consent`). A chapter told out of order is
+refused (the replay is in told order).
 
 **Caught by the chain check, fixed.** The first version carried each view as
 its holder's own knowledge (rank 10). Chapter 4 then could not let Kiran see
@@ -115,43 +121,56 @@ re-proved for openings with such beliefs. What a character only noted (a tell
 she did not believe) still does not cross; the conviction's count carries in
 the ext state, which is where the burn needs it.
 
-## 7. Talk across places (open)
+## 7. Talk across places (implemented: `MindEv.message`)
 
 Texting is how a weekly friendship lives between meetings. `tell`, `hint`,
-`ask` need the two together, so a message from his office to hers cannot be
-read; the series keeps its key exchanges in person and lets texts be narrated
-summary. Proposed: a `channel` (a phone, a letter) that makes two places
-adjacent for speech only, with no perception of anything else.
+`ask` need the two together, so a message from his office to hers could not be
+read. `message c d l` is a tell that needs no co-location: only `d` learns it,
+as testimony from `c`, and `c` must believe it. It joins the L5 record proofs
+(`mind_grows`) and the Fight example's projection, and "text", "message",
+"write", "type" are verbs of saying for completeness. (The series was written
+before this, with its texts as narrated summary.)
 
-## 8. Recurring events cannot be beat keys (worked around)
+## 8. Recurring events as beat keys (implemented: indexed keys)
 
-A beat's key event must occur once, in that beat. A weekly story repeats its
-moves (to the shop, up the avenue), so keys are scene-specific facts (a state
-atom that changes once) or speech acts about a fact told once.
+A beat's key event had to occur once: a weekly story repeats its moves (to the
+shop, up the avenue), so keys had to be scene-specific facts. A key may now
+name an occurrence, `"move kiran errata#1"`: the n-th time the event happens in
+the story. Beats abstract occurrence-tagged events (`tagOcc`, `Beats.absOcc`),
+and without indexed keys this is exactly the old abstraction (`absOcc_plain`).
+The series' first beat is now keyed by her first arrival at the shop. Keys of
+beats outside a chapter are dropped from its vocabulary, since an occurrence
+count is per chapter.
 
-## 9. A reason not to act is not a gate (open)
+## 9. A reason not to act is a gate (implemented: `TieLaws.forbids`)
 
-His rule (no asking anyone in the group out while he convenes it) is a fact and
-a state, and the plot honours it, but nothing makes a proposal while he
-convenes out of character: ties have `requires` (a positive level) and
-`excludes` (one tie ends another), not "only while the other is absent".
-Proposed: `requires` with a bound (`["convenes", "<", 1]`).
+His rule (no asking anyone in the group out while he convenes it) was a fact the
+plot honoured and nothing enforced. Ties now have `forbids r = some (r', k)`: `r`
+cannot start or rise while `r'` holds at `k` either way (`forbids_no_start`).
+The series declares `romance` forbidden by `convenes`, which Ryan holds toward
+Kiran from his first words to her until the handover; without the handover the
+romance tie is out of character ("another tie between them rules this one out
+for now"), tested on a scratch copy.
 
-## 10. "Nobody fixes her outlook" is an absence (partly)
+## 10. "Nobody fixes her outlook" (implemented: `Spec.kept`)
 
-Her outlook (nothing outside research) is a true fact she holds; the series
-asserts she still holds it at the end (a claim of the last beat). That nobody
-argues her out of it is a property of every event, not of an end state; it
-holds because no event in any reading tells her otherwise, which is checked
-only by reading the plans. Proposed: a story-level theorem over all chapters'
-events (no `tell _ kiran !kiranLifeIsWork`), once chapters chain in Lean.
+Her outlook (nothing outside research) is a true fact she holds. A story can
+now declare beliefs that must be held after every paragraph (`"kept":
+[["kiran", "kiranLifeIsWork"]]`): `paragraph-check` reports the paragraph that
+breaks one, and `Proofs.lean` proves each at every checkpoint (`pNN_kept0`).
+With the chain theorems this covers the whole series.
 
-## 11. A lexicon word with two senses
+## 11. A lexicon word with two senses (implemented: directed words)
 
 The story's emotion lexicon listed "hungry" under desire; "She had not known she
 was hungry" then read as desire she could not yet feel (the bond gate), when it
-was the food need she is blind to. The checker was right about the words; the
-lexicon was wrong. Emotion words that also name a need belong to neither list.
+was the food need she is blind to. But "hungry for him" is desire. A lexicon
+word may now name a preposition (`"hungry+for"`): it counts only when the
+predicate adjective has a complement with that preposition pointing at a
+character. Predicate adjective phrases (`ADJP` heads) are now read too; before,
+"she was hungry for him" escaped the check entirely. Tested on scratch copies:
+directed and unrecognised is flagged, directed and recognised passes, bare
+"hungry" is never desire.
 
 ## 12. Voice measured by proxy
 

@@ -43,6 +43,7 @@ inductive Fact where
 inductive Ev where
   | move (c p : Nat) | take (c o : Nat) | drop (c o : Nat) | give (c d o : Nat)
   | tell (c d : Nat) (l : Fact × Bool) | whisper (c d : Nat) (l : Fact × Bool)
+  | message (c d : Nat) (l : Fact × Bool)
   | lie (c d : Nat) (l : Fact × Bool)
   | notice (c : Nat) (l : Fact × Bool) (e : Evid Nat) | realise (c : Nat) (l : Fact × Bool)
   | flirt (a b : Nat) | confide (a b : Nat) | argue (a b : Nat)
@@ -115,6 +116,9 @@ structure Spec where
   /-- what characters believe at the start on weaker evidence than their own knowledge
   (a chapter continuing another carries each belief with its evidence and rank) -/
   held : List (Nat × (Fact × Bool) × Nat × Evid Nat) := []
+  /-- beliefs that must still be held after every paragraph (an outlook nobody argues a
+  character out of): `Proofs.lean` proves each at each checkpoint -/
+  kept : List (Nat × (Fact × Bool)) := []
   goals : List (Nat × (Fact × Bool)) := []
   /-- what kind of place each place is, by place index -/
   placeInfo : List (Nat × PlaceInfo) := []
@@ -425,6 +429,7 @@ def Ev.toA : Ev → Option (A s)
   | .give c d o => some (.space (.give ⟨c⟩ ⟨d⟩ ⟨o⟩))
   | .tell c d l => some (.mind (.tell ⟨c⟩ ⟨d⟩ (lit l)))
   | .whisper c d l => some (.mind (.whisper ⟨c⟩ ⟨d⟩ (lit l)))
+  | .message c d l => some (.mind (.message ⟨c⟩ ⟨d⟩ (lit l)))
   | .lie c d l => some (.mind (.lie ⟨c⟩ ⟨d⟩ (lit l)))
   | .notice c l e => some (.mind (.notice ⟨c⟩ (lit l) (Evid.toCh e)))
   | .realise c l => some (.mind (.realise ⟨c⟩ (lit l)))

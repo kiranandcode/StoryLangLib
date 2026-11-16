@@ -308,6 +308,7 @@ theorem proj_step_mind (w : W) (x : MindEv Ch Fact) : proj (Domain.step w (E.min
     rw [proj_learn, proj_foldl _ (fun w x => proj_learn _ _ _ _)]; rfl
   | whisper c d l => show proj (learn (learn (meet w c d) d _ _) c _ _) = proj w; rw [proj_learn, proj_learn]; rfl
   | lie c d l => show proj (learn (learn (meet w c d) d _ _) c _ _) = proj w; rw [proj_learn, proj_learn]; rfl
+  | message c d l => show proj (learn (learn w d _ _) c _ _) = proj w; rw [proj_learn, proj_learn]
   | notice c l e => exact proj_learn _ _ _ _
   | realise c l => exact proj_learn _ _ _ _
 

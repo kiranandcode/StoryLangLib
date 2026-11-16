@@ -48,6 +48,7 @@ structure TieSpec where
   symmetric : Bool := false
   excludes : List Nat := []
   requires : Option (Nat × Nat) := none
+  forbids : Option (Nat × Nat) := none
   deriving Repr, DecidableEq
 
 structure XSpec where
@@ -110,6 +111,7 @@ instance : TieLaws (XR x) where
   symmetric r := ((x.ties[r.i]?).map (·.symmetric)).getD false
   excludes r := (((x.ties[r.i]?).map (·.excludes)).getD []).map (⟨·⟩)
   requires r := ((x.ties[r.i]?).bind (·.requires)).map fun (r', k) => (⟨r'⟩, k)
+  forbids r := ((x.ties[r.i]?).bind (·.forbids)).map fun (r', k) => (⟨r'⟩, k)
 
 instance : CareLaws (XK x) (XR x) where
   consent k := (lookup x.consent k.i).getD .none
@@ -291,6 +293,11 @@ def slowNote (x : XSpec) (w w' : XW x) (beat : String) (e : XEv x) : XW x :=
     HasTies.tie w' (⟨r⟩ : XR x) (⟨a⟩ : XCh x) (⟨b⟩ : XCh x) > HasTies.tie w (⟨r⟩ : XR x) (⟨a⟩ : XCh x) (⟨b⟩ : XCh x)
   { w' with raised := rose.map (fun (r, a, b) => (r, a, b, beat)) ++ w'.raised }
 
+/-- A conviction is conceded where, and only where, the main reading flips the belief by the
+character's own conclusion (`notice c q self`): the two readings move together. -/
+def convCoupled (x : XSpec) (concedes flips : List (Nat × String)) : Bool :=
+  x.convictions.all fun (c, q, _) => concedes.contains (c, q) == flips.contains (c, q)
+
 /-- An intimate act of the consent reading: (from, with, act). -/
 abbrev XAct := Nat × Nat × String
 
@@ -377,6 +384,25 @@ partial def subjRef (x : XSpec) : Tree → Option Nat
     | [k] => subjRef x k
     | _ => none
 
+/-- The prepositions of the phrases among `kids` that point at a character ("for him"). -/
+def towardPreps (x : XSpec) (kids : List Tree) : List String :=
+  kids.filterMap fun k => match k with
+    | .node i ks => if i.cat != .PP then none else
+      let case := ks.findSome? fun k => match k with
+        | .leaf w => if w.role == some .case then some w.form.toLower else none | _ => none
+      let toward := ks.any fun k => match k with
+        | .leaf w => w.role != some .case && (w.ref.bind (x.chars.idxOf? ·)).isSome
+        | .node _ _ => (subjRef x k).isSome
+      if toward then case else none
+    | _ => none
+
+/-- A lexicon word matches a lemma: plainly, or as `word+prep` ("hungry+for": desire only when
+directed at someone, "hungry for him"; bare "hungry" is not desire). -/
+def lexHit (ws : List String) (lemma : String) (preps : List String) : Bool :=
+  ws.any fun w => w == lemma || match w.splitOn "+" with
+    | [a, p] => a == lemma && preps.contains p
+    | _ => false
+
 /-- Feeling words said predicatively ("she was jealous", "I'm mortified"): an
 adjective heading a clause whose subject refers to a character, with a copula
 (or one contracted into the subject). -/
@@ -391,13 +417,24 @@ partial def predFeelsIn (x : XSpec) : Tree → Nat → List XFeel × Nat
     let fused := match subj with
       | some (.leaf w, _) => w.form.contains '\'' || w.form.contains '’'
       | _ => false
+    let sibPreps := towardPreps x kids
     let here : List XFeel := match subj.bind (fun (k, _) => subjRef x k) with
       | some c => if !(cop || fused) then [] else placed.filterMap fun (k, o) => match k with
         | .leaf w => if w.upos == .ADJ && w.role == some .head then
-            ((x.lexicon.find? fun (_, ws) => ws.contains (w.lemma.getD w.form).toLower).map (·.1)).map
+            ((x.lexicon.find? fun (_, ws) => lexHit ws (w.lemma.getD w.form).toLower sibPreps).map (·.1)).map
               fun e => { at_ := o, who := c, emo := e }
           else none
-        | _ => none
+        -- a predicate adjective phrase ("hungry for him"): its head adjective, with the
+        -- prepositions of its own complements
+        | .node i ks => if i.cat == .ADJP && i.role == some .head then
+            let off := (ks.foldl (fun (acc, q) k => (acc ++ [q], q + k.render.length)) (([] : List Nat), o)).1
+            match (ks.zip off).find? (fun (k, _) => match k with
+                | .leaf w => w.upos == .ADJ && w.role == some .head | _ => false) with
+            | some (.leaf w, o') =>
+              ((x.lexicon.find? fun (_, ws) => lexHit ws (w.lemma.getD w.form).toLower (sibPreps ++ towardPreps x ks)).map (·.1)).map
+                fun e => { at_ := o', who := c, emo := e }
+            | _ => none
+          else none
       | none => []
     (here ++ placed.flatMap (fun (k, o) => (predFeelsIn x k o).1), end_)
 
@@ -422,6 +459,9 @@ structure XPara (x : XSpec) where
   beat : String := ""
   /-- the intimate acts of its consent reading, held to the ties they need at its end -/
   acts : List XAct := []
+  /-- the held-out propositions whose belief the main reading flips by the character's own
+  conclusion (`notice c q self`): a conviction is conceded in both readings at once -/
+  flips : List (Nat × String) := []
   deriving DecidableEq, Repr
 
 /-- Is reference `m` allowed in state `w`, given the paragraph's events? -/
@@ -450,7 +490,9 @@ event at or before a word's token takes effect first). `none` if an event is
 not allowed, or a reference or a feeling is not backed by the state. -/
 def XPara.run (p : XPara x) (w : XW x) : Option (XW x) :=
   let rec go (w : XW x) : List (Nat × XEv x) → List XMention → List XFeel → Option (XW x)
-    | [], ms, fs => if ms.all (mentionOk x w p.events) && fs.all (feelOk w) && p.acts.all (actOk x w)
+    | [], ms, fs => if ms.all (mentionOk x w p.events) && fs.all (feelOk w) && p.acts.all (actOk x w) &&
+        convCoupled x (p.events.filterMap fun (_, e) => match e with
+          | .conv (.concede c q) => some (c.i, q) | _ => none) p.flips
         then some w else none
     | (a, e) :: es, ms, fs =>
       let (before, after) := ms.partition (·.at_ < a)
@@ -498,6 +540,9 @@ def xspecOfJson (s : Spec) (j : Json) : Except String XSpec := do
     pure ({ id := (str t "id").getD "", symmetric := (t.getObjValAs? Bool "symmetric").toOption.getD false,
             excludes := ← (strsOf ((t.getObjVal? "excludes").toOption.getD (Json.arr #[]))).mapM tieOf,
             requires := ← match (t.getObjVal? "requires").toOption with
+              | some (.arr #[r, k]) => do pure (some (← tieOf (r.getStr?.toOption.getD ""), k.getNat?.toOption.getD 0))
+              | _ => pure none,
+            forbids := ← match (t.getObjVal? "forbids").toOption with
               | some (.arr #[r, k]) => do pure (some (← tieOf (r.getStr?.toOption.getD ""), k.getNat?.toOption.getD 0))
               | _ => pure none } : TieSpec)
   let consent := ((arr e "needs").zipIdx).filterMap fun (n, i) =>
@@ -666,6 +711,15 @@ def actsOf (x : XSpec) (ej : Option Json) : Except String (List XAct) :=
     | some ["act", a, b, act] => do pure (some (← idxOf "character" x.chars a, ← idxOf "character" x.chars b, act))
     | _ => pure none
 
+/-- The main reading's flips of held-out beliefs (`notice c q self`), from the events or plan. -/
+def flipsOf (x : XSpec) (ej : Option Json) : List (Nat × String) :=
+  ((ej.map fun j => arr j "events").getD []).filterMap fun (it : Json) =>
+    let str := (it.getStr?.toOption <|> (it.getObjValAs? String "e").toOption).getD ""
+    match (str.splitOn " ").filter (· != "") with
+    | ["notice", c, q, "self"] => (x.chars.idxOf? c).bind fun ci =>
+        if x.convictions.any (fun (c', q', _) => c' == ci && q' == q) then some (ci, q) else none
+    | _ => none
+
 /-- A paragraph's ext reading, from its events file (or, for a paragraph not yet written, its plan,
 whose entries may be bare strings in story order) and annotation, in its beat. -/
 def xparaOfAt (s : Spec) (x : XSpec) (beat : String) (ej : Option Json) (d : Option Doc) : Except String (XPara x) := do
@@ -678,7 +732,7 @@ def xparaOfAt (s : Spec) (x : XSpec) (beat : String) (ej : Option Json) (d : Opt
   -- stable sort by token, so the walk is in text order
   let evs := sortBy (fun a b => a.1 ≤ b.1) evs
   pure { events := evs, mentions := (d.map (mentionsOf x.chars)).getD [], feels := (d.map (feelsOf s x)).getD [],
-         beat, acts := ← actsOf x ej }
+         beat, acts := ← actsOf x ej, flips := flipsOf x ej }
 
 def xparaOf (s : Spec) (x : XSpec) (ej : Option Json) (d : Option Doc) : Except String (XPara x) :=
   xparaOfAt s x "" ej d
@@ -765,6 +819,13 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
       if !feelOk w f then issues := issues.push (feelIssue w f)
     for m in ms do
       if !mentionOk x w p.events m then issues := issues.push s!"{mentionS x m}, which they do not know (or, in speech, a misgendering not read as a `refer` event)"
+    let concedes := p.events.filterMap fun (_, e) => match e with
+      | .conv (.concede c q) => some (c.i, q) | _ => none
+    for (c, q, _) in x.convictions do
+      if concedes.contains (c, q) != p.flips.contains (c, q) then
+        issues := issues.push (if concedes.contains (c, q)
+          then s!"{x.chS c} concedes {q} here, but the main reading does not flip the belief (`notice {x.chS c} {q} self`)"
+          else s!"the main reading flips {x.chS c}'s belief in {q} (`notice {x.chS c} {q} self`) without the concession the signs gate (`concede {x.chS c} {q}`)")
     for act in p.acts do
       if !actOk x w act then
         issues := issues.push (s!"consent act '{act.2.2}' between {x.chS act.1} and {x.chS act.2.1} is out of character " ++
@@ -878,7 +939,8 @@ def extLean (dir : String) (ns : String) : IO String := do
     | .care (.seek c _ k) | .care (.register c _ k) => if x.blind.contains (c.i, c.i, k.i) then some e else none
     | .care (.offer a c k) | .care (.tend a c k) => if x.blind.contains (a.i, c.i, k.i) then some e else none
     | .read (.recognise c em) | .read (.own c em) => if (x.anomaly.any fun (c', e', _) => c' == c.i && e' == em.i) then some e else none
-    | .tie (.relate a r _) | .tie (.raise a r _) => if x.aloof.contains (a.i, r.i) then some e else none
+    | .tie (.relate a r _) | .tie (.raise a r _) =>
+      if x.aloof.contains (a.i, r.i) || ((x.ties[r.i]?).bind (·.forbids)).isSome then some e else none
     | .conv (.concede c q) => if (x.convictions.any fun (c', q', _) => c' == c.i && q' == q) then some e else none
     | .aff (.feel c em) => if (x.bondNeeds.any fun (c', e', _, _) => c' == c.i && e' == em.i) then some e else none
     | _ => none
@@ -888,7 +950,7 @@ def extLean (dir : String) (ns : String) : IO String := do
     out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, a feeling still an anomaly or one that needs a bond, a tie they never start, or a conviction not yet outrun). -/\n" ++
       s!"theorem persona_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
   let answers := (persona.eraseDups.filter fun e => Domain.ok x.start e).filterMap fun e => match e with
-    | .tie (.relate a r b) | .tie (.raise a r b) => some (e, a, r, b)
+    | .tie (.relate a r b) | .tie (.raise a r b) => if x.aloof.contains (a.i, r.i) then some (e, a, r, b) else none
     | _ => none
   for ((e, a, r, b), i) in answers.zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: they never start this tie; it is allowed because the other already holds it toward them. -/\n" ++
