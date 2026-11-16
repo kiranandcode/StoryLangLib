@@ -78,6 +78,8 @@ structure XSpec where
   anomaly : List (Nat × Nat × Nat) := []
   /-- (emotion, need): the emotion is the felt sign of the need -/
   signals : List (Nat × Nat) := []
+  /-- (character, tie): the character never starts that kind of tie, only answers one -/
+  aloof : List (Nat × Nat) := []
   deriving Repr, DecidableEq
 
 structure XCh (x : XSpec) where i : Nat deriving DecidableEq, Repr
@@ -97,6 +99,9 @@ instance : CareLaws (XK x) (XR x) where
   builds := x.builds.map (⟨·⟩)
   threat := x.threat.map (⟨·⟩)
   protects := x.protects.map (⟨·⟩)
+
+instance : TieSight (XCh x) (XR x) where
+  aloof c r := x.aloof.contains (c.i, r.i)
 
 instance : CareSight (XCh x) (XK x) where
   blind a c k := x.blind.contains (a.i, c.i, k.i)
@@ -478,7 +483,11 @@ def xspecOfJson (s : Spec) (j : Json) : Except String XSpec := do
     | _ => throw "an anomaly is [character, emotion, examinations]"
   let signals ← (obj e "signals").mapM fun (em, v) => do
     pure (← emo em, ← idxOf "need" needIds (v.getStr?.toOption.getD ""))
-  pure { chars, pron := s.chars.map fun c => (Pron.ofString? c.pron).getD .they, blind, anomaly, signals,
+  let aloof ← (arr e "aloof").mapM fun t => do
+    match strsOf t with
+    | [c, r] => pure (← ch c, ← tieOf r)
+    | _ => throw "an aloof entry is [character, tie]"
+  pure { chars, pron := s.chars.map fun c => (Pron.ofString? c.pron).getD .they, blind, anomaly, signals, aloof,
          emotions, lexicon, appraise, startFeels,
          ties, needs := needIds, consent, builds := ← optTie "builds", threat := ← optTie "threat",
          protects := ← optTie "protects", trust := ← optTie "trust", names, secrets,
@@ -697,6 +706,7 @@ def extLean (dir : String) (ns : String) : IO String := do
     | .care (.seek c _ k) | .care (.register c _ k) => if x.blind.contains (c.i, c.i, k.i) then some e else none
     | .care (.offer a c k) | .care (.tend a c k) => if x.blind.contains (a.i, c.i, k.i) then some e else none
     | .read (.recognise c em) | .read (.own c em) => if (x.anomaly.any fun (c', e', _) => c' == c.i && e' == em.i) then some e else none
+    | .tie (.relate a r _) | .tie (.raise a r _) => if x.aloof.contains (a.i, r.i) then some e else none
     | _ => none
   for (e, i) in persona.eraseDups.zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, or a feeling still an anomaly). -/\n" ++

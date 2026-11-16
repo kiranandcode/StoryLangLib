@@ -19,6 +19,11 @@ Laws:
 Events: `relate a r b` (set to at least 1), `raise a r b` (one level up),
 `lower a r b`, `unrelate a r b` (to 0). Every event is decidable, so a story's
 web of ties is checked like its places.
+
+Personas can also bound ties: `TieSight.aloof a r` says `a` never starts a tie
+of type `r`; they can only answer one held toward them (`r b a > 0`). Someone
+who makes no friends can still return a friendship kept for them
+(`aloof_no_start`, `aloof_answers`). Nobody is aloof by default.
 -/
 
 namespace LangLib.World
@@ -27,6 +32,12 @@ class TieLaws (R : Type) where
   symmetric : R → Bool := fun _ => false
   excludes : R → List R := fun _ => []
   requires : R → Option (R × Nat) := fun _ => none
+
+/-- Tie types a character never starts, only answers. -/
+class TieSight (C R : Type) where
+  aloof : C → R → Bool := fun _ _ => false
+
+instance (priority := low) {C R : Type} : TieSight C R := {}
 
 class HasTies (W : Type) (C R : outParam Type) where
   tie : W → R → C → C → Nat
@@ -39,7 +50,7 @@ inductive TieEv (C R : Type) where
   | unrelate (a : C) (r : R) (b : C)
   deriving DecidableEq, Repr
 
-variable {W C R : Type} [DecidableEq C] [DecidableEq R] [HasTies W C R] [TieLaws R]
+variable {W C R : Type} [DecidableEq C] [DecidableEq R] [HasTies W C R] [TieLaws R] [TieSight C R]
 
 open HasTies
 
@@ -58,8 +69,11 @@ def tieReady (w : W) (r : R) (a b : C) : Bool :=
   | some (r', k) => tie w r' a b ≥ k
   | none => true
 
+/-- `a` may start (or raise) `r` toward `b`: not aloof in `r`, or `b` holds `r` toward `a`. -/
+def tieReach (w : W) (r : R) (a b : C) : Bool := !TieSight.aloof a r || tie w r b a > 0
+
 def TieEv.ok (w : W) : TieEv C R → Bool
-  | .relate a r b | .raise a r b => a != b && tieReady w r a b
+  | .relate a r b | .raise a r b => a != b && tieReady w r a b && tieReach w r a b
   | .lower a r b | .unrelate a r b => tie w r a b > 0
 
 def TieEv.step (w : W) : TieEv C R → W
@@ -74,9 +88,21 @@ instance : Domain W (TieEv C R) where
   why w
     | .relate a r b | .raise a r b =>
       if a == b then "a tie needs two people" else
+      if !tieReach w r a b then "out of character: they never start this kind of tie, only answer one; " ++
+        "to justify it, first establish: the other holds it toward them" else
       match TieLaws.requires r with
       | some (r', k) => s!"this tie needs another first, at level {k} (has {tie w r' a b})"
       | none => ""
     | .lower _ _ _ | .unrelate _ _ _ => "there is no such tie to weaken"
+
+/-- An aloof character cannot start the tie. -/
+theorem aloof_no_start (w : W) (a b : C) (r : R) (h : TieSight.aloof a r = true) (h0 : tie w r b a = 0) :
+    TieEv.ok w (.relate a r b) = false := by
+  simp [TieEv.ok, tieReach, h, h0]
+
+/-- But answering a tie held toward them is open to them (given the type's other laws). -/
+theorem aloof_answers (w : W) (a b : C) (r : R) (hab : a ≠ b) (hr : tieReady w r a b = true) (h : tie w r b a > 0) :
+    TieEv.ok w (.relate a r b) = true := by
+  simp [TieEv.ok, tieReach, hab, hr, h]
 
 end LangLib.World
