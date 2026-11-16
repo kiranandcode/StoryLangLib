@@ -1,0 +1,1 @@
+A lot of presumptions we build upon have been completely upturned. There's a real wealth of assumptions that our software ecosystem is built upon that no longer hold, and by questioning each one of them, we get entirely novel and fun research ideas.

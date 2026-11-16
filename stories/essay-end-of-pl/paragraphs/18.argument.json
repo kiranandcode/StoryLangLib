@@ -1,0 +1,48 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "toolingHuman",
+   "uses": [
+    "code"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "llmsDiffer",
+   "uses": [
+    "llms"
+   ],
+   "s": 2
+  },
+  {
+   "move": "hedge",
+   "t": "toolingPossible",
+   "sec": 0,
+   "uses": [
+    "llmsDiffer"
+   ],
+   "s": 2
+  },
+  {
+   "move": "infer",
+   "t": "toolingPossible",
+   "premises": [
+    "llmsDiffer"
+   ],
+   "uses": [
+    "toolingHuman"
+   ],
+   "s": 2
+  },
+  {
+   "move": "claim",
+   "t": "amazonExperiments",
+   "uses": [
+    "toolingPossible"
+   ],
+   "s": 3
+  }
+ ]
+}

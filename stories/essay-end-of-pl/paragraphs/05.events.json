@@ -1,0 +1,49 @@
+{
+ "text_sha": "271de6b729c74a82",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader explorationPremise",
+   "at": 12,
+   "w": "is",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 5,
+   "w": "want",
+   "kind": "act"
+  },
+  {
+   "at": 7,
+   "w": "put",
+   "kind": "act"
+  },
+  {
+   "at": 19,
+   "w": "need",
+   "kind": "content",
+   "lit": "explorationPremise"
+  },
+  {
+   "at": 21,
+   "w": "shift",
+   "kind": "content",
+   "lit": "explorationPremise"
+  },
+  {
+   "at": 46,
+   "w": "shift",
+   "kind": "content",
+   "lit": "explorationPremise"
+  },
+  {
+   "at": 58,
+   "w": "underpinning",
+   "kind": "hypothetical"
+  }
+ ]
+}

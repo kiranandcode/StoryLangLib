@@ -1,0 +1,47 @@
+entity bloom person he "Bloom"
+entity mistake abstract it "the same mistake as presented in the article; this claim"
+entity article abstract it "the article (this post)"
+entity false_positive abstract it "a false positive" generic
+entity distinct_bits abstract they "k distinct bits"
+entity fp_prob abstract it "the probability of this occurring"
+entity distinct_formula abstract it "the expression (1 - (1 - k/m)^n)^k"
+entity hash_outputs abstract they "the hash outputs"
+entity counterexample abstract it "the obvious counterexample presented in the article"
+topic t1 "Bloom's same mistake" mistake
+(S%t1 However/ADV.advmod~order ,/PUNCT (NP.nsubj@bloom Bloom/PROPN.head)
+  (VP.head then/ADV.advmod~order makes/VERB.head=make{Fin,Pres}
+    (NP.obj@mistake the/DET.det same/ADJ.amod mistake/NOUN.head
+      (SBAR.acl as/SCONJ.mark
+        (VP.head presented/VERB.head=present{Part}
+          (PP.obl in/ADP.case (NP.head@article the/DET.det article/NOUN.head))))))
+    ,/PUNCT
+    (SBAR.advcl by/SCONJ.mark
+      (VP.head reasoning/VERB.head=reason{Ger}
+        (SBAR.ccomp that/SCONJ.mark ,/PUNCT
+          (S.head
+            (SBAR.advcl as/SCONJ.mark
+              (S.head (NP.nsubj@false_positive a/DET.det false/ADJ.amod positive/NOUN.head)
+                (VP.head occurs/VERB.head=occur{Fin,Pres}
+                  (SBAR.advcl if/SCONJ.mark
+                    (S.head (NP.nsubj@distinct_bits k/SYM.nummod distinct/ADJ.amod bits/NOUN.head=bit)
+                      (VP.head are/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part}))))))
+            ,/PUNCT
+            (NP.nsubj@fp_prob the/DET.det probability/NOUN.head
+              (PP.nmod of/ADP.case
+                (S.head (NP.nsubj@false_positive this/PRON.head) (VP.head occurring/VERB.head=occur{Ger}))))
+            (VP.head is/AUX.cop=be{Fin,Pres}
+              (NP.head@distinct_formula \(/PUNCT 1/NUM.head -/SYM.cc \(/PUNCT 1/NUM.conj -/SYM.cc k/SYM.conj //SYM.cc m/SYM.conj \)/PUNCT ^/SYM.cc n/SYM.conj \)/PUNCT ^/SYM.cc k/SYM.conj))))))
+  ./PUNCT)
+(S%t1 (NP.nsubj@mistake This/DET.det claim/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres} still/ADV.advmod~aspect
+    (ADJP.head wrong/ADJ.head)
+    (SBAR.advcl even/ADV.advmod~degree though/SCONJ.mark
+      (S.head (NP.nsubj@hash_outputs the/DET.det hash/NOUN.compound~abstract outputs/NOUN.head=output)
+        (VP.head are/AUX.aux=be{Fin,Pres} guaranteed/VERB.head=guarantee{Part}
+          (VP.xcomp to/PART.mark not/PART.advmod overlap/VERB.head{Inf}))))
+    (PRN.dep \(/PUNCT
+      (NP.appos@counterexample the/DET.det "/PUNCT obvious/ADJ.amod "/PUNCT counterexample/NOUN.head
+        (VP.acl presented/VERB.head=present{Part}
+          (PP.obl in/ADP.case (NP.head@article the/DET.det article/NOUN.head))))
+      \)/PUNCT))
+  ./PUNCT)

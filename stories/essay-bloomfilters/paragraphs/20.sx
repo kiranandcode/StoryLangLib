@@ -1,0 +1,72 @@
+entity authors group they "I / we (the authors; the inclusive we of the worked argument)"
+entity false_positive abstract it "this: a false positive (a positive result for a value never inserted)"
+entity scenario abstract it "the following scenario: insert x, later query y"
+entity x abstract it "the value x"
+entity y abstract it "the value y (a different value)"
+entity bloom_filter abstract it "a Bloom filter bf / the Bloom filter"
+entity insertion abstract it "inserting this value (the insertion of x)"
+entity subset abstract it "a subset of the bits (those raised)"
+entity bits abstract they "the bits of the bit-vector"
+entity bit_vector abstract it "the bit-vector"
+entity hash_functions abstract they "the hash functions"
+entity possibility abstract it "the possibility that y's bits are already raised"
+entity y_bits abstract it "the corresponding set of bits that y maps to"
+entity query abstract it "our query for y"
+entity positive_result abstract it "a positive result"
+topic t1 "how a false positive occurs" false_positive
+(S%t1 (SBAR.advcl To/PART.mark
+    (VP.head see/VERB.head{Inf}
+      (SBAR.ccomp how/ADV.advmod~manner (S.head (NP.nsubj@false_positive this/PRON.head) may/AUX.aux{Fin,Pres} occur/VERB.head{Inf}))))
+  ,/PUNCT
+  consider/VERB.head{Fin,Pres,Mood=Imp}
+  (NP.obj@scenario the/DET.det following/VERB.amod=follow{Part} scenario/NOUN.head)
+  :/PUNCT
+  (S.appos@scenario Suppose/VERB.head=suppose{Fin,Pres,Mood=Imp}
+    (S.ccomp (NP.nsubj@authors we/PRON.head) insert/VERB.head{Fin,Pres}
+      (NP.obj@x a/DET.det value/NOUN.head x/SYM.appos@x)
+      (PP.obl into/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head bf/PROPN.appos@bloom_filter)))
+    :/PUNCT
+    (S.parataxis
+      (S.csubj@insertion Inserting/VERB.head=insert{Ger} (NP.obj@x this/DET.det value/NOUN.head))
+      will/AUX.aux{Fin,Pres}
+      thus/ADV.advmod~order
+      result/VERB.head{Inf}
+      (PP.obl in/ADP.case
+        (S.head (NP.nsubj@subset a/DET.det subset/NOUN.head (PP.nmod of/ADP.case (NP.head@bits the/DET.det bits/NOUN.head=bit (PP.nmod in/ADP.case (NP.head@bit_vector the/DET.det bit-vector/NOUN.head)))))
+          being/AUX.aux=be{Ger} raised/VERB.head=raise{Part,Voice=Pass}))))
+  ./PUNCT)
+(S%t1 (PP.obl At/ADP.case a/DET.det later/ADJ.amod point/NOUN.head~time)
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  may/AUX.aux{Fin,Pres}
+  choose/VERB.head{Inf}
+  (S.xcomp to/PART.mark query/VERB.head{Inf}
+    (NP.obj@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head)
+    (PP.obl for/ADP.case (NP.head@y a/DET.det different/ADJ.amod value/NOUN.head y/SYM.appos@y)))
+  ./PUNCT)
+(S%t1 (S.advcl Depending/VERB.head=depend{Ger}
+    (PP.obl on/ADP.case (NP.head the/DET.det choice/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@hash_functions hash/NOUN.compound~abstract functions/NOUN.head=function)))))
+  ,/PUNCT
+  there/PRON.expl
+  is/VERB.head=be{Fin,Pres}
+  (NP.nsubj@possibility a/DET.det possibility/NOUN.head
+    (SBAR.acl that/SCONJ.mark
+      (S.head
+        (NP.nsubj@y_bits the/DET.det corresponding/ADJ.amod set/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@bits bits/NOUN.head=bit))
+          (S.relcl that/PRON.obl (NP.nsubj@y y/SYM.head) maps/VERB.head=map{Fin,Pres} to/ADP.case))
+        will/AUX.aux{Fin,Pres}
+        be/AUX.cop{Inf}
+        (NP.head@subset a/DET.det subset/NOUN.head
+          (PP.nmod of/ADP.case (NP.head@bits those/PRON.head
+            (S.relcl that/PRON.nsubj are/AUX.aux=be{Fin,Pres} already/ADV.advmod~aspect raised/VERB.head=raise{Part,Voice=Pass})))))))
+  ./PUNCT)
+(S%t1 (PP.obl In/ADP.case this/DET.det case/NOUN.head~abstract)
+  ,/PUNCT
+  (NP.nsubj@query our/PRON.poss@authors query/NOUN.head)
+  would/AUX.aux{Fin,Pres}
+  return/VERB.head{Inf}
+  (NP.obj@positive_result a/DET.det positive/ADJ.amod result/NOUN.head)
+  (SBAR.advcl even/ADV.advmod~degree though/SCONJ.mark
+    (S.head (NP.nsubj@y y/SYM.head) is/AUX.cop=be{Fin,Pres} not/PART.advmod actually/ADV.advmod~degree
+      (PP.head in/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))))
+  ./PUNCT)

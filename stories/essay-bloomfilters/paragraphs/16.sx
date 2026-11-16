@@ -1,0 +1,49 @@
+entity authors group they "I / we (the authors; the inclusive we of the worked argument)"
+entity bloom_filter abstract it "a Bloom filter / the Bloom filter bf (the data structure, as a kind)" generic
+entity approx_set abstract it "an approximate set (as a kind)" generic
+entity operations abstract they "the standard set operations: insertion and query" of=insertion,query
+entity insertion abstract it "insertion (the operation)"
+entity query abstract it "a query / querying (the operation)"
+entity x abstract it "the value x"
+entity y abstract it "the value y"
+entity hash_functions abstract they "the k hash functions"
+entity hash_outputs abstract they "the hash outputs"
+entity bit_vector abstract it "the bit-vector"
+entity bits abstract they "the bits of the bit-vector (the corresponding bits)"
+topic t1 "insertion and query" operations
+(S%t1 (SBAR.advcl To/PART.mark (VP.head use/VERB.head{Inf} (NP.obj@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head) (PP.obl as/ADP.case (NP.head@approx_set an/DET.det approximate/ADJ.amod set/NOUN.head))))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  can/AUX.aux{Fin,Pres}
+  perform/VERB.head{Inf}
+  (NP.obj@operations the/DET.det standard/ADJ.amod set/NOUN.compound~abstract operations/NOUN.head=operation)
+  (ADVP.advmod as/ADV.head follows/VERB.fixed=follow{Fin,Pres})
+  :/PUNCT
+  (FRAG.appos@insertion Insertion/NOUN.head@insertion :/PUNCT
+    (S.appos@insertion (SBAR.advcl To/PART.mark (VP.head insert/VERB.head{Inf} (NP.obj@x a/DET.det value/NOUN.head x/SYM.appos@x) (PP.obl into/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head bf/PROPN.appos@bloom_filter))))
+      ,/PUNCT
+      simply/ADV.advmod~manner
+      hash/VERB.head{Fin,Pres,Mood=Imp}
+      (NP.obj@x it/PRON.head)
+      (PP.obl over/ADP.case (NP.head@hash_functions each/DET.det one/NUM.head (PP.nmod of/ADP.case the/DET.det k/SYM.nummod hash/NOUN.compound~abstract functions/NOUN.head=function~abstract)))
+      ,/PUNCT
+      (VP.conj and/CCONJ.cc
+        (VP.advcl treating/VERB.head=treat{Ger} (NP.obj@hash_outputs the/DET.det hash/NOUN.compound~abstract outputs/NOUN.head=output) (PP.obl as/ADP.case (NP.head indices/NOUN.head=index~abstract (PP.nmod into/ADP.case (NP.head@bit_vector the/DET.det bit-vector/NOUN.head)))))
+        ,/PUNCT
+        raise/VERB.head{Fin,Pres,Mood=Imp}
+        (NP.obj@bits the/DET.det corresponding/ADJ.amod bits/NOUN.head=bit))))
+  ./PUNCT)
+(FRAG%t1 (NP.head@query Query/NOUN.head) :/PUNCT
+  (S.appos@query (SBAR.advcl To/PART.mark (VP.head query/VERB.head{Inf} (PP.obl for/ADP.case (NP.head@y a/DET.det value/NOUN.head y/SYM.appos@y)) (PP.obl in/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))))
+    ,/PUNCT
+    once/ADV.advmod~time again/ADV.advmod~time
+    hash/VERB.head{Fin,Pres,Mood=Imp}
+    (NP.obj@y it/PRON.head)
+    (PP.obl over/ADP.case (NP.head@hash_functions each/DET.det one/NUM.head (PP.nmod of/ADP.case the/DET.det k/SYM.nummod hash/NOUN.compound~abstract functions/NOUN.head=function~abstract)))
+    ,/PUNCT
+    (VP.conj and/CCONJ.cc then/ADV.advmod
+      check/VERB.head{Fin,Pres,Mood=Imp}
+      (SBAR.ccomp whether/SCONJ.mark
+        (S.head (NP.nsubj@bits all/PRON.head (PP.nmod of/ADP.case (NP.head@bits the/DET.det corresponding/ADJ.amod bits/NOUN.head=bit)))
+          are/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part,Voice=Pass}))))
+  ./PUNCT)

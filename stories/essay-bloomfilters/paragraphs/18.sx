@@ -1,0 +1,48 @@
+entity authors group they "I / we (the authors; the inclusive we of the worked argument)"
+entity item abstract it "an item / the inserted element (as a kind)" generic
+entity bloom_filter abstract it "the Bloom filter (the data structure, as a kind)" generic
+entity insertion abstract it "insertion (the operation)"
+entity subset abstract it "a certain subset of the bits raised by an insertion"
+entity bits abstract they "the bits of the bit-vector"
+entity bit_vector abstract it "the bit-vector"
+entity query abstract it "a query (the operation)" generic
+topic t1 "why there are no false negatives" item
+(S%t1 (SBAR.advcl When/SCONJ.mark
+    (S.head (NP.nsubj@item an/DET.det item/NOUN.head) is/AUX.aux=be{Fin,Pres} inserted/VERB.head=insert{Part,Voice=Pass}
+      (PP.obl into/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))))
+  ,/PUNCT
+  (NP.nsubj@insertion it/PRON.head)
+  will/AUX.aux{Fin,Pres}
+  result/VERB.head{Inf}
+  (PP.obl in/ADP.case
+    (S.head (NP.nsubj@subset a/DET.det certain/ADJ.amod subset/NOUN.head (PP.nmod of/ADP.case (NP.head@bits the/DET.det bits/NOUN.head=bit (PP.nmod in/ADP.case (NP.head@bit_vector the/DET.det bit-vector/NOUN.head)))))
+      being/AUX.aux=be{Ger} raised/VERB.head=raise{Part,Voice=Pass}))
+  ./PUNCT)
+(S%t1 (SBAR.advcl As/SCONJ.mark
+    (S.head there/PRON.expl are/VERB.head=be{Fin,Pres}
+      (NP.nsubj no/DET.det operations/NOUN.head=operation~abstract
+        (S.relcl that/PRON.nsubj can/AUX.aux{Fin,Pres} unset/VERB.head{Inf} (NP.obj@bits these/DET.det bits/NOUN.head=bit)))))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  can/AUX.aux{Fin,Pres}
+  be/AUX.cop{Inf}
+  certain/ADJ.head~impression
+  (SBAR.ccomp that/SCONJ.mark
+    (S.head (NP.nsubj@query any/DET.det subsequent/ADJ.amod query/NOUN.head (PP.nmod for/ADP.case (NP.head@item the/DET.det inserted/VERB.amod=insert{Part} element/NOUN.head)))
+      must/AUX.aux{Fin,Pres} return/VERB.head{Inf} true/ADJ.obj))
+  ./PUNCT)
+(S%t1 (PP.obl In/ADP.case other/ADJ.amod words/NOUN.head=word~abstract)
+  ,/PUNCT
+  (SBAR.advcl if/SCONJ.mark
+    (S.head (NP.nsubj@authors we/PRON.head) get/VERB.head{Fin,Pres}
+      (NP.obj a/DET.det negative/ADJ.amod result/NOUN.head~abstract (PP.nmod for/ADP.case (NP.head@query a/DET.det query/NOUN.head)))))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  can/AUX.aux{Fin,Pres}
+  be/AUX.cop{Inf}
+  certain/ADJ.head~impression
+  (SBAR.ccomp that/SCONJ.mark
+    (S.head (NP.nsubj@item the/DET.det item/NOUN.head) has/AUX.aux=have{Fin,Pres} never/ADV.advmod been/AUX.aux=be{Part} inserted/VERB.head=insert{Part,Voice=Pass}
+      (PP.obl into/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))
+      before/ADV.advmod~time))
+  ./PUNCT)

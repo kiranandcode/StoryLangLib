@@ -1,0 +1,48 @@
+entity final_step abstract it "this final step of Bloom's proof"
+entity query_bits abstract they "the bits selected by the hash function"
+entity hash_functions abstract they "the hash functions"
+entity distinctness abstract it "the bits all being distinct"
+entity counterexample abstract it "the counterexample: every hash function maps to the same bit"
+entity same_bit abstract it "the same bit"
+entity fpr abstract it "the probability of a false positive"
+entity hash_outcomes abstract they "the hash outcomes"
+entity single_bit_prob abstract it "(1 - (1 - 1/m)^(kn)), the single-bit expression"
+entity cited_expression abstract it "(1 - (1 - 1/m)^(kn))^k, Bloom's bound"
+entity false_positive abstract it "a false positive" generic
+topic t1 "the counterexample to independence" counterexample,final_step
+(S%t1 Crucially/ADV.advmod~impression ,/PUNCT
+  (NP.nsubj@final_step this/DET.det final/ADJ.amod step/NOUN.head)
+  only/ADV.advmod~degree works/VERB.head=work{Fin,Pres}
+  (SBAR.advcl if/SCONJ.mark
+    (S.head (NP.nsubj@query_bits the/DET.det bits/NOUN.head=bit
+        (VP.acl selected/VERB.head=select{Part} (PP.obl by/ADP.case (NP.head@hash_functions the/DET.det hash/NOUN.compound function/NOUN.head))))
+      end/VERB.head{Fin,Pres} up/ADP.compound
+      (ADJP.xcomp all/DET.dep being/AUX.cop=be{Ger} distinct/ADJ.head)))
+  ,/PUNCT
+  (SBAR.parataxis which/PRON.nsubj@distinctness is/AUX.aux=be{Fin,Pres} not/PART.advmod always/ADV.advmod~time guaranteed/VERB.head=guarantee{Part}
+    (PRN.advcl \(/PUNCT even/ADV.advmod~degree though/SCONJ.mark
+      (S.head (NP.nsubj@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function)
+        are/AUX.aux=be{Fin,Pres} assumed/VERB.head=assume{Part}
+        (VP.xcomp to/PART.mark be/AUX.cop{Inf} independent/ADJ.head))
+      \)/PUNCT))
+  -/PUNCT
+  (S.parataxis (PP.obl for/ADP.case (NP.head@counterexample a/DET.det simple/ADJ.amod counterexample/NOUN.head)) ,/PUNCT
+    consider/VERB.head{Fin,Pres,Mood=Imp}
+    (NP.obj@counterexample the/DET.det case/NOUN.head
+      (SBAR.relcl (PP.obl in/ADP.case which/PRON.head)
+        (NP.nsubj@hash_functions all/DET.det the/DET.det hash/NOUN.compound functions/NOUN.head=function)
+        happen/VERB.head{Fin,Pres}
+        (VP.xcomp to/PART.mark map/VERB.head{Inf} (NP.obj@same_bit the/DET.det same/ADJ.amod bit/NOUN.head)))))
+  -/PUNCT
+  (S.parataxis (PP.obl in/ADP.case (NP.head@counterexample this/DET.det case/NOUN.head))
+    (NP.nsubj@fpr the/DET.det probability/NOUN.head (PP.nmod of/ADP.case (NP.head@false_positive a/DET.det false/ADJ.amod positive/NOUN.head~abstract))
+      (PRN.acl \(/PUNCT given/VERB.head=give{Part} (NP.obj@hash_outcomes the/DET.det hash/NOUN.compound outcomes/NOUN.head=outcome) \)/PUNCT))
+    will/AUX.aux{Fin,Pres} be/AUX.cop{Inf}
+    (NP.head
+      (NP.head@single_bit_prob \(/PUNCT 1/NUM.head -/SYM.cc
+        (NP.conj \(/PUNCT 1/NUM.head -/SYM.cc (NP.conj 1/NUM.head //SYM.case m/SYM.nmod) \)/PUNCT ^/SYM.dep \(/PUNCT kn/SYM.dep \)/PUNCT) \)/PUNCT)
+      and/CCONJ.cc not/PART.advmod
+      (NP.conj@cited_expression \(/PUNCT 1/NUM.head -/SYM.cc
+        (NP.conj \(/PUNCT 1/NUM.head -/SYM.cc (NP.conj 1/NUM.head //SYM.case m/SYM.nmod) \)/PUNCT ^/SYM.dep \(/PUNCT kn/SYM.dep \)/PUNCT)
+        \)/PUNCT ^/SYM.dep k/SYM.dep)))
+  ./PUNCT)

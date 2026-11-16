@@ -1,0 +1,41 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 2
+  },
+  {
+   "move": "deliver",
+   "t": "blooms_analysis",
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deliver",
+   "t": "errorCause",
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  },
+  {
+   "move": "concede",
+   "t": "bloomErr",
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "knuthVariant",
+   "premises": [
+    "blooms_analysis"
+   ],
+   "uses": [],
+   "s": 1
+  }
+ ]
+}

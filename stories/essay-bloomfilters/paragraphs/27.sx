@@ -1,0 +1,17 @@
+entity authors group they "I / we (the authors)"
+entity input abstract it "an input (as a kind)" generic
+entity hash_functions abstract they "the k hash functions"
+entity bloom_filter abstract it "the Bloom filter" generic
+topic t1 "hashing one input" hash_functions
+(S%t1 Now/ADV.advmod~time ,/PUNCT
+  let's/VERB.head=let{Fin,Pres,Mood=Imp}
+  (VP.xcomp have/VERB.head{Inf} (NP.obj a/DET.det look/NOUN.head~event)
+    (PP.obl at/ADP.case
+      (SBAR.head what/PRON.nsubj happens/VERB.head=happen{Fin,Pres}
+        (SBAR.advcl when/SCONJ.mark
+          (S.head (NP.nsubj@authors we/PRON.head)
+            (VP.head hash/VERB.head{Fin,Pres} (NP.obj@input an/DET.det input/NOUN.head)
+              (PP.obl over/ADP.case (NP.head one/NUM.head
+                (PP.nmod of/ADP.case (NP.head@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function
+                  (PP.nmod in/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))))))))))))
+  ./PUNCT)

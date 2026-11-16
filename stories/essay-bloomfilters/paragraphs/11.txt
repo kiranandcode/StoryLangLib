@@ -1,0 +1,1 @@
+In the rest of this post, we'll explore the main highlights of this research, answering the following questions: What is a Bloom filter? Why did these errors initially arise? What is the true behaviour of a Bloom filter? and how can we be certain?

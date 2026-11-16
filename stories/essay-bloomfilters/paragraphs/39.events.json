@@ -1,0 +1,21 @@
+{
+ "text_sha": "407e2ec40b9eebd3",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice bose !bloomFormula inferred",
+   "at": 16,
+   "w": "noticed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 29,
+   "w": "see",
+   "kind": "generic"
+  }
+ ]
+}

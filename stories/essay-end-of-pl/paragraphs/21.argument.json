@@ -1,0 +1,39 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "loss",
+   "sec": 0,
+   "uses": [
+    "ego"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "craftPride",
+   "uses": [
+    "code"
+   ],
+   "s": 5
+  },
+  {
+   "move": "claim",
+   "t": "egoNotCuriosity",
+   "uses": [
+    "craftPride",
+    "ego"
+   ],
+   "s": 6
+  },
+  {
+   "move": "claim",
+   "t": "expertiseNotNeeded",
+   "uses": [
+    "egoNotCuriosity",
+    "exploration"
+   ],
+   "s": 7
+  }
+ ]
+}

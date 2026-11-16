@@ -1,0 +1,42 @@
+{
+ "text_sha": "bad0272cbd8cb671",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader bridge",
+   "at": 4,
+   "w": "saddled",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true bridge",
+   "at": 56,
+   "w": "boil"
+  }
+ ],
+ "judge": [
+  {
+   "at": 20,
+   "w": "get",
+   "kind": "generic"
+  },
+  {
+   "at": 22,
+   "w": "work",
+   "kind": "generic"
+  },
+  {
+   "at": 31,
+   "w": "need",
+   "kind": "generic"
+  },
+  {
+   "at": 33,
+   "w": "compromise",
+   "kind": "generic"
+  }
+ ]
+}

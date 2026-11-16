@@ -1,0 +1,1 @@
+Given this, it's understandable that researchers might worry that maybe their research is becoming obsolete. Humans aren't going to be writing programs. So why care about programming languages at all? Humans aren't going to be writing them.

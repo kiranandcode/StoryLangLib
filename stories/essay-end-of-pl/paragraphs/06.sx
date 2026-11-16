@@ -1,0 +1,24 @@
+entity authors group they "we / me (Kiran, with the reader in let's)"
+entity fears abstract they "the fears of practicing researchers"
+entity pessimists group they "practicing researchers (who fear for the field)"
+entity points abstract they "a few points"
+entity ai_tools abstract they "language models" generic
+entity code abstract it "code (as a kind)" generic
+entity humans group they "humans (who write code)" generic
+topic t1 "the researchers' fears" fears
+(S%t1 (S.head Let's/VERB.head=let{Fin,Pres,Mood=Imp}
+    (VP.xcomp dig/VERB.head{Inf} (PP.obl into/ADP.case (NP.head@fears the/DET.det fears/NOUN.head=fear~abstract
+      (PP.nmod of/ADP.case (NP.head@pessimists practicing/VERB.amod=practice{Part} researchers/NOUN.head=researcher))))))
+  ,/PUNCT
+  (S.conj and/CCONJ.cc let/VERB.head{Fin,Pres,Mood=Imp}
+    (S.ccomp (NP.nsubj@authors me/PRON.head=I) (VP.head put/VERB.head{Inf} down/ADP.compound (NP.obj@points a/DET.det few/ADJ.amod points/NOUN.head=point~abstract))))
+  :/PUNCT
+  (S.parataxis (NP.nsubj@ai_tools Language/NOUN.compound~abstract models/NOUN.head=model)
+    are/AUX.cop=be{Fin,Pres} exceedingly/ADV.advmod~degree good/ADJ.head
+    (SBAR.obl at/SCONJ.mark (VP.head writing/VERB.head=write{Ger} (NP.obj@code code/NOUN.head))))
+  ./PUNCT)
+(S%t1 (ADVP.advmod As/ADP.case such/ADJ.fixed) ,/PUNCT
+  (NP.nsubj@humans humans/NOUN.head=human)
+  (VP.head are/AUX.aux=be{Fin,Pres} increasingly/ADV.advmod~degree not/PART.advmod going/VERB.head=go{Part}
+    (VP.xcomp to/PART.mark be/AUX.aux{Inf} writing/VERB.head=write{Part} (NP.obj@code code/NOUN.head)))
+  ./PUNCT)

@@ -1,0 +1,24 @@
+entity bloom person he "Bloom"
+entity asymptotics abstract it "the asymptotic behaviour of Bloom's original bound"
+entity cited_expression abstract it "Bloom's original bound"
+entity bose_expression abstract it "this updated definition"
+entity impact abstract it "the impact"
+entity pedantry abstract it "an issue of pedantry"
+entity applications abstract they "practical applications"
+topic t1 "the correction is pedantic" asymptotics
+(S%t1 (ADVP.discourse To/PART.head be/AUX.fixed{Inf} fair/ADJ.fixed) ,/PUNCT
+  (NP.nsubj@asymptotics the/DET.det asymptotic/ADJ.amod behaviour/NOUN.head
+    (PP.nmod of/ADP.case
+      (NP.head@cited_expression Bloom's/PROPN.poss=Bloom@bloom original/ADJ.amod bound/NOUN.head)))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+    (ADJP.head consistent/ADJ.head
+      (PP.obl with/ADP.case (NP.head@bose_expression this/DET.det updated/ADJ.amod definition/NOUN.head))))
+  ,/PUNCT
+  (S.conj so/CCONJ.cc
+    (NP.nsubj@impact the/DET.det impact/NOUN.head)
+    (VP.head is/AUX.cop=be{Fin,Pres}
+      (NP.head@pedantry more/ADV.advmod~degree an/DET.det issue/NOUN.head
+        (PP.nmod of/ADP.case pedantry/NOUN.head~abstract)
+        rather/ADV.cc~degree than/ADP.fixed
+        (PP.conj about/ADP.case (NP.head@applications practical/ADJ.amod applications/NOUN.head=application)))))
+  ./PUNCT)

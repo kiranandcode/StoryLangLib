@@ -1,0 +1,1507 @@
+{
+ "AI/PROPN": {
+  "reg": "technical"
+ },
+ "I mean": {
+  "cls": [
+   "filler"
+  ],
+  "reg": "informal"
+ },
+ "I think": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "LLM/PROPN": {
+  "reg": "technical"
+ },
+ "Linux/PROPN": {
+  "reg": "technical"
+ },
+ "PL/PROPN": {
+  "reg": "technical"
+ },
+ "TYPES/PROPN": {
+  "reg": "technical"
+ },
+ "abandon/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "able": {
+  "reg": "neutral"
+ },
+ "about/ADJ": {
+  "reg": "neutral"
+ },
+ "absolutely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "abstract/VERB": {
+  "reg": "technical"
+ },
+ "access/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "actually": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "ad-hoc": {
+  "reg": "informal"
+ },
+ "adapt/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "add/VERB": {
+  "reg": "neutral"
+ },
+ "affect/VERB": {
+  "reg": "neutral"
+ },
+ "agent/NOUN": {
+  "reg": "technical"
+ },
+ "ago/ADV": {
+  "reg": "neutral"
+ },
+ "allow/VERB": {
+  "reg": "neutral"
+ },
+ "alternative": {
+  "reg": "neutral"
+ },
+ "always/ADV": {
+  "reg": "neutral"
+ },
+ "amazing/ADJ": {
+  "reg": "informal"
+ },
+ "amenable/ADJ": {
+  "reg": "formal"
+ },
+ "analysis": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "anecdotally/ADV": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "answer": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "application": {
+  "reg": "neutral"
+ },
+ "applied/ADJ": {
+  "reg": "neutral"
+ },
+ "area/NOUN": {
+  "reg": "neutral"
+ },
+ "around": {
+  "reg": "neutral"
+ },
+ "article": {
+  "reg": "neutral"
+ },
+ "as such": {
+  "reg": "formal",
+  "rel": "cause"
+ },
+ "ask": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "assumption/NOUN": {
+  "reg": "neutral"
+ },
+ "at all": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "at the same time": {
+  "reg": "neutral",
+  "rel": "concession"
+ },
+ "automate/VERB": {
+  "reg": "technical"
+ },
+ "automatically/ADV": {
+  "reg": "neutral"
+ },
+ "available": {
+  "reg": "neutral"
+ },
+ "away": {
+  "reg": "neutral"
+ },
+ "barely": {
+  "reg": "neutral"
+ },
+ "be/VERB": {
+  "reg": "neutral"
+ },
+ "beautiful": {
+  "reg": "neutral"
+ },
+ "beauty": {
+  "reg": "neutral"
+ },
+ "become": {
+  "reg": "neutral"
+ },
+ "before": {
+  "reg": "neutral"
+ },
+ "begin/VERB": {
+  "reg": "neutral"
+ },
+ "behaviour/NOUN": {
+  "reg": "neutral"
+ },
+ "believe": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "believe me": {
+  "reg": "informal"
+ },
+ "big": {
+  "reg": "neutral"
+ },
+ "binary/ADJ": {
+  "reg": "technical"
+ },
+ "binary/NOUN": {
+  "reg": "technical"
+ },
+ "boil": {
+  "reg": "neutral"
+ },
+ "boil down": {
+  "reg": "informal"
+ },
+ "boring/ADJ": {
+  "reg": "neutral"
+ },
+ "bother": {
+  "reg": "informal"
+ },
+ "bridge": {
+  "reg": "neutral"
+ },
+ "build": {
+  "reg": "neutral"
+ },
+ "capability/NOUN": {
+  "reg": "neutral"
+ },
+ "capable": {
+  "reg": "neutral"
+ },
+ "care": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "career": {
+  "reg": "neutral"
+ },
+ "central": {
+  "reg": "neutral"
+ },
+ "change/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "change/VERB": {
+  "reg": "neutral"
+ },
+ "chart": {
+  "reg": "formal"
+ },
+ "climate": {
+  "reg": "formal"
+ },
+ "code": {
+  "reg": "technical"
+ },
+ "collaboration/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "colleague/NOUN": {
+  "reg": "neutral"
+ },
+ "community": {
+  "reg": "neutral"
+ },
+ "completely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "compromise": {
+  "reg": "neutral"
+ },
+ "concrete/ADJ": {
+  "reg": "neutral"
+ },
+ "construct/NOUN": {
+  "reg": "technical"
+ },
+ "cool/ADJ": {
+  "reg": "informal"
+ },
+ "counterfactual/NOUN": {
+  "reg": "technical"
+ },
+ "craft/NOUN": {
+  "reg": "neutral"
+ },
+ "crazed/ADJ": {
+  "reg": "informal"
+ },
+ "crazier": {
+  "reg": "informal"
+ },
+ "crazy": {
+  "reg": "informal"
+ },
+ "crazyyy/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "crisis": {
+  "reg": "neutral"
+ },
+ "curiosity/NOUN": {
+  "reg": "neutral"
+ },
+ "daily": {
+  "reg": "neutral"
+ },
+ "daunting": {
+  "reg": "formal"
+ },
+ "deep/ADJ": {
+  "reg": "neutral"
+ },
+ "deep/ADV": {
+  "reg": "neutral"
+ },
+ "defense": {
+  "cls": [
+   "nominal",
+   "us"
+  ],
+  "reg": "neutral"
+ },
+ "delve/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "formal"
+ },
+ "demographics/NOUN": {
+  "reg": "formal"
+ },
+ "demonstration": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "formal"
+ },
+ "depth/NOUN": {
+  "reg": "neutral"
+ },
+ "design/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "detail/NOUN": {
+  "reg": "neutral"
+ },
+ "develop/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "developer": {
+  "reg": "neutral"
+ },
+ "development/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "dig": {
+  "reg": "informal"
+ },
+ "dig into": {
+  "reg": "informal"
+ },
+ "discussion": {
+  "reg": "neutral"
+ },
+ "disruptive": {
+  "cls": [
+   "buzz"
+  ],
+  "reg": "formal"
+ },
+ "dive/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "do": {
+  "reg": "neutral"
+ },
+ "domain/NOUN": {
+  "reg": "neutral"
+ },
+ "down/ADV": {
+  "reg": "neutral"
+ },
+ "downstream": {
+  "reg": "technical"
+ },
+ "dynamical/ADJ": {
+  "reg": "technical"
+ },
+ "easy/ADJ": {
+  "reg": "neutral"
+ },
+ "ecosystem/NOUN": {
+  "reg": "neutral"
+ },
+ "effect": {
+  "reg": "neutral"
+ },
+ "effort": {
+  "reg": "neutral"
+ },
+ "ego-driven": {
+  "reg": "informal"
+ },
+ "ego/NOUN": {
+  "reg": "neutral"
+ },
+ "elegance": {
+  "reg": "neutral"
+ },
+ "elegant": {
+  "reg": "neutral"
+ },
+ "engineering": {
+  "reg": "technical"
+ },
+ "enjoy/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "enter": {
+  "reg": "neutral"
+ },
+ "enthusiasm/NOUN": {
+  "reg": "neutral"
+ },
+ "entire": {
+  "reg": "neutral"
+ },
+ "entirely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "era/NOUN": {
+  "reg": "neutral"
+ },
+ "esoteric/ADJ": {
+  "reg": "formal"
+ },
+ "even": {
+  "reg": "neutral"
+ },
+ "eventually": {
+  "reg": "neutral"
+ },
+ "ever": {
+  "reg": "neutral"
+ },
+ "example/NOUN": {
+  "reg": "neutral"
+ },
+ "exceedingly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "formal"
+ },
+ "excited": {
+  "reg": "neutral"
+ },
+ "exciting/ADJ": {
+  "reg": "neutral"
+ },
+ "existential": {
+  "reg": "formal"
+ },
+ "expand/VERB": {
+  "reg": "neutral"
+ },
+ "experiment/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "experiment/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "expert/NOUN": {
+  "reg": "neutral"
+ },
+ "expertise/NOUN": {
+  "reg": "formal"
+ },
+ "explain/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "exploit/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "exploration": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "explore": {
+  "reg": "neutral"
+ },
+ "expose/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "extremely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "face": {
+  "reg": "neutral"
+ },
+ "far": {
+  "reg": "neutral"
+ },
+ "fear": {
+  "reg": "neutral"
+ },
+ "feel": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "few": {
+  "reg": "neutral"
+ },
+ "field": {
+  "reg": "neutral"
+ },
+ "foot/NOUN": {
+  "reg": "neutral"
+ },
+ "for the sake of": {
+  "reg": "formal"
+ },
+ "form/NOUN": {
+  "reg": "neutral"
+ },
+ "formal/ADJ": {
+  "reg": "technical"
+ },
+ "forward/ADV": {
+  "reg": "neutral"
+ },
+ "free/VERB": {
+  "reg": "neutral"
+ },
+ "frontier/NOUN": {
+  "reg": "formal"
+ },
+ "fuck": {
+  "reg": "informal"
+ },
+ "fucking": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "fun": {
+  "reg": "neutral"
+ },
+ "functional": {
+  "reg": "neutral"
+ },
+ "future": {
+  "reg": "neutral"
+ },
+ "general": {
+  "reg": "neutral"
+ },
+ "generate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "genuinely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "get": {
+  "reg": "neutral"
+ },
+ "get at": {
+  "reg": "informal"
+ },
+ "get to": {
+  "reg": "informal"
+ },
+ "give": {
+  "reg": "neutral"
+ },
+ "given/ADP": {
+  "reg": "formal"
+ },
+ "go": {
+  "reg": "neutral"
+ },
+ "good": {
+  "reg": "neutral"
+ },
+ "graph/NOUN": {
+  "reg": "technical"
+ },
+ "hacky": {
+  "reg": "informal"
+ },
+ "handle": {
+  "reg": "neutral"
+ },
+ "have fun": {
+  "reg": "informal"
+ },
+ "have/VERB": {
+  "reg": "neutral"
+ },
+ "heck": {
+  "reg": "informal"
+ },
+ "help/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "here": {
+  "reg": "neutral"
+ },
+ "hold/VERB": {
+  "reg": "neutral"
+ },
+ "honest": {
+  "reg": "neutral"
+ },
+ "human": {
+  "reg": "neutral"
+ },
+ "hundred/NOUN": {
+  "reg": "neutral"
+ },
+ "idea": {
+  "reg": "neutral"
+ },
+ "improve/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "in general": {
+  "reg": "neutral"
+ },
+ "inception": {
+  "reg": "formal"
+ },
+ "incomplete": {
+  "reg": "neutral"
+ },
+ "increasingly": {
+  "reg": "neutral"
+ },
+ "incredibly/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "insight": {
+  "reg": "neutral"
+ },
+ "instantiation/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "instead/ADV": {
+  "reg": "neutral"
+ },
+ "intellectual/ADJ": {
+  "reg": "formal"
+ },
+ "intelligence": {
+  "reg": "neutral"
+ },
+ "intent/NOUN": {
+  "reg": "neutral"
+ },
+ "interface/NOUN": {
+  "reg": "technical"
+ },
+ "internal/NOUN": {
+  "reg": "technical"
+ },
+ "interpreted/ADJ": {
+  "reg": "technical"
+ },
+ "investigate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "iterate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "jagged/ADJ": {
+  "reg": "neutral"
+ },
+ "joy/NOUN": {
+  "reg": "neutral"
+ },
+ "junior": {
+  "reg": "neutral"
+ },
+ "just/ADV": {
+  "reg": "neutral"
+ },
+ "kernel": {
+  "reg": "technical"
+ },
+ "kind": {
+  "reg": "neutral"
+ },
+ "knowledge/NOUN": {
+  "reg": "neutral"
+ },
+ "lack/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "lack/VERB": {
+  "reg": "neutral"
+ },
+ "language": {
+  "reg": "neutral"
+ },
+ "language model": {
+  "reg": "technical"
+ },
+ "let": {
+  "reg": "neutral"
+ },
+ "let you in on": {
+  "reg": "informal"
+ },
+ "level/NOUN": {
+  "reg": "neutral"
+ },
+ "like": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "limitation/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "line/NOUN": {
+  "reg": "neutral"
+ },
+ "list": {
+  "reg": "neutral"
+ },
+ "literally": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "little": {
+  "reg": "neutral"
+ },
+ "llm/NOUN": {
+  "reg": "technical"
+ },
+ "longer/ADV": {
+  "reg": "neutral"
+ },
+ "look/VERB": {
+  "reg": "neutral"
+ },
+ "loss/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "lot/NOUN": {
+  "reg": "informal"
+ },
+ "mailing": {
+  "reg": "neutral"
+ },
+ "mailing list": {
+  "reg": "technical"
+ },
+ "majority": {
+  "reg": "neutral"
+ },
+ "make/VERB": {
+  "reg": "neutral"
+ },
+ "manage/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "match/VERB": {
+  "reg": "neutral"
+ },
+ "maybe": {
+  "reg": "informal"
+ },
+ "mean": {
+  "reg": "neutral"
+ },
+ "mechanised/ADJ": {
+  "reg": "technical"
+ },
+ "mix": {
+  "reg": "neutral"
+ },
+ "model": {
+  "reg": "technical"
+ },
+ "moment": {
+  "reg": "neutral"
+ },
+ "month/NOUN": {
+  "reg": "neutral"
+ },
+ "more": {
+  "reg": "neutral"
+ },
+ "more than able": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "motivation": {
+  "reg": "neutral"
+ },
+ "much/ADV": {
+  "reg": "neutral"
+ },
+ "need": {
+  "cls": [
+   "deontic"
+  ],
+  "reg": "neutral"
+ },
+ "need to": {
+  "cls": [
+   "deontic"
+  ],
+  "reg": "neutral"
+ },
+ "negative": {
+  "reg": "neutral"
+ },
+ "never/ADV": {
+  "reg": "neutral"
+ },
+ "new": {
+  "reg": "neutral"
+ },
+ "niche/ADJ": {
+  "reg": "neutral"
+ },
+ "noble": {
+  "reg": "formal"
+ },
+ "normalising/ADJ": {
+  "reg": "technical"
+ },
+ "novel/ADJ": {
+  "reg": "neutral"
+ },
+ "now": {
+  "reg": "neutral"
+ },
+ "obscure/ADJ": {
+  "reg": "neutral"
+ },
+ "obsolete": {
+  "reg": "neutral"
+ },
+ "okay": {
+  "reg": "informal"
+ },
+ "opinion": {
+  "reg": "neutral"
+ },
+ "other than": {
+  "reg": "neutral"
+ },
+ "other/ADJ": {
+  "reg": "neutral"
+ },
+ "overwhelmingly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "pace/NOUN": {
+  "reg": "neutral"
+ },
+ "past/ADJ": {
+  "reg": "neutral"
+ },
+ "play": {
+  "reg": "neutral"
+ },
+ "play around": {
+  "reg": "informal"
+ },
+ "plentiful": {
+  "reg": "formal"
+ },
+ "point": {
+  "reg": "neutral"
+ },
+ "pop": {
+  "reg": "informal"
+ },
+ "pop up": {
+  "reg": "informal"
+ },
+ "position": {
+  "reg": "neutral"
+ },
+ "positive": {
+  "reg": "neutral"
+ },
+ "possible/ADJ": {
+  "reg": "neutral"
+ },
+ "practical": {
+  "reg": "neutral"
+ },
+ "practicality": {
+  "reg": "formal"
+ },
+ "practice": {
+  "reg": "neutral"
+ },
+ "practicing": {
+  "cls": [
+   "us"
+  ],
+  "reg": "neutral"
+ },
+ "premise": {
+  "reg": "formal"
+ },
+ "present": {
+  "reg": "formal"
+ },
+ "presumption/NOUN": {
+  "reg": "formal"
+ },
+ "pretty": {
+  "reg": "neutral"
+ },
+ "pride/NOUN": {
+  "reg": "neutral"
+ },
+ "principled": {
+  "reg": "formal"
+ },
+ "problem": {
+  "reg": "neutral"
+ },
+ "program": {
+  "reg": "technical"
+ },
+ "programmer/NOUN": {
+  "reg": "neutral"
+ },
+ "programming": {
+  "reg": "technical"
+ },
+ "programming language": {
+  "reg": "technical"
+ },
+ "programming languages research": {
+  "reg": "technical"
+ },
+ "progress/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "project/NOUN": {
+  "reg": "neutral"
+ },
+ "prompting/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "proof/NOUN": {
+  "reg": "technical"
+ },
+ "property/NOUN": {
+  "reg": "neutral"
+ },
+ "prove/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "put": {
+  "reg": "neutral"
+ },
+ "put down": {
+  "reg": "informal"
+ },
+ "qualified/ADJ": {
+  "reg": "neutral"
+ },
+ "question": {
+  "reg": "neutral"
+ },
+ "quickly": {
+  "reg": "neutral"
+ },
+ "real/ADJ": {
+  "reg": "neutral"
+ },
+ "reality/NOUN": {
+  "reg": "neutral"
+ },
+ "really/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "recent": {
+  "reg": "neutral"
+ },
+ "reel": {
+  "reg": "formal"
+ },
+ "research": {
+  "reg": "neutral"
+ },
+ "researcher": {
+  "reg": "neutral"
+ },
+ "result": {
+  "reg": "neutral"
+ },
+ "right now": {
+  "reg": "informal"
+ },
+ "right/ADV": {
+  "reg": "neutral"
+ },
+ "run/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "saddle": {
+  "reg": "formal"
+ },
+ "sake": {
+  "reg": "formal"
+ },
+ "same": {
+  "reg": "neutral"
+ },
+ "say": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "scale/NOUN": {
+  "reg": "neutral"
+ },
+ "science/NOUN": {
+  "reg": "neutral"
+ },
+ "scientist/NOUN": {
+  "reg": "neutral"
+ },
+ "search/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "secret": {
+  "reg": "neutral"
+ },
+ "see/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "seem/VERB": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "semantics/NOUN": {
+  "reg": "technical"
+ },
+ "sense/NOUN": {
+  "reg": "neutral"
+ },
+ "set/VERB": {
+  "reg": "neutral"
+ },
+ "settle": {
+  "reg": "neutral"
+ },
+ "settle for": {
+  "reg": "neutral"
+ },
+ "shift": {
+  "reg": "neutral"
+ },
+ "short/ADJ": {
+  "reg": "neutral"
+ },
+ "similar/ADJ": {
+  "reg": "neutral"
+ },
+ "singlehandedly/ADV": {
+  "reg": "informal"
+ },
+ "sit/VERB": {
+  "reg": "neutral"
+ },
+ "slightly": {
+  "reg": "neutral"
+ },
+ "slowly/ADV": {
+  "reg": "neutral"
+ },
+ "smart/ADJ": {
+  "reg": "neutral"
+ },
+ "so much more": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "so what": {
+  "reg": "informal"
+ },
+ "so/ADV": {
+  "reg": "neutral"
+ },
+ "software": {
+  "reg": "technical"
+ },
+ "software engineering": {
+  "reg": "technical"
+ },
+ "solver/NOUN": {
+  "reg": "technical"
+ },
+ "some kind of": {
+  "reg": "informal"
+ },
+ "soul/NOUN": {
+  "reg": "neutral"
+ },
+ "sound/ADJ": {
+  "reg": "technical"
+ },
+ "speculate": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "formal"
+ },
+ "speed/NOUN": {
+  "reg": "neutral"
+ },
+ "stance": {
+  "reg": "formal"
+ },
+ "static": {
+  "reg": "technical"
+ },
+ "static analysis": {
+  "reg": "technical"
+ },
+ "step/NOUN": {
+  "reg": "neutral"
+ },
+ "step/VERB": {
+  "reg": "neutral"
+ },
+ "still": {
+  "reg": "neutral"
+ },
+ "strength/NOUN": {
+  "reg": "neutral"
+ },
+ "strictly/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "strongly/ADV": {
+  "reg": "neutral"
+ },
+ "student": {
+  "reg": "neutral"
+ },
+ "stuff/NOUN": {
+  "reg": "informal"
+ },
+ "such/ADJ": {
+  "reg": "neutral"
+ },
+ "system": {
+  "reg": "neutral"
+ },
+ "tackle": {
+  "reg": "neutral"
+ },
+ "take/VERB": {
+  "reg": "neutral"
+ },
+ "task": {
+  "reg": "neutral"
+ },
+ "tedious/ADJ": {
+  "reg": "neutral"
+ },
+ "tell/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "test/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "testing/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "the heck": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "then/ADV": {
+  "reg": "neutral"
+ },
+ "theoretical/ADJ": {
+  "reg": "neutral"
+ },
+ "theory": {
+  "reg": "neutral"
+ },
+ "there/ADV": {
+  "reg": "neutral"
+ },
+ "think": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "thoughtful": {
+  "reg": "neutral"
+ },
+ "thousand/NOUN": {
+  "reg": "neutral"
+ },
+ "thread": {
+  "reg": "neutral"
+ },
+ "time": {
+  "reg": "neutral"
+ },
+ "to be honest": {
+  "reg": "informal"
+ },
+ "today/NOUN": {
+  "reg": "neutral"
+ },
+ "toil/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "ton/NOUN": {
+  "reg": "informal"
+ },
+ "too/ADV": {
+  "reg": "neutral"
+ },
+ "tool": {
+  "reg": "neutral"
+ },
+ "tooling/NOUN": {
+  "reg": "technical"
+ },
+ "totally/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "transformative/ADJ": {
+  "reg": "neutral"
+ },
+ "true": {
+  "reg": "neutral"
+ },
+ "try": {
+  "reg": "neutral"
+ },
+ "tumultuous": {
+  "reg": "formal"
+ },
+ "type/NOUN": {
+  "reg": "technical"
+ },
+ "underpin": {
+  "reg": "formal"
+ },
+ "understandable": {
+  "reg": "neutral"
+ },
+ "unify/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "unthinkable/ADJ": {
+  "reg": "neutral"
+ },
+ "upturn/VERB": {
+  "reg": "formal"
+ },
+ "use": {
+  "reg": "neutral"
+ },
+ "user": {
+  "reg": "neutral"
+ },
+ "validate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "vast": {
+  "reg": "neutral"
+ },
+ "verification/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "verify/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "vision": {
+  "reg": "formal"
+ },
+ "wacky/ADJ": {
+  "reg": "informal"
+ },
+ "want": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "watch": {
+  "reg": "neutral"
+ },
+ "weakness/NOUN": {
+  "reg": "neutral"
+ },
+ "wealth/NOUN": {
+  "reg": "neutral"
+ },
+ "well": {
+  "reg": "formal"
+ },
+ "whole": {
+  "reg": "neutral"
+ },
+ "why/ADV": {
+  "reg": "neutral"
+ },
+ "wild/ADJ": {
+  "reg": "neutral"
+ },
+ "wildly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "work": {
+  "reg": "neutral"
+ },
+ "worry": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "wouldn't be too far to say": {
+  "reg": "informal",
+  "rel": "hedge"
+ },
+ "write": {
+  "reg": "neutral"
+ },
+ "writing/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "year/NOUN": {
+  "reg": "neutral"
+ }
+}

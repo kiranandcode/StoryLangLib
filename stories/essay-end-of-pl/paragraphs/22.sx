@@ -1,0 +1,42 @@
+entity authors group they "I / we (the author)"
+entity reader person they "you, the reader"
+entity ego abstract it "your ego"
+entity soul abstract it "your soul"
+entity exploration abstract it "exploration / the joys of exploration"
+entity research abstract it "research (as a kind)" generic
+entity frontiers abstract they "the frontiers of human knowledge"
+entity this22 abstract it "this: research as exploration, expanding the frontiers" of=research,exploration,frontiers
+entity questions abstract they "more questions"
+entity ai_tools abstract they "tools that can let you ask and search (LLMs)" generic
+topic t1 "go and explore" exploration
+(S%t1 (VP.head Abandon/VERB.head=abandon{Fin,Pres,Mood=Imp} (NP.obj@ego your/PRON.poss@reader ego/NOUN.head)) !/PUNCT)
+(S%t1 (VP.head Free/VERB.head=free{Fin,Pres,Mood=Imp} (NP.obj@soul your/PRON.poss@reader soul/NOUN.head)) !/PUNCT)
+(S%t1 (VP.head Give/VERB.head=give{Fin,Pres,Mood=Imp} in/ADP.compound
+   (PP.obl to/ADP.case (NP.head@exploration the/DET.det joys/NOUN.head=joy~abstract (PP.nmod of/ADP.case exploration/NOUN.head~abstract)))) ./PUNCT)
+(S%t1 (NP.nsubj@research Research/NOUN.head)
+  (VP.head has/AUX.aux=have{Fin,Pres} always/ADV.advmod~time been/AUX.cop=be{Part}
+    (PP.head@exploration about/ADP.case exploration/NOUN.head))
+  ./PUNCT)
+(FRAG%t1 (VP.head Expanding/VERB.head=expand{Ger}
+   (NP.obj@frontiers the/DET.det frontiers/NOUN.head=frontier (PP.nmod of/ADP.case human/ADJ.amod knowledge/NOUN.head~abstract))) ./PUNCT)
+(S%t1 (S.head (NP.nsubj@this22 This/PRON.head) (VP.head is/AUX.cop=be{Fin,Pres}
+     (NP.head the/DET.det beauty/NOUN.head~abstract (PP.nmod of/ADP.case science/NOUN.head~abstract))))
+  ,/PUNCT and/CCONJ.cc
+  (S.conj (NP.nsubj@this22 this/PRON.head) (VP.head is/AUX.cop=be{Fin,Pres}
+     (SBAR.head what/PRON.obj (S.head it/PRON.expl (VP.head means/VERB.head=mean{Fin,Pres}
+        (VP.xcomp to/PART.mark be/AUX.cop{Inf} (NP.head a/DET.det scientist/NOUN.head~person)))))))
+  ./PUNCT)
+(S%t1 (VP.head Ask/VERB.head=ask{Fin,Pres,Mood=Imp} (NP.obj@questions more/ADJ.amod questions/NOUN.head=question)) ./PUNCT)
+(S%t1 (VP.head Investigate/VERB.head=investigate{Fin,Pres,Mood=Imp}) ./PUNCT)
+(S%t1 (VP.head Dive/VERB.head=dive{Fin,Pres,Mood=Imp} deep/ADV.advmod~manner) ./PUNCT)
+(S%t1 (NP.nsubj@reader You/PRON.head)
+  (VP.head now/ADV.advmod~time have/VERB.head{Fin,Pres}
+    (NP.obj@ai_tools tools/NOUN.head=tool
+      (S.relcl that/PRON.nsubj@ai_tools (VP.head can/AUX.aux{Fin,Pres} let/VERB.head{Inf}
+        (S.ccomp (NP.nsubj@reader you/PRON.head)
+          (VP.head ask/VERB.head{Inf} and/CCONJ.cc search/VERB.conj{Inf} and/CCONJ.cc delve/VERB.conj{Inf}
+            (PP.obl into/ADP.case the/DET.det depths/NOUN.head=depth~figurative (PP.nmod of/ADP.case reality/NOUN.head~abstract))
+            (PP.obl like/ADP.case (NP.head nothing/PRON.head before/ADV.advmod~time))))))))
+  ./PUNCT)
+(S%t1 (VP.head Exploit/VERB.head=exploit{Fin,Pres,Mood=Imp} them/PRON.obj@ai_tools) ./PUNCT)
+(S%t1 (VP.head Enjoy/VERB.head=enjoy{Fin,Pres,Mood=Imp} them/PRON.obj@ai_tools) ./PUNCT)

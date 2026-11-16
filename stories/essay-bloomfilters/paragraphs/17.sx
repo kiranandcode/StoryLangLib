@@ -1,0 +1,19 @@
+entity operations abstract they "these operations: insertion and query" of=insertion,query
+entity insertion abstract it "insertion (the operation)"
+entity query abstract it "a query / querying (the operation)"
+entity no_false_negatives abstract it "the No false negatives property"
+entity coq abstract it "Coq / Rocq, the proof assistant"
+topic t1 "the operations ensure no false negatives" no_false_negatives
+(S%t1 (NP.nsubj@operations These/DET.det operations/NOUN.head=operation)
+  ,/PUNCT
+  (ADJP.advcl while/SCONJ.mark fairly/ADV.advmod~degree straightforward/ADJ.head)
+  ,/PUNCT
+  are/AUX.cop=be{Fin,Pres}
+  actually/ADV.advmod~degree
+  entirely/ADV.advmod~degree
+  sufficient/ADJ.head
+  (S.xcomp to/PART.mark ensure/VERB.head{Inf}
+    (NP.obj@no_false_negatives the/DET.det No/DET.compound false/ADJ.amod negatives/NOUN.head=negative property/NOUN.head))
+  (PRN.parataxis \(/PUNCT see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place
+    (PP.obl for/ADP.case (NP.head@coq Coq/PROPN.compound statement/NOUN.head~abstract)) \)/PUNCT)
+  :/PUNCT)

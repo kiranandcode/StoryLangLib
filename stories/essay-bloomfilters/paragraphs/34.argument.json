@@ -1,0 +1,13 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "fpEquivKBits",
+   "uses": [
+    "falsePos",
+    "bit_vector"
+   ],
+   "s": 1
+  }
+ ]
+}

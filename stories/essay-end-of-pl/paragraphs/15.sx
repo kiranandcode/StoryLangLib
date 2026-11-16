@@ -1,0 +1,5 @@
+entity authors group they "I (the author)"
+topic t1 "the author's excitement" authors
+(S%t1 (NP.obl The/DET.det past/ADJ.amod few/ADJ.amod months/NOUN.head=month~time) ,/PUNCT I/PRON.nsubj@authors
+  (VP.head have/AUX.aux{Fin,Pres} been/AUX.cop=be{Part} absolutely/ADV.advmod~degree crazed/ADJ.head~impression) ./PUNCT)
+(S%t1 I/PRON.nsubj@authors (VP.head run/VERB.head{Fin,Pres} (PP.obl into/ADP.case new/ADJ.amod ideas/NOUN.head=idea~abstract) daily/ADV.advmod~time) ./PUNCT)

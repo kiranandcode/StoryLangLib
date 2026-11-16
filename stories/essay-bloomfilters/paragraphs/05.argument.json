@@ -1,0 +1,32 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "bloom_filter",
+   "uses": [
+    "sets",
+    "probability"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "proxy",
+   "uses": [
+    "bloom_filter",
+    "browsers",
+    "urls"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "fewUrlsSent",
+   "uses": [
+    "proxy",
+    "privacy"
+   ],
+   "s": 2
+  }
+ ]
+}

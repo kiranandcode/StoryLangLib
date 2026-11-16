@@ -541,7 +541,7 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
         out := out ++ s!"#guard judgesMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}judges\n"
         let ats := p.items.map (·.at_.getD 0)
         let prior := if k == 0 then "[]" else s!"story.upTo owner {k - 1}"
-        let stmt := s!"completeOk (⟨{prior}, p{nm}.zip {rs ats}⟩ : ParaCtx spec) p{nm}tree p{nm}judges = true"
+        let stmt := s!"completeOk (\{ prior := {prior}, items := p{nm}.zip {rs ats} } : ParaCtx spec) p{nm}tree p{nm}judges = true"
         let ok := (unanchoredClaims j).isEmpty && completeOk (paraCtx s timed owner k p) f js
         if ok then bundled := bundled.push (s!"p{nm}_complete", stmt, "")
         else out := out ++ s!"theorem p{nm}_complete : {stmt} := by decide +kernel\n"

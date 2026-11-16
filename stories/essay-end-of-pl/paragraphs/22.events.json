@@ -1,0 +1,115 @@
+{
+ "text_sha": "9a847c37c406c859",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 0,
+   "w": "Abandon",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 4,
+   "w": "Free",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 8,
+   "w": "Give",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader explorationIsResearch",
+   "at": 20,
+   "w": "about",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 48,
+   "w": "Ask",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 52,
+   "w": "Investigate",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 54,
+   "w": "Dive",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "hint authors reader counterfactualsFast",
+   "at": 59,
+   "w": "have",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 79,
+   "w": "Exploit",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "request authors reader explorationPremise",
+   "at": 82,
+   "w": "Enjoy",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true explorationIsResearch",
+   "at": 23,
+   "w": "Expanding"
+  }
+ ],
+ "judge": [
+  {
+   "at": 32,
+   "w": "the",
+   "kind": "generic"
+  },
+  {
+   "at": 40,
+   "w": "what",
+   "kind": "generic"
+  },
+  {
+   "at": 42,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 45,
+   "w": "a",
+   "kind": "generic"
+  },
+  {
+   "at": 63,
+   "w": "let",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 65,
+   "w": "ask",
+   "kind": "hypothetical"
+  }
+ ]
+}

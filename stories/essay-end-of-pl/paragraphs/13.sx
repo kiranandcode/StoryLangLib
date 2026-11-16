@@ -1,0 +1,30 @@
+entity authors group they "I / we (the author)"
+entity reader person they "you, the reader"
+entity ai_tools abstract they "LLMs" generic
+entity field abstract it "PL research"
+entity ideas abstract they "the ideas, the beauty, the fun of PL"
+entity enthusiasm abstract it "your enthusiasm for PL research"
+entity demographics abstract it "the change in demographics of programmers"
+entity future abstract it "the future of PL research"
+topic t1 "why LLMs are exciting for PL research" ai_tools
+(S%t1 So/ADV.advmod~order I've/PRON.nsubj@authors
+  (VP.head explained/VERB.head=explain{Part,Pres}
+    (SBAR.ccomp why/ADV.advmod~manner
+      (S.head (NP.nsubj (NP.head@ai_tools LLMs/NOUN.head=LLM) and/CCONJ.cc
+                (NP.conj@demographics the/DET.det change/NOUN.head~event (PP.nmod in/ADP.case demographics/NOUN.head~abstract (PP.nmod of/ADP.case programmers/NOUN.head=programmer~person))))
+        (VP.head shouldn't/AUX.aux=should{Fin,Pres} affect/VERB.head{Inf}
+          (NP.obj@enthusiasm your/PRON.poss@reader enthusiasm/NOUN.head~abstract (PP.nmod for/ADP.case (NP.head@field PL/PROPN.compound research/NOUN.head))))))
+    ,/PUNCT
+    (NP.dislocated@ideas the/DET.det ideas/NOUN.head=idea ,/PUNCT the/DET.det beauty/NOUN.appos~abstract ,/PUNCT the/DET.det fun/NOUN.appos~abstract)
+    ,/PUNCT
+    (S.parataxis it's/PRON.nsubj@ideas all/DET.det still/ADV.advmod~aspect there/ADV.head~place)
+    !/PUNCT
+    but/CCONJ.cc
+    (S.conj now/ADV.advmod~time I'd/PRON.nsubj@authors
+      (VP.head like/VERB.head{Fin,Pres}
+        (VP.xcomp to/PART.mark tell/VERB.head{Inf} you/PRON.iobj@reader
+          (SBAR.ccomp why/ADV.advmod~manner
+            (S.head (NP.nsubj@ai_tools LLMs/NOUN.head=LLM)
+              (VP.head make/VERB.head{Fin,Pres} me/PRON.obj@authors extremely/ADV.advmod~degree excited/ADJ.xcomp~impression
+                (PP.obl for/ADP.case (NP.head@future the/DET.det future/NOUN.head (PP.nmod of/ADP.case (NP.head@field PL/PROPN.compound research/NOUN.head)))))))))))
+  ./PUNCT)

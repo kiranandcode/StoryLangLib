@@ -1,0 +1,18 @@
+{
+ "text_sha": "d2596eca188c686c",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "turns",
+   "kind": "generic"
+  },
+  {
+   "at": 7,
+   "w": "implement",
+   "kind": "generic"
+  }
+ ]
+}

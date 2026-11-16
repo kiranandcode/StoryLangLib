@@ -1,0 +1,21 @@
+entity authors group they "I / we (the author)"
+entity ai_tools abstract they "crazyyy smart tools (LLMs)" generic
+entity counterfactuals abstract they "research counterfactuals"
+entity this14 abstract it "this (being able to test counterfactuals so fast)" of=para:14
+topic t1 "testing counterfactuals fast" counterfactuals
+(S%t1 (PP.obl In/ADP.case short/ADJ.head) ,/PUNCT
+  I/PRON.nsubj@authors
+  (VP.head think/VERB.head{Fin,Pres}
+    (S.ccomp we/PRON.nsubj@authors
+      (VP.head now/ADV.advmod~time have/VERB.head{Fin,Pres}
+        (NP.obj access/NOUN.head~abstract
+          (PP.nmod to/ADP.case
+            (NP.head@ai_tools crazyyy/ADV.advmod~degree smart/ADJ.amod tools/NOUN.head=tool
+              (SBAR.relcl that/PRON.nsubj@ai_tools
+                (VP.head allow/VERB.head{Fin,Pres} us/PRON.obj@authors
+                  (VP.xcomp to/PART.mark answer/VERB.head{Inf} and/CCONJ.cc test/VERB.conj{Inf} and/CCONJ.cc validate/VERB.conj{Inf}
+                    (NP.obj@counterfactuals research/NOUN.compound~abstract counterfactuals/NOUN.head=counterfactual)
+                    (PP.obl at/ADP.case (NP.head a/DET.det pace/NOUN.head~abstract
+                      (VP.acl never/ADV.advmod~time seen/VERB.head=see{Part} before/ADV.advmod~time))))))))))))
+  ./PUNCT)
+(S%t1 This/PRON.nsubj@this14 is/AUX.cop=be{Fin,Pres} crazy/ADJ.head~impression ./PUNCT)

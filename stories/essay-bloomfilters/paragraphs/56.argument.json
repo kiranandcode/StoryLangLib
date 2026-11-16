@@ -1,0 +1,38 @@
+{
+ "moves": [
+  {
+   "move": "deliver",
+   "t": "boseDefinitions",
+   "uses": [],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "boseDefinitionsWrong",
+   "premises": [
+    "boseErrors"
+   ],
+   "uses": [],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "bloomRejected",
+   "uses": [
+    "boseErrors"
+   ],
+   "s": 2
+  },
+  {
+   "move": "infer",
+   "t": "boseDefinitionsProved",
+   "premises": [
+    "certified"
+   ],
+   "uses": [
+    "boseErrors"
+   ],
+   "s": 3
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+entity bloom person he "Bloom"
+entity distinct_assumption abstract it "this distinct hash output assumption"
+entity first_steps abstract they "the first steps to the derivation"
+entity blooms_analysis abstract it "Bloom's derivation"
+entity bit_prob abstract it "the probability of a single bit being set after n insertions"
+entity single_bit abstract it "a single bit" generic
+entity insertion abstract they "n insertions"
+entity distinct_bit_prob abstract it "the expression 1 - (1 - k/m)^n"
+topic t1 "the derivation under distinct outputs" blooms_analysis
+(S%t1
+  (VP.advcl Using/VERB.head=use{Ger}
+    (NP.obj@distinct_assumption this/DET.det distinct/ADJ.amod hash/NOUN.compound~abstract output/NOUN.compound~abstract assumption/NOUN.head))
+  ,/PUNCT
+  (NP.nsubj@first_steps the/DET.det first/ADJ.amod steps/NOUN.head=step
+    (PP.nmod to/ADP.case (NP.head@blooms_analysis the/DET.det derivation/NOUN.head)))
+  (VP.head are/AUX.cop=be{Fin,Pres} mostly/ADV.advmod~degree
+    (NP.head the/DET.det same/ADJ.head)
+    ,/PUNCT
+    (PP.obl except/SCONJ.mark with/ADP.case
+      (S.head
+        (NP.nsubj@bit_prob the/DET.det probability/NOUN.head
+          (PP.nmod of/ADP.case
+            (S.head (NP.nsubj@single_bit a/DET.det single/ADJ.amod bit/NOUN.head)
+              (VP.head being/AUX.aux=be{Ger} set/VERB.head{Part}
+                (PP.obl after/ADP.case (NP.head@insertion n/SYM.nummod insertions/NOUN.head=insertion))))))
+        (VP.head as/ADP.mark being/AUX.cop=be{Ger}
+          (NP.head@distinct_bit_prob 1/NUM.head -/SYM.cc \(/PUNCT 1/NUM.conj -/SYM.cc k/SYM.conj //SYM.cc m/SYM.conj \)/PUNCT ^/SYM.cc n/SYM.conj
+            ,/PUNCT
+            (SBAR.relcl which/PRON.obj@distinct_bit_prob (NP.nsubj@bloom Bloom/PROPN.head)
+              (VP.head accurately/ADV.advmod~manner derives/VERB.head=derive{Fin,Pres})))))))
+  ./PUNCT)

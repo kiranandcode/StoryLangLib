@@ -1,0 +1,64 @@
+{
+ "text_sha": "0403870daab1691b",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "adopt bose boseFormula",
+   "at": 3,
+   "w": "correct",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "message bose practitioners boseFormula",
+   "at": 11,
+   "w": "propose",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "thinks bose boseFormula",
+   "at": 32,
+   "w": "derive"
+  }
+ ],
+ "judge": [
+  {
+   "at": 3,
+   "w": "correct",
+   "kind": "goal",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 16,
+   "w": "uses",
+   "kind": "content",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 21,
+   "w": "account",
+   "kind": "content",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 29,
+   "w": "overlap",
+   "kind": "content",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 38,
+   "w": "being",
+   "kind": "content",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 40,
+   "w": "see",
+   "kind": "generic"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "dynestyx",
+   "uses": [
+    "research"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deny",
+   "t": "colleaguesPL",
+   "uses": [
+    "dynestyx"
+   ],
+   "s": 2
+  },
+  {
+   "move": "claim",
+   "t": "dynestyxUnifies",
+   "uses": [
+    "dynestyx"
+   ],
+   "s": 2
+  },
+  {
+   "move": "concede",
+   "t": "domainExpert",
+   "uses": [
+    "dynestyx"
+   ],
+   "s": 3
+  },
+  {
+   "move": "example",
+   "t": "counterfactualsFast",
+   "uses": [
+    "dynestyx",
+    "llms"
+   ],
+   "s": 4
+  }
+ ]
+}

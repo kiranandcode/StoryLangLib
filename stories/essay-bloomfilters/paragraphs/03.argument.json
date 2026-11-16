@@ -1,0 +1,23 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "sendLeaks",
+   "uses": [
+    "external_service",
+    "privacy"
+   ],
+   "s": 1
+  },
+  {
+   "move": "hedge",
+   "t": "sendLeaks",
+   "sec": 0,
+   "uses": [
+    "external_service",
+    "privacy"
+   ],
+   "s": 1
+  }
+ ]
+}

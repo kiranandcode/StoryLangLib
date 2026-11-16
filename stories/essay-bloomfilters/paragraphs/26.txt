@@ -1,0 +1,1 @@
+Bloom proposes we begin the analysis by focusing on the behaviours of an arbitrary single bit of the bit-vector, and then generalise the result at the end - for the purposes of illustration, suppose that this bit is b1.

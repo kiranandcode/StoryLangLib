@@ -1,0 +1,34 @@
+{
+ "text_sha": "73c0a84866ba1821",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice bloom bitsIndependent assumed",
+   "at": 9,
+   "w": "independent",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "message bloom reader bloomFormula",
+   "at": 19,
+   "w": "(",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 16,
+   "w": "occur",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 38,
+   "w": "concluding",
+   "kind": "content",
+   "lit": "bloomFormula"
+  }
+ ]
+}

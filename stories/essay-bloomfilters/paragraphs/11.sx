@@ -1,0 +1,24 @@
+entity authors group they "we, the authors"
+entity post place it "this post"
+entity research abstract it "this research"
+entity questions abstract they "the following questions"
+entity bloom_filter abstract it "a Bloom filter" generic
+entity errors abstract they "these errors"
+entity behaviour abstract it "the true behaviour of a Bloom filter"
+topic t1 "the questions the post answers" questions,research
+(S%t1 (PP.obl In/ADP.case (NP.head the/DET.det rest/NOUN.head~part (PP.nmod of/ADP.case (NP.head@post this/DET.det post/NOUN.head))))
+  ,/PUNCT
+  we'll/PRON.nsubj@authors
+  (VP.head explore/VERB.head{Inf}
+    (NP.obj the/DET.det main/ADJ.amod highlights/NOUN.head=highlight~abstract (PP.nmod of/ADP.case (NP.head@research this/DET.det research/NOUN.head)))
+    ,/PUNCT
+    (VP.advcl answering/VERB.head=answer{Ger} (NP.obj@questions the/DET.det following/ADJ.amod questions/NOUN.head=question)))
+  :/PUNCT)
+(S%t1 What/PRON.head is/AUX.cop=be{Fin,Pres} (NP.nsubj@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head) ?/PUNCT)
+(S%t1 Why/ADV.advmod~manner did/AUX.aux=do{Fin,Past} (NP.nsubj@errors these/DET.det errors/NOUN.head=error)
+  (VP.head initially/ADV.advmod~time arise/VERB.head{Inf}) ?/PUNCT)
+(S%t1 What/PRON.head is/AUX.cop=be{Fin,Pres}
+  (NP.nsubj@behaviour the/DET.det true/ADJ.amod behaviour/NOUN.head (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))
+  ?/PUNCT)
+(S%t1 and/CCONJ.cc how/ADV.advmod~manner
+  (VP.head can/AUX.aux{Fin,Pres} we/PRON.nsubj@authors be/AUX.cop{Inf} certain/ADJ.head~impression) ?/PUNCT)

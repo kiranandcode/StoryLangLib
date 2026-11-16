@@ -1,0 +1,1 @@
+In order to generalise this result, Bloom then reasons that we can interpret the occurrence of a false-positive result as being equivalent to each of the k bits selected by the hash functions being raised.

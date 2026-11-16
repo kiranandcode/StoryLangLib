@@ -1,0 +1,15 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "uniformOutputs",
+   "premises": [
+    "hashRandom"
+   ],
+   "uses": [
+    "hash_functions"
+   ],
+   "s": 1
+  }
+ ]
+}

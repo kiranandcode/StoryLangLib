@@ -1,0 +1,66 @@
+{
+ "text_sha": "a335f0382d534034",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "adopt authors certified",
+   "at": 7,
+   "w": "writing",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader certified",
+   "at": 18,
+   "w": "used",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at authors post",
+   "at": 7,
+   "w": "writing"
+  },
+  {
+   "c": "knows authors certified",
+   "at": 38,
+   "w": "putting"
+  },
+  {
+   "c": "knows authors certified",
+   "at": 47,
+   "w": "returning"
+  },
+  {
+   "c": "knows practitioners noFalseNeg",
+   "at": 60,
+   "w": "rely"
+  }
+ ],
+ "judge": [
+  {
+   "at": 3,
+   "w": "fear",
+   "kind": "act"
+  },
+  {
+   "at": 11,
+   "w": "inform",
+   "kind": "goal",
+   "lit": "certified"
+  },
+  {
+   "at": 21,
+   "w": "produce",
+   "kind": "goal",
+   "lit": "certified"
+  },
+  {
+   "at": 50,
+   "w": "pardon",
+   "kind": "act"
+  }
+ ]
+}

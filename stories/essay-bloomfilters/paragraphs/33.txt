@@ -1,0 +1,1 @@
+So far this derivation is entirely correct - this expression we have proven is actually correct (see here for a corresponding Coq proof), but it only applies for a single bit not a false positive result.

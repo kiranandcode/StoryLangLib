@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "transformative",
+   "uses": [
+    "pl_research"
+   ],
+   "s": 1
+  }
+ ]
+}

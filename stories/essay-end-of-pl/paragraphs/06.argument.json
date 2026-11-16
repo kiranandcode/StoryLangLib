@@ -1,0 +1,28 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 1
+  },
+  {
+   "move": "claim",
+   "t": "llmsCodeWell",
+   "uses": [
+    "llms",
+    "code"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "humansStopCoding",
+   "premises": [
+    "llmsCodeWell"
+   ],
+   "uses": [
+    "code"
+   ],
+   "s": 2
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "text_sha": "c2258e35c98b08f5",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader warnUser",
+   "at": 0,
+   "w": "There's",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true warnUser",
+   "at": 21,
+   "w": "warn"
+  }
+ ],
+ "judge": [
+  {
+   "at": 26,
+   "w": "happen",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 28,
+   "w": "navigate",
+   "kind": "hypothetical"
+  }
+ ]
+}

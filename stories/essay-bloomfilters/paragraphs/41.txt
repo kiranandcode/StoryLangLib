@@ -1,0 +1,1 @@
+Unfortunately, while we now know that this new expression for the false positive rate is correct, 2 years after Bose et al.'s publication, other researchers actually found errors in their derivation, throwing further doubt on its validity.

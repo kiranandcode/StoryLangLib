@@ -1,0 +1,14 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "fpr",
+   "uses": [
+    "hashRandom",
+    "bloom_filter",
+    "falsePos"
+   ],
+   "s": 1
+  }
+ ]
+}

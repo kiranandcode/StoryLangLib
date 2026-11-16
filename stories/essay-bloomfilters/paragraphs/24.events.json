@@ -1,0 +1,18 @@
+{
+ "text_sha": "d30ca43e090a9e84",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 5,
+   "w": "accompanying",
+   "kind": "act"
+  },
+  {
+   "at": 23,
+   "w": "provides",
+   "kind": "act"
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+entity authors group they "I / we (the author; we: the field)"
+entity field abstract it "our field (PL research)"
+entity moment abstract it "a genuinely transformative moment"
+entity future abstract it "the wild wacky future"
+topic t1 "a transformative moment" moment
+(S%t1 (S.head I/PRON.nsubj@authors
+    (VP.head believe/VERB.head{Fin,Pres}
+      (S.ccomp we're/PRON.nsubj@authors (VP.head entering/VERB.head=enter{Part,Pres}
+        (NP.obj@moment a/DET.det genuinely/ADV.advmod~degree transformative/ADJ.amod moment/NOUN.head
+          (PP.nmod for/ADP.case (NP.head@field our/PRON.poss@authors field/NOUN.head)))))))
+  ,/PUNCT and/CCONJ.cc
+  (S.conj I'm/PRON.nsubj@authors
+    (VP.head really/ADV.advmod~degree looking/VERB.head=look{Part,Pres} forward/ADV.advmod~direction
+      (PP.obl to/ADP.case (NP.head@future the/DET.det wild/ADJ.amod wacky/ADJ.amod future/NOUN.head
+        (S.relcl we're/PRON.nsubj@authors (ADJP.head about/ADJ.head
+          (VP.xcomp to/PART.mark step/VERB.head{Inf} foot/NOUN.obj~body into/ADP.obl)))))))
+  !/PUNCT)

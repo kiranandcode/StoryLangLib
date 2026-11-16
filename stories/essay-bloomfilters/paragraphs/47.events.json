@@ -1,0 +1,23 @@
+{
+ "text_sha": "5c2424eb3a576ae2",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 4,
+   "w": "used",
+   "kind": "generic"
+  },
+  {
+   "at": 10,
+   "w": "FOSS",
+   "kind": "generic"
+  },
+  {
+   "at": 15,
+   "w": "found",
+   "kind": "hypothetical"
+  }
+ ]
+}

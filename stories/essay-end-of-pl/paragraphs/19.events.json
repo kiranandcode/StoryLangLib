@@ -1,0 +1,107 @@
+{
+ "text_sha": "a0df7188cd745df4",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader dynestyxUnifies",
+   "at": 43,
+   "w": "unified",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader semantics",
+   "at": 118,
+   "w": "experimenting",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 14,
+   "w": "developed",
+   "kind": "act"
+  },
+  {
+   "at": 30,
+   "w": "researchers",
+   "kind": "act"
+  },
+  {
+   "at": 33,
+   "w": "helped",
+   "kind": "act"
+  },
+  {
+   "at": 36,
+   "w": "build",
+   "kind": "act"
+  },
+  {
+   "at": 54,
+   "w": "lacks",
+   "kind": "generic"
+  },
+  {
+   "at": 63,
+   "w": "something",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 68,
+   "w": "qualified",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 70,
+   "w": "help",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 72,
+   "w": "set",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 80,
+   "w": "expert",
+   "kind": "act"
+  },
+  {
+   "at": 89,
+   "w": "have",
+   "kind": "act"
+  },
+  {
+   "at": 93,
+   "w": "sit",
+   "kind": "act"
+  },
+  {
+   "at": 119,
+   "w": "using",
+   "kind": "content",
+   "lit": "semantics"
+  },
+  {
+   "at": 123,
+   "w": "generate",
+   "kind": "content",
+   "lit": "semantics"
+  },
+  {
+   "at": 143,
+   "w": "iterate",
+   "kind": "content",
+   "lit": "semantics"
+  },
+  {
+   "at": 147,
+   "w": "match",
+   "kind": "content",
+   "lit": "semantics"
+  }
+ ]
+}

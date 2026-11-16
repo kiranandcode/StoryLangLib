@@ -1,0 +1,16 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "unsetKN",
+   "premises": [
+    "unsetK",
+    "independence"
+   ],
+   "uses": [
+    "selected_bit"
+   ],
+   "s": 1
+  }
+ ]
+}

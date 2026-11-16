@@ -1,0 +1,1 @@
+There was a recent thread on the TYPES mailing list with researchers speculating about the future of our field given the disruptive effects of AI tools on programming in general.

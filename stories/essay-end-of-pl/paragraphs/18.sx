@@ -1,0 +1,51 @@
+entity authors group they "we (the author's team)"
+entity ai_tools abstract they "LLMs / agents" generic
+entity tooling_project abstract it "AI-first Verified Tooling (the experiment)"
+entity vtools abstract they "verification and language tooling / tools / such verification tools" generic
+entity users group they "human users" generic
+entity humans group they "humans" generic
+entity strengths abstract they "the strengths and weaknesses of LLMs"
+entity details abstract they "more details about tooling internals / these details"
+entity amazon group it "Amazon"
+entity experiments abstract they "some experiments with Amazon"
+topic t1 "adapting verification tools to agents" tooling_project
+(FRAG%t1 (NP.head@tooling_project AI-first/PROPN.compound Verified/PROPN.compound Tooling/PROPN.head
+    (PRN.appos \(/PUNCT (PP.head in/ADP.case progress/NOUN.head~abstract) \)/PUNCT))
+  –/PUNCT
+  (S.parataxis (NP.nsubj@vtools Verification/NOUN.compound~abstract and/CCONJ.cc language/NOUN.conj~abstract tooling/NOUN.head~abstract)
+    (VP.head are/AUX.aux=be{Fin,Pres} built/VERB.head=build{Part}
+      (PP.obl for/ADP.case and/CCONJ.cc around/ADP.conj
+        (NP.head the/DET.det limitations/NOUN.head=limitation~abstract (PP.nmod of/ADP.case (NP.head@users human/ADJ.amod users/NOUN.head=user))))))
+  ./PUNCT)
+(S%t1 Anecdotally/ADV.advmod~manner ,/PUNCT it/PRON.expl
+  (VP.head seems/VERB.head=seem{Fin,Pres}
+    (SBAR.ccomp like/SCONJ.mark
+      (S.head (NP.nsubj@strengths the/DET.det strengths/NOUN.head=strength~abstract and/CCONJ.cc weaknesses/NOUN.conj=weakness~abstract
+          (PP.nmod of/ADP.case (NP.head@ai_tools LLMs/NOUN.head=LLM)))
+        ,/PUNCT (ADJP.advcl while/SCONJ.mark similar/ADJ.head) ,/PUNCT
+        (VP.head are/AUX.cop=be{Fin,Pres} not/PART.advmod always/ADV.advmod~time the/DET.det same/ADJ.head
+          (PP.obl as/ADP.case (NP.head@humans humans/NOUN.head=human)))))
+    ,/PUNCT
+    (S.conj so/CCONJ.cc maybe/ADV.advmod~degree it/PRON.expl
+      (VP.head might/AUX.aux{Fin,Pres} be/AUX.cop{Inf} possible/ADJ.head
+        (VP.csubj to/PART.mark adapt/VERB.head{Inf}
+          (NP.obj the/DET.det interfaces/NOUN.head=interface~abstract (PP.nmod of/ADP.case (NP.head@vtools tools/NOUN.head=tool)))
+          (SBAR.advcl to/SCONJ.mark (VP.head make/VERB.head{Inf} them/PRON.obj@vtools more/ADV.advmod~degree amenable/ADJ.xcomp
+            (PP.obl to/ADP.case the/DET.det jagged/ADJ.amod intelligence/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@ai_tools agents/NOUN.head=agent)))))
+          ,/PUNCT
+          (SBAR.advcl (PP.advmod for/ADP.case example/NOUN.head~abstract) ,/PUNCT by/SCONJ.mark
+            (VP.head exposing/VERB.head=expose{Ger}
+              (NP.obj@details more/ADJ.amod details/NOUN.head=detail (PP.nmod about/ADP.case tooling/NOUN.compound~abstract internals/NOUN.head=internal~part)
+                ,/PUNCT
+                (PP.nmod such/ADJ.case as/ADP.fixed the/DET.det instantiation/NOUN.compound~abstract graph/NOUN.head~abstract
+                  (PP.nmod of/ADP.case an/DET.det SMT/PROPN.compound~digital solver/NOUN.head~digital) etc/X.dep))))))))
+  ./PUNCT)
+(S%t1 We're/PRON.nsubj@authors
+  (VP.head running/VERB.head=run{Part,Pres}
+    (NP.obj@experiments some/DET.det experiments/NOUN.head=experiment (PP.nmod with/ADP.case Amazon/PROPN.head@amazon))
+    (SBAR.advcl to/SCONJ.mark (VP.head try/VERB.head{Inf}
+      (VP.xcomp improving/VERB.head=improve{Ger}
+        (NP.obj the/DET.det capabilities/NOUN.head=capability~abstract (PP.nmod of/ADP.case (NP.head@ai_tools LLMs/NOUN.head=LLM))
+          (SBAR.acl in/SCONJ.mark (VP.head using/VERB.head=use{Ger} (NP.obj@vtools such/ADJ.amod verification/NOUN.compound~abstract tools/NOUN.head=tool))))
+        (SBAR.advcl by/SCONJ.mark (VP.head exposing/VERB.head=expose{Ger} (NP.obj@details these/DET.det details/NOUN.head=detail)))))))
+  ./PUNCT)

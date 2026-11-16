@@ -1,0 +1,1 @@
+As is the standard approach for these kinds of data structures, in order to get a more general result, we can instead treat the hash functions and their outputs as random (more on this later).

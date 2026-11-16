@@ -1,0 +1,26 @@
+{
+ "text_sha": "f0ff8edde34dc3a9",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader hashRandom",
+   "at": 24,
+   "w": "treat",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "the",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 15,
+   "w": "get",
+   "kind": "hypothetical"
+  }
+ ]
+}

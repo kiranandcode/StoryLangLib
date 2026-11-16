@@ -1,0 +1,58 @@
+entity authors group they "I / we / me (the author)"
+entity colleagues group they "colleagues at my work who built dynestyx"
+entity ai_tools abstract they "LLMs" generic
+entity semantics_project abstract it "Developing semantics for new languages (the dynestyx collaboration)"
+entity dynestyx abstract it "dynestyx, the colleagues' language for dynamical systems"
+entity area abstract it "their area / their domain"
+entity mech_semantics abstract it "mechanised big step semantics for dynestyx"
+topic t1 "semantics for dynestyx" dynestyx
+(FRAG%t1 (NP.head@semantics_project Developing/PROPN.compound semantics/PROPN.compound for/PROPN.compound new/PROPN.compound languages/PROPN.head
+    (PRN.appos \(/PUNCT (PP.head in/ADP.case progress/NOUN.head~abstract) \)/PUNCT))
+  –/PUNCT
+  (S.parataxis (NP.nsubj@colleagues Colleagues/NOUN.head=colleague (PP.nmod at/ADP.case my/PRON.poss@authors work/NOUN.head~abstract))
+    (VP.head developed/VERB.head=develop{Fin,Past}
+      (NP.obj@dynestyx a/DET.det new/ADJ.amod language/NOUN.head (PP.nmod for/ADP.case dynamical/ADJ.amod systems/NOUN.head=system~abstract)
+        (PRN.appos \(/PUNCT dynestyx/PROPN.head@dynestyx \)/PUNCT))))
+  ./PUNCT)
+(S%t1 (S.head They/PRON.nsubj@colleagues
+    (VP.head were/AUX.cop=be{Fin,Past} not/PART.advmod programming/NOUN.compound~abstract languages/NOUN.compound=language~abstract researchers/NOUN.head=researcher~person))
+  but/CCONJ.cc
+  (S.conj we/PRON.nsubj@authors
+    (VP.head helped/VERB.head=help{Fin,Past} them/PRON.obj@colleagues
+      (VP.xcomp to/PART.mark build/VERB.head{Inf}
+        (NP.obj@dynestyx a/DET.det really/ADV.advmod~degree cool/ADJ.amod new/ADJ.amod language/NOUN.head
+          (SBAR.relcl which/PRON.nsubj@dynestyx
+            (VP.head unified/VERB.head=unify{Fin,Past} (NP.obj a/DET.det TON/NOUN.head~part (PP.nmod of/ADP.case work/NOUN.head~abstract (PP.nmod in/ADP.case (NP.head@area their/PRON.poss@colleagues area/NOUN.head))))))))))
+  ./PUNCT)
+(S%t1 (S.head (NP.nsubj@dynestyx This/DET.det language/NOUN.head)
+    (VP.head lacks/VERB.head=lack{Fin,Pres} (NP.obj a/DET.det formal/ADJ.amod semantics/NOUN.head~abstract)))
+  ,/PUNCT and/CCONJ.cc
+  (S.conj this/PRON.nsubj@mech_semantics
+    (VP.head would/AUX.aux{Fin,Past} be/AUX.cop{Inf}
+      (NP.head something/PRON.head
+        (S.relcl I/PRON.nsubj@authors
+          (VP.head would/AUX.aux{Fin,Past} be/AUX.cop{Inf} extremely/ADV.advmod~degree qualified/ADJ.head~impression
+            (VP.xcomp to/PART.mark help/VERB.head{Inf} them/PRON.obj@colleagues (VP.xcomp set/VERB.head{Inf} up/ADP.compound)))))))
+  ,/PUNCT but/CCONJ.cc
+  (S.conj I/PRON.nsubj@authors
+    (VP.head am/AUX.cop=be{Fin,Pres} not/PART.advmod an/DET.det expert/NOUN.head~person
+      (PP.nmod in/ADP.case (NP.head@area their/PRON.poss@colleagues domain/NOUN.head))))
+  ,/PUNCT nor/CCONJ.cc
+  (S.conj do/AUX.aux{Fin,Pres} we/PRON.nsubj@authors
+    (VP.head really/ADV.advmod~degree have/VERB.head{Fin,Pres}
+      (NP.obj the/DET.det time/NOUN.head~time
+        (VP.acl to/PART.mark sit/VERB.head{Inf} down/ADV.advmod~direction and/CCONJ.cc slowly/ADV.advmod~manner get/VERB.conj{Inf} me/PRON.obj@authors up/ADP.compound
+          (PP.obl to/ADP.case speed/NOUN.head~abstract) (PP.obl in/ADP.case (NP.head@area their/PRON.poss@colleagues area/NOUN.head))))))
+  ./PUNCT)
+(S%t1 Instead/ADV.advmod~order ,/PUNCT
+  (PP.obl as/ADP.case a/DET.det new/ADJ.amod form/NOUN.head~kind (PP.nmod of/ADP.case collaboration/NOUN.head~event))
+  ,/PUNCT I/PRON.nsubj@authors
+  (VP.head have/AUX.aux{Fin,Pres} been/AUX.aux=be{Part} experimenting/VERB.head=experiment{Part}
+    (VP.xcomp using/VERB.head=use{Ger} (NP.obj@ai_tools LLMs/NOUN.head=LLM)
+      (VP.xcomp to/PART.mark automatically/ADV.advmod~manner generate/VERB.head{Inf}
+        (NP.obj@mech_semantics mechanised/ADJ.amod big/ADJ.amod step/NOUN.compound~abstract semantics/NOUN.head (PP.nmod for/ADP.case (NP.head@dynestyx their/PRON.poss@colleagues language/NOUN.head)))
+        ,/PUNCT validate/VERB.conj{Inf} it/PRON.obj@mech_semantics (PP.obl with/ADP.case testing/NOUN.head~event)
+        ,/PUNCT and/CCONJ.cc then/ADV.advmod working/VERB.conj=work{Ger} (PP.obl with/ADP.case them/PRON.head@colleagues)
+        (SBAR.advcl to/SCONJ.mark (VP.head iterate/VERB.head{Inf} (NP.obj@mech_semantics this/DET.det semantics/NOUN.head)
+          (SBAR.advcl to/SCONJ.mark (VP.head match/VERB.head{Inf} (NP.obj their/PRON.poss@colleagues intent/NOUN.head~abstract))))))))
+  ./PUNCT)

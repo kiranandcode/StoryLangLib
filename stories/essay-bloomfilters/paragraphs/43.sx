@@ -1,0 +1,31 @@
+entity authors group they "we, the authors"
+entity certified_proof abstract it "this: the certified proof of Bose et al.'s bound" 
+entity first_principles abstract it "first principles"
+entity errors abstract they "any further errors"
+entity bose_derivation abstract it "this derivation (the certified one)"
+entity bose_expression abstract it "this new expression"
+entity behaviour abstract they "the behaviours of a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter (as a kind)" generic
+topic t1 "no further errors" bose_derivation,authors
+(S%t1
+  (SBAR.advcl As/SCONJ.mark
+    (S.head (NP.nsubj@authors we've/PRON.head=we)
+      (VP.head proven/VERB.head=prove{Part} (NP.obj@certified_proof this/PRON.head)
+        (PP.obl from/ADP.case (NP.head@first_principles first/ADJ.amod principles/NOUN.head=principle)))))
+  ,/PUNCT
+  (S.head it/PRON.expl
+    (VP.head is/AUX.cop=be{Fin,Pres} highly/ADV.advmod~degree unlikely/ADJ.head
+      (S.csubj (NP.nsubj@errors any/DET.det further/ADJ.amod errors/NOUN.head=error)
+        (VP.head will/AUX.aux{Fin,Pres} ever/ADV.advmod~time be/AUX.aux{Inf} discovered/VERB.head=discover{Part}
+          (PP.obl in/ADP.case (NP.head@bose_derivation this/DET.det derivation/NOUN.head))))))
+  ,/PUNCT and/CCONJ.cc
+  (S.conj (ADVP.advmod as/ADV.head such/ADJ.fixed)
+    (NP.nsubj@authors we/PRON.head)
+    (VP.head can/AUX.aux{Fin,Pres} be/AUX.cop{Inf} fairly/ADV.advmod~degree certain/ADJ.head
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head (NP.nsubj@bose_expression this/DET.det new/ADJ.amod expression/NOUN.head)
+          (VP.head does/AUX.aux=do{Fin,Pres} actually/ADV.advmod~degree model/VERB.head{Inf}
+            (NP.obj@behaviour the/DET.det behaviours/NOUN.head=behaviour
+              (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))
+            correctly/ADV.advmod~manner)))))
+  ./PUNCT)

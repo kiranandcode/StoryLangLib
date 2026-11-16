@@ -1,0 +1,31 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "juniorsWorry",
+   "sec": 0,
+   "uses": [
+    "thread"
+   ],
+   "s": 2
+  },
+  {
+   "move": "claim",
+   "t": "juniorsWorry",
+   "uses": [
+    "thread",
+    "pl_research"
+   ],
+   "s": 2
+  },
+  {
+   "move": "promise",
+   "t": "vision",
+   "sec": 2,
+   "uses": [
+    "juniorsWorry"
+   ],
+   "s": 2
+  }
+ ]
+}

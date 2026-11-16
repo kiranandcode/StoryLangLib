@@ -1,0 +1,1 @@
+However, Bloom then makes the same mistake as presented in the article, by reasoning that, as a false positive occurs if k distinct bits are raised, the probability of this occurring is (1 - (1 - k/m)^n)^k. This claim is still wrong even though the hash outputs are guaranteed to not overlap ( the "obvious" counterexample presented in the article).

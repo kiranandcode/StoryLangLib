@@ -1,0 +1,16 @@
+entity safe_browsing abstract it "this feature: warning users about malicious URLs"
+entity malicious_urls abstract it "the set of known malicious URLs"
+topic t1 "tracking malicious URLs is hard" safe_browsing,malicious_urls
+(S%t1 (ADJP.advcl While/SCONJ.mark conceptually/ADV.advmod~manner simple/ADJ.head) ,/PUNCT
+  (NP.nsubj@safe_browsing this/DET.det feature/NOUN.head)
+  (VP.head actually/ADV.advmod~degree requires/VERB.head=require{Fin,Pres}
+    (NP.obj more/ADJ.amod engineering/NOUN.compound~abstract effort/NOUN.head~abstract
+      (SBAR.advcl than/SCONJ.mark (S.head one/PRON.nsubj (VP.head would/AUX.aux{Fin,Past} expect/VERB.head{Inf})))))
+  -/PUNCT
+  (S.parataxis (PP.obl in/ADP.case particular/ADJ.head) ,/PUNCT
+    (VP.csubj tracking/VERB.head=track{Ger}
+      (NP.obj@malicious_urls the/DET.det set/NOUN.head (PP.nmod of/ADP.case (NP.head known/ADJ.amod malicious/ADJ.amod URLs/NOUN.head=URL~abstract)))
+      (PP.obl in/ADP.case (NP.head a/DET.det practical/ADJ.amod manner/NOUN.head~abstract)))
+    (VP.head turns/VERB.head=turn{Fin,Pres} out/ADP.compound
+      (VP.xcomp to/PART.mark be/AUX.cop{Inf} somewhat/ADV.advmod~degree difficult/ADJ.head)))
+  ./PUNCT)

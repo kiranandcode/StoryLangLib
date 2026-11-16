@@ -1,0 +1,1 @@
+Using a probabilistic data structure known as a Bloom filter, Browsers maintain a approximate representation of the set of known malicious URLs locally. By querying this space-efficient local set, browsers will only send up a small proportion of the honest URLs. Use a Bloom filter to act as a local proxy for queries to an external database.

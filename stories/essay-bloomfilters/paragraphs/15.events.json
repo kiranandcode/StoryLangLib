@@ -1,0 +1,18 @@
+{
+ "text_sha": "50827c1ac9278c60",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "put",
+   "kind": "generic"
+  },
+  {
+   "at": 10,
+   "w": "a",
+   "kind": "generic"
+  }
+ ]
+}

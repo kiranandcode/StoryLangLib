@@ -1,0 +1,1 @@
+Thus, in the case that the bits are independent, the probability that this will occur is simply (1 - (1 - 1/m)^(kn))^k, thereby concluding the proof.

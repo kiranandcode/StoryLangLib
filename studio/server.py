@@ -158,6 +158,9 @@ async def watch() -> None:
             if rel.parts:
                 touched.add(rel.parts[0])
         for name in touched:
+            if name in extras.papers():   # an essay is a story and a paper
+                extras.invalidate("paper", name)
+                await broadcast({"type": "paper", "paper": name, "at": time.time()})
             if (STORIES / name / "story.json").exists():
                 extras.invalidate("story", name)
                 schedule_refresh(name)

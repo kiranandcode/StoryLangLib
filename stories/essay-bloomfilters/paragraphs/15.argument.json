@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "bit_vector",
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 1
+  },
+  {
+   "move": "define",
+   "t": "hash_functions",
+   "uses": [
+    "hashing",
+    "bloom_filter"
+   ],
+   "s": 1
+  }
+ ]
+}

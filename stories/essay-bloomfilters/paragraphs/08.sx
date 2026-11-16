@@ -1,0 +1,15 @@
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind)" generic
+entity behaviour abstract they "the behaviours of a Bloom filter"
+entity contention abstract it "30 years of mathematical contention (the history of errors)"
+entity corrections abstract they "the corrections (and corrections of corrections)"
+topic t1 "thirty years of contention" contention
+(S%t1 (PP.obl In/ADP.case fact/NOUN.head~abstract) ,/PUNCT
+  (SBAR.advcl as/SCONJ.mark (S.head it/PRON.expl (VP.head turns/VERB.head=turn{Fin,Pres} out/ADP.compound)))
+  ,/PUNCT
+  (NP.nsubj@behaviour the/DET.det behaviours/NOUN.head=behaviour (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))
+  (VP.head have/AUX.aux{Fin,Pres} actually/ADV.advmod~degree been/AUX.cop=be{Part}
+    (NP.head the/DET.det subject/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@contention 30/NUM.nummod years/NOUN.head=year (PP.nmod of/ADP.case mathematical/ADJ.amod contention/NOUN.head~abstract))))
+    ,/PUNCT
+    (VP.advcl requiring/VERB.head=require{Ger}
+      (NP.obj@corrections multiple/ADJ.amod corrections/NOUN.head=correction and/CCONJ.cc even/ADV.advmod~degree corrections/NOUN.conj=correction~abstract (PP.nmod of/ADP.case these/DET.det corrections/NOUN.head=correction~abstract))))
+  ./PUNCT)

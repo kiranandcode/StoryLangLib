@@ -1,0 +1,54 @@
+entity authors group they "I / my (the author)"
+entity craft abstract it "my code / programming as a craft"
+entity ego abstract it "my ego"
+entity curiosity abstract it "my intellectual curiosity"
+entity ideas abstract they "the ideas, the insights"
+entity exploration abstract it "the exploration"
+entity loss abstract it "some loss"
+entity effort abstract it "the effort I need to put in"
+entity these21 abstract they "none of these (the ideas, insights, exploration)" of=ideas,exploration
+entity stuff abstract it "all these amazing stuff (the projects above)" of=para:17,para:18,para:19,para:20
+topic t1 "loss, pride, ego" craft
+(S%t1 Sure/INTJ.discourse ,/PUNCT I/PRON.nsubj@authors
+  (VP.head think/VERB.head{Fin,Pres}
+    (S.ccomp I/PRON.nsubj@authors
+      (VP.head do/AUX.aux{Fin,Pres} feel/VERB.head{Inf}
+        (NP.obj@loss some/DET.det loss/NOUN.head)
+        (PP.obl at/ADP.case the/DET.det lack/NOUN.head~abstract
+          (PP.nmod of/ADP.case (NP.head@effort effort/NOUN.head
+            (S.relcl I/PRON.nsubj@authors (VP.head need/VERB.head{Fin,Pres}
+              (VP.xcomp to/PART.mark put/VERB.head{Inf} in/ADP.compound
+                (SBAR.advcl to/SCONJ.mark (VP.head do/VERB.head{Inf} (NP.obj@stuff all/DET.det these/DET.det amazing/ADJ.amod stuff/NOUN.head))))))))))))
+  ./PUNCT)
+(S%t1 I/PRON.nsubj@authors
+  (VP.head used/VERB.head=use{Fin,Past}
+    (VP.xcomp to/PART.mark take/VERB.head{Inf} deep/ADJ.amod pride/NOUN.obj~abstract
+      (PP.obl in/ADP.case (NP.head@craft my/PRON.poss@authors programming/NOUN.head~event and/CCONJ.cc development/NOUN.conj~event))))
+  ./PUNCT)
+(S%t1 I've/PRON.nsubj@authors
+  (VP.head singlehandedly/ADV.advmod~manner built/VERB.head=build{Part,Pres}
+    (NP.obj hundreds/NOUN.head=hundred~part (PP.nmod of/ADP.case thousands/NOUN.head=thousand~part (PP.nmod of/ADP.case lines/NOUN.head=line~part
+      (PP.nmod of/ADP.case code/NOUN.compound~digital projects/NOUN.head=project~abstract
+        (PP.nmod in/ADP.case obscure/ADJ.amod and/CCONJ.cc niche/ADJ.conj languages/NOUN.head=language~abstract))))))
+  ./PUNCT)
+(S%t1 I've/PRON.nsubj@authors
+  (VP.head toiled/VERB.head=toil{Part,Pres} away/ADV.advmod~aspect
+    (SBAR.advcl at/SCONJ.mark (VP.head designing/VERB.head=design{Ger} and/CCONJ.cc proving/VERB.conj=prove{Ger}
+      (NP.obj properties/NOUN.head=property~abstract (PP.nmod of/ADP.case esoteric/ADJ.amod type/NOUN.compound~abstract systems/NOUN.head=system~abstract)))))
+  ./PUNCT)
+(S%t1 (S.head (NP.nsubj@craft My/PRON.poss@authors code/NOUN.head)
+    (VP.head was/AUX.cop=be{Fin,Past} a/DET.det craft/NOUN.head~abstract))
+  ,/PUNCT and/CCONJ.cc
+  (NP.conj@craft a/DET.det craft/NOUN.head
+    (S.relcl I/PRON.nsubj@authors (VP.head took/VERB.head=take{Fin,Past} deep/ADJ.amod pride/NOUN.obj~abstract in/ADP.compound)))
+  ./PUNCT)
+(S%t1 But/CCONJ.cc (PP.obl in/ADP.case some/DET.det sense/NOUN.head~abstract) ,/PUNCT
+  that/PRON.nsubj@craft
+  (VP.head was/AUX.cop=be{Fin,Past} more/ADV.advmod~degree my/PRON.poss@authors ego/NOUN.head@ego
+    (PP.obl than/ADP.case (NP.head@curiosity my/PRON.poss@authors intellectual/ADJ.amod curiousity/NOUN.head=curiosity)))
+  ./PUNCT)
+(S%t1 (NP.dislocated@ideas The/DET.det ideas/NOUN.head=idea ?/PUNCT the/DET.det insights/NOUN.appos=insight~abstract ?/PUNCT)
+  (NP.dislocated@exploration the/DET.det exploration/NOUN.head ?/PUNCT)
+  (NP.nsubj@these21 none/PRON.head (PP.nmod of/ADP.case these/PRON.head@these21))
+  (VP.head strictly/ADV.advmod~degree needed/VERB.head=need{Fin,Past} (NP.obj my/PRON.poss expertise/NOUN.head~abstract))
+  ./PUNCT)

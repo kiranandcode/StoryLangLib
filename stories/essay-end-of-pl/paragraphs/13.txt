@@ -1,0 +1,1 @@
+So I've explained why LLMs and the change in demographics of programmers shouldn't affect your enthusiasm for PL research, the ideas, the beauty, the fun, it's all still there! but now I'd like to tell you why LLMs make me extremely excited for the future of PL research.

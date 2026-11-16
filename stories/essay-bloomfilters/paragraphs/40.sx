@@ -1,0 +1,32 @@
+entity bose group they "Bose et al."
+entity errors abstract it "this issue: the error in Bloom's derivation"
+entity bose_derivation abstract it "Bose et al.'s alternative derivation (balls into bins)"
+entity analogy abstract it "a balls-into-bins analogy"
+entity overlap abstract it "the possibility that the hash outputs overlap"
+entity hash_outputs abstract they "the hash outputs"
+entity fpr abstract it "the false positive rate"
+entity coq abstract it "Coq"
+entity coq_proof abstract it "the Coq proof of the expression"
+topic t1 "Bose et al.'s correction" bose,bose_derivation
+(S%t1
+  (S.head
+    (SBAR.advcl In/ADP.mark order/NOUN.fixed~abstract to/PART.fixed
+      (VP.head correct/VERB.head{Inf} (NP.obj@errors this/DET.det issue/NOUN.head)))
+    ,/PUNCT
+    (NP.nsubj@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT)
+    (VP.head propose/VERB.head{Fin,Pres}
+      (NP.obj@bose_derivation an/DET.det alternative/ADJ.amod derivation/NOUN.head
+        (SBAR.acl which/PRON.nsubj@bose_derivation
+          (VP.head uses/VERB.head=use{Fin,Pres}
+            (NP.obj@analogy a/DET.det balls-into-bins/ADJ.amod analogy/NOUN.head
+              (VP.acl to/PART.mark account/VERB.head{Inf}
+                (PP.obl for/ADP.case (NP.head@overlap the/DET.det possibility/NOUN.head
+                  (SBAR.acl that/SCONJ.mark (NP.nsubj@hash_outputs the/DET.det hash/NOUN.compound outputs/NOUN.head=output)
+                    (VP.head overlap/VERB.head{Fin,Pres}))))))))))
+    ,/PUNCT and/CCONJ.cc
+    (VP.conj derive/VERB.head{Fin,Pres}
+      (NP.obj@fpr the/DET.det false/ADJ.amod positive/ADJ.amod rate/NOUN.head)
+      (SBAR.advcl as/SCONJ.mark being/VERB.head=be{Ger})))
+  (FRAG.parataxis \(/PUNCT see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place
+    (PP.obl for/ADP.case (NP.head@coq_proof the/DET.det Coq/PROPN.compound@coq proof/NOUN.head)) \)/PUNCT)
+  :/PUNCT)

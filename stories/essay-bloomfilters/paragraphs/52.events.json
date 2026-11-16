@@ -1,0 +1,34 @@
+{
+ "text_sha": "94f0136f615ca7fb",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "knows bloom singleBit",
+   "at": 48,
+   "w": "derives"
+  },
+  {
+   "c": "knows bloom hashRandom",
+   "at": 0,
+   "w": "Using"
+  }
+ ],
+ "judge": [
+  {
+   "at": 15,
+   "w": "the",
+   "kind": "generic"
+  },
+  {
+   "at": 27,
+   "w": "set",
+   "kind": "generic"
+  },
+  {
+   "at": 33,
+   "w": "1",
+   "kind": "generic"
+  }
+ ]
+}

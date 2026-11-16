@@ -1,0 +1,1 @@
+Fundamentally, this is because the values of the bits themselves are not independent - knowing that one bit is raised after inserting n elements, will influence the probabilities of the other bits being raised, as the hash outputs are now depedent.

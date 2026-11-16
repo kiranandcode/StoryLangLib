@@ -1,0 +1,1 @@
+As part of the analysis accompanying the original description of the Bloom filter (by Burton Howard Bloom in 1970), Bloom provides a derivation for the false positive rate.

@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "proxy_compromise",
+   "uses": [
+    "browsers"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "hashedUrls",
+   "sec": 5,
+   "uses": [
+    "browsers"
+   ],
+   "s": 1
+  }
+ ]
+}

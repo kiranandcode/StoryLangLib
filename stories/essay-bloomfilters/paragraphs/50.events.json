@@ -1,0 +1,48 @@
+{
+ "text_sha": "34fdbb1d4c144606",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell commenter authors hashesDistinct",
+   "at": 9,
+   "w": "pointed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "thinks commenter hashesDistinct",
+   "at": 1,
+   "w": "was"
+  }
+ ],
+ "judge": [
+  {
+   "at": 19,
+   "w": "makes",
+   "kind": "content",
+   "lit": "hashesDistinct"
+  },
+  {
+   "at": 28,
+   "w": "produce",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 34,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 39,
+   "w": "propose",
+   "kind": "act"
+  },
+  {
+   "at": 43,
+   "w": "correct",
+   "kind": "hypothetical"
+  }
+ ]
+}

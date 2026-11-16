@@ -1,0 +1,1 @@
+Inverting this expression, we derive that the probability that an arbitrary bit in the bit-vector is raised after inserting n elements will simply be 1 - (1 - 1/m)^(kn).

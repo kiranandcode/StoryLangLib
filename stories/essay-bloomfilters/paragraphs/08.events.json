@@ -1,0 +1,32 @@
+{
+ "text_sha": "3ef38ae52331bc0b",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader contention",
+   "at": 17,
+   "w": "the",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true contention",
+   "at": 17,
+   "w": "the"
+  }
+ ],
+ "judge": [
+  {
+   "at": 5,
+   "w": "turns",
+   "kind": "generic"
+  },
+  {
+   "at": 26,
+   "w": "requiring",
+   "kind": "generic"
+  }
+ ]
+}

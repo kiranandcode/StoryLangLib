@@ -1,0 +1,22 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "insertion",
+   "uses": [
+    "bit_vector",
+    "hash_functions"
+   ],
+   "s": 1
+  },
+  {
+   "move": "define",
+   "t": "query",
+   "uses": [
+    "bit_vector",
+    "hash_functions"
+   ],
+   "s": 2
+  }
+ ]
+}

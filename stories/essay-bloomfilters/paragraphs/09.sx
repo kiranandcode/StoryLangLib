@@ -1,0 +1,12 @@
+entity authors group they "we (authors and reader, inclusive)"
+entity contention abstract it "this history of errors"
+entity errors abstract they "the errors in the literature"
+entity bloom_filter abstract it "a Bloom filter" generic
+topic t1 "can we be certain about Bloom filters" contention,bloom_filter
+(S%t1 (PP.obl Given/ADP.case (NP.head@contention this/DET.det history/NOUN.head (PP.nmod of/ADP.case (NP.head@errors errors/NOUN.head=error))))
+  ,/PUNCT
+  (VP.head can/AUX.aux{Fin,Pres} we/PRON.nsubj@authors really/ADV.advmod~degree have/VERB.head{Inf}
+    (NP.obj any/DET.det certainty/NOUN.head~abstract
+      (PP.nmod in/ADP.case (NP.head our/PRON.poss@authors understanding/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))))
+    (PP.advmod at/ADP.case all/PRON.head))
+  ?/PUNCT)

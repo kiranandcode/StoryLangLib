@@ -1,0 +1,38 @@
+{
+ "text_sha": "db6607584c86d790",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 1,
+   "w": "proposes",
+   "kind": "act"
+  },
+  {
+   "at": 3,
+   "w": "begin",
+   "kind": "act"
+  },
+  {
+   "at": 7,
+   "w": "focusing",
+   "kind": "act"
+  },
+  {
+   "at": 22,
+   "w": "generalise",
+   "kind": "act"
+  },
+  {
+   "at": 35,
+   "w": "suppose",
+   "kind": "act"
+  },
+  {
+   "at": 40,
+   "w": "b1",
+   "kind": "act"
+  }
+ ]
+}

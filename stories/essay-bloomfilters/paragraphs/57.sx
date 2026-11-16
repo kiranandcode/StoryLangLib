@@ -1,0 +1,16 @@
+entity authors group they "our (the authors)"
+entity bose group they "Bose et al."
+entity certified_proof abstract it "our proof"
+entity alt_derivation abstract it "an alternative derivation"
+entity bose_issues abstract they "the issues in Bose et al.'s paper"
+entity bose_paper abstract it "Bose et al.'s paper"
+topic t1 "our alternative derivation" certified_proof
+(S%t1 (NP.nsubj@certified_proof Our/PRON.poss@authors proof/NOUN.head)
+  (VP.head uses/VERB.head=use{Fin,Pres}
+    (NP.obj@alt_derivation an/DET.det alternative/ADJ.amod derivation/NOUN.head
+      (SBAR.relcl that/PRON.nsubj@alt_derivation
+        (VP.head fixes/VERB.head=fix{Fin,Pres}
+          (NP.obj@bose_issues the/DET.det issues/NOUN.head=issue
+            (PP.nmod in/ADP.case
+              (NP.head@bose_paper (NP.poss@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT '/PART.case s/PART.case) paper/NOUN.head)))))))
+  ./PUNCT)

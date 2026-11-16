@@ -1,0 +1,15 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "singleBit",
+   "premises": [
+    "unsetKN"
+   ],
+   "uses": [
+    "selected_bit"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+Ideally, we'd like to characterise the frequency at which these kinds of results may occur, however this will generally be highly dependent on the particular choice of hash functions, limiting the scope of our analysis.

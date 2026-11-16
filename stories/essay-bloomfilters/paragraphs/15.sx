@@ -1,0 +1,19 @@
+entity bloom_filter abstract it "a Bloom filter bf (the data structure, as a kind)" generic
+entity components abstract they "two separate components: the bit-vector and the hash functions" of=bit_vector,hash_functions
+entity bit_vector abstract it "the bit-vector (n bits)"
+entity bits abstract they "the bits of the bit-vector"
+entity hash_functions abstract they "the k hash functions"
+topic t1 "what a Bloom filter is made of" bloom_filter
+(S%t1 Well/INTJ.discourse ,/PUNCT
+  (VP.advcl put/VERB.head{Part} simply/ADV.advmod~manner) ,/PUNCT
+  (NP.nsubj@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head bf/PROPN.appos@bloom_filter)
+  is/AUX.cop=be{Fin,Pres}
+  (NP.head@components a/DET.det simply/ADV.advmod~degree a/DET.det combination/NOUN.head~abstract
+    (PP.nmod of/ADP.case (NP.head@components two/NUM.nummod separate/ADJ.amod components/NOUN.head=component))
+    :/PUNCT
+    (COORD.appos@components
+      (NP.head@bit_vector A/DET.det bit-vector/NOUN.head (PP.nmod of/ADP.case (NP.head@bits n/SYM.nummod bits/NOUN.head=bit)))
+      ./PUNCT
+      and/CCONJ.cc
+      (NP.conj@hash_functions a/DET.det sequence/NOUN.head~abstract (PP.nmod of/ADP.case k/SYM.nummod hash/NOUN.compound~abstract functions/NOUN.head=function~abstract))))
+  ./PUNCT)

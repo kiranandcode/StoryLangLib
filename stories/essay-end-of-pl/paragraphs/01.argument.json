@@ -1,0 +1,17 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 0
+  },
+  {
+   "move": "cite",
+   "t": "thread",
+   "uses": [
+    "types_list",
+    "llms"
+   ],
+   "s": 1
+  }
+ ]
+}

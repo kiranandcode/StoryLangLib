@@ -1,0 +1,25 @@
+entity blooms_analysis abstract it "Bloom's derivation so far"
+entity single_bit_prob abstract it "the single-bit expression 1 - (1 - 1/m)^(kn)"
+entity authors group they "I / we (the authors)"
+entity coq_proof abstract it "a corresponding Coq proof of the single-bit expression"
+entity coq abstract it "Coq / Rocq"
+entity selected_bit abstract it "a single bit" generic
+entity false_positive abstract it "a false positive result" generic
+topic t1 "the single-bit expression is correct" single_bit_prob
+(S%t1 (ADVP.advmod So/ADV.advmod~degree far/ADV.head) (NP.nsubj@blooms_analysis this/DET.det derivation/NOUN.head)
+  is/AUX.cop=be{Fin,Pres} entirely/ADV.advmod~degree correct/ADJ.head
+  -/PUNCT
+  (S.parataxis
+    (NP.nsubj@single_bit_prob this/DET.det expression/NOUN.head
+      (S.relcl (NP.nsubj@authors we/PRON.head) have/AUX.aux{Fin,Pres} proven/VERB.head=prove{Part}))
+    is/AUX.cop=be{Fin,Pres} actually/ADV.advmod~degree correct/ADJ.head
+    (PRN.parataxis \(/PUNCT
+      (VP.head see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place
+        (PP.obl for/ADP.case (NP.head@coq_proof a/DET.det corresponding/ADJ.amod Coq/PROPN.compound@coq proof/NOUN.head)))
+      \)/PUNCT)
+    ,/PUNCT
+    (S.conj but/CCONJ.cc (NP.nsubj@single_bit_prob it/PRON.head)
+      (VP.head only/ADV.advmod~degree applies/VERB.head=apply{Fin,Pres}
+        (PP.obl for/ADP.case (NP.head@selected_bit a/DET.det single/ADJ.amod bit/NOUN.head
+          (NP.conj@false_positive not/PART.advmod a/DET.det false/ADJ.amod positive/ADJ.amod result/NOUN.head))))))
+  ./PUNCT)

@@ -1,0 +1,62 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 4
+  },
+  {
+   "move": "claim",
+   "t": "importance",
+   "uses": [
+    "certified"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "asymptoticOk",
+   "sec": 5,
+   "uses": [
+    "bloomFormula"
+   ],
+   "s": 1
+  },
+  {
+   "move": "hedge",
+   "t": "interest",
+   "sec": 0,
+   "uses": [
+    "certified"
+   ],
+   "s": 2
+  },
+  {
+   "move": "promise",
+   "t": "probabilityInCoq",
+   "sec": 0,
+   "uses": [
+    "coq",
+    "probability"
+   ],
+   "s": 2
+  },
+  {
+   "move": "promise",
+   "t": "exactDerivation",
+   "sec": 0,
+   "uses": [
+    "boseFormula"
+   ],
+   "s": 3
+  },
+  {
+   "move": "promise",
+   "t": "otherFilters",
+   "sec": 0,
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 4
+  }
+ ]
+}

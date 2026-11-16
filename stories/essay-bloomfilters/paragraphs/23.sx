@@ -1,0 +1,30 @@
+entity assumption abstract it "this modelling assumption: the hashes are random" of=para:22
+entity property abstract it "the property of interest: the false positive probability"
+entity fpr abstract it "the False positive probability of a Bloom filter (the quantity)"
+entity elements abstract they "n elements (inserted values)" generic
+entity bloom_filter abstract it "an empty Bloom filter bf"
+entity y abstract it "an unseen value y"
+entity positive_result abstract it "a positive result"
+topic t1 "the false positive probability defined" fpr
+(S%t1 (PP.obl With/ADP.case (NP.head@assumption this/DET.det modelling/NOUN.compound~abstract assumption/NOUN.head))
+  ,/PUNCT
+  (NP.nsubj@property the/DET.det property/NOUN.head (PP.nmod of/ADP.case interest/NOUN.head~abstract))
+  now/ADV.advmod~time
+  becomes/VERB.head=become{Fin,Pres}
+  (NP.xcomp@fpr the/DET.det False/ADJ.amod positive/ADJ.amod probability/NOUN.head)
+  -/PUNCT
+  (FRAG.appos@fpr (ADVP.discourse that/ADV.head is/AUX.fixed=be{Fin,Pres})
+    :/PUNCT
+    (NP.appos@fpr False/ADJ.amod positive/ADJ.amod probability/NOUN.head)
+    :/PUNCT
+    (NP.appos@fpr
+      (S.advcl After/SCONJ.mark inserting/VERB.head=insert{Ger}
+        (NP.obj@elements n/SYM.nummod elements/NOUN.head=element)
+        (PP.obl into/ADP.case (NP.head@bloom_filter an/DET.det empty/ADJ.amod Bloom/PROPN.compound filter/NOUN.head bf/PROPN.appos@bloom_filter)))
+      ,/PUNCT
+      the/DET.det probability/NOUN.head
+      (SBAR.acl that/SCONJ.mark
+        (S.head (S.csubj querying/VERB.head=query{Ger} (PP.obl for/ADP.case (NP.head@y an/DET.det unseen/ADJ.amod value/NOUN.head y/SYM.appos@y)))
+          returns/VERB.head=return{Fin,Pres}
+          (NP.obj@positive_result a/DET.det positive/ADJ.amod result/NOUN.head)))))
+  ./PUNCT)

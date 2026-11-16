@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "certified",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  }
+ ]
+}

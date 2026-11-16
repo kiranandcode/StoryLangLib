@@ -1,0 +1,1 @@
+To be fair, the asymptotic behaviour of Bloom's original bound is consistent with this updated definition, so the impact is more an issue of pedantry rather than about practical applications.

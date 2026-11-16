@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "fprHashDependent",
+   "uses": [
+    "falsePos",
+    "hash_functions"
+   ],
+   "s": 1
+  },
+  {
+   "move": "motivate",
+   "t": "hashRandom",
+   "uses": [
+    "fprHashDependent"
+   ],
+   "s": 1
+  }
+ ]
+}

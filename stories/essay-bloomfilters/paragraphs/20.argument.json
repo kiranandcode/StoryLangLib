@@ -1,0 +1,26 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "falsePos",
+   "premises": [
+    "insertion",
+    "query"
+   ],
+   "uses": [
+    "hash_functions"
+   ],
+   "s": 1
+  },
+  {
+   "move": "example",
+   "t": "falsePos",
+   "uses": [
+    "insertion",
+    "query",
+    "bit_vector"
+   ],
+   "s": 4
+  }
+ ]
+}

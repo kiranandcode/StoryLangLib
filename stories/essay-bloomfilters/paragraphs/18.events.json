@@ -1,0 +1,58 @@
+{
+ "text_sha": "5c30cf5df366ff9f",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 4,
+   "w": "inserted",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 12,
+   "w": "result",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 24,
+   "w": "raised",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 28,
+   "w": "are",
+   "kind": "generic"
+  },
+  {
+   "at": 33,
+   "w": "unset",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 40,
+   "w": "certain",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 50,
+   "w": "return",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 59,
+   "w": "get",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 70,
+   "w": "certain",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 77,
+   "w": "inserted",
+   "kind": "hypothetical"
+  }
+ ]
+}

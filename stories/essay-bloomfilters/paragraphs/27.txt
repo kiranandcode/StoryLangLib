@@ -1,0 +1,1 @@
+Now, let's have a look at what happens when we hash an input over one of the hash functions in the Bloom filter.

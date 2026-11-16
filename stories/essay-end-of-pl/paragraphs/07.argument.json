@@ -1,0 +1,13 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "plObsoleteFear",
+   "uses": [
+    "humansStopCoding",
+    "pl_research"
+   ],
+   "s": 1
+  }
+ ]
+}

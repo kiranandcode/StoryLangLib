@@ -1,0 +1,34 @@
+{
+ "text_sha": "82be9257c6978319",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "true hashRandom",
+   "at": 10,
+   "w": "independent"
+  }
+ ],
+ "judge": [
+  {
+   "at": 13,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 21,
+   "w": "remains",
+   "kind": "generic"
+  },
+  {
+   "at": 26,
+   "w": "executing",
+   "kind": "generic"
+  },
+  {
+   "at": 35,
+   "w": "(",
+   "kind": "generic"
+  }
+ ]
+}

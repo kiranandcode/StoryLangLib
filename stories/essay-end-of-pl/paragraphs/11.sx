@@ -1,0 +1,44 @@
+entity point abstract it "the point I'm trying to get at"
+entity authors group they "I / me (Kiran)"
+entity ideas abstract they "the beautiful ideas of PL, the insights, the beauty"
+entity field abstract it "PL"
+entity community group they "we (PL researchers)"
+entity users group they "users of programming languages (anyone)" generic
+entity programming_languages abstract they "programming languages (as a kind)" generic
+entity reader person they "you, the reader"
+entity secret abstract it "a little secret (most languages have no users)"
+entity majority abstract it "the vast majority of programming languages" of=programming_languages
+entity developers group they "their developers (of the languages)" generic
+topic t1 "the ideas are still here" ideas
+topic t2 "nobody uses languages anyway" users
+(S%t1 (NP.nsubj@point The/DET.det point/NOUN.head~abstract
+    (SBAR.relcl (S.head (NP.nsubj@authors I'm/PRON.head=I)
+      (VP.head trying/VERB.head=try{Part} (VP.xcomp to/PART.mark get/VERB.head{Inf} at/ADP.compound)))))
+  (VP.head is/VERB.head=be{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (NP.dislocated@ideas (NP.head@ideas the/DET.det beautiful/ADJ.amod ideas/NOUN.head=idea (PP.nmod of/ADP.case (NP.head@field PL/PROPN.head)))
+          ,/PUNCT (NP.appos@ideas the/DET.det insights/NOUN.head=insight~abstract) ?/PUNCT
+          (NP.appos@ideas the/DET.det beauty/NOUN.head~abstract) ?/PUNCT)
+        (NP.nsubj@ideas they're/PRON.head=they) all/DET.advmod still/ADV.advmod~aspect here/ADV.head~place)))
+  ./PUNCT)
+(S%t1 (S.head (NP.nsubj@ideas They're/PRON.head=they) all/DET.advmod still/ADV.advmod~aspect available/ADJ.head)
+  (S.conj and/CCONJ.cc (NP.nsubj@community we're/PRON.head=we) (ADJP.head more/ADV.advmod~degree than/ADP.fixed able/ADJ.head)
+    (VP.xcomp to/PART.mark still/ADV.advmod~aspect explore/VERB.head{Inf} and/CCONJ.cc play/VERB.conj{Inf} around/ADV.advmod~manner and/CCONJ.cc have/VERB.conj{Inf} fun/NOUN.obj~abstract
+      (PP.obl with/ADP.case (NP.head@ideas them/PRON.head))))
+  ./PUNCT)
+(S%t2 (NP.nsubj Who/PRON.head (NP.nmod the/DET.det heck/NOUN.head~figurative))
+  (VP.head cares/VERB.head=care{Fin,Pres}
+    (SBAR.advcl if/SCONJ.mark (S.head (NP.nsubj@users anyone/PRON.head)
+      (VP.head uses/VERB.head=use{Fin,Pres} (NP.obj@programming_languages programming/NOUN.compound~abstract languages/NOUN.head=language)))))
+  ?/PUNCT)
+(S%t2 (VP.head Let/VERB.head{Fin,Pres,Mood=Imp}
+    (S.ccomp (NP.nsubj@authors me/PRON.head=I)
+      (VP.head let/VERB.head{Inf} (NP.obj@reader you/PRON.head) in/ADP.compound
+        (PP.obl on/ADP.case (NP.head@secret a/DET.det little/ADJ.amod secret/NOUN.head)))))
+  ./PUNCT)
+(S%t2 (NP.nsubj@majority The/DET.det vast/ADJ.amod majority/NOUN.head~part (PP.nmod of/ADP.case (NP.head@programming_languages programming/NOUN.compound~abstract languages/NOUN.head=language)))
+  (VP.head have/VERB.head{Fin,Pres}
+    (NP.obj@users literally/ADV.advmod~degree 0/NUM.nummod users/NOUN.head=user
+      (PP.nmod other/ADJ.case than/ADP.fixed (NP.head@developers their/PRON.poss@programming_languages developers/NOUN.head=developer))))
+  ./PUNCT)

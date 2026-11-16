@@ -1,0 +1,40 @@
+{
+ "text_sha": "2833c3ddc84f67be",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "hint authors reader !plObsolete",
+   "at": 2,
+   "w": "explained",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "promise authors reader excited",
+   "at": 39,
+   "w": "tell",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 13,
+   "w": "affect",
+   "kind": "content",
+   "lit": "!plObsolete"
+  },
+  {
+   "at": 37,
+   "w": "like",
+   "kind": "act"
+  },
+  {
+   "at": 43,
+   "w": "make",
+   "kind": "content",
+   "lit": "excited"
+  }
+ ]
+}

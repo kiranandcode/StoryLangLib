@@ -1,0 +1,1 @@
+In fact, provided that the list of elements to be inserted is unique, this independence argument actually generalises over all the hash invocations, and thus we can conclude that the probability that our selected bit is not raised during the execution will be (1 - 1/m)^(kn).

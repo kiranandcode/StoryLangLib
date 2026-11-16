@@ -1,0 +1,28 @@
+{
+ "moves": [
+  {
+   "move": "deny",
+   "t": "applicationsMatter",
+   "uses": [
+    "practicalApps"
+   ],
+   "s": 3
+  },
+  {
+   "move": "claim",
+   "t": "seMessy",
+   "uses": [
+    "research"
+   ],
+   "s": 8
+  },
+  {
+   "move": "claim",
+   "t": "messNeeded",
+   "uses": [
+    "seMessy"
+   ],
+   "s": 9
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "text_sha": "346366c3ed615d0a",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader hashedUrls",
+   "at": 32,
+   "w": "send",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true hashedUrls",
+   "at": 32,
+   "w": "send"
+  }
+ ],
+ "judge": [
+  {
+   "at": 2,
+   "w": "note",
+   "kind": "act"
+  },
+  {
+   "at": 6,
+   "w": "a",
+   "kind": "act"
+  },
+  {
+   "at": 12,
+   "w": "used",
+   "kind": "act"
+  },
+  {
+   "at": 16,
+   "w": "detecting",
+   "kind": "act"
+  },
+  {
+   "at": 24,
+   "w": "sending",
+   "kind": "content",
+   "lit": "hashedUrls"
+  },
+  {
+   "at": 40,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 51,
+   "w": "at",
+   "kind": "generic"
+  },
+  {
+   "at": 59,
+   "w": "noted",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 66,
+   "w": "used",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 68,
+   "w": "learn",
+   "kind": "hypothetical"
+  }
+ ]
+}

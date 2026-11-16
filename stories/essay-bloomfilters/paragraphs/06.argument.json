@@ -1,0 +1,41 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "no_false_negatives",
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 2
+  },
+  {
+   "move": "define",
+   "t": "low_fpr",
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 3
+  },
+  {
+   "move": "infer",
+   "t": "privacyKept",
+   "premises": [
+    "low_fpr",
+    "proxy"
+   ],
+   "uses": [
+    "privacy"
+   ],
+   "s": 3
+  },
+  {
+   "move": "hedge",
+   "t": "low_fpr",
+   "sec": 0,
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 3
+  }
+ ]
+}

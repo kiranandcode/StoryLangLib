@@ -1,0 +1,26 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "hitProb",
+   "premises": [
+    "uniformOutputs"
+   ],
+   "uses": [
+    "selected_bit"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "missProb",
+   "premises": [
+    "hitProb"
+   ],
+   "uses": [
+    "selected_bit"
+   ],
+   "s": 2
+  }
+ ]
+}

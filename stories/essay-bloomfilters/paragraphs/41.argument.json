@@ -1,0 +1,28 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "boseErrors",
+   "uses": [
+    "boseFormula"
+   ],
+   "s": 1
+  },
+  {
+   "move": "contrast",
+   "a": "boseFormula",
+   "b": "boseErrors",
+   "uses": [],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "boseDefinitions",
+   "sec": 5,
+   "uses": [
+    "boseErrors"
+   ],
+   "s": 1
+  }
+ ]
+}

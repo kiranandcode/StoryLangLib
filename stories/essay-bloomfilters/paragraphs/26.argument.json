@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "selected_bit",
+   "uses": [
+    "bit_vector"
+   ],
+   "s": 1
+  }
+ ]
+}

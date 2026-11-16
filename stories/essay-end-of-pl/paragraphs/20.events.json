@@ -1,0 +1,80 @@
+{
+ "text_sha": "08ce2f5dafdd9d26",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader theoryToo",
+   "at": 8,
+   "w": "exciting",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true theoryToo",
+   "at": 23,
+   "w": "makes"
+  }
+ ],
+ "judge": [
+  {
+   "at": 15,
+   "w": "able",
+   "kind": "content",
+   "lit": "theoryToo"
+  },
+  {
+   "at": 17,
+   "w": "automate",
+   "kind": "content",
+   "lit": "theoryToo"
+  },
+  {
+   "at": 28,
+   "w": "ask",
+   "kind": "content",
+   "lit": "theoryToo"
+  },
+  {
+   "at": 34,
+   "w": "add",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 45,
+   "w": "normalising",
+   "kind": "generic"
+  },
+  {
+   "at": 50,
+   "w": "change",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 60,
+   "w": "sound",
+   "kind": "generic"
+  },
+  {
+   "at": 65,
+   "w": "able",
+   "kind": "act"
+  },
+  {
+   "at": 67,
+   "w": "iterate",
+   "kind": "act"
+  },
+  {
+   "at": 75,
+   "w": "able",
+   "kind": "act"
+  },
+  {
+   "at": 77,
+   "w": "do",
+   "kind": "act"
+  }
+ ]
+}

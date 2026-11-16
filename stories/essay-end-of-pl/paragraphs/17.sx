@@ -1,0 +1,50 @@
+entity authors group they "I / we (the author)"
+entity ai_tools abstract they "LLMs / an LLM" generic
+entity interpreters_project abstract it "Ship your interpreters (the experiment; this idea)"
+entity humans group they "no human (humans as a kind)" generic
+entity code abstract it "programs" generic
+entity proofs abstract they "tedious and boring proofs" generic
+entity capability abstract it "this capability (verifying programs to the binary level)"
+entity gen_semantics abstract it "the generated semantics (a semantics)"
+entity language abstract it "the interpreted language"
+topic t1 "the interpreters experiment" interpreters_project
+(FRAG%t1 (NP.head@interpreters_project Ship/PROPN.compound your/PROPN.compound interpreters/PROPN.head)
+  —/PUNCT
+  (S.parataxis (NP.nsubj@ai_tools LLMs/NOUN.head=LLM)
+    (VP.head are/AUX.cop=be{Fin,Pres} incredibly/ADV.advmod~degree capable/ADJ.head
+      (SBAR.advcl of/SCONJ.mark (VP.head handling/VERB.head=handle{Ger} and/CCONJ.cc managing/VERB.conj=manage{Ger}
+        (NP.obj@proofs tedious/ADJ.amod and/CCONJ.cc boring/ADJ.conj proofs/NOUN.head=proof)))
+      ,/PUNCT
+      (PP.obl at/ADP.case (NP.head a/DET.det scale/NOUN.head~abstract
+        (S.relcl (NP.nsubj@humans no/DET.det human/NOUN.head)
+          (VP.head would/AUX.aux{Fin,Past} ever/ADV.advmod~time have/AUX.aux{Inf} done/VERB.head=do{Part} themselves/PRON.obl@humans))))))
+  ./PUNCT)
+(S%t1 (SBAR.advcl If/SCONJ.mark (S.head we/PRON.nsubj@authors (VP.head point/VERB.head{Fin,Pres} (NP.obj@ai_tools an/DET.det LLM/NOUN.head)
+      (PP.obl at/ADP.case a/DET.det problem/NOUN.head~abstract))))
+  ,/PUNCT they/PRON.nsubj@ai_tools
+  (VP.head can/AUX.aux{Fin,Pres} totally/ADV.advmod~degree verify/VERB.head{Inf} (NP.obj@code programs/NOUN.head=program)
+    (PP.obl to/ADP.case the/DET.det binary/ADJ.amod level/NOUN.head~abstract))
+  ./PUNCT)
+(S%t1 (SBAR.advcl By/SCONJ.mark (VP.head exploiting/VERB.head=exploit{Ger} (NP.obj@capability this/DET.det capability/NOUN.head)))
+  I/PRON.nsubj@authors
+  (VP.head ran/VERB.head=run{Fin,Past}
+    (NP.obj@interpreters_project an/DET.det experiment/NOUN.head
+      (SBAR.acl of/SCONJ.mark (VP.head automatically/ADV.advmod~manner generating/VERB.head=generate{Ger}
+        (NP.obj semantics/NOUN.head~abstract (PP.nmod for/ADP.case interpreted/ADJ.amod languages/NOUN.head=language~abstract)))))
+    ,/PUNCT
+    (SBAR.advcl by/SCONJ.mark (VP.head getting/VERB.head=get{Ger} (NP.obj@ai_tools the/DET.det LLM/NOUN.head)
+      (VP.xcomp to/PART.mark generate/VERB.head{Inf} (NP.obj@gen_semantics a/DET.det semantics/NOUN.head)
+        ,/PUNCT and/CCONJ.cc then/ADV.advmod prove/VERB.conj{Inf}
+        (SBAR.ccomp that/SCONJ.mark (S.head it/PRON.nsubj@gen_semantics
+          (VP.head abstracts/VERB.head=abstract{Fin,Pres}
+            (NP.obj the/DET.det behaviours/NOUN.head=behaviour~abstract (PP.nmod of/ADP.case the/DET.det concrete/ADJ.amod binary/NOUN.head~digital
+              (PP.nmod of/ADP.case (NP.head@language the/DET.det language/NOUN.head itself/PRON.appos@language)))))))))))
+  ./PUNCT)
+(S%t1 (NP.nsubj@interpreters_project This/DET.det idea/NOUN.head)
+  (VP.head would/AUX.aux{Fin,Past} have/AUX.aux{Inf} been/AUX.cop=be{Part} absolutely/ADV.advmod~degree unthinkable/ADJ.head
+    (ADVP.advmod (NP.obl a/DET.det year/NOUN.head~time) ago/ADV.head~time))
+  ,/PUNCT but/CCONJ.cc
+  (FRAG.conj today/NOUN.head~time ?/PUNCT)
+  (S.parataxis today/NOUN.obl~time it's/PRON.nsubj@interpreters_project just/ADV.advmod~degree
+    (NP.head a/DET.det month/NOUN.head~time (PP.nmod of/ADP.case prompting/NOUN.head~event)))
+  ./PUNCT)

@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "boseFormula",
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  },
+  {
+   "move": "evaluate",
+   "t": "boseFormula",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "text_sha": "cdff1ab95cafb5a1",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "adopt authors explorationPremise",
+   "at": 3,
+   "w": "write",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader juniorsWorry",
+   "at": 13,
+   "w": "think",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 7,
+   "w": "present",
+   "kind": "goal",
+   "lit": "explorationPremise"
+  },
+  {
+   "at": 21,
+   "w": "watching",
+   "kind": "content",
+   "lit": "juniorsWorry"
+  },
+  {
+   "at": 28,
+   "w": "reeling",
+   "kind": "content",
+   "lit": "juniorsWorry"
+  },
+  {
+   "at": 34,
+   "w": "charting",
+   "kind": "content",
+   "lit": "juniorsWorry"
+  },
+  {
+   "at": 43,
+   "w": "worrying",
+   "kind": "content",
+   "lit": "juniorsWorry"
+  },
+  {
+   "at": 48,
+   "w": "bother",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 49,
+   "w": "entering",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 57,
+   "w": "like",
+   "kind": "act"
+  },
+  {
+   "at": 59,
+   "w": "give",
+   "kind": "act"
+  },
+  {
+   "at": 1,
+   "w": "wanted",
+   "kind": "act"
+  }
+ ]
+}

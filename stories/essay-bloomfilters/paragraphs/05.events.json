@@ -1,0 +1,42 @@
+{
+ "text_sha": "687cab09354bbc06",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader proxy",
+   "at": 12,
+   "w": "maintain",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true proxy",
+   "at": 0,
+   "w": "Using"
+  },
+  {
+   "c": "true proxy",
+   "at": 26,
+   "w": "querying"
+  },
+  {
+   "c": "true proxy",
+   "at": 45,
+   "w": "Use"
+  },
+  {
+   "c": "true proxy",
+   "at": 50,
+   "w": "act"
+  }
+ ],
+ "judge": [
+  {
+   "at": 35,
+   "w": "send",
+   "kind": "hypothetical"
+  }
+ ]
+}

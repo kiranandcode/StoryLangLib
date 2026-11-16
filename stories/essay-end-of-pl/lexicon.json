@@ -1,0 +1,4801 @@
+{
+ "\"": {
+  "rel": "quote"
+ },
+ ", so": {
+  "rel": "cause"
+ },
+ "; for": {
+  "rel": "cause"
+ },
+ "AI/PROPN": {
+  "reg": "technical"
+ },
+ "I mean": {
+  "cls": [
+   "filler"
+  ],
+  "reg": "informal"
+ },
+ "I think": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "LLM/PROPN": {
+  "reg": "technical"
+ },
+ "Linux/PROPN": {
+  "reg": "technical"
+ },
+ "PL/PROPN": {
+  "reg": "technical"
+ },
+ "TYPES/PROPN": {
+  "reg": "technical"
+ },
+ "a deep understanding": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a direct result of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a diverse range of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a multitude of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a number of key": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a reminder of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a sense of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "a variety of different": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "abandon/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "able": {
+  "reg": "neutral"
+ },
+ "about/ADJ": {
+  "reg": "neutral"
+ },
+ "above": {
+  "rel": "callback"
+ },
+ "absolutely": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "absolutely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "abstract/VERB": {
+  "reg": "technical"
+ },
+ "access/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "acclaim": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "acclaimed": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "according to some": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "acknowledge": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "acknowledges": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "actually": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "ad-hoc": {
+  "reg": "informal"
+ },
+ "adapt/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "add/VERB": {
+  "reg": "neutral"
+ },
+ "additionally": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "affect/VERB": {
+  "reg": "neutral"
+ },
+ "again": {
+  "rel": "callback"
+ },
+ "against the backdrop of": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "age": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "agent/NOUN": {
+  "reg": "technical"
+ },
+ "ago/ADV": {
+  "reg": "neutral"
+ },
+ "aim": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "aims": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "all in all": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "allow/VERB": {
+  "reg": "neutral"
+ },
+ "alternative": {
+  "reg": "neutral"
+ },
+ "although": {
+  "rel": "concession"
+ },
+ "always/ADV": {
+  "reg": "neutral"
+ },
+ "am": {
+  "cls": [
+   "be"
+  ]
+ },
+ "amazing": {
+  "cls": [
+   "hype",
+   "ing"
+  ]
+ },
+ "amazing/ADJ": {
+  "reg": "informal"
+ },
+ "amenable/ADJ": {
+  "reg": "formal"
+ },
+ "analysis": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "analyze": {
+  "cls": [
+   "us"
+  ]
+ },
+ "analyzed": {
+  "cls": [
+   "us"
+  ]
+ },
+ "analyzes": {
+  "cls": [
+   "us"
+  ]
+ },
+ "analyzing": {
+  "cls": [
+   "us"
+  ]
+ },
+ "and": {
+  "cls": [
+   "and"
+  ]
+ },
+ "anecdotally/ADV": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "answer": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "apologize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "application": {
+  "reg": "neutral"
+ },
+ "applied/ADJ": {
+  "reg": "neutral"
+ },
+ "are": {
+  "cls": [
+   "be"
+  ]
+ },
+ "area/NOUN": {
+  "reg": "neutral"
+ },
+ "aren't": {
+  "cls": [
+   "fusedbe"
+  ],
+  "rel": "neg"
+ },
+ "arguably": {
+  "rel": "hedge"
+ },
+ "argue": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "argues": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "around": {
+  "reg": "neutral"
+ },
+ "article": {
+  "reg": "neutral"
+ },
+ "as a result": {
+  "rel": "cause"
+ },
+ "as such": {
+  "reg": "formal",
+  "rel": "cause"
+ },
+ "as we navigate": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "ask": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "asks": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "aspect": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "aspects": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "aspire": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "aspires": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "assume": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "assumes": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "assumption/NOUN": {
+  "reg": "neutral"
+ },
+ "at all": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "at its core": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "at least ,": {
+  "rel": "hedge"
+ },
+ "at the end of the day": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "at the same time": {
+  "reg": "neutral",
+  "rel": "concession"
+ },
+ "automate/VERB": {
+  "reg": "technical"
+ },
+ "automatically/ADV": {
+  "reg": "neutral"
+ },
+ "available": {
+  "reg": "neutral"
+ },
+ "away": {
+  "reg": "neutral"
+ },
+ "awesome": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "barely": {
+  "reg": "neutral"
+ },
+ "be": {
+  "cls": [
+   "be"
+  ]
+ },
+ "be/VERB": {
+  "reg": "neutral"
+ },
+ "beacon": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "beautiful": {
+  "reg": "neutral"
+ },
+ "beauty": {
+  "reg": "neutral"
+ },
+ "because": {
+  "rel": "cause"
+ },
+ "become": {
+  "reg": "neutral"
+ },
+ "becoming": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "been": {
+  "cls": [
+   "be"
+  ]
+ },
+ "before": {
+  "reg": "neutral"
+ },
+ "begin/VERB": {
+  "reg": "neutral"
+ },
+ "behavior": {
+  "cls": [
+   "us"
+  ]
+ },
+ "behavioral": {
+  "cls": [
+   "us"
+  ]
+ },
+ "behaviors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "behaviour/NOUN": {
+  "reg": "neutral"
+ },
+ "being": {
+  "cls": [
+   "be",
+   "ing"
+  ]
+ },
+ "believe": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "believe me": {
+  "reg": "informal"
+ },
+ "believes": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "best of the best": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "big": {
+  "reg": "neutral"
+ },
+ "binary/ADJ": {
+  "reg": "technical"
+ },
+ "binary/NOUN": {
+  "reg": "technical"
+ },
+ "boast": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "boasts": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "boil": {
+  "reg": "neutral"
+ },
+ "boil down": {
+  "reg": "informal"
+ },
+ "boring": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "boring/ADJ": {
+  "reg": "neutral"
+ },
+ "bother": {
+  "reg": "informal"
+ },
+ "breathtaking": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "bridge": {
+  "reg": "neutral"
+ },
+ "broader": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "buckle up": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "build": {
+  "reg": "neutral"
+ },
+ "bustling": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "but": {
+  "rel": "contrast"
+ },
+ "by": {
+  "cls": [
+   "agent"
+  ]
+ },
+ "by contrast": {
+  "rel": "contrast"
+ },
+ "can't": {
+  "rel": "neg"
+ },
+ "cannot": {
+  "rel": "neg"
+ },
+ "capability/NOUN": {
+  "reg": "neutral"
+ },
+ "capable": {
+  "reg": "neutral"
+ },
+ "captivate": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "captivates": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "captivating": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "care": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "career": {
+  "reg": "neutral"
+ },
+ "carried": {
+  "cls": [
+   "light"
+  ]
+ },
+ "carries": {
+  "cls": [
+   "light"
+  ]
+ },
+ "carry": {
+  "cls": [
+   "light"
+  ]
+ },
+ "catalog": {
+  "cls": [
+   "us"
+  ]
+ },
+ "catalyst": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "celebrate": {
+  "cls": [
+   "animate",
+   "attribution"
+  ]
+ },
+ "celebrated": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "celebrates": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "center": {
+  "cls": [
+   "us"
+  ]
+ },
+ "centered": {
+  "cls": [
+   "us"
+  ]
+ },
+ "centers": {
+  "cls": [
+   "us"
+  ]
+ },
+ "central": {
+  "reg": "neutral"
+ },
+ "certainly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "change/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "change/VERB": {
+  "reg": "neutral"
+ },
+ "chapter": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "characterise": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "characterised": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "characterize": {
+  "cls": [
+   "us",
+   "attribution"
+  ]
+ },
+ "characterized": {
+  "cls": [
+   "us",
+   "attribution"
+  ]
+ },
+ "charm": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "chart": {
+  "reg": "formal"
+ },
+ "charting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "civilization": {
+  "cls": [
+   "us"
+  ]
+ },
+ "claim": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "claims": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "climate": {
+  "reg": "formal"
+ },
+ "code": {
+  "reg": "technical"
+ },
+ "collaboration/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "colleague/NOUN": {
+  "reg": "neutral"
+ },
+ "color": {
+  "cls": [
+   "us"
+  ]
+ },
+ "colored": {
+  "cls": [
+   "us"
+  ]
+ },
+ "colors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "commendable": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "community": {
+  "reg": "neutral"
+ },
+ "completely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "compromise": {
+  "reg": "neutral"
+ },
+ "concrete/ADJ": {
+  "reg": "neutral"
+ },
+ "conduct": {
+  "cls": [
+   "light"
+  ]
+ },
+ "conducted": {
+  "cls": [
+   "light"
+  ]
+ },
+ "conducts": {
+  "cls": [
+   "light"
+  ]
+ },
+ "consequently": {
+  "rel": "cause"
+ },
+ "consider": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "considered": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "construct/NOUN": {
+  "reg": "technical"
+ },
+ "contribution": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "contributions": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "conversely": {
+  "rel": "contrast"
+ },
+ "cool/ADJ": {
+  "reg": "informal"
+ },
+ "cornerstone": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "couldn't": {
+  "rel": "neg"
+ },
+ "counterfactual/NOUN": {
+  "reg": "technical"
+ },
+ "craft/NOUN": {
+  "reg": "neutral"
+ },
+ "crazed/ADJ": {
+  "reg": "informal"
+ },
+ "crazier": {
+  "reg": "informal"
+ },
+ "crazy": {
+  "reg": "informal"
+ },
+ "crazyyy/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "credit": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "credited": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "crisis": {
+  "reg": "neutral"
+ },
+ "critical": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "criticize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "critics argue": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "critics say": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "crucial": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "crucially": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "curiosity/NOUN": {
+  "reg": "neutral"
+ },
+ "cutting-edge": {
+  "cls": [
+   "buzz",
+   "hype"
+  ]
+ },
+ "daily": {
+  "reg": "neutral"
+ },
+ "daunting": {
+  "cls": [
+   "ing"
+  ],
+  "reg": "formal"
+ },
+ "decide": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "decides": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "deep/ADJ": {
+  "reg": "neutral"
+ },
+ "deep/ADV": {
+  "reg": "neutral"
+ },
+ "deeply": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "defense": {
+  "cls": [
+   "nominal",
+   "us"
+  ],
+  "reg": "neutral"
+ },
+ "delighted": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "delve": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "delve/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "formal"
+ },
+ "delved": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "delves": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "delving": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "demographics/NOUN": {
+  "reg": "formal"
+ },
+ "demonstrate": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "demonstrates": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "demonstration": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "formal"
+ },
+ "depth/NOUN": {
+  "reg": "neutral"
+ },
+ "describe": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "described": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "design/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "designing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "despite": {
+  "rel": "concession"
+ },
+ "detail/NOUN": {
+  "reg": "neutral"
+ },
+ "develop/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "developer": {
+  "reg": "neutral"
+ },
+ "developing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "development/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "did": {
+  "cls": [
+   "light"
+  ]
+ },
+ "didn't": {
+  "rel": "neg"
+ },
+ "dig": {
+  "reg": "informal"
+ },
+ "dig into": {
+  "reg": "informal"
+ },
+ "discussion": {
+  "reg": "neutral"
+ },
+ "disruptive": {
+  "cls": [
+   "buzz"
+  ],
+  "reg": "formal"
+ },
+ "dive deeper": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "dive in": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "dive into": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "dive/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "do": {
+  "cls": [
+   "light"
+  ],
+  "reg": "neutral"
+ },
+ "does": {
+  "cls": [
+   "light"
+  ]
+ },
+ "doesn't": {
+  "rel": "neg"
+ },
+ "domain/NOUN": {
+  "reg": "neutral"
+ },
+ "don't": {
+  "rel": "neg"
+ },
+ "done": {
+  "cls": [
+   "light"
+  ]
+ },
+ "down/ADV": {
+  "reg": "neutral"
+ },
+ "downstream": {
+  "reg": "technical"
+ },
+ "dream": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "dreams": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "dynamical/ADJ": {
+  "reg": "technical"
+ },
+ "eager": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "earlier": {
+  "rel": "callback"
+ },
+ "easy/ADJ": {
+  "reg": "neutral"
+ },
+ "ecosystem": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "ecosystem/NOUN": {
+  "reg": "neutral"
+ },
+ "effect": {
+  "reg": "neutral"
+ },
+ "effort": {
+  "reg": "neutral"
+ },
+ "ego-driven": {
+  "reg": "informal"
+ },
+ "ego/NOUN": {
+  "reg": "neutral"
+ },
+ "elegance": {
+  "reg": "neutral"
+ },
+ "elegant": {
+  "reg": "neutral"
+ },
+ "element": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "elements": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "elevate": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "elevates": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "embark": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "embarks": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "embodies": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "embody": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "embrace": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "embraces": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "emerging": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "emphasise": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "emphasises": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "emphasize": {
+  "cls": [
+   "us",
+   "animate"
+  ]
+ },
+ "emphasizes": {
+  "cls": [
+   "us",
+   "animate"
+  ]
+ },
+ "empower": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "empowering": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "empowers": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "endeavor": {
+  "cls": [
+   "buzz",
+   "us"
+  ]
+ },
+ "endeavour": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "endeavours": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "enduring": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "engineering": {
+  "cls": [
+   "ing"
+  ],
+  "reg": "technical"
+ },
+ "enjoy": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "enjoy/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "enjoys": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "enter": {
+  "reg": "neutral"
+ },
+ "entering": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "enthusiasm/NOUN": {
+  "reg": "neutral"
+ },
+ "entire": {
+  "reg": "neutral"
+ },
+ "entirely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "era": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "era/NOUN": {
+  "reg": "neutral"
+ },
+ "esoteric/ADJ": {
+  "reg": "formal"
+ },
+ "essential": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "even": {
+  "reg": "neutral",
+  "rel": "concession"
+ },
+ "eventually": {
+  "reg": "neutral"
+ },
+ "ever": {
+  "reg": "neutral"
+ },
+ "ever-changing": {
+  "cls": [
+   "buzz",
+   "scope"
+  ]
+ },
+ "ever-evolving": {
+  "cls": [
+   "buzz",
+   "scope"
+  ]
+ },
+ "evolution": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "evolving": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "examine": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "examines": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "example/NOUN": {
+  "reg": "neutral"
+ },
+ "exceedingly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "formal"
+ },
+ "exceptional": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "exceptionally": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "excited": {
+  "cls": [
+   "hype"
+  ],
+  "reg": "neutral"
+ },
+ "exciting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "exciting/ADJ": {
+  "reg": "neutral"
+ },
+ "exemplifies": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "exemplify": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "existential": {
+  "reg": "formal"
+ },
+ "expand/VERB": {
+  "reg": "neutral"
+ },
+ "expanding": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "experiment/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "experiment/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "experimenting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "expert/NOUN": {
+  "reg": "neutral"
+ },
+ "expertise/NOUN": {
+  "reg": "formal"
+ },
+ "experts believe": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "experts say": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "explain/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "exploit/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "exploiting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "exploration": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "explore": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "explores": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "expose/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "exposing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "extremely": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "extremely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "face": {
+  "reg": "neutral"
+ },
+ "facing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "factor": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "factors": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "far": {
+  "reg": "neutral"
+ },
+ "far more than": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "favor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "favorite": {
+  "cls": [
+   "us"
+  ]
+ },
+ "favors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "fear": {
+  "reg": "neutral"
+ },
+ "feature": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "features": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "feel": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "few": {
+  "reg": "neutral"
+ },
+ "fiber": {
+  "cls": [
+   "us"
+  ]
+ },
+ "fibers": {
+  "cls": [
+   "us"
+  ]
+ },
+ "field": {
+  "reg": "neutral"
+ },
+ "first and foremost": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "flavor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "flavors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "foot/NOUN": {
+  "reg": "neutral"
+ },
+ "for the sake of": {
+  "reg": "formal"
+ },
+ "force": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "form/NOUN": {
+  "reg": "neutral"
+ },
+ "formal/ADJ": {
+  "reg": "technical"
+ },
+ "formalize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "formalized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "forward/ADV": {
+  "reg": "neutral"
+ },
+ "foster": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "fostered": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "fostering": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "fosters": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "free/VERB": {
+  "reg": "neutral"
+ },
+ "frontier/NOUN": {
+  "reg": "formal"
+ },
+ "fuck": {
+  "reg": "informal"
+ },
+ "fucking": {
+  "cls": [
+   "ing",
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "fulfill": {
+  "cls": [
+   "us"
+  ]
+ },
+ "fun": {
+  "reg": "neutral"
+ },
+ "functional": {
+  "reg": "neutral"
+ },
+ "fundamental": {
+  "cls": [
+   "significance",
+   "scope"
+  ]
+ },
+ "furthermore": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "future": {
+  "reg": "neutral"
+ },
+ "game-changer": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "game-changing": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "garner": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "garnered": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "gave": {
+  "cls": [
+   "light"
+  ]
+ },
+ "general": {
+  "reg": "neutral"
+ },
+ "generate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "generating": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "genuinely": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "genuinely/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "get": {
+  "reg": "neutral"
+ },
+ "get at": {
+  "reg": "informal"
+ },
+ "get to": {
+  "reg": "informal"
+ },
+ "getting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "give": {
+  "cls": [
+   "light"
+  ],
+  "reg": "neutral"
+ },
+ "given": {
+  "cls": [
+   "light"
+  ]
+ },
+ "given/ADP": {
+  "reg": "formal"
+ },
+ "gives": {
+  "cls": [
+   "light"
+  ]
+ },
+ "global": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "go": {
+  "reg": "neutral"
+ },
+ "going": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "good": {
+  "reg": "neutral"
+ },
+ "grail": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "graph/NOUN": {
+  "reg": "technical"
+ },
+ "gray": {
+  "cls": [
+   "us"
+  ]
+ },
+ "great question": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "groundbreaking": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "growing": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "guru": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "hacky": {
+  "reg": "informal"
+ },
+ "had": {
+  "cls": [
+   "light"
+  ]
+ },
+ "hail": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "hailed": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "handle": {
+  "reg": "neutral"
+ },
+ "handling": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "harmonize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "harness": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "harnessing": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "has": {
+  "cls": [
+   "light"
+  ]
+ },
+ "has been described": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "hasn't": {
+  "rel": "neg"
+ },
+ "have": {
+  "cls": [
+   "light"
+  ]
+ },
+ "have fun": {
+  "reg": "informal"
+ },
+ "have to": {
+  "cls": [
+   "deontic"
+  ]
+ },
+ "have/VERB": {
+  "reg": "neutral"
+ },
+ "haven't": {
+  "rel": "neg"
+ },
+ "he's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "heck": {
+  "reg": "informal"
+ },
+ "help/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "hence": {
+  "rel": "cause"
+ },
+ "here": {
+  "reg": "neutral"
+ },
+ "here's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "highlight": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "highlights": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "highly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "hold/VERB": {
+  "reg": "neutral"
+ },
+ "holistic": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "honest": {
+  "reg": "neutral"
+ },
+ "honor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "honored": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "honors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "honoured": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "hope": {
+  "cls": [
+   "animate"
+  ],
+  "rel": "hedge"
+ },
+ "hopes": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "how": {
+  "cls": [
+   "wh"
+  ]
+ },
+ "however": {
+  "rel": "contrast"
+ },
+ "hub": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "human": {
+  "reg": "neutral"
+ },
+ "humor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "hundred/NOUN": {
+  "reg": "neutral"
+ },
+ "hybridize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "hybridized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "i hope this helps": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "i'm": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "idea": {
+  "reg": "neutral"
+ },
+ "illustrate": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "illustrates": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "immensely": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "impact": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "importance": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "important": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "improve/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "improving": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "in an era": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in conclusion": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in contrast": {
+  "rel": "contrast"
+ },
+ "in effect": {
+  "rel": "cause"
+ },
+ "in essence": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in general": {
+  "reg": "neutral"
+ },
+ "in terms of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "in the ever": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in the realm of": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in the world of": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in today's": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "in today's world": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "inception": {
+  "reg": "formal"
+ },
+ "incomplete": {
+  "reg": "neutral"
+ },
+ "increasing": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "increasingly": {
+  "reg": "neutral"
+ },
+ "incredible": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "incredibly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "incredibly/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "indeed": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "indispensable": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "influence": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "insight": {
+  "reg": "neutral"
+ },
+ "insightful": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "insist": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "insists": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "instantiation/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "instead": {
+  "rel": "contrast"
+ },
+ "instead/ADV": {
+  "reg": "neutral"
+ },
+ "intellectual/ADJ": {
+  "reg": "formal"
+ },
+ "intelligence": {
+  "reg": "neutral"
+ },
+ "intent/NOUN": {
+  "reg": "neutral"
+ },
+ "interface/NOUN": {
+  "reg": "technical"
+ },
+ "internal/NOUN": {
+  "reg": "technical"
+ },
+ "interplay": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "interpreted/ADJ": {
+  "reg": "technical"
+ },
+ "intricacies": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "intricate": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "intriguing": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "invaluable": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "investigate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "invite": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "invites": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "is": {
+  "cls": [
+   "be"
+  ]
+ },
+ "is not merely": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "is often described": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "isn't": {
+  "cls": [
+   "fusedbe"
+  ],
+  "rel": "neg"
+ },
+ "isn't just": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "it goes without saying": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it has been said": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "it is clear that": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "it is crucial to": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it is important to note": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it is often said": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "it is widely": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "it is worth noting": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it should be noted": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "it's important to note": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "it's worth noting": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "iterate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "jagged/ADJ": {
+  "reg": "neutral"
+ },
+ "jewelry": {
+  "cls": [
+   "us"
+  ]
+ },
+ "journey": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "joy/NOUN": {
+  "reg": "neutral"
+ },
+ "juncture": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "junior": {
+  "reg": "neutral"
+ },
+ "just/ADV": {
+  "reg": "neutral"
+ },
+ "kernel": {
+  "reg": "technical"
+ },
+ "key": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "kind": {
+  "reg": "neutral"
+ },
+ "know": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "knowledge/NOUN": {
+  "reg": "neutral"
+ },
+ "knows": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "labeled": {
+  "cls": [
+   "us"
+  ]
+ },
+ "labor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "labors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "lack/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "lack/VERB": {
+  "reg": "neutral"
+ },
+ "landscape": {
+  "cls": [
+   "buzz",
+   "trend"
+  ]
+ },
+ "landscapes": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "language": {
+  "reg": "neutral"
+ },
+ "language model": {
+  "reg": "technical"
+ },
+ "larger": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "legacy": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "let": {
+  "reg": "neutral"
+ },
+ "let us": {
+  "cls": [
+   "throat",
+   "deontic"
+  ]
+ },
+ "let you in on": {
+  "reg": "informal"
+ },
+ "let's": {
+  "cls": [
+   "throat",
+   "deontic"
+  ]
+ },
+ "level/NOUN": {
+  "reg": "neutral"
+ },
+ "leverage": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "leverages": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "leveraging": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "license": {
+  "cls": [
+   "us"
+  ]
+ },
+ "like": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "limitation/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "line/NOUN": {
+  "reg": "neutral"
+ },
+ "list": {
+  "reg": "neutral"
+ },
+ "literally": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "little": {
+  "reg": "neutral"
+ },
+ "lively": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "llm/NOUN": {
+  "reg": "technical"
+ },
+ "longer/ADV": {
+  "reg": "neutral"
+ },
+ "look no further": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "look/VERB": {
+  "reg": "neutral"
+ },
+ "looking": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "loss/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "lot/NOUN": {
+  "reg": "informal"
+ },
+ "made": {
+  "cls": [
+   "light"
+  ]
+ },
+ "mailing": {
+  "cls": [
+   "ing"
+  ],
+  "reg": "neutral"
+ },
+ "mailing list": {
+  "reg": "technical"
+ },
+ "majority": {
+  "reg": "neutral"
+ },
+ "make": {
+  "cls": [
+   "light"
+  ]
+ },
+ "make/VERB": {
+  "reg": "neutral"
+ },
+ "makes": {
+  "cls": [
+   "light"
+  ]
+ },
+ "making": {
+  "cls": [
+   "light"
+  ]
+ },
+ "manage/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "managing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "many argue": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "many believe": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "match/VERB": {
+  "reg": "neutral"
+ },
+ "matters": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "maximize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "maybe": {
+  "reg": "informal"
+ },
+ "mean": {
+  "reg": "neutral"
+ },
+ "mechanised/ADJ": {
+  "reg": "technical"
+ },
+ "meticulous": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "meticulously": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "milestone": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "milestones": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "minimize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "mix": {
+  "reg": "neutral"
+ },
+ "model": {
+  "reg": "technical"
+ },
+ "modeling": {
+  "cls": [
+   "us"
+  ]
+ },
+ "moment": {
+  "cls": [
+   "vague"
+  ],
+  "reg": "neutral"
+ },
+ "moments": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "momentum": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "month/NOUN": {
+  "reg": "neutral"
+ },
+ "monumental": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "more": {
+  "reg": "neutral"
+ },
+ "more than": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "more than able": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "moreover": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "motivation": {
+  "reg": "neutral"
+ },
+ "movement": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "movements": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "much more than": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "much/ADV": {
+  "reg": "neutral"
+ },
+ "multifaceted": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "must": {
+  "cls": [
+   "deontic"
+  ]
+ },
+ "must-have": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "navigate": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "navigates": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "navigating": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "need": {
+  "cls": [
+   "deontic"
+  ],
+  "reg": "neutral"
+ },
+ "need to": {
+  "cls": [
+   "deontic"
+  ],
+  "reg": "neutral"
+ },
+ "needless to say": {
+  "cls": [
+   "throat",
+   "filler"
+  ]
+ },
+ "needs to": {
+  "cls": [
+   "deontic"
+  ]
+ },
+ "negative": {
+  "reg": "neutral"
+ },
+ "neighbor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "neighbors": {
+  "cls": [
+   "us"
+  ]
+ },
+ "nestled": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "never": {
+  "rel": "neg"
+ },
+ "never-ending": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "never/ADV": {
+  "reg": "neutral"
+ },
+ "nevertheless": {
+  "rel": "contrast"
+ },
+ "new": {
+  "reg": "neutral"
+ },
+ "niche/ADJ": {
+  "reg": "neutral"
+ },
+ "ninja": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "no": {
+  "rel": "neg"
+ },
+ "no mere": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "noble": {
+  "reg": "formal"
+ },
+ "none": {
+  "rel": "neg"
+ },
+ "nonetheless": {
+  "rel": "contrast"
+ },
+ "nor": {
+  "rel": "neg"
+ },
+ "normalising": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "normalising/ADJ": {
+  "reg": "technical"
+ },
+ "not": {
+  "rel": "neg"
+ },
+ "not just": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "not merely": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "not only": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "notably": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "noteworthy": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "nothing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "nothing but": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "nothing short of": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "novel/ADJ": {
+  "reg": "neutral"
+ },
+ "now": {
+  "reg": "neutral"
+ },
+ "nuanced": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "obscure/ADJ": {
+  "reg": "neutral"
+ },
+ "observers note": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "obsolete": {
+  "reg": "neutral"
+ },
+ "offer": {
+  "cls": [
+   "light"
+  ]
+ },
+ "offered": {
+  "cls": [
+   "light"
+  ]
+ },
+ "offers": {
+  "cls": [
+   "light"
+  ]
+ },
+ "okay": {
+  "reg": "informal"
+ },
+ "on a daily basis": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "on the other hand": {
+  "rel": "contrast"
+ },
+ "ongoing": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "only": {
+  "rel": "focus"
+ },
+ "opinion": {
+  "reg": "neutral"
+ },
+ "optimize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "optimized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "optimizing": {
+  "cls": [
+   "us"
+  ]
+ },
+ "organization": {
+  "cls": [
+   "us"
+  ]
+ },
+ "organizations": {
+  "cls": [
+   "us"
+  ]
+ },
+ "organize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "organized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "other than": {
+  "reg": "neutral"
+ },
+ "other/ADJ": {
+  "reg": "neutral"
+ },
+ "ought": {
+  "cls": [
+   "deontic"
+  ]
+ },
+ "outstanding": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "overall ,": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "overwhelmingly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "pace/NOUN": {
+  "reg": "neutral"
+ },
+ "paradigm": {
+  "cls": [
+   "buzz",
+   "trend"
+  ]
+ },
+ "paramount": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "part": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "passionate": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "past/ADJ": {
+  "reg": "neutral"
+ },
+ "perceive": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "perceived": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "perform": {
+  "cls": [
+   "light"
+  ]
+ },
+ "performed": {
+  "cls": [
+   "light"
+  ]
+ },
+ "performs": {
+  "cls": [
+   "light"
+  ]
+ },
+ "perhaps": {
+  "rel": "hedge"
+ },
+ "pivotal": {
+  "cls": [
+   "significance",
+   "buzz"
+  ]
+ },
+ "place": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "play": {
+  "reg": "neutral"
+ },
+ "play a role": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "play around": {
+  "reg": "informal"
+ },
+ "played a role": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "player": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "plays a role": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "plentiful": {
+  "reg": "formal"
+ },
+ "point": {
+  "cls": [
+   "vague"
+  ],
+  "reg": "neutral"
+ },
+ "pop": {
+  "reg": "informal"
+ },
+ "pop up": {
+  "reg": "informal"
+ },
+ "popping": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "position": {
+  "cls": [
+   "vague"
+  ],
+  "reg": "neutral"
+ },
+ "positive": {
+  "reg": "neutral"
+ },
+ "possible/ADJ": {
+  "reg": "neutral"
+ },
+ "possibly": {
+  "rel": "hedge"
+ },
+ "potentially": {
+  "rel": "hedge"
+ },
+ "powerful": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "practical": {
+  "reg": "neutral"
+ },
+ "practicality": {
+  "reg": "formal"
+ },
+ "practice": {
+  "reg": "neutral"
+ },
+ "practicing": {
+  "cls": [
+   "ing",
+   "us"
+  ],
+  "reg": "neutral"
+ },
+ "praise": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "praised": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "premise": {
+  "reg": "formal"
+ },
+ "presence": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "present": {
+  "reg": "formal"
+ },
+ "presumption/NOUN": {
+  "reg": "formal"
+ },
+ "pretty": {
+  "reg": "neutral"
+ },
+ "previously": {
+  "rel": "callback"
+ },
+ "pride/NOUN": {
+  "reg": "neutral"
+ },
+ "principled": {
+  "reg": "formal"
+ },
+ "prioritize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "problem": {
+  "reg": "neutral"
+ },
+ "profound": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "profoundly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "program": {
+  "reg": "technical"
+ },
+ "programmer/NOUN": {
+  "reg": "neutral"
+ },
+ "programming": {
+  "cls": [
+   "ing"
+  ],
+  "reg": "technical"
+ },
+ "programming language": {
+  "reg": "technical"
+ },
+ "programming languages research": {
+  "reg": "technical"
+ },
+ "progress/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "project/NOUN": {
+  "reg": "neutral"
+ },
+ "promise": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "promises": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "prompting": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "prompting/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "proof/NOUN": {
+  "reg": "technical"
+ },
+ "property/NOUN": {
+  "reg": "neutral"
+ },
+ "prove/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "provide": {
+  "cls": [
+   "light"
+  ]
+ },
+ "provided": {
+  "cls": [
+   "light"
+  ]
+ },
+ "provides": {
+  "cls": [
+   "light"
+  ]
+ },
+ "proving": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "put": {
+  "reg": "neutral"
+ },
+ "put down": {
+  "reg": "informal"
+ },
+ "qualified/ADJ": {
+  "reg": "neutral"
+ },
+ "question": {
+  "reg": "neutral",
+  "rel": "question"
+ },
+ "questioning": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "quickly": {
+  "reg": "neutral"
+ },
+ "rather": {
+  "rel": "contrast"
+ },
+ "real/ADJ": {
+  "reg": "neutral"
+ },
+ "reality/NOUN": {
+  "reg": "neutral"
+ },
+ "realize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "realized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "realizes": {
+  "cls": [
+   "us"
+  ]
+ },
+ "really": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "really/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "realm": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "realms": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "recall": {
+  "rel": "callback"
+ },
+ "recent": {
+  "reg": "neutral"
+ },
+ "recognise": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "recognises": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "recognizable": {
+  "cls": [
+   "us"
+  ]
+ },
+ "recognize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "recognized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "redefine": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "redefines": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "reel": {
+  "reg": "formal"
+ },
+ "reeling": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "reflect": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "reflects": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "refuse": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "refuses": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "regard": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "regarded": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "reimagine": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "remarkable": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "remarkably": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "remind": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "reminds": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "renowned": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "research": {
+  "reg": "neutral"
+ },
+ "researcher": {
+  "reg": "neutral"
+ },
+ "researchers suggest": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "resonate": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "resonates": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "result": {
+  "reg": "neutral"
+ },
+ "reveal": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "reveals": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "revolution": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "revolutionary": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "revolutionise": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "revolutionize": {
+  "cls": [
+   "buzz",
+   "us"
+  ]
+ },
+ "right now": {
+  "reg": "informal"
+ },
+ "right/ADV": {
+  "reg": "neutral"
+ },
+ "rockstar": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "role": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "roles": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "rumor": {
+  "cls": [
+   "us"
+  ]
+ },
+ "run/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "running": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "saddle": {
+  "reg": "formal"
+ },
+ "sake": {
+  "reg": "formal"
+ },
+ "same": {
+  "reg": "neutral"
+ },
+ "say": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "scale/NOUN": {
+  "reg": "neutral"
+ },
+ "scholars note": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "science/NOUN": {
+  "reg": "neutral"
+ },
+ "scientist/NOUN": {
+  "reg": "neutral"
+ },
+ "seamless": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "seamlessly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "search/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "second to none": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "secret": {
+  "reg": "neutral"
+ },
+ "see": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "see/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "seek": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "seeks": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "seem": {
+  "rel": "hedge"
+ },
+ "seem/VERB": {
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "seemingly": {
+  "rel": "hedge"
+ },
+ "seems": {
+  "rel": "hedge"
+ },
+ "seen": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "seismic": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "semantics/NOUN": {
+  "reg": "technical"
+ },
+ "sense/NOUN": {
+  "reg": "neutral"
+ },
+ "serve": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "serves": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "serves as a reminder": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "set/VERB": {
+  "reg": "neutral"
+ },
+ "settle": {
+  "reg": "neutral"
+ },
+ "settle for": {
+  "reg": "neutral"
+ },
+ "she's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "shift": {
+  "cls": [
+   "vague",
+   "trend"
+  ],
+  "reg": "neutral"
+ },
+ "shifts": {
+  "cls": [
+   "vague",
+   "trend"
+  ]
+ },
+ "short/ADJ": {
+  "reg": "neutral"
+ },
+ "should": {
+  "cls": [
+   "deontic"
+  ]
+ },
+ "shouldn't": {
+  "rel": "neg"
+ },
+ "showcase": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "showcased": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "showcases": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "showcasing": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "significance": {
+  "cls": [
+   "significance",
+   "vague"
+  ]
+ },
+ "significant": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "similar/ADJ": {
+  "reg": "neutral"
+ },
+ "simply": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "since": {
+  "rel": "cause"
+ },
+ "singlehandedly/ADV": {
+  "reg": "informal"
+ },
+ "sit/VERB": {
+  "reg": "neutral"
+ },
+ "slightly": {
+  "reg": "neutral"
+ },
+ "slowly/ADV": {
+  "reg": "neutral"
+ },
+ "smart/ADJ": {
+  "reg": "neutral"
+ },
+ "so ,": {
+  "rel": "cause"
+ },
+ "so much more": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "so what": {
+  "reg": "informal"
+ },
+ "so/ADV": {
+  "reg": "neutral"
+ },
+ "software": {
+  "reg": "technical"
+ },
+ "software engineering": {
+  "reg": "technical"
+ },
+ "solver/NOUN": {
+  "reg": "technical"
+ },
+ "some argue": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "some kind of": {
+  "reg": "informal"
+ },
+ "some say": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "something": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "soul/NOUN": {
+  "reg": "neutral"
+ },
+ "sound/ADJ": {
+  "reg": "technical"
+ },
+ "speak": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "speaks": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "specialize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "specialized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "speculate": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "formal"
+ },
+ "speculating": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "speed/NOUN": {
+  "reg": "neutral"
+ },
+ "stance": {
+  "reg": "formal"
+ },
+ "stand": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "standardize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "standardized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "stands": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "state-of-the-art": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "static": {
+  "reg": "technical"
+ },
+ "static analysis": {
+  "reg": "technical"
+ },
+ "step": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "step/NOUN": {
+  "reg": "neutral"
+ },
+ "step/VERB": {
+  "reg": "neutral"
+ },
+ "still": {
+  "reg": "neutral"
+ },
+ "streamline": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "streamlined": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "streamlines": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "strength/NOUN": {
+  "reg": "neutral"
+ },
+ "strictly/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "neutral"
+ },
+ "strive": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "strives": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "strongly/ADV": {
+  "reg": "neutral"
+ },
+ "student": {
+  "reg": "neutral"
+ },
+ "studies show": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "stuff/NOUN": {
+  "reg": "informal"
+ },
+ "stunning": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "such": {
+  "rel": "demonstrative"
+ },
+ "such/ADJ": {
+  "reg": "neutral"
+ },
+ "summarize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "sweeping": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "synchronization": {
+  "cls": [
+   "us"
+  ]
+ },
+ "synergies": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "synergy": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "system": {
+  "reg": "neutral"
+ },
+ "tackle": {
+  "reg": "neutral"
+ },
+ "take": {
+  "cls": [
+   "light"
+  ]
+ },
+ "take/VERB": {
+  "reg": "neutral"
+ },
+ "taken": {
+  "cls": [
+   "light"
+  ]
+ },
+ "takes": {
+  "cls": [
+   "light"
+  ]
+ },
+ "tapestry": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "task": {
+  "reg": "neutral"
+ },
+ "tedious/ADJ": {
+  "reg": "neutral"
+ },
+ "tell": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "tell/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "tells": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "test/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "testament": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "testament to": {
+  "cls": [
+   "inflation"
+  ]
+ },
+ "testing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "testing/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "that": {
+  "cls": [
+   "that"
+  ],
+  "rel": "demonstrative"
+ },
+ "that's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "the fact that": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "the heck": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "the importance of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "the power of": {
+  "cls": [
+   "filler"
+  ]
+ },
+ "then/ADV": {
+  "reg": "neutral"
+ },
+ "theoretical/ADJ": {
+  "reg": "neutral"
+ },
+ "theory": {
+  "reg": "neutral"
+ },
+ "there's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "there/ADV": {
+  "reg": "neutral"
+ },
+ "therefore": {
+  "rel": "cause"
+ },
+ "these": {
+  "rel": "demonstrative"
+ },
+ "they're": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "think": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral",
+  "rel": "hedge"
+ },
+ "thinks": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "this": {
+  "rel": "demonstrative"
+ },
+ "those": {
+  "rel": "demonstrative"
+ },
+ "though": {
+  "rel": "concession"
+ },
+ "thoughtful": {
+  "reg": "neutral"
+ },
+ "thousand/NOUN": {
+  "reg": "neutral"
+ },
+ "thread": {
+  "reg": "neutral"
+ },
+ "thrilled": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "thus": {
+  "rel": "cause"
+ },
+ "time": {
+  "reg": "neutral"
+ },
+ "to be honest": {
+  "reg": "informal"
+ },
+ "to sum up": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "today/NOUN": {
+  "reg": "neutral"
+ },
+ "toil/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "ton/NOUN": {
+  "reg": "informal"
+ },
+ "too/ADV": {
+  "reg": "neutral"
+ },
+ "took": {
+  "cls": [
+   "light"
+  ]
+ },
+ "tool": {
+  "reg": "neutral"
+ },
+ "tooling": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "tooling/NOUN": {
+  "reg": "technical"
+ },
+ "totally/ADV": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "tout": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "touted": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "transformation": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "transformative": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "transformative/ADJ": {
+  "reg": "neutral"
+ },
+ "traveling": {
+  "cls": [
+   "us"
+  ]
+ },
+ "trend": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "trends": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "tries": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "true": {
+  "reg": "neutral"
+ },
+ "truly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "try": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "trying": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "tumultuous": {
+  "reg": "formal"
+ },
+ "turning": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "type/NOUN": {
+  "reg": "technical"
+ },
+ "ultimate": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "ultimately ,": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "undeniably": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "undergo": {
+  "cls": [
+   "light"
+  ]
+ },
+ "undergoes": {
+  "cls": [
+   "light"
+  ]
+ },
+ "underpin": {
+  "reg": "formal"
+ },
+ "underpinning": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "underscore": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "underscored": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "underscores": {
+  "cls": [
+   "buzz",
+   "animate"
+  ]
+ },
+ "underscoring": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "understandable": {
+  "reg": "neutral"
+ },
+ "underwent": {
+  "cls": [
+   "light"
+  ]
+ },
+ "undoubtedly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "unify/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "unleash": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "unlike": {
+  "rel": "contrast"
+ },
+ "unlock": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "unlocking": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "unlocks": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "unmatched": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "unparalleled": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "unprecedented": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "unrivaled": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "unrivalled": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "unthinkable/ADJ": {
+  "reg": "neutral"
+ },
+ "upturn/VERB": {
+  "reg": "formal"
+ },
+ "use": {
+  "reg": "neutral"
+ },
+ "user": {
+  "reg": "neutral"
+ },
+ "using": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "utilize": {
+  "cls": [
+   "us"
+  ]
+ },
+ "utilized": {
+  "cls": [
+   "us"
+  ]
+ },
+ "utilizes": {
+  "cls": [
+   "us"
+  ]
+ },
+ "utterly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "validate/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "vast": {
+  "reg": "neutral"
+ },
+ "vastly": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "verification/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "technical"
+ },
+ "verify/VERB": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "technical"
+ },
+ "very": {
+  "cls": [
+   "intensifier"
+  ]
+ },
+ "vibrant": {
+  "cls": [
+   "buzz"
+  ]
+ },
+ "view": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "viewed": {
+  "cls": [
+   "attribution"
+  ]
+ },
+ "vision": {
+  "reg": "formal"
+ },
+ "vital": {
+  "cls": [
+   "significance"
+  ]
+ },
+ "wacky/ADJ": {
+  "reg": "informal"
+ },
+ "want": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "wants": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "was": {
+  "cls": [
+   "be"
+  ]
+ },
+ "wasn't": {
+  "cls": [
+   "fusedbe"
+  ],
+  "rel": "neg"
+ },
+ "watch": {
+  "reg": "neutral"
+ },
+ "watching": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "wave": {
+  "cls": [
+   "trend"
+  ]
+ },
+ "way": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "ways": {
+  "cls": [
+   "vague"
+  ]
+ },
+ "we're": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "weakness/NOUN": {
+  "reg": "neutral"
+ },
+ "wealth/NOUN": {
+  "reg": "neutral"
+ },
+ "welcome": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "welcomes": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "well": {
+  "reg": "formal"
+ },
+ "were": {
+  "cls": [
+   "be"
+  ]
+ },
+ "weren't": {
+  "cls": [
+   "fusedbe"
+  ],
+  "rel": "neg"
+ },
+ "what": {
+  "cls": [
+   "wh"
+  ]
+ },
+ "what's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "when it comes to": {
+  "cls": [
+   "throat"
+  ]
+ },
+ "where": {
+  "cls": [
+   "wh"
+  ]
+ },
+ "where's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "whereas": {
+  "rel": "contrast"
+ },
+ "which": {
+  "cls": [
+   "that"
+  ]
+ },
+ "while": {
+  "rel": "concession"
+ },
+ "whisper": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "whispers": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "who": {
+  "cls": [
+   "that"
+  ]
+ },
+ "who's": {
+  "cls": [
+   "fusedbe"
+  ]
+ },
+ "whole": {
+  "reg": "neutral"
+ },
+ "whom": {
+  "cls": [
+   "that"
+  ]
+ },
+ "whose": {
+  "cls": [
+   "that"
+  ]
+ },
+ "why": {
+  "cls": [
+   "wh"
+  ]
+ },
+ "why/ADV": {
+  "reg": "neutral"
+ },
+ "widely considered": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "widely regarded": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "widely seen": {
+  "cls": [
+   "weasel"
+  ]
+ },
+ "wider": {
+  "cls": [
+   "scope"
+  ]
+ },
+ "wild/ADJ": {
+  "reg": "neutral"
+ },
+ "wildly": {
+  "cls": [
+   "intensifier"
+  ],
+  "reg": "informal"
+ },
+ "witness": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "witnessed": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "witnesses": {
+  "cls": [
+   "animate"
+  ]
+ },
+ "won't": {
+  "rel": "neg"
+ },
+ "wonder": {
+  "rel": "question"
+ },
+ "work": {
+  "reg": "neutral"
+ },
+ "working": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "world-class": {
+  "cls": [
+   "hype"
+  ]
+ },
+ "worry": {
+  "cls": [
+   "animate"
+  ],
+  "reg": "neutral"
+ },
+ "worrying": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "wouldn't": {
+  "rel": "neg"
+ },
+ "wouldn't be too far to say": {
+  "reg": "informal",
+  "rel": "hedge"
+ },
+ "write": {
+  "reg": "neutral"
+ },
+ "writing": {
+  "cls": [
+   "ing"
+  ]
+ },
+ "writing/NOUN": {
+  "cls": [
+   "nominal"
+  ],
+  "reg": "neutral"
+ },
+ "year/NOUN": {
+  "reg": "neutral"
+ },
+ "yet": {
+  "rel": "contrast"
+ },
+ "you're": {
+  "cls": [
+   "fusedbe"
+  ]
+ }
+}

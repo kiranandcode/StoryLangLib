@@ -1,0 +1,4 @@
+entity worry abstract it "the worry just stated (humans won't write programs)" of=para:7
+topic t1 "so what?" worry
+(FRAG%t1 Okay/INTJ.head ?/PUNCT)
+(FRAG%t1 So/ADV.advmod~degree what/PRON.head ?/PUNCT)

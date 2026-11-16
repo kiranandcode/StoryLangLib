@@ -1,0 +1,705 @@
+{
+ "title": "Bloom filters debunked (Kiran's blog, 2020)",
+ "kind": "essay",
+ "characters": [
+  {
+   "id": "authors",
+   "name": "Kiran (I, we: the authors)",
+   "pron": "she",
+   "traits": [
+    "confident",
+    "honest",
+    "skeptical"
+   ],
+   "values": [
+    "curiosity",
+    "honesty",
+    "pride"
+   ]
+  },
+  {
+   "id": "reader",
+   "name": "the reader (you)",
+   "pron": "they",
+   "traits": [
+    "openMinded"
+   ],
+   "values": [
+    "curiosity",
+    "safety"
+   ]
+  },
+  {
+   "id": "bloom",
+   "name": "Burton Howard Bloom",
+   "pron": "he",
+   "traits": [
+    "confident"
+   ],
+   "values": [
+    "curiosity"
+   ]
+  },
+  {
+   "id": "bose",
+   "name": "Bose et al.",
+   "pron": "they",
+   "traits": [
+    "skeptical"
+   ],
+   "values": [
+    "curiosity",
+    "honesty"
+   ]
+  },
+  {
+   "id": "critics",
+   "name": "the researchers who found errors in Bose et al.",
+   "pron": "they",
+   "traits": [
+    "skeptical"
+   ],
+   "values": [
+    "honesty"
+   ]
+  },
+  {
+   "id": "practitioners",
+   "name": "the people who use and cite Bloom filters",
+   "pron": "they",
+   "traits": [
+    "gullible"
+   ],
+   "values": [
+    "safety"
+   ]
+  },
+  {
+   "id": "commenter",
+   "name": "a Hacker News commenter",
+   "pron": "they",
+   "traits": [
+    "skeptical"
+   ],
+   "values": [
+    "honesty"
+   ]
+  },
+  {
+   "id": "reviewers",
+   "name": "the reviewers of the first version",
+   "pron": "they",
+   "traits": [
+    "skeptical"
+   ],
+   "values": [
+    "honesty"
+   ]
+  }
+ ],
+ "places": [
+  {
+   "id": "post",
+   "kind": "blog post",
+   "desc": "the essay itself: where the author addresses the reader and recounts the literature",
+   "words": [
+    "post",
+    "article"
+   ]
+  },
+  {
+   "id": "literature",
+   "kind": "the published literature",
+   "desc": "where Bloom (1970), Bose et al. (2008), their critics and the reviewers made their moves; they publish to the post's readers but do not overhear it",
+   "words": [
+    "literature",
+    "paper"
+   ]
+  }
+ ],
+ "objects": [],
+ "atoms": [
+  {
+   "id": "warnUser",
+   "label": "browsers warn the user before they navigate to a malicious URL",
+   "truth": true
+  },
+  {
+   "id": "storeInfeasible",
+   "label": "storing the whole database of malicious URLs locally is infeasible for most users",
+   "truth": true
+  },
+  {
+   "id": "sendLeaks",
+   "label": "sending every visited URL to an external service exposes the user's browsing",
+   "truth": true
+  },
+  {
+   "id": "proxy",
+   "label": "browsers use a Bloom filter as a local proxy for queries to the external database",
+   "truth": true
+  },
+  {
+   "id": "noFalseNeg",
+   "label": "a Bloom filter has no false negatives",
+   "truth": true
+  },
+  {
+   "id": "lowFpr",
+   "label": "a Bloom filter has a low false positive rate",
+   "truth": true
+  },
+  {
+   "id": "bloomFormula",
+   "label": "the widely cited expression (1 - (1 - 1/m)^(kn))^k is the false positive rate of a Bloom filter",
+   "truth": false
+  },
+  {
+   "id": "contention",
+   "label": "the Bloom filter's behaviour has been the subject of 30 years of contention and corrections",
+   "truth": true
+  },
+  {
+   "id": "certified",
+   "label": "the authors have a certified (Coq/Rocq) proof of the false positive rate of a Bloom filter",
+   "truth": true
+  },
+  {
+   "id": "falsePos",
+   "label": "a query can return a positive result for a value never inserted (false positives are possible)",
+   "truth": true
+  },
+  {
+   "id": "hashRandom",
+   "label": "the hash functions and their outputs are modelled as random and independent",
+   "truth": true
+  },
+  {
+   "id": "singleBit",
+   "label": "the probability that a given bit is raised after n insertions is 1 - (1 - 1/m)^(kn)",
+   "truth": true
+  },
+  {
+   "id": "bitsIndependent",
+   "label": "the k bits a query checks are independent of one another",
+   "truth": false
+  },
+  {
+   "id": "hashesDistinct",
+   "label": "the k bits the hash functions select are always distinct",
+   "truth": false
+  },
+  {
+   "id": "boseFormula",
+   "label": "Bose et al.'s balls-into-bins expression is the false positive rate",
+   "truth": true
+  },
+  {
+   "id": "boseDerivationSound",
+   "label": "Bose et al.'s derivation is free of errors",
+   "truth": false
+  },
+  {
+   "id": "noFurtherErrors",
+   "label": "no further errors will be found in the certified derivation",
+   "truth": true
+  },
+  {
+   "id": "novelStructures",
+   "label": "the mechanisation yielded a few novel data structures",
+   "truth": true
+  },
+  {
+   "id": "hashedUrls",
+   "label": "in practice browsers send a hash of the URL, not the URL itself",
+   "truth": true
+  },
+  {
+   "id": "asymptoticOk",
+   "label": "the asymptotic behaviour of Bloom's bound agrees with the corrected expression",
+   "truth": true
+  },
+  {
+   "id": "bloomRejected",
+   "label": "the first version of the authors' work was rejected by reviewers who rediscovered Bose et al.'s error",
+   "truth": true
+  },
+  {
+   "id": "bloomErr",
+   "label": "Bloom himself introduced the error in the derivation presented as his",
+   "truth": false,
+   "who": [
+    "bloom"
+   ]
+  }
+ ],
+ "lore": [
+  {
+   "if": [
+    "bitsIndependent",
+    "singleBit"
+   ],
+   "then": "bloomFormula"
+  },
+  {
+   "if": [
+    "certified"
+   ],
+   "then": "boseFormula"
+  },
+  {
+   "if": [
+    "proxy",
+    "noFalseNeg",
+    "lowFpr"
+   ],
+   "then": "warnUser"
+  }
+ ],
+ "start": {
+  "at": {
+   "authors": "post",
+   "reader": "post",
+   "bloom": "literature",
+   "bose": "literature",
+   "critics": "literature",
+   "practitioners": "post",
+   "commenter": "post",
+   "reviewers": "literature"
+  },
+  "knows": {
+   "authors": [
+    "warnUser",
+    "storeInfeasible",
+    "sendLeaks",
+    "proxy",
+    "noFalseNeg",
+    "lowFpr",
+    "!bloomFormula",
+    "contention",
+    "certified",
+    "falsePos",
+    "hashRandom",
+    "singleBit",
+    "!bitsIndependent",
+    "!hashesDistinct",
+    "boseFormula",
+    "!boseDerivationSound",
+    "noFurtherErrors",
+    "novelStructures",
+    "hashedUrls",
+    "asymptoticOk",
+    "bloomRejected",
+    "!bloomErr"
+   ],
+   "bloom": [
+    "singleBit",
+    "hashRandom",
+    "bloomFormula@3:inferred",
+    "bitsIndependent@3:assumed"
+   ],
+   "practitioners": [
+    "noFalseNeg",
+    "bloomFormula@2:told:bloom"
+   ],
+   "bose": [
+    "!bloomFormula",
+    "!bitsIndependent",
+    "boseFormula@3:inferred"
+   ],
+   "critics": [
+    "!boseDerivationSound"
+   ],
+   "commenter": [
+    "hashesDistinct@2:told:bloom"
+   ],
+   "reviewers": [
+    "!boseDerivationSound"
+   ],
+   "reader": [
+    "bloomFormula@1:rumour"
+   ]
+  },
+  "bonds": {
+   "reader>authors": {
+    "trust": 2
+   }
+  }
+ },
+ "pov": "authors",
+ "beats": {
+  "conds": [
+   "motivateDone",
+   "thesisDone",
+   "defineDone",
+   "deriveDone",
+   "refuteDone",
+   "correctDone",
+   "certifyDone",
+   "moreDone",
+   "notesDone"
+  ],
+  "init": [],
+  "vocab": [
+   {
+    "id": "motivate",
+    "label": "Browsers protect privacy with a Bloom filter as a local proxy",
+    "add": [
+     "motivateDone"
+    ],
+    "keys": [
+     "tell authors reader proxy"
+    ]
+   },
+   {
+    "id": "thesis",
+    "label": "The widely cited false positive rate is wrong; we certified the true one",
+    "add": [
+     "thesisDone"
+    ],
+    "keys": [
+     "tell authors reader !bloomFormula"
+    ],
+    "pre": [
+     "motivateDone"
+    ]
+   },
+   {
+    "id": "define",
+    "label": "What a Bloom filter is: no false negatives, but false positives",
+    "add": [
+     "defineDone"
+    ],
+    "keys": [
+     "tell authors reader falsePos"
+    ],
+    "pre": [
+     "thesisDone"
+    ]
+   },
+   {
+    "id": "derive",
+    "label": "Bloom's derivation, step by step: the single-bit probability is right",
+    "add": [
+     "deriveDone"
+    ],
+    "keys": [
+     "tell authors reader singleBit"
+    ],
+    "pre": [
+     "defineDone"
+    ]
+   },
+   {
+    "id": "refute",
+    "label": "The bits are not independent, so the final step fails",
+    "add": [
+     "refuteDone"
+    ],
+    "keys": [
+     "tell authors reader !bitsIndependent"
+    ],
+    "pre": [
+     "deriveDone"
+    ]
+   },
+   {
+    "id": "correct",
+    "label": "Bose et al. notice the error and correct it, with errors of their own",
+    "add": [
+     "correctDone"
+    ],
+    "keys": [
+     "notice bose !bloomFormula inferred"
+    ],
+    "pre": [
+     "refuteDone"
+    ]
+   },
+   {
+    "id": "certify",
+    "label": "Ceramist certifies the corrected bound from first principles",
+    "add": [
+     "certifyDone"
+    ],
+    "keys": [
+     "tell authors reader noFurtherErrors"
+    ],
+    "pre": [
+     "correctDone"
+    ]
+   },
+   {
+    "id": "more",
+    "label": "What the post leaves out, and where to read more",
+    "add": [
+     "moreDone"
+    ],
+    "keys": [
+     "tell authors reader novelStructures"
+    ],
+    "pre": [
+     "certifyDone"
+    ]
+   },
+   {
+    "id": "notes",
+    "label": "Footnotes: caveats and concessions",
+    "add": [
+     "notesDone"
+    ],
+    "keys": [
+     "tell authors reader hashedUrls"
+    ],
+    "pre": [
+     "moreDone"
+    ]
+   }
+  ],
+  "story": [
+   "motivate",
+   "thesis",
+   "define",
+   "derive",
+   "refute",
+   "correct",
+   "certify",
+   "more",
+   "notes"
+  ]
+ },
+ "outline": [
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "motivate",
+   "brief": "Safe browsing must check URLs without storing the database or leaking history; browsers use a Bloom filter as a local proxy, relying on no false negatives and a low false positive rate."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "thesis",
+   "brief": "The widely cited false positive rate is wrong; 30 years of corrections; we certified the true rate in Coq/Rocq; the questions the post answers; where the paper and code are."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "define",
+   "brief": "A Bloom filter is a bit-vector and k hash functions; insertion and query; why there are no false negatives; how false positives arise; modelling the hashes as random; the false positive probability; Bloom's own derivation."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "derive",
+   "brief": "Bloom's analysis: one bit, one hash, then k hashes, then n insertions: the single-bit probability, which is right; then the generalisation to k bits assuming independence."
+  },
+  {
+   "beat": "refute",
+   "brief": "The bits are not independent: a counterexample where every hash hits the same bit; so the cited expression is not the rate."
+  },
+  {
+   "beat": "refute",
+   "brief": "The bits are not independent: a counterexample where every hash hits the same bit; so the cited expression is not the rate."
+  },
+  {
+   "beat": "refute",
+   "brief": "The bits are not independent: a counterexample where every hash hits the same bit; so the cited expression is not the rate."
+  },
+  {
+   "beat": "correct",
+   "brief": "Bose et al. notice the error in 2008 and derive a balls-into-bins expression; others then find errors in their derivation."
+  },
+  {
+   "beat": "correct",
+   "brief": "Bose et al. notice the error in 2008 and derive a balls-into-bins expression; others then find errors in their derivation."
+  },
+  {
+   "beat": "correct",
+   "brief": "Bose et al. notice the error in 2008 and derive a balls-into-bins expression; others then find errors in their derivation."
+  },
+  {
+   "beat": "certify",
+   "brief": "Ceramist: a certified proof of Bose et al.'s bound from first principles, so further errors are unlikely."
+  },
+  {
+   "beat": "certify",
+   "brief": "Ceramist: a certified proof of Bose et al.'s bound from first principles, so further errors are unlikely."
+  },
+  {
+   "beat": "more",
+   "brief": "What the post leaves out (encoding probability in Coq, the exact derivation, other filters); novel data structures; the paper, the talk and the code."
+  },
+  {
+   "beat": "more",
+   "brief": "What the post leaves out (encoding probability in Coq, the exact derivation, other filters); novel data structures; the paper, the talk and the code."
+  },
+  {
+   "beat": "more",
+   "brief": "What the post leaves out (encoding probability in Coq, the exact derivation, other filters); novel data structures; the paper, the talk and the code."
+  },
+  {
+   "beat": "more",
+   "brief": "What the post leaves out (encoding probability in Coq, the exact derivation, other filters); novel data structures; the paper, the talk and the code."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  },
+  {
+   "beat": "notes",
+   "brief": "Footnotes: browsers send hashes; the pun; the Hacker News correction about distinct hashes and why Bloom is still wrong (a worked k=2, m=3 example); Bose's error was in definitions; the asymptotics agree."
+  }
+ ]
+}

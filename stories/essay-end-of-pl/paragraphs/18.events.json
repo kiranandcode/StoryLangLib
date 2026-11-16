@@ -1,0 +1,75 @@
+{
+ "text_sha": "198a5274903d0e2d",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader tooling",
+   "at": 93,
+   "w": "running",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 13,
+   "w": "built",
+   "kind": "generic"
+  },
+  {
+   "at": 26,
+   "w": "seems",
+   "kind": "generic"
+  },
+  {
+   "at": 42,
+   "w": "same",
+   "kind": "generic"
+  },
+  {
+   "at": 51,
+   "w": "possible",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 53,
+   "w": "adapt",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 59,
+   "w": "make",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 74,
+   "w": "exposing",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 99,
+   "w": "try",
+   "kind": "content",
+   "lit": "tooling"
+  },
+  {
+   "at": 100,
+   "w": "improving",
+   "kind": "content",
+   "lit": "tooling"
+  },
+  {
+   "at": 106,
+   "w": "using",
+   "kind": "content",
+   "lit": "tooling"
+  },
+  {
+   "at": 111,
+   "w": "exposing",
+   "kind": "content",
+   "lit": "tooling"
+  }
+ ]
+}

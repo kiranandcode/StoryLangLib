@@ -1,0 +1,39 @@
+{
+ "text_sha": "5fbb16de33827fec",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader singleBit",
+   "at": 5,
+   "w": "derive",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 0,
+   "w": "Inverting",
+   "kind": "act"
+  },
+  {
+   "at": 25,
+   "w": "1",
+   "kind": "content",
+   "lit": "singleBit"
+  },
+  {
+   "at": 17,
+   "w": "raised",
+   "kind": "content",
+   "lit": "singleBit"
+  },
+  {
+   "at": 19,
+   "w": "inserting",
+   "kind": "content",
+   "lit": "singleBit"
+  }
+ ]
+}

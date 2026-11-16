@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "example",
+   "t": "bitsDependent",
+   "uses": [
+    "hash_functions",
+    "selected_bit"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deny",
+   "t": "bloomFormula",
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  }
+ ]
+}

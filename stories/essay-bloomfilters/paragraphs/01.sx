@@ -1,0 +1,19 @@
+entity safe_browsing abstract it "this feature: warning users about malicious URLs"
+entity browsers group they "modern web browsers / the browser" generic
+entity users group they "the user" generic
+entity url abstract it "a malicious URL" generic
+topic t1 "browsers warn users about malicious URLs" safe_browsing,browsers
+(S%t1 There's/VERB.head=be{Fin,Pres}
+  (NP.nsubj@safe_browsing this/DET.det (ADJP.amod rather/ADV.advmod~degree nifty/ADJ.head) feature/NOUN.head
+    (PP.nmod of/ADP.case (NP.head@browsers modern/ADJ.amod web/NOUN.compound~digital browsers/NOUN.head=browser
+      (PRN.appos \(/PUNCT (PP.head such/ADJ.case as/ADP.fixed (NP.head Firefox/PROPN.head~digital or/CCONJ.cc Chrome/PROPN.conj~digital)) \)/PUNCT)))
+    (SBAR.relcl where/SCONJ.mark
+      (S.head (NP.nsubj@browsers the/DET.det browser/NOUN.head)
+        (VP.head will/AUX.aux{Fin,Pres} automatically/ADV.advmod~manner warn/VERB.head{Inf}
+          (NP.obj@users the/DET.det user/NOUN.head)
+          (SBAR.advcl if/SCONJ.mark
+            (S.head they/PRON.nsubj@users
+              (VP.head happen/VERB.head{Fin,Pres}
+                (VP.xcomp to/PART.mark navigate/VERB.head{Inf}
+                  (PP.obl to/ADP.case (NP.head@url a/DET.det "/PUNCT malicious/ADJ.amod "/PUNCT URL/NOUN.head))))))))))
+  :/PUNCT)

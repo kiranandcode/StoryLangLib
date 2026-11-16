@@ -1,0 +1,26 @@
+{
+ "text_sha": "d9ab54ca1c8b0937",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader thread",
+   "at": 1,
+   "w": "was",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true thread",
+   "at": 12,
+   "w": "speculating"
+  },
+  {
+   "c": "true aiDisrupts",
+   "at": 12,
+   "w": "speculating"
+  }
+ ],
+ "judge": []
+}

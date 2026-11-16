@@ -1,0 +1,29 @@
+{
+ "moves": [
+  {
+   "move": "contribute",
+   "t": "certified",
+   "sec": 3,
+   "uses": [
+    "coq",
+    "bloom_filter"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "certified",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "pun",
+   "sec": 5,
+   "uses": [],
+   "s": 1
+  }
+ ]
+}

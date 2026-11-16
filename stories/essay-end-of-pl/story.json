@@ -1,0 +1,566 @@
+{
+ "title": "PL research is dead, the age of PL exploration is just beginning! (Kiran's blog, 2026)",
+ "kind": "essay",
+ "characters": [
+  {
+   "id": "authors",
+   "name": "Kiran (I, we: the author)",
+   "pron": "she",
+   "traits": [
+    "confident",
+    "brash",
+    "openMinded"
+   ],
+   "values": [
+    "curiosity",
+    "pride",
+    "honesty"
+   ]
+  },
+  {
+   "id": "reader",
+   "name": "the reader (you, budding PL researchers)",
+   "pron": "they",
+   "traits": [
+    "openMinded"
+   ],
+   "values": [
+    "curiosity",
+    "safety"
+   ]
+  },
+  {
+   "id": "pessimists",
+   "name": "the researchers in the TYPES thread who fear for the field",
+   "pron": "they",
+   "traits": [
+    "cautious"
+   ],
+   "values": [
+    "safety",
+    "pride"
+   ]
+  },
+  {
+   "id": "juniors",
+   "name": "junior researchers and students watching the discussion",
+   "pron": "they",
+   "traits": [
+    "timid"
+   ],
+   "values": [
+    "safety",
+    "curiosity"
+   ]
+  },
+  {
+   "id": "seResearchers",
+   "name": "software engineering researchers",
+   "pron": "they",
+   "traits": [],
+   "values": [
+    "duty"
+   ]
+  },
+  {
+   "id": "colleagues",
+   "name": "the author's colleagues who built dynestyx",
+   "pron": "they",
+   "traits": [],
+   "values": [
+    "curiosity"
+   ]
+  }
+ ],
+ "places": [
+  {
+   "id": "post",
+   "kind": "blog post",
+   "desc": "the essay itself, an answer to a mailing-list thread",
+   "words": [
+    "post",
+    "article"
+   ]
+  },
+  {
+   "id": "typesList",
+   "kind": "mailing-list thread",
+   "desc": "the TYPES thread the post answers; the pessimists speak there and do not read the post",
+   "words": [
+    "list"
+   ]
+  },
+  {
+   "id": "elsewhere",
+   "kind": "their own field",
+   "desc": "software engineering research, and the colleagues' lab",
+   "words": []
+  }
+ ],
+ "objects": [],
+ "atoms": [
+  {
+   "id": "aiDisrupts",
+   "label": "AI tools are disrupting programming in general",
+   "truth": true
+  },
+  {
+   "id": "thread",
+   "label": "researchers on the TYPES mailing list are speculating about the future of the field",
+   "truth": true
+  },
+  {
+   "id": "majorityNegative",
+   "label": "the majority opinion in the thread is negative",
+   "truth": true
+  },
+  {
+   "id": "crisis",
+   "label": "some researchers feel they face an existential crisis",
+   "truth": true
+  },
+  {
+   "id": "juniorsWorry",
+   "label": "junior researchers are watching and worrying whether to enter PL",
+   "truth": true
+  },
+  {
+   "id": "excited",
+   "label": "the author has never been more excited as a researcher",
+   "truth": true
+  },
+  {
+   "id": "ideasPlentiful",
+   "label": "research ideas are more plentiful than ever and questions are answered faster",
+   "truth": true
+  },
+  {
+   "id": "explorationPremise",
+   "label": "the community should shift from an ego-driven defence of its work to exploration",
+   "truth": true
+  },
+  {
+   "id": "llmsCodeWell",
+   "label": "language models are exceedingly good at writing code",
+   "truth": true
+  },
+  {
+   "id": "humansStopCoding",
+   "label": "humans are increasingly not going to write code",
+   "truth": true
+  },
+  {
+   "id": "plObsolete",
+   "label": "PL research is becoming obsolete",
+   "truth": false
+  },
+  {
+   "id": "bridge",
+   "label": "PL research has bridged theory and application since its inception",
+   "truth": true
+  },
+  {
+   "id": "applicationsMatter",
+   "label": "PL researchers care about the applications of their work",
+   "truth": false
+  },
+  {
+   "id": "seMessy",
+   "label": "software engineering research systems are ad hoc and barely functional",
+   "truth": true
+  },
+  {
+   "id": "ideasRemain",
+   "label": "the beautiful ideas and insights of PL are all still available",
+   "truth": true
+  },
+  {
+   "id": "fewUsers",
+   "label": "the vast majority of programming languages have no users other than their developers",
+   "truth": true
+  },
+  {
+   "id": "biggerProblems",
+   "label": "with LLMs, researchers can tackle bigger and crazier problems than before",
+   "truth": true
+  },
+  {
+   "id": "counterfactualsFast",
+   "label": "LLMs let researchers test research counterfactuals at an unprecedented pace",
+   "truth": true
+  },
+  {
+   "id": "assumptionsUpturned",
+   "label": "many assumptions the software ecosystem is built on no longer hold",
+   "truth": true
+  },
+  {
+   "id": "interpreters",
+   "label": "the author ran an experiment generating semantics for interpreted languages and proving them against the binary",
+   "truth": true
+  },
+  {
+   "id": "tooling",
+   "label": "verification tools could be adapted to the jagged intelligence of agents (experiments in progress)",
+   "truth": true
+  },
+  {
+   "id": "semantics",
+   "label": "the author is generating mechanised semantics for colleagues' language (dynestyx) with LLMs",
+   "truth": true
+  },
+  {
+   "id": "theoryToo",
+   "label": "LLMs make theoretical work faster too: counterfactuals about calculi are cheap to check",
+   "truth": true
+  },
+  {
+   "id": "loss",
+   "label": "the author feels some loss at the lack of effort the work now needs",
+   "truth": true
+  },
+  {
+   "id": "egoNotCuriosity",
+   "label": "the author's pride in craft was more ego than intellectual curiosity",
+   "truth": true
+  },
+  {
+   "id": "explorationIsResearch",
+   "label": "research has always been about exploration",
+   "truth": true
+  },
+  {
+   "id": "transformative",
+   "label": "the field is entering a transformative moment",
+   "truth": true
+  },
+  {
+   "id": "dynestyxUnifies",
+   "label": "dynestyx, the language the author helped colleagues build, unified a lot of work in their area",
+   "truth": true
+  },
+  {
+   "id": "craftPride",
+   "label": "the author's code was a craft she took deep pride in",
+   "truth": true
+  }
+ ],
+ "lore": [
+  {
+   "if": [
+    "llmsCodeWell"
+   ],
+   "then": "humansStopCoding"
+  },
+  {
+   "if": [
+    "ideasRemain",
+    "!applicationsMatter"
+   ],
+   "then": "!plObsolete"
+  },
+  {
+   "if": [
+    "counterfactualsFast"
+   ],
+   "then": "biggerProblems"
+  }
+ ],
+ "start": {
+  "at": {
+   "authors": "post",
+   "reader": "post",
+   "pessimists": "typesList",
+   "juniors": "post",
+   "seResearchers": "elsewhere",
+   "colleagues": "elsewhere"
+  },
+  "knows": {
+   "authors": [
+    "aiDisrupts",
+    "thread",
+    "majorityNegative",
+    "crisis",
+    "juniorsWorry",
+    "excited",
+    "ideasPlentiful",
+    "explorationPremise",
+    "llmsCodeWell",
+    "humansStopCoding",
+    "!plObsolete",
+    "bridge",
+    "!applicationsMatter",
+    "seMessy",
+    "ideasRemain",
+    "fewUsers",
+    "biggerProblems",
+    "counterfactualsFast",
+    "assumptionsUpturned",
+    "interpreters",
+    "tooling",
+    "semantics",
+    "theoryToo",
+    "loss",
+    "egoNotCuriosity",
+    "explorationIsResearch",
+    "transformative",
+    "dynestyxUnifies",
+    "craftPride"
+   ],
+   "pessimists": [
+    "aiDisrupts",
+    "llmsCodeWell",
+    "plObsolete@3:inferred",
+    "applicationsMatter@3:assumed"
+   ],
+   "juniors": [
+    "aiDisrupts",
+    "plObsolete@2:told:pessimists"
+   ],
+   "seResearchers": [
+    "applicationsMatter"
+   ],
+   "colleagues": [
+    "semantics"
+   ],
+   "reader": [
+    "aiDisrupts",
+    "plObsolete@1:rumour",
+    "applicationsMatter@2:assumed"
+   ]
+  },
+  "bonds": {
+   "reader>authors": {
+    "trust": 2
+   },
+   "juniors>pessimists": {
+    "trust": 2
+   }
+  }
+ },
+ "pov": "authors",
+ "beats": {
+  "conds": [
+   "occasionDone",
+   "premiseDone",
+   "fearsDone",
+   "rebuttalDone",
+   "excitementDone",
+   "examplesDone",
+   "reflectionDone",
+   "exhortDone"
+  ],
+  "init": [],
+  "vocab": [
+   {
+    "id": "occasion",
+    "label": "A TYPES thread fears for the field; juniors are watching",
+    "add": [
+     "occasionDone"
+    ],
+    "keys": [
+     "tell authors reader thread"
+    ]
+   },
+   {
+    "id": "premise",
+    "label": "Shift from ego-driven defence to exploration",
+    "add": [
+     "premiseDone"
+    ],
+    "keys": [
+     "tell authors reader explorationPremise"
+    ],
+    "pre": [
+     "occasionDone"
+    ]
+   },
+   {
+    "id": "fears",
+    "label": "LLMs write code, so humans will not: is PL obsolete?",
+    "add": [
+     "fearsDone"
+    ],
+    "keys": [
+     "tell authors reader llmsCodeWell"
+    ],
+    "pre": [
+     "premiseDone"
+    ]
+   },
+   {
+    "id": "rebuttal",
+    "label": "Who cares about applications: the ideas are still here",
+    "add": [
+     "rebuttalDone"
+    ],
+    "keys": [
+     "tell authors reader fewUsers"
+    ],
+    "pre": [
+     "fearsDone"
+    ]
+   },
+   {
+    "id": "excitement",
+    "label": "LLMs let us test counterfactuals at a new pace",
+    "add": [
+     "excitementDone"
+    ],
+    "keys": [
+     "tell authors reader counterfactualsFast"
+    ],
+    "pre": [
+     "rebuttalDone"
+    ]
+   },
+   {
+    "id": "examples",
+    "label": "Three projects: interpreters, AI-first tooling, semantics for dynestyx",
+    "add": [
+     "examplesDone"
+    ],
+    "keys": [
+     "tell authors reader interpreters"
+    ],
+    "pre": [
+     "excitementDone"
+    ]
+   },
+   {
+    "id": "reflection",
+    "label": "Theory too; the loss of effort was ego, not curiosity",
+    "add": [
+     "reflectionDone"
+    ],
+    "keys": [
+     "tell authors reader egoNotCuriosity"
+    ],
+    "pre": [
+     "examplesDone"
+    ]
+   },
+   {
+    "id": "exhort",
+    "label": "Abandon your ego and explore",
+    "add": [
+     "exhortDone"
+    ],
+    "keys": [
+     "tell authors reader explorationIsResearch"
+    ],
+    "pre": [
+     "reflectionDone"
+    ]
+   }
+  ],
+  "story": [
+   "occasion",
+   "premise",
+   "fears",
+   "rebuttal",
+   "excitement",
+   "examples",
+   "reflection",
+   "exhort"
+  ]
+ },
+ "outline": [
+  {
+   "beat": "occasion",
+   "brief": "A recent TYPES thread on AI and the future of PL is mostly negative, some feel an existential crisis; the author writes for the junior researchers watching, and is herself more excited than ever."
+  },
+  {
+   "beat": "occasion",
+   "brief": "A recent TYPES thread on AI and the future of PL is mostly negative, some feel an existential crisis; the author writes for the junior researchers watching, and is herself more excited than ever."
+  },
+  {
+   "beat": "occasion",
+   "brief": "A recent TYPES thread on AI and the future of PL is mostly negative, some feel an existential crisis; the author writes for the junior researchers watching, and is herself more excited than ever."
+  },
+  {
+   "beat": "occasion",
+   "brief": "A recent TYPES thread on AI and the future of PL is mostly negative, some feel an existential crisis; the author writes for the junior researchers watching, and is herself more excited than ever."
+  },
+  {
+   "beat": "premise",
+   "brief": "The central premise: shift from ego-driven defence of our work to exploration."
+  },
+  {
+   "beat": "fears",
+   "brief": "The fears: LLMs write code well, so humans will stop writing it, so PL research may seem obsolete. So what?"
+  },
+  {
+   "beat": "fears",
+   "brief": "The fears: LLMs write code well, so humans will stop writing it, so PL research may seem obsolete. So what?"
+  },
+  {
+   "beat": "fears",
+   "brief": "The fears: LLMs write code well, so humans will stop writing it, so PL research may seem obsolete. So what?"
+  },
+  {
+   "beat": "rebuttal",
+   "brief": "PL bridges theory and application, but who cares about applications; the beautiful ideas remain; most languages have no users anyway; so do PL research, now with LLMs."
+  },
+  {
+   "beat": "rebuttal",
+   "brief": "PL bridges theory and application, but who cares about applications; the beautiful ideas remain; most languages have no users anyway; so do PL research, now with LLMs."
+  },
+  {
+   "beat": "rebuttal",
+   "brief": "PL bridges theory and application, but who cares about applications; the beautiful ideas remain; most languages have no users anyway; so do PL research, now with LLMs."
+  },
+  {
+   "beat": "rebuttal",
+   "brief": "PL bridges theory and application, but who cares about applications; the beautiful ideas remain; most languages have no users anyway; so do PL research, now with LLMs."
+  },
+  {
+   "beat": "excitement",
+   "brief": "LLMs make the author excited: smart tools test counterfactuals fast; new ideas daily; upturned assumptions give new research."
+  },
+  {
+   "beat": "excitement",
+   "brief": "LLMs make the author excited: smart tools test counterfactuals fast; new ideas daily; upturned assumptions give new research."
+  },
+  {
+   "beat": "excitement",
+   "brief": "LLMs make the author excited: smart tools test counterfactuals fast; new ideas daily; upturned assumptions give new research."
+  },
+  {
+   "beat": "excitement",
+   "brief": "LLMs make the author excited: smart tools test counterfactuals fast; new ideas daily; upturned assumptions give new research."
+  },
+  {
+   "beat": "examples",
+   "brief": "Three projects: verified interpreters against the binary; AI-first verified tooling; semantics for colleagues' language dynestyx."
+  },
+  {
+   "beat": "examples",
+   "brief": "Three projects: verified interpreters against the binary; AI-first verified tooling; semantics for colleagues' language dynestyx."
+  },
+  {
+   "beat": "examples",
+   "brief": "Three projects: verified interpreters against the binary; AI-first verified tooling; semantics for colleagues' language dynestyx."
+  },
+  {
+   "beat": "reflection",
+   "brief": "Theory benefits too; the author feels some loss of effort, but that pride was ego rather than curiosity."
+  },
+  {
+   "beat": "reflection",
+   "brief": "Theory benefits too; the author feels some loss of effort, but that pride was ego rather than curiosity."
+  },
+  {
+   "beat": "exhort",
+   "brief": "Abandon your ego; research is exploration; use the tools; the era of PL exploration begins."
+  },
+  {
+   "beat": "exhort",
+   "brief": "Abandon your ego; research is exploration; use the tools; the era of PL exploration begins."
+  },
+  {
+   "beat": "exhort",
+   "brief": "Abandon your ego; research is exploration; use the tools; the era of PL exploration begins."
+  }
+ ]
+}

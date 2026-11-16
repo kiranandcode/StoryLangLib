@@ -1,0 +1,18 @@
+entity authors group they "we (the PL community, the author included)"
+entity assumptions abstract they "the presumptions / assumptions our software ecosystem is built upon"
+entity ecosystem abstract it "our software ecosystem"
+topic t1 "upturned assumptions" assumptions
+(S%t1 (NP.nsubj@assumptions A/DET.det lot/NOUN.head~part (PP.nmod of/ADP.case (NP.head presumptions/NOUN.head=presumption~abstract
+      (S.relcl we/PRON.nsubj@authors (VP.head build/VERB.head{Fin,Pres} upon/ADP.compound)))))
+  (VP.head have/AUX.aux{Fin,Pres} been/AUX.aux=be{Part} completely/ADV.advmod~degree upturned/VERB.head=upturn{Part})
+  ./PUNCT)
+(S%t1 There's/VERB.head=be{Fin,Pres}
+  (NP.nsubj@assumptions a/DET.det real/ADJ.amod wealth/NOUN.head~part (PP.nmod of/ADP.case (NP.head assumptions/NOUN.head=assumption~abstract
+      (SBAR.relcl that/PRON.obj@assumptions (NP.nsubj@ecosystem our/PRON.poss@authors software/NOUN.compound~digital ecosystem/NOUN.head)
+        (VP.head is/AUX.aux=be{Fin,Pres} built/VERB.head=build{Part} upon/ADP.compound))
+      (SBAR.relcl that/PRON.nsubj@assumptions (VP.head no/DET.advmod longer/ADV.advmod~time hold/VERB.head{Fin,Pres})))))
+  ,/PUNCT and/CCONJ.cc
+  (S.conj (SBAR.advcl by/SCONJ.mark (VP.head questioning/VERB.head=question{Ger} (NP.obj@assumptions each/DET.det one/NUM.head (PP.nmod of/ADP.case them/PRON.head@assumptions))))
+    ,/PUNCT we/PRON.nsubj@authors
+    (VP.head get/VERB.head{Fin,Pres} (NP.obj entirely/ADV.advmod~degree novel/ADJ.amod and/CCONJ.cc fun/ADJ.conj research/NOUN.compound~abstract ideas/NOUN.head=idea~abstract)))
+  ./PUNCT)

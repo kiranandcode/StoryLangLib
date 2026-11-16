@@ -1,0 +1,1 @@
+Programming languages research has saddled the bridge between theory and application since its inception. As PL researchers, we get to work on principled and elegant ideas. We don't need to compromise those ideas for the sake of our practicality, but at the same time the downstream results of our work do eventually boil down to practical applications.

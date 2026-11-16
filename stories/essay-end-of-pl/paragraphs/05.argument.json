@@ -1,0 +1,29 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "explorationPremise",
+   "uses": [
+    "ego",
+    "exploration"
+   ],
+   "s": 1
+  },
+  {
+   "move": "contrast",
+   "a": "ego",
+   "b": "exploration",
+   "uses": [],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "premiseArgued",
+   "sec": 3,
+   "uses": [
+    "explorationPremise"
+   ],
+   "s": 1
+  }
+ ]
+}

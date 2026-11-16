@@ -1,0 +1,42 @@
+{
+ "text_sha": "1066f21eb7176cd6",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "adopt bloom bloomFormula",
+   "at": 9,
+   "w": "reasons",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 3,
+   "w": "generalise",
+   "kind": "goal",
+   "lit": "bloomFormula"
+  },
+  {
+   "at": 13,
+   "w": "interpret",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 22,
+   "w": "equivalent",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 29,
+   "w": "selected",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 35,
+   "w": "raised",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "text_sha": "4c73cba8f4c1beec",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 9,
+   "w": "have",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+entity authors group they "I (Kiran)"
+entity ideas_wells abstract they "the wells of research ideas"
+entity problems abstract they "new problems" generic
+entity questions abstract they "questions" generic
+topic t1 "never more excited" authors
+topic t2 "plentiful ideas" ideas_wells
+(S%t1 (FRAG.discourse To/PART.mark be/AUX.cop{Inf} honest/ADJ.head~impression) ,/PUNCT
+  (PP.obl as/ADP.case a/DET.det researcher/NOUN.head~person) ,/PUNCT
+  (NP.nsubj@authors I/PRON.head) have/AUX.aux{Fin,Pres} never/ADV.advmod been/AUX.cop=be{Part}
+  (ADJP.head more/ADV.advmod~degree excited/ADJ.head~impression)
+  !/PUNCT)
+(S%t2 (S.head (NP.nsubj@ideas_wells The/DET.det wells/NOUN.head=well~figurative (PP.nmod of/ADP.case research/NOUN.compound~abstract ideas/NOUN.head=idea~abstract))
+    have/AUX.aux{Fin,Pres} never/ADV.advmod been/AUX.cop=be{Part} so/ADV.advmod~degree plentiful/ADJ.head)
+  ,/PUNCT
+  (S.conj (NP.nsubj@problems new/ADJ.amod problems/NOUN.head=problem)
+    (VP.head are/AUX.aux=be{Fin,Pres} popping/VERB.head=pop{Part} up/ADP.compound daily/ADV.advmod~time))
+  ,/PUNCT
+  (S.conj and/CCONJ.cc (NP.nsubj@authors I'm/PRON.head=I) able/ADJ.head
+    (VP.xcomp to/PART.mark ask/VERB.head{Inf} and/CCONJ.cc answer/VERB.conj{Inf} (NP.obj@questions questions/NOUN.head=question)
+      (ADVP.advmod so/ADV.advmod~degree much/ADV.advmod~degree more/ADV.advmod~degree quickly/ADV.head~manner (PP.obl than/ADP.case before/ADV.head~time))))
+  ./PUNCT)

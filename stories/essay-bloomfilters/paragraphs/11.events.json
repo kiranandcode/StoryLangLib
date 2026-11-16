@@ -1,0 +1,39 @@
+{
+ "text_sha": "7a81547ed4acb450",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "true contention",
+   "at": 32,
+   "w": "arise"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "explore",
+   "kind": "act"
+  },
+  {
+   "at": 16,
+   "w": "answering",
+   "kind": "act"
+  },
+  {
+   "at": 21,
+   "w": "What",
+   "kind": "generic"
+  },
+  {
+   "at": 34,
+   "w": "What",
+   "kind": "generic"
+  },
+  {
+   "at": 49,
+   "w": "certain",
+   "kind": "hypothetical"
+  }
+ ]
+}

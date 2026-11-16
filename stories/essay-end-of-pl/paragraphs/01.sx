@@ -1,0 +1,21 @@
+entity authors group they "I / we (Kiran; our field = the PL community including her)"
+entity thread abstract it "the thread on the TYPES mailing list"
+entity types_list abstract it "the TYPES mailing list"
+entity pessimists group they "the researchers in the thread"
+entity future abstract it "the future of our field"
+entity field abstract it "our field, PL research"
+entity effects abstract they "the disruptive effects of AI tools on programming"
+entity ai_tools abstract they "AI tools" generic
+entity programming abstract it "programming in general" generic
+topic t1 "the TYPES thread" thread
+(S%t1 There/PRON.expl
+  (VP.head was/VERB.head=be{Fin,Past}
+    (NP.nsubj@thread a/DET.det recent/ADJ.amod thread/NOUN.head
+      (PP.nmod on/ADP.case (NP.head@types_list the/DET.det TYPES/PROPN.compound mailing/NOUN.compound~digital list/NOUN.head))
+      (PP.nmod with/ADP.case (NP.head@pessimists researchers/NOUN.head=researcher
+        (VP.acl speculating/VERB.head=speculate{Ger}
+          (PP.obl about/ADP.case (NP.head@future the/DET.det future/NOUN.head (PP.nmod of/ADP.case (NP.head@field our/PRON.poss@authors field/NOUN.head))))
+          (PP.obl given/ADP.case (NP.head@effects the/DET.det disruptive/ADJ.amod effects/NOUN.head=effect
+            (PP.nmod of/ADP.case (NP.head@ai_tools AI/PROPN.compound tools/NOUN.head=tool))
+            (PP.nmod on/ADP.case (NP.head@programming programming/NOUN.head (PP.nmod in/ADP.case general/ADJ.head))))))))))
+  ./PUNCT)

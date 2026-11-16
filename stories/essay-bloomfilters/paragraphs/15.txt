@@ -1,0 +1,1 @@
+Well, put simply, a Bloom filter bf is a simply a combination of two separate components: A bit-vector of n bits. and a sequence of k hash functions.

@@ -1,0 +1,15 @@
+entity code_proofs abstract they "the code and proofs used in this research project"
+entity research abstract it "this research project"
+entity repo abstract it "the Ceramist repo"
+topic t1 "the code is FOSS" code_proofs,repo
+(S%t1
+  (NP.nsubj@code_proofs The/DET.det code/NOUN.head and/CCONJ.cc proofs/NOUN.conj=proof~digital
+    (VP.acl used/VERB.head=use{Part}
+      (PP.obl in/ADP.case (NP.head@research this/DET.det research/NOUN.compound project/NOUN.head))))
+  are/AUX.cop=be{Fin,Pres} (NP.head FOSS/PROPN.head~kind)
+  ,/PUNCT and/CCONJ.cc
+  (VP.conj can/AUX.aux{Fin,Pres} be/AUX.aux{Inf} found/VERB.head=find{Part}
+    (PP.obl on/ADP.case
+      (NP.head@repo the/DET.det Ceramist/PROPN.compound repo/NOUN.head
+        :/PUNCT
+        (NP.appos@repo https/X.head :/PUNCT //PUNCT //PUNCT github/X.flat ./PUNCT com/X.flat //PUNCT verse-lab/X.flat //PUNCT ceramist/X.flat)))))

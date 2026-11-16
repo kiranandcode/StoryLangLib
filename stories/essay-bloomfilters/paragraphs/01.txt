@@ -1,0 +1,1 @@
+There's this rather nifty feature of modern web browsers (such as Firefox or Chrome) where the browser will automatically warn the user if they happen to navigate to a "malicious" URL:

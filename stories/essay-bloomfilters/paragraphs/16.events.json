@@ -1,0 +1,58 @@
+{
+ "text_sha": "92a021ca73647c9c",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 1,
+   "w": "use",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 12,
+   "w": "perform",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 23,
+   "w": "insert",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 34,
+   "w": "hash",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 46,
+   "w": "treating",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 56,
+   "w": "raise",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 64,
+   "w": "query",
+   "kind": "generic"
+  },
+  {
+   "at": 76,
+   "w": "hash",
+   "kind": "generic"
+  },
+  {
+   "at": 89,
+   "w": "check",
+   "kind": "generic"
+  },
+  {
+   "at": 97,
+   "w": "raised",
+   "kind": "generic"
+  }
+ ]
+}

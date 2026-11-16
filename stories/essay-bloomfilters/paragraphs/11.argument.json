@@ -1,0 +1,31 @@
+{
+ "moves": [
+  {
+   "move": "promise",
+   "t": "bloom_def",
+   "sec": 1,
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 2
+  },
+  {
+   "move": "promise",
+   "t": "errorCause",
+   "sec": 2,
+   "uses": [
+    "contention"
+   ],
+   "s": 3
+  },
+  {
+   "move": "promise",
+   "t": "trueFpr",
+   "sec": 3,
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 4
+  }
+ ]
+}

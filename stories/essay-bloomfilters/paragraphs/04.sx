@@ -1,0 +1,11 @@
+entity browsers group they "browsers" generic
+entity safe_browsing abstract it "this functionality"
+entity proxy abstract it "a rather interesting compromise: the local-proxy technique"
+topic t1 "browsers compromise" browsers,proxy
+(S%t1 (SBAR.advcl As/SCONJ.mark (S.head it/PRON.expl (VP.head turns/VERB.head=turn{Fin,Pres} out/ADP.compound))) ,/PUNCT
+  (NP.nsubj@browsers browsers/NOUN.head=browser)
+  (VP.head actually/ADV.advmod~degree implement/VERB.head{Fin,Pres}
+    (NP.obj@safe_browsing this/DET.det functionality/NOUN.head)
+    (PP.obl by/ADP.case means/NOUN.fixed=means~abstract of/ADP.fixed
+      (NP.head@proxy a/DET.det (ADJP.amod rather/ADV.advmod~degree interesting/ADJ.head) compromise/NOUN.head)))
+  ./PUNCT)

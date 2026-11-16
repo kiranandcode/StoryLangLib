@@ -1,0 +1,63 @@
+{
+ "gaps": [
+  "claim dbHuge is unsupported",
+  "claim proxy_compromise is unsupported",
+  "claim fewUrlsSent is unsupported",
+  "claim privacyKept is unsupported",
+  "claim contention is unsupported",
+  "claim fprHashDependent is unsupported",
+  "claim importance is unsupported",
+  "claim fingerprinting is unsupported",
+  "promise of whyRandom (section 2) is never delivered"
+ ],
+ "deferred": [
+  [
+   "storeInfeasible",
+   "0"
+  ],
+  [
+   "sendLeaks",
+   "0"
+  ],
+  [
+   "low_fpr",
+   "0"
+  ],
+  [
+   "proxy",
+   "0"
+  ],
+  [
+   "bloomFormula",
+   "0"
+  ],
+  [
+   "noFurtherErrors",
+   "0"
+  ],
+  [
+   "interest",
+   "0"
+  ],
+  [
+   "probabilityInCoq",
+   "0"
+  ],
+  [
+   "exactDerivation",
+   "0"
+  ],
+  [
+   "otherFilters",
+   "0"
+  ]
+ ],
+ "antitheses": [
+  "singleBitIsFpr"
+ ],
+ "contrasts": [
+  "bitsIndependent",
+  "bloomFormula",
+  "historyAtRisk"
+ ]
+}

@@ -1,0 +1,83 @@
+{
+ "text_sha": "fa8dd3928733ffce",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader noFalseNeg",
+   "at": 29,
+   "w": "states",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader lowFpr",
+   "at": 88,
+   "w": "states",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true noFalseNeg",
+   "at": 69,
+   "w": "guaranteed"
+  },
+  {
+   "c": "true noFalseNeg",
+   "at": 71,
+   "w": "return"
+  },
+  {
+   "c": "true lowFpr",
+   "at": 120,
+   "w": "minimising"
+  }
+ ],
+ "judge": [
+  {
+   "at": 5,
+   "w": "safe-guards",
+   "kind": "generic"
+  },
+  {
+   "at": 15,
+   "w": "depends",
+   "kind": "generic"
+  },
+  {
+   "at": 41,
+   "w": "returns",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 50,
+   "w": "guaranteed",
+   "kind": "content",
+   "lit": "noFalseNeg"
+  },
+  {
+   "at": 54,
+   "w": "present",
+   "kind": "content",
+   "lit": "noFalseNeg"
+  },
+  {
+   "at": 96,
+   "w": "in",
+   "kind": "generic"
+  },
+  {
+   "at": 110,
+   "w": "returning",
+   "kind": "content",
+   "lit": "lowFpr"
+  },
+  {
+   "at": 117,
+   "w": "low",
+   "kind": "content",
+   "lit": "lowFpr"
+  }
+ ]
+}

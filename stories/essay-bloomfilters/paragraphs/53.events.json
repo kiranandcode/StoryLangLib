@@ -1,0 +1,70 @@
+{
+ "text_sha": "bc5439a52661a27c",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice bloom bloomFormula inferred",
+   "at": 15,
+   "w": "reasoning",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "falseBelief bloom bloomFormula",
+   "at": 4,
+   "w": "makes"
+  },
+  {
+   "c": "falseBelief bloom bloomFormula",
+   "at": 9,
+   "w": "presented"
+  },
+  {
+   "c": "true !bloomFormula",
+   "at": 56,
+   "w": "wrong"
+  }
+ ],
+ "judge": [
+  {
+   "at": 22,
+   "w": "occurs",
+   "kind": "content",
+   "lit": "bloomFormula"
+  },
+  {
+   "at": 28,
+   "w": "raised",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 34,
+   "w": "occurring",
+   "kind": "content",
+   "lit": "bloomFormula"
+  },
+  {
+   "at": 36,
+   "w": "(",
+   "kind": "content",
+   "lit": "bloomFormula"
+  },
+  {
+   "at": 63,
+   "w": "guaranteed",
+   "kind": "generic"
+  },
+  {
+   "at": 66,
+   "w": "overlap",
+   "kind": "generic"
+  },
+  {
+   "at": 73,
+   "w": "presented",
+   "kind": "generic"
+  }
+ ]
+}

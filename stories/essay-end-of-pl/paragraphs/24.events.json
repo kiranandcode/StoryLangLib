@@ -1,0 +1,32 @@
+{
+ "text_sha": "cfe463ca1784efbf",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader transformative",
+   "at": 1,
+   "w": "believe",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 3,
+   "w": "entering",
+   "kind": "content",
+   "lit": "transformative"
+  },
+  {
+   "at": 15,
+   "w": "looking",
+   "kind": "act"
+  },
+  {
+   "at": 25,
+   "w": "step",
+   "kind": "act"
+  }
+ ]
+}

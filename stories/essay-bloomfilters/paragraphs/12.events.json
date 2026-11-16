@@ -1,0 +1,19 @@
+{
+ "text_sha": "fd4a8b6bfc223d16",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "true certified",
+   "at": 5,
+   "w": "presented"
+  }
+ ],
+ "judge": [
+  {
+   "at": 25,
+   "w": "find",
+   "kind": "hypothetical"
+  }
+ ]
+}

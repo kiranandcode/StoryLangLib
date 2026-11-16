@@ -1,0 +1,14 @@
+{
+ "moves": [
+  {
+   "move": "example",
+   "t": "noFalseNeg",
+   "uses": [
+    "insertion",
+    "query",
+    "bit_vector"
+   ],
+   "s": 2
+  }
+ ]
+}

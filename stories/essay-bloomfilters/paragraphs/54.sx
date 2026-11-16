@@ -1,0 +1,36 @@
+entity mistake abstract it "this: Bloom's claim being wrong" of=para:53
+entity bit_values abstract they "the values of the bits themselves"
+entity bits abstract they "the bits of the bit-vector"
+entity one_bit abstract it "one bit"
+entity elements abstract they "n elements"
+entity probabilities abstract they "the probabilities of the other bits being raised"
+entity other_bits abstract they "the other bits"
+entity hash_outputs abstract they "the hash outputs"
+topic t1 "why the bits are not independent" bit_values
+(S%t1 Fundamentally/ADV.advmod~manner ,/PUNCT (NP.nsubj@mistake this/PRON.head)
+  (VP.head is/VERB.head=be{Fin,Pres}
+    (SBAR.advcl because/SCONJ.mark
+      (S.head
+        (NP.nsubj@bit_values the/DET.det values/NOUN.head=value
+          (PP.nmod of/ADP.case (NP.head@bits the/DET.det bits/NOUN.head=bit themselves/PRON.nmod@bits)))
+        (VP.head are/AUX.cop=be{Fin,Pres} not/PART.advmod (ADJP.head independent/ADJ.head)))))
+  -/PUNCT
+  (S.parataxis
+   (VP.head
+    (VP.csubj knowing/VERB.head=know{Ger}
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head (NP.nsubj@one_bit one/NUM.nummod bit/NOUN.head)
+          (VP.head is/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part}
+            (SBAR.advcl after/SCONJ.mark
+              (VP.head inserting/VERB.head=insert{Ger} (NP.obj@elements n/SYM.nummod elements/NOUN.head=element)))))))
+    ,/PUNCT
+    will/AUX.aux{Fin,Pres} influence/VERB.head{Inf}
+      (NP.obj@probabilities the/DET.det probabilities/NOUN.head=probability
+        (PP.nmod of/ADP.case
+          (S.head (NP.nsubj@other_bits the/DET.det other/ADJ.amod bits/NOUN.head=bit)
+            (VP.head being/AUX.aux=be{Ger} raised/VERB.head=raise{Part}))))
+      ,/PUNCT
+      (SBAR.advcl as/SCONJ.mark
+        (S.head (NP.nsubj@hash_outputs the/DET.det hash/NOUN.compound~abstract outputs/NOUN.head=output)
+          (VP.head are/AUX.cop=be{Fin,Pres} now/ADV.advmod~time (ADJP.head depedent/ADJ.head=dependent))))))
+  ./PUNCT)

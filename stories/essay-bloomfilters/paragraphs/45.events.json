@@ -1,0 +1,33 @@
+{
+ "text_sha": "053a020c545bc10d",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader novelStructures",
+   "at": 15,
+   "w": "managed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 8,
+   "w": "gained",
+   "kind": "content",
+   "lit": "novelStructures"
+  },
+  {
+   "at": 17,
+   "w": "construct",
+   "kind": "content",
+   "lit": "novelStructures"
+  },
+  {
+   "at": 25,
+   "w": "see",
+   "kind": "generic"
+  }
+ ]
+}

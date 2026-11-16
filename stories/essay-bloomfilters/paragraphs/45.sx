@@ -1,0 +1,22 @@
+entity authors group they "we, our: the authors"
+entity insight abstract it "the insight gained during our mechanisation"
+entity mechanisation abstract it "our mechanisation (the Coq development)"
+entity novel_structures abstract they "a few entirely novel data structures"
+entity research abstract it "the paper"
+entity details abstract they "more details"
+topic t1 "novel data structures" novel_structures,authors
+(S%t1 \(/PUNCT
+  (S.head
+    (PP.obl As/ADP.case a/DET.det side/NOUN.compound~abstract product/NOUN.head~abstract
+      (PP.nmod of/ADP.case (NP.head@insight the/DET.det insight/NOUN.head
+        (VP.acl gained/VERB.head=gain{Part}
+          (PP.obl during/ADP.case (NP.head@mechanisation our/PRON.nmod@authors mechanisation/NOUN.head))))))
+    ,/PUNCT
+    (NP.nsubj@authors we/PRON.head)
+    (VP.head even/ADV.advmod~degree managed/VERB.head=manage{Fin,Past}
+      (VP.xcomp to/PART.mark construct/VERB.head{Inf}
+        (NP.obj@novel_structures a/DET.det few/ADJ.amod entirely/ADV.advmod~degree novel/ADJ.amod data/NOUN.compound structures/NOUN.head=structure))))
+  -/PUNCT
+  (S.parataxis see/VERB.head{Fin,Pres,Mood=Imp} (NP.obj@research the/DET.det paper/NOUN.head)
+    (PP.obl for/ADP.case (NP.head@details more/ADJ.amod details/NOUN.head=detail)))
+  \)/PUNCT ./PUNCT)

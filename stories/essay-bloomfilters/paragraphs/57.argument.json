@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "deliver",
+   "t": "altDerivation",
+   "uses": [
+    "boseErrors"
+   ],
+   "s": 1
+  }
+ ]
+}

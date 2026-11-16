@@ -1,0 +1,24 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "falsePos",
+   "premises": [
+    "query"
+   ],
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 1
+  },
+  {
+   "move": "contrast",
+   "a": "noFalseNeg",
+   "b": "falsePos",
+   "uses": [
+    "query"
+   ],
+   "s": 1
+  }
+ ]
+}

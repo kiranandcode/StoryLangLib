@@ -1,0 +1,1 @@
+Conversely, sending every URL that a user visits to some external service, where it could be logged and data-mined by nefarious third parties, is something that most users should probably not be comfortable with.

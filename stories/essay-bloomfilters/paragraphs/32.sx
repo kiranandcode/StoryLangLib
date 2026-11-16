@@ -1,0 +1,25 @@
+entity authors group they "I / we (the authors)"
+entity reader person they "you, the reader"
+entity unset_prob abstract it "the expression (1 - 1/m)^(kn), the probability the selected bit stays unset"
+entity single_bit_prob abstract it "the single-bit probability 1 - (1 - 1/m)^(kn)"
+entity selected_bit abstract it "an arbitrary bit of the bit-vector (b1)"
+entity bit_vector abstract it "the bit-vector"
+entity elements abstract they "the n elements inserted" generic
+topic t1 "the single-bit probability" single_bit_prob
+(S%t1
+  (VP.advcl Inverting/VERB.head=invert{Ger} (NP.obj@unset_prob this/DET.det expression/NOUN.head))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head derive/VERB.head{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (NP.nsubj@single_bit_prob the/DET.det probability/NOUN.head
+          (SBAR.acl that/SCONJ.mark
+            (S.head
+              (NP.nsubj@selected_bit an/DET.det arbitrary/ADJ.amod bit/NOUN.head (PP.nmod in/ADP.case (NP.head@bit_vector the/DET.det bit-vector/NOUN.head)))
+              (VP.head is/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part}
+                (SBAR.advcl after/SCONJ.mark (VP.head inserting/VERB.head=insert{Ger} (NP.obj@elements n/SYM.nummod elements/NOUN.head=element)))))))
+        (VP.head will/AUX.aux{Fin,Pres} simply/ADV.advmod~degree be/AUX.cop{Inf}
+          (NP.head@single_bit_prob 1/NUM.head -/SYM.cc
+            (NP.conj \(/PUNCT 1/NUM.head -/SYM.cc (NP.conj 1/NUM.head //SYM.case m/SYM.nmod) \)/PUNCT ^/SYM.dep \(/PUNCT kn/SYM.dep \)/PUNCT))))))
+  ./PUNCT)

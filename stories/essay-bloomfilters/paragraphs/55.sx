@@ -1,0 +1,76 @@
+entity authors group they "we (the worked argument)"
+entity bloom person he "Bloom"
+entity params abstract they "the parameters k=2 and m=3"
+entity bit_prob abstract it "the probability of any single bit being raised after an insertion"
+entity single_bit abstract it "any single bit" generic
+entity insertion abstract it "an insertion"
+entity third abstract it "1/3"
+entity element abstract it "1 element"
+entity selected_bit abstract it "bit b1"
+entity b2 abstract it "bit b2"
+entity b3 abstract it "bit b3"
+entity half abstract it "probability 1/2"
+entity distinct_fact abstract it "the fact that hash outputs must be distinct"
+entity hash_outputs abstract they "hash outputs" generic
+entity b1_news abstract it "learning that b1 is raised"
+entity bits abstract they "the bits"
+entity inequality abstract it "P[b2 raised | b1 raised] != P[b2 raised]"
+topic t1 "a worked example with k=2, m=3" selected_bit
+(S%t1 (PP.obl For/ADP.case example/NOUN.head~abstract) ,/PUNCT
+  (VP.head suppose/VERB.head{Fin,Pres,Mood=Imp}
+    (S.ccomp (NP.nsubj@authors we/PRON.head)
+      (VP.head use/VERB.head{Fin,Pres}
+        (NP.obj@params k/SYM.head =/SYM.dep 2/NUM.dep ,/PUNCT and/CCONJ.cc
+          (NP.conj m/SYM.head =/SYM.dep 3/NUM.dep)))))
+  ./PUNCT)
+(S%t1 First/ADV.advmod~order ,/PUNCT
+  (VP.head observe/VERB.head{Fin,Pres,Mood=Imp}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (SBAR.advcl as/SCONJ.mark
+          (S.head (NP.nsubj@bloom Bloom/PROPN.head)
+            (VP.head correctly/ADV.advmod~manner derives/VERB.head=derive{Fin,Pres})))
+        ,/PUNCT
+        (NP.nsubj@bit_prob the/DET.det probability/NOUN.head
+          (PP.nmod of/ADP.case
+            (S.head (NP.nsubj@single_bit any/DET.det single/ADJ.amod bit/NOUN.head)
+              (VP.head being/AUX.aux=be{Ger} raised/VERB.head=raise{Part}
+                (PP.obl after/ADP.case (NP.head@insertion an/DET.det insertion/NOUN.head))))))
+        (VP.head is/AUX.cop=be{Fin,Pres} (NP.head@third 1/NUM.head //SYM.dep 3/NUM.dep)))))
+  ./PUNCT)
+(S%t1 Now/ADV.advmod~order ,/PUNCT
+  (SBAR.advcl if/SCONJ.mark
+    (S.head
+      (SBAR.advcl after/SCONJ.mark
+        (VP.head inserting/VERB.head=insert{Ger} (NP.obj@element 1/NUM.nummod element/NOUN.head)))
+      ,/PUNCT
+      (NP.nsubj@authors we/PRON.head)
+      (VP.head learn/VERB.head{Fin,Pres}
+        (SBAR.ccomp that/SCONJ.mark
+          (S.head (NP.nsubj@selected_bit bit/NOUN.head b1/X.appos)
+            (VP.head is/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part}))))))
+  ,/PUNCT then/ADV.advmod~order
+  (NP.nsubj@b1_news this/PRON.head)
+  (VP.head means/VERB.head=mean{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (PP.obl with/ADP.case (NP.head@half probability/NOUN.head (NP.appos 1/NUM.head //SYM.dep 2/NUM.dep)))
+        ,/PUNCT
+        (NP.nsubj either/CCONJ.cc b2/X.head@b2 or/CCONJ.cc b3/X.conj@b3)
+        (VP.head is/AUX.aux=be{Fin,Pres} raised/VERB.head=raise{Part}
+          (PRN.dep \(/PUNCT
+            (PP.head from/ADP.case
+              (NP.head@distinct_fact the/DET.det from/X.head
+                (SBAR.acl that/SCONJ.mark
+                  (S.head (NP.nsubj@hash_outputs hash/NOUN.compound~abstract outputs/NOUN.head=output)
+                    (VP.head must/AUX.aux{Fin,Pres} be/AUX.cop{Inf} (ADJP.head distinct/ADJ.head))))))
+            \)/PUNCT)))))
+  ./PUNCT)
+(S%t1 (ADVP.advmod As/ADP.head such/ADJ.fixed) ,/PUNCT
+  (NP.nsubj@bits the/DET.det bits/NOUN.head=bit)
+  (VP.head are/AUX.cop=be{Fin,Pres} not/PART.advmod (ADJP.head independent/ADJ.head))
+  :/PUNCT
+  (NP.appos@inequality P/SYM.head [/PUNCT b2/X.dep@b2 is/X.dep raised/X.dep |/SYM.dep b1/X.dep@selected_bit is/X.dep raised/X.dep ]/PUNCT
+    !/SYM.dep =/SYM.dep P/SYM.dep [/PUNCT b2/X.dep@b2 is/X.dep raised/X.dep ]/PUNCT
+    \(/PUNCT 1/NUM.dep //SYM.dep 2/NUM.dep !/SYM.dep =/SYM.dep 1/NUM.dep //SYM.dep 3/NUM.dep \)/PUNCT)
+  ./PUNCT)

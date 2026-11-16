@@ -1,0 +1,29 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "majorityNegative",
+   "uses": [
+    "thread"
+   ],
+   "s": 2
+  },
+  {
+   "move": "hedge",
+   "t": "crisis",
+   "sec": 0,
+   "uses": [
+    "thread"
+   ],
+   "s": 3
+  },
+  {
+   "move": "cite",
+   "t": "crisis",
+   "uses": [
+    "thread"
+   ],
+   "s": 3
+  }
+ ]
+}

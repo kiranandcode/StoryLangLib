@@ -1,0 +1,81 @@
+{
+ "text_sha": "8a333fbec2b5dc92",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice bloom hashesDistinct assumed",
+   "at": 29,
+   "w": "assumes",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader !bloomErr",
+   "at": 81,
+   "w": "the",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true !bloomErr",
+   "at": 81,
+   "w": "the"
+  }
+ ],
+ "judge": [
+  {
+   "at": 12,
+   "w": "uses",
+   "kind": "generic"
+  },
+  {
+   "at": 26,
+   "w": "used",
+   "kind": "generic"
+  },
+  {
+   "at": 35,
+   "w": "distinct",
+   "kind": "content",
+   "lit": "hashesDistinct"
+  },
+  {
+   "at": 40,
+   "w": "hard",
+   "kind": "generic"
+  },
+  {
+   "at": 42,
+   "w": "achieve",
+   "kind": "generic"
+  },
+  {
+   "at": 48,
+   "w": "present",
+   "kind": "act"
+  },
+  {
+   "at": 53,
+   "w": "\"",
+   "kind": "act"
+  },
+  {
+   "at": 58,
+   "w": "follow",
+   "kind": "act"
+  },
+  {
+   "at": 68,
+   "w": "based",
+   "kind": "generic"
+  },
+  {
+   "at": 85,
+   "w": "introduced",
+   "kind": "content",
+   "lit": "!bloomErr"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "text_sha": "532c243ffa43b6dc",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader interpreters",
+   "at": 52,
+   "w": "ran",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 7,
+   "w": "capable",
+   "kind": "generic"
+  },
+  {
+   "at": 9,
+   "w": "handling",
+   "kind": "generic"
+  },
+  {
+   "at": 25,
+   "w": "done",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 30,
+   "w": "point",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 40,
+   "w": "verify",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 48,
+   "w": "exploiting",
+   "kind": "content",
+   "lit": "interpreters"
+  },
+  {
+   "at": 57,
+   "w": "generating",
+   "kind": "content",
+   "lit": "interpreters"
+  },
+  {
+   "at": 64,
+   "w": "getting",
+   "kind": "content",
+   "lit": "interpreters"
+  },
+  {
+   "at": 68,
+   "w": "generate",
+   "kind": "content",
+   "lit": "interpreters"
+  },
+  {
+   "at": 77,
+   "w": "abstracts",
+   "kind": "content",
+   "lit": "interpreters"
+  },
+  {
+   "at": 95,
+   "w": "unthinkable",
+   "kind": "hypothetical"
+  }
+ ]
+}

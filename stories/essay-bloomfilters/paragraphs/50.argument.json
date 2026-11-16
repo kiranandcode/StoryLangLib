@@ -1,0 +1,26 @@
+{
+ "moves": [
+  {
+   "move": "deliver",
+   "t": "distinctCaveat",
+   "uses": [],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "hashesDistinct",
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  },
+  {
+   "move": "concede",
+   "t": "counterexampleValid",
+   "uses": [
+    "bitsDependent"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "dbHuge",
+   "uses": [
+    "urls"
+   ],
+   "s": 1
+  },
+  {
+   "move": "hedge",
+   "t": "storeInfeasible",
+   "sec": 0,
+   "uses": [
+    "users"
+   ],
+   "s": 1
+  }
+ ]
+}

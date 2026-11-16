@@ -1,0 +1,24 @@
+entity hash_functions abstract they "the k hash functions"
+entity unset_k abstract it "the probability that the selected bit remains unset after the k hash functions, (1 - 1/m)^k"
+entity selected_bit abstract it "our selected bit b1"
+entity authors group they "we (the authors and reader)"
+topic t1 "the bit stays unset after k hashes" unset_k
+(S%t1 (PP.obl From/ADP.case here/ADV.head) ,/PUNCT
+  (SBAR.advcl as/SCONJ.mark
+    (S.head (NP.nsubj@hash_functions all/DET.det the/DET.det hash/NOUN.compound functions/NOUN.head=function)
+      are/AUX.cop=be{Fin,Pres} also/ADV.advmod~degree independent/ADJ.head))
+  ,/PUNCT this/PRON.nsubj
+  (VP.head means/VERB.head=mean{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (NP.nsubj@unset_k the/DET.det probability/NOUN.head
+          (SBAR.acl that/SCONJ.mark
+            (S.head (NP.nsubj@selected_bit our/PRON.poss@authors selected/ADJ.amod bit/NOUN.head)
+              (VP.head remains/VERB.head=remain{Fin,Pres} unset/ADJ.xcomp
+                ,/PUNCT
+                (VP.advcl even/ADV.advmod~degree after/SCONJ.mark executing/VERB.head=execute{Ger}
+                  (NP.obj@hash_functions all/DET.det the/DET.det k/SYM.nummod hash/NOUN.compound functions/NOUN.head=function))
+                ,/PUNCT))))
+        (VP.head will/AUX.aux{Fin,Pres} be/AUX.cop{Inf}
+          (NP.head@unset_k \(/PUNCT 1/NUM.head -/SYM.cc (NP.conj 1/NUM.head //SYM.case m/SYM.nmod) \)/PUNCT ^/SYM.dep k/SYM.dep)))))
+  ./PUNCT)

@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "newIdeasDaily",
+   "uses": [
+    "research"
+   ],
+   "s": 2
+  }
+ ]
+}

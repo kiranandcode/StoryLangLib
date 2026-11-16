@@ -1,0 +1,56 @@
+entity authors group they "I, we: the authors"
+entity reader person they "you, the reader"
+entity overview abstract it "this: the high-level overview just given" of=para:42,para:43
+entity context abstract it "the context surrounding our research"
+entity research abstract it "our research / the work"
+entity importance abstract it "the research's importance"
+entity interest abstract it "the reader's interest"
+entity questions abstract they "the many components of the work not mentioned here" generic
+entity probability abstract it "probability" generic
+entity coq abstract it "Coq"
+entity bose_derivation abstract it "the exact derivation for the updated expression"
+entity bose_expression abstract it "the updated Bloom filter false positive expression"
+entity analysis abstract it "this analysis"
+entity structures abstract they "other probabilistic data structures" generic
+entity counting abstract they "Counting filters" generic
+entity quotient abstract they "Quotient filters" generic
+entity blocked abstract they "Blocked Bloom filters" generic
+topic t1 "what the post leaves out" questions,research
+(S%t1 (NP.nsubj@overview This/PRON.head)
+  (VP.head concludes/VERB.head=conclude{Fin,Pres}
+    (NP.obj@overview the/DET.det high-level/ADJ.amod overview/NOUN.head
+      (PP.nmod of/ADP.case (NP.head@context the/DET.det context/NOUN.head
+        (VP.acl surrounding/VERB.head=surround{Ger}
+          (NP.obj@research our/PRON.nmod@authors research/NOUN.head and/CCONJ.cc
+            (NP.conj@importance its/PRON.nmod@research importance/NOUN.head)))))))
+  ./PUNCT)
+(S%t1 Hopefully/ADV.advmod~impression (NP.nsubj@overview this/PRON.head)
+  has/AUX.aux=have{Fin,Pres} piqued/VERB.head=pique{Part} (NP.obj@interest your/PRON.nmod@reader interest/NOUN.head)
+  ;/PUNCT
+  (S.parataxis there/PRON.expl
+    (VP.head are/VERB.head=be{Fin,Pres}
+      (NP.nsubj@questions many/ADJ.amod components/NOUN.head=component
+        (PP.nmod of/ADP.case (NP.head@research the/DET.det work/NOUN.head))
+        (SBAR.acl that/PRON.obj@questions (NP.nsubj@authors I/PRON.head)
+          (VP.head have/AUX.aux{Fin,Pres} not/PART.advmod mentioned/VERB.head=mention{Part} here/ADV.advmod~place
+            (PP.obl for/ADP.case (NP.head size/NOUN.compound~abstract constraints/NOUN.head=constraint~abstract))))
+        ,/PUNCT
+        (PP.nmod such/ADJ.case as/ADP.fixed :/PUNCT
+          (S.dep How/ADV.advmod~manner can/AUX.aux{Fin,Pres} (NP.nsubj@authors we/PRON.head)
+            encode/VERB.head{Inf} (NP.obj@probability probability/NOUN.head)
+            (PP.obl in/ADP.case (NP.head@coq Coq/PROPN.head))
+            ?/PUNCT))))))
+(S%t1 (NP.head What/PRON.head)
+  is/AUX.cop=be{Fin,Pres}
+  (NP.nsubj@bose_derivation the/DET.det exact/ADJ.amod derivation/NOUN.head
+    (PP.nmod for/ADP.case (NP.head@bose_expression the/DET.det updated/ADJ.amod Bloom/PROPN.compound filter/NOUN.compound false/ADJ.amod positive/ADJ.amod expression/NOUN.head)))
+  ?/PUNCT)
+(S%t1 How/ADV.advmod~manner can/AUX.aux{Fin,Pres} (NP.nsubj@authors we/PRON.head)
+  extend/VERB.head{Inf} (NP.obj@analysis this/DET.det analysis/NOUN.head)
+  (PP.obl to/ADP.case (NP.head@structures other/ADJ.amod probabilistic/ADJ.amod data/NOUN.compound structures/NOUN.head=structure
+    ,/PUNCT
+    (PP.nmod such/ADJ.case as/ADP.fixed :/PUNCT
+      (NP.head@counting Counting/PROPN.compound filters/NOUN.head=filter ?/PUNCT
+        (NP.conj@quotient Quotient/PROPN.compound filters/NOUN.head=filter ?/PUNCT)
+        (NP.conj@blocked Blocked/ADJ.amod Bloom/PROPN.compound filters/NOUN.head=filter)))))
+  ?/PUNCT)

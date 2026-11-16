@@ -1,0 +1,29 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "proxy",
+   "sec": 0,
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "bloomFormula",
+   "uses": [
+    "bloom_filter"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "citedWrong",
+   "uses": [
+    "bloomFormula"
+   ],
+   "s": 1
+  }
+ ]
+}

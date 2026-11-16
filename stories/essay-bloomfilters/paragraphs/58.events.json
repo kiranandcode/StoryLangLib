@@ -1,0 +1,19 @@
+{
+ "text_sha": "e44b3cc7ccf808c6",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "true asymptoticOk",
+   "at": 12,
+   "w": "consistent"
+  }
+ ],
+ "judge": [
+  {
+   "at": 22,
+   "w": "more",
+   "kind": "generic"
+  }
+ ]
+}

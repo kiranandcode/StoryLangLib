@@ -1,0 +1,38 @@
+{
+ "text_sha": "4d88e166b72e0c09",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 11,
+   "w": "inserted",
+   "kind": "generic"
+  },
+  {
+   "at": 13,
+   "w": "unique",
+   "kind": "generic"
+  },
+  {
+   "at": 19,
+   "w": "generalises",
+   "kind": "generic"
+  },
+  {
+   "at": 30,
+   "w": "conclude",
+   "kind": "act"
+  },
+  {
+   "at": 40,
+   "w": "raised",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 46,
+   "w": "(",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "text_sha": "0a1a76bf07cd8e16",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "hint authors reader !applicationsMatter",
+   "at": 5,
+   "w": "cares",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader !applicationsMatter",
+   "at": 11,
+   "w": "mean",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader seMessy",
+   "at": 46,
+   "w": "ad-hoc",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true !applicationsMatter",
+   "at": 23,
+   "w": "in"
+  },
+  {
+   "c": "knows authors seMessy",
+   "at": 28,
+   "w": "worked"
+  },
+  {
+   "c": "true seMessy",
+   "at": 41,
+   "w": "pretty"
+  }
+ ],
+ "judge": [
+  {
+   "at": 15,
+   "w": "like",
+   "kind": "content",
+   "lit": "!applicationsMatter"
+  },
+  {
+   "at": 20,
+   "w": "did",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 35,
+   "w": "believe",
+   "kind": "generic"
+  },
+  {
+   "at": 58,
+   "w": "need",
+   "kind": "generic"
+  },
+  {
+   "at": 61,
+   "w": "like",
+   "kind": "generic"
+  },
+  {
+   "at": 66,
+   "w": "settle",
+   "kind": "generic"
+  },
+  {
+   "at": 73,
+   "w": "want",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 75,
+   "w": "build",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 81,
+   "w": "handling",
+   "kind": "hypothetical"
+  }
+ ]
+}

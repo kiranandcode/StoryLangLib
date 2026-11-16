@@ -1,0 +1,91 @@
+{
+ "text_sha": "9b9b3725845a112e",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader loss",
+   "at": 3,
+   "w": "think",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader craftPride",
+   "at": 72,
+   "w": "craft",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader egoNotCuriosity",
+   "at": 92,
+   "w": "ego",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true egoNotCuriosity",
+   "at": 111,
+   "w": "needed"
+  }
+ ],
+ "judge": [
+  {
+   "at": 6,
+   "w": "feel",
+   "kind": "content",
+   "lit": "loss"
+  },
+  {
+   "at": 15,
+   "w": "need",
+   "kind": "content",
+   "lit": "loss"
+  },
+  {
+   "at": 17,
+   "w": "put",
+   "kind": "content",
+   "lit": "loss"
+  },
+  {
+   "at": 20,
+   "w": "do",
+   "kind": "content",
+   "lit": "loss"
+  },
+  {
+   "at": 27,
+   "w": "used",
+   "kind": "act"
+  },
+  {
+   "at": 29,
+   "w": "take",
+   "kind": "act"
+  },
+  {
+   "at": 40,
+   "w": "built",
+   "kind": "act"
+  },
+  {
+   "at": 56,
+   "w": "toiled",
+   "kind": "act"
+  },
+  {
+   "at": 59,
+   "w": "designing",
+   "kind": "act"
+  },
+  {
+   "at": 78,
+   "w": "took",
+   "kind": "content",
+   "lit": "craftPride"
+  }
+ ]
+}

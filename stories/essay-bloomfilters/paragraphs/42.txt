@@ -1,0 +1,1 @@
+This finally brings us to our research - Ceramist: Certifying Certainty and Uncertainty in Approximate Membership Query Structures, in which we manage to finally pin down the true behaviours of a Bloom filter by producing a certified proof of Bose et al.'s updated bound in Coq.

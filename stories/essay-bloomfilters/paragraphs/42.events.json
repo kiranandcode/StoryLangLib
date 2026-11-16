@@ -1,0 +1,33 @@
+{
+ "text_sha": "ec8bfd1ea9728ed6",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader certified",
+   "at": 23,
+   "w": "manage",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "brings",
+   "kind": "generic"
+  },
+  {
+   "at": 26,
+   "w": "pin",
+   "kind": "content",
+   "lit": "certified"
+  },
+  {
+   "at": 36,
+   "w": "producing",
+   "kind": "content",
+   "lit": "certified"
+  }
+ ]
+}

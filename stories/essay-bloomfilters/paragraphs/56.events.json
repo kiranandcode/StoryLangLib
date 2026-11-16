@@ -1,0 +1,52 @@
+{
+ "text_sha": "eda7ce63441ac727",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice reviewers !boseDerivationSound inferred",
+   "at": 58,
+   "w": "rediscovered",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true !boseDerivationSound",
+   "at": 16,
+   "w": "due"
+  },
+  {
+   "c": "true bloomRejected",
+   "at": 39,
+   "w": "based"
+  },
+  {
+   "c": "true bloomRejected",
+   "at": 50,
+   "w": "ended"
+  },
+  {
+   "c": "knows reviewers !boseDerivationSound",
+   "at": 53,
+   "w": "rejected"
+  },
+  {
+   "c": "knows authors certified",
+   "at": 69,
+   "w": "proving"
+  }
+ ],
+ "judge": [
+  {
+   "at": 67,
+   "w": "ended",
+   "kind": "act"
+  },
+  {
+   "at": 82,
+   "w": "eliding",
+   "kind": "act"
+  }
+ ]
+}

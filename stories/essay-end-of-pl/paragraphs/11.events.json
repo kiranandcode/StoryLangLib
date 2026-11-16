@@ -1,0 +1,61 @@
+{
+ "text_sha": "02a1edd7553cb356",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader ideasRemain",
+   "at": 7,
+   "w": "is",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "ask authors reader applicationsMatter",
+   "at": 50,
+   "w": "cares",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader fewUsers",
+   "at": 73,
+   "w": "have",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true ideasRemain",
+   "at": 37,
+   "w": "explore"
+  }
+ ],
+ "judge": [
+  {
+   "at": 3,
+   "w": "trying",
+   "kind": "act"
+  },
+  {
+   "at": 5,
+   "w": "get",
+   "kind": "act"
+  },
+  {
+   "at": 53,
+   "w": "uses",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 57,
+   "w": "Let",
+   "kind": "generic"
+  },
+  {
+   "at": 59,
+   "w": "let",
+   "kind": "act"
+  }
+ ]
+}

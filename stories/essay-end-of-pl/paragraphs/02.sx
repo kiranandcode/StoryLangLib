@@ -1,0 +1,29 @@
+entity opinions abstract they "the opinions in the thread"
+entity thread abstract it "the thread on the TYPES mailing list"
+entity stances abstract they "the thoughtful stances in the thread"
+entity some_opinions abstract they "some of the opinions (the positive ones)" of=opinions
+entity majority abstract it "the majority opinion in the thread"
+entity pessimists group they "some researchers (who fear for the field)"
+entity crisis abstract it "an existential crisis"
+topic t1 "the mood of the thread" opinions
+topic t2 "an existential crisis" crisis
+(S%t1 (NP.nsubj@opinions The/DET.det opinions/NOUN.head=opinion (PP.nmod in/ADP.case (NP.head@thread the/DET.det thread/NOUN.head)))
+  were/AUX.cop=be{Fin,Past}
+  (NP.head@opinions a/DET.det mix/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@stances thoughtful/ADJ.amod stances/NOUN.head=stance)))
+  ./PUNCT)
+(S%t1 (S.head (NP.nsubj@some_opinions Some/PRON.head) were/AUX.cop=be{Fin,Past} positive/ADJ.head)
+  ,/PUNCT
+  (S.conj but/CCONJ.cc (NP.nsubj@majority the/DET.det majority/NOUN.compound~abstract opinion/NOUN.head)
+    was/AUX.cop=be{Fin,Past} overwhelmingly/ADV.advmod~degree negative/ADJ.head)
+  ./PUNCT)
+(S%t2 It/PRON.expl wouldn't/AUX.aux=would{Fin,Pres,Mood=Cnd} be/AUX.cop{Inf} too/ADV.advmod~degree far/ADJ.head
+  (VP.csubj to/PART.mark say/VERB.head{Inf}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head (NP.nsubj@pessimists some/DET.det researchers/NOUN.head=researcher)
+        (VP.head feel/VERB.head{Fin,Pres}
+          (SBAR.ccomp that/SCONJ.mark
+            (S.head (NP.nsubj@pessimists they/PRON.head)
+              (VP.head are/AUX.aux=be{Fin,Pres} facing/VERB.head=face{Part}
+                (NP.obj@crisis an/DET.det existential/ADJ.amod crisis/NOUN.head)
+                (ADVP.advmod right/ADV.advmod~degree now/ADV.head~time))))))))
+  :/PUNCT)

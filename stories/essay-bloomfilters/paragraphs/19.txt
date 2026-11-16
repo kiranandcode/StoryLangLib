@@ -1,0 +1,1 @@
+This is the case for negative results; things get slightly more interesting for positive results due to the possibility of false positives.

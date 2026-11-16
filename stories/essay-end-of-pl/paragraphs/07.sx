@@ -1,0 +1,28 @@
+entity points abstract it "this (the points just made: LLMs code well, humans stop coding)" of=para:6
+entity pessimists group they "researchers (who fear for the field)"
+entity research abstract it "their research (PL research)"
+entity humans group they "humans (who write code)" generic
+entity code abstract they "programs (as a kind)" generic
+entity programming_languages abstract they "programming languages (as a kind)" generic
+topic t1 "the fear of obsolescence" research
+(S%t1 (PP.obl Given/ADP.case (NP.head@points this/PRON.head)) ,/PUNCT
+  it's/PRON.expl=it understandable/ADJ.head
+  (SBAR.csubj that/SCONJ.mark
+    (S.head (NP.nsubj@pessimists researchers/NOUN.head=researcher)
+      (VP.head might/AUX.aux{Fin,Pres} worry/VERB.head{Inf}
+        (SBAR.ccomp that/SCONJ.mark
+          (S.head maybe/ADV.advmod~impression (NP.nsubj@research their/PRON.poss@pessimists research/NOUN.head)
+            (VP.head is/AUX.aux=be{Fin,Pres} becoming/VERB.head=become{Part} obsolete/ADJ.xcomp))))))
+  ./PUNCT)
+(S%t1 (NP.nsubj@humans Humans/NOUN.head=human)
+  (VP.head aren't/AUX.aux=be{Fin,Pres} going/VERB.head=go{Part}
+    (VP.xcomp to/PART.mark be/AUX.aux{Inf} writing/VERB.head=write{Part} (NP.obj@code programs/NOUN.head=program)))
+  ./PUNCT)
+(S%t1 So/CCONJ.cc why/ADV.advmod~manner
+  (VP.head care/VERB.head{Inf} (PP.obl about/ADP.case (NP.head@programming_languages programming/NOUN.compound~abstract languages/NOUN.head=language))
+    (ADVP.advmod at/ADP.case all/DET.head~degree))
+  ?/PUNCT)
+(S%t1 (NP.nsubj@humans Humans/NOUN.head=human)
+  (VP.head aren't/AUX.aux=be{Fin,Pres} going/VERB.head=go{Part}
+    (VP.xcomp to/PART.mark be/AUX.aux{Inf} writing/VERB.head=write{Part} (NP.obj@programming_languages them/PRON.head)))
+  ./PUNCT)

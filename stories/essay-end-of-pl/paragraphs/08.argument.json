@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "motivate",
+   "t": "rebuttal",
+   "uses": [
+    "plObsoleteFear"
+   ],
+   "s": 2
+  }
+ ]
+}

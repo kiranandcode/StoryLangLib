@@ -1,0 +1,37 @@
+{
+ "text_sha": "4c333771a22a1a04",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader sendLeaks",
+   "at": 27,
+   "w": "something",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true sendLeaks",
+   "at": 2,
+   "w": "sending"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "visits",
+   "kind": "generic"
+  },
+  {
+   "at": 18,
+   "w": "logged",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 35,
+   "w": "comfortable",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "text_sha": "7bcd8a50390db496",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader !hashesDistinct",
+   "at": 25,
+   "w": "guaranteed",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true hashRandom",
+   "at": 33,
+   "w": "assumed"
+  }
+ ],
+ "judge": [
+  {
+   "at": 6,
+   "w": "works",
+   "kind": "generic"
+  },
+  {
+   "at": 10,
+   "w": "selected",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 15,
+   "w": "end",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 19,
+   "w": "distinct",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 36,
+   "w": "independent",
+   "kind": "content",
+   "lit": "hashRandom"
+  },
+  {
+   "at": 44,
+   "w": "consider",
+   "kind": "generic"
+  },
+  {
+   "at": 53,
+   "w": "happen",
+   "kind": "generic"
+  },
+  {
+   "at": 55,
+   "w": "map",
+   "kind": "generic"
+  },
+  {
+   "at": 70,
+   "w": "given",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 77,
+   "w": "(",
+   "kind": "hypothetical"
+  }
+ ]
+}

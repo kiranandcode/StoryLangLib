@@ -15,15 +15,15 @@ A file holds entity and topic lines, then one tree per sentence:
           ./PUNCT)
 
 Node:  (CAT[.role][@ref][%topic][!speaker] kids...)   a top-level node is the root
-Leaf:  form/UPOS[.role][=lemma][{feats}][@ref]        PUNCT defaults to role punct
+Leaf:  form/UPOS[.role][=lemma][{feats}][@ref][~sense] PUNCT defaults to role punct
 Feats: k=v pairs, or the shorthands Fin Inf Part Ger (VerbForm), Past Pres (Tense).
 Escape ( ) and \\ in a form with a backslash: \\(/PUNCT.
 """
 import json, re, sys
 
 UPOS = "ADJ ADP ADV AUX CCONJ DET INTJ NOUN NUM PART PRON PROPN PUNCT SCONJ SYM VERB X".split()
-LEAF = re.compile(r"^(?P<w>.+?)/(?P<p>%s)(?:\.(?P<r>[a-z]+))?(?:=(?P<l>[^{@]+))?"
-                  r"(?:\{(?P<f>[^}]*)\})?(?:@(?P<ref>[\w-]+))?$" % "|".join(UPOS))
+LEAF = re.compile(r"^(?P<w>.+?)/(?P<p>%s)(?:\.(?P<r>[a-z]+))?(?:=(?P<l>[^{@~]+))?"
+                  r"(?:\{(?P<f>[^}]*)\})?(?:@(?P<ref>[\w-]+))?(?:~(?P<s>[\w-]+))?$" % "|".join(UPOS))
 HEAD = re.compile(r"^(?P<c>[A-Z]+)(?:\.(?P<r>[a-z]+))?(?:@(?P<ref>[\w-]+))?(?:%(?P<t>[\w-]+))?(?:!(?P<spk>[\w-]+))?$")
 SHORT = {"Fin": ("VerbForm", "Fin"), "Inf": ("VerbForm", "Inf"), "Part": ("VerbForm", "Part"),
          "Ger": ("VerbForm", "Ger"), "Past": ("Tense", "Past"), "Pres": ("Tense", "Pres")}
@@ -66,6 +66,7 @@ def leaf(a, where):
             f[k] = v
         d["f"] = f
     if m["ref"]: d["ref"] = m["ref"]
+    if m["s"]: d["sense"] = m["s"]
     return d
 
 

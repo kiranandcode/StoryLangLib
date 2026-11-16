@@ -1,0 +1,25 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 3
+  },
+  {
+   "move": "deliver",
+   "t": "premiseArgued",
+   "uses": [
+    "egoNotCuriosity"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "explorationIsResearch",
+   "uses": [
+    "exploration",
+    "research"
+   ],
+   "s": 4
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "moves": [
+  {
+   "move": "example",
+   "t": "bitsDependent",
+   "uses": [
+    "hashesDistinct",
+    "bit_vector"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "bitsDependent",
+   "premises": [
+    "distinctSingleBit"
+   ],
+   "uses": [
+    "probability"
+   ],
+   "s": 4
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+entity field abstract it "programming languages research / PL"
+entity bridge_ abstract it "the bridge between theory and application"
+entity theory abstract it "theory"
+entity applications abstract they "application / practical applications" generic
+entity community group they "we as PL researchers (the community)"
+entity ideas abstract they "principled and elegant ideas (of PL)"
+entity practicality abstract it "our practicality"
+entity results abstract they "the downstream results of our work"
+entity work abstract it "our work"
+topic t1 "PL between theory and practice" field
+(S%t1 (NP.nsubj@field Programming/NOUN.compound~abstract languages/NOUN.compound=language~abstract research/NOUN.head)
+  (VP.head has/AUX.aux=have{Fin,Pres} saddled/VERB.head=saddle{Part}
+    (NP.obj@bridge_ the/DET.det bridge/NOUN.head~figurative
+      (PP.nmod between/ADP.case (NP.head@theory theory/NOUN.head) and/CCONJ.cc (NP.conj@applications application/NOUN.head)))
+    (PP.obl since/ADP.case (NP.head its/PRON.poss@field inception/NOUN.head~event)))
+  ./PUNCT)
+(S%t1 (PP.obl As/ADP.case (NP.head@community PL/PROPN.compound researchers/NOUN.head=researcher)) ,/PUNCT
+  (NP.nsubj@community we/PRON.head)
+  (VP.head get/VERB.head{Fin,Pres}
+    (VP.xcomp to/PART.mark work/VERB.head{Inf}
+      (PP.obl on/ADP.case (NP.head@ideas (ADJP.amod principled/ADJ.head and/CCONJ.cc elegant/ADJ.conj) ideas/NOUN.head=idea))))
+  ./PUNCT)
+(S%t1 (S.head (NP.nsubj@community We/PRON.head)
+    (VP.head don't/AUX.aux=do{Fin,Pres} need/VERB.head{Inf}
+      (VP.xcomp to/PART.mark compromise/VERB.head{Inf} (NP.obj@ideas those/DET.det ideas/NOUN.head=idea)
+        (PP.obl for/ADP.case the/DET.det sake/NOUN.fixed~abstract (PP.nmod of/ADP.case (NP.head@practicality our/PRON.poss@community practicality/NOUN.head))))))
+  ,/PUNCT
+  (S.conj but/CCONJ.cc (PP.obl at/ADP.case the/DET.det same/ADJ.amod time/NOUN.head~time)
+    (NP.nsubj@results the/DET.det downstream/ADJ.amod results/NOUN.head=result (PP.nmod of/ADP.case (NP.head@work our/PRON.poss@community work/NOUN.head)))
+    (VP.head do/AUX.aux{Fin,Pres} eventually/ADV.advmod~time boil/VERB.head{Inf} down/ADP.compound
+      (PP.obl to/ADP.case (NP.head@applications practical/ADJ.amod applications/NOUN.head=application))))
+  ./PUNCT)

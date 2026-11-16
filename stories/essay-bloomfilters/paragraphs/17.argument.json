@@ -1,0 +1,31 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "noFalseNeg",
+   "uses": [
+    "insertion",
+    "query",
+    "no_false_negatives"
+   ],
+   "s": 1
+  },
+  {
+   "move": "hedge",
+   "t": "noFalseNeg",
+   "sec": 0,
+   "uses": [
+    "insertion"
+   ],
+   "s": 1
+  },
+  {
+   "move": "evaluate",
+   "t": "noFalseNeg",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+As we're treating the hash functions as random, the hash outputs can be thought of as being uniformly randomly distributed over each possible bit.

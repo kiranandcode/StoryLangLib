@@ -1,0 +1,37 @@
+{
+ "text_sha": "be8276fd3b132e24",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader ideasPlentiful",
+   "at": 37,
+   "w": "ask",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows authors excited",
+   "at": 12,
+   "w": "more"
+  },
+  {
+   "c": "true ideasPlentiful",
+   "at": 24,
+   "w": "plentiful"
+  },
+  {
+   "c": "true ideasPlentiful",
+   "at": 29,
+   "w": "popping"
+  }
+ ],
+ "judge": [
+  {
+   "at": 2,
+   "w": "honest",
+   "kind": "act"
+  }
+ ]
+}

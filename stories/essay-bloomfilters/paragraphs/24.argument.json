@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "blooms_analysis",
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "blooms_analysis",
+   "sec": 2,
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "text_sha": "50bd792a58131734",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "let's",
+   "kind": "generic"
+  },
+  {
+   "at": 3,
+   "w": "have",
+   "kind": "generic"
+  },
+  {
+   "at": 8,
+   "w": "happens",
+   "kind": "generic"
+  },
+  {
+   "at": 11,
+   "w": "hash",
+   "kind": "act"
+  }
+ ]
+}

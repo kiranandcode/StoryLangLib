@@ -1,0 +1,1 @@
+As such, the probability that the hash function happens to hit our selected bit will simply be - 1 over the number of bits - 1/m. Obviously, this naturally also means the probability that the hash output misses our selected bit will just be 1 - 1/m.

@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "novelStructures",
+   "uses": [
+    "certified"
+   ],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "novelStructures",
+   "uses": [
+    "certified"
+   ],
+   "s": 1
+  }
+ ]
+}

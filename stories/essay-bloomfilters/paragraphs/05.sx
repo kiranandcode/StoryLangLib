@@ -1,0 +1,30 @@
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind); its approximate local representation" generic
+entity browsers group they "browsers" generic
+entity malicious_urls abstract it "the set of known malicious URLs"
+entity honest_urls abstract they "the honest URLs" generic
+entity query abstract they "queries" generic
+entity external_service abstract it "an external database"
+entity proxy abstract it "a local proxy"
+topic t1 "the Bloom filter as a local proxy" bloom_filter,browsers
+(S%t1 (VP.advcl Using/VERB.head=use{Ger}
+    (NP.obj@bloom_filter a/DET.det probabilistic/ADJ.amod data/NOUN.compound~digital structure/NOUN.head
+      (ADJP.acl known/ADJ.head (PP.obl as/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))))
+  ,/PUNCT
+  (NP.nsubj@browsers Browsers/NOUN.head=browser)
+  (VP.head maintain/VERB.head{Fin,Pres}
+    (NP.obj@bloom_filter a/DET.det approximate/ADJ.amod representation/NOUN.head
+      (PP.nmod of/ADP.case (NP.head@malicious_urls the/DET.det set/NOUN.head (PP.nmod of/ADP.case (NP.head known/ADJ.amod malicious/ADJ.amod URLs/NOUN.head=URL~abstract)))))
+    locally/ADV.advmod~place)
+  ./PUNCT)
+(S%t1 (SBAR.advcl By/SCONJ.mark (VP.head querying/VERB.head=query{Ger} (NP.obj@bloom_filter this/DET.det space-efficient/ADJ.amod local/ADJ.amod set/NOUN.head)))
+  ,/PUNCT
+  (NP.nsubj@browsers browsers/NOUN.head=browser)
+  (VP.head will/AUX.aux{Fin,Pres} only/ADV.advmod~degree send/VERB.head{Inf} up/ADP.compound
+    (NP.obj a/DET.det small/ADJ.amod proportion/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@honest_urls the/DET.det honest/ADJ.amod URLs/NOUN.head=URL))))
+  ./PUNCT)
+(S%t1 (VP.head Use/VERB.head{Inf}
+    (NP.obj@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)
+    (VP.xcomp to/PART.mark act/VERB.head{Inf}
+      (PP.obl as/ADP.case (NP.head@proxy a/DET.det local/ADJ.amod proxy/NOUN.head
+        (PP.nmod for/ADP.case (NP.head@query queries/NOUN.head=query (PP.nmod to/ADP.case (NP.head@external_service an/DET.det external/ADJ.amod database/NOUN.head))))))))
+  ./PUNCT)

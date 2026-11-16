@@ -1,0 +1,16 @@
+entity authors group they "I / we (the authors)"
+entity hash_functions abstract they "the k hash functions"
+entity hash_outputs abstract they "the hash outputs"
+entity bits abstract they "the bits of the bit-vector (each possible bit)" generic
+topic t1 "hashes as random" hash_functions,hash_outputs
+(S%t1
+  (SBAR.advcl As/SCONJ.mark
+    (S.head we're/PRON.nsubj@authors
+      (VP.head treating/VERB.head=treat{Ger} (NP.obj@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function)
+        (ADJP.xcomp as/ADP.case random/ADJ.head))))
+  ,/PUNCT
+  (NP.nsubj@hash_outputs the/DET.det hash/NOUN.compound outputs/NOUN.head=output)
+  (VP.head can/AUX.aux{Fin,Pres} be/AUX.aux{Inf} thought/VERB.head=think{Part} of/ADP.compound
+    (VP.xcomp as/SCONJ.mark being/AUX.aux=be{Ger} uniformly/ADV.advmod~manner randomly/ADV.advmod~manner distributed/VERB.head=distribute{Part}
+      (PP.obl over/ADP.case (NP.head@bits each/DET.det possible/ADJ.amod bit/NOUN.head))))
+  ./PUNCT)

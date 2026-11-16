@@ -1,0 +1,38 @@
+{
+ "text_sha": "925ad34602738ac9",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 3,
+   "w": "interested",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 6,
+   "w": "recommend",
+   "kind": "act"
+  },
+  {
+   "at": 8,
+   "w": "reading",
+   "kind": "act"
+  },
+  {
+   "at": 13,
+   "w": "see",
+   "kind": "act"
+  },
+  {
+   "at": 18,
+   "w": "checking",
+   "kind": "act"
+  },
+  {
+   "at": 28,
+   "w": "see",
+   "kind": "act"
+  }
+ ]
+}

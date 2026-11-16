@@ -1,0 +1,22 @@
+entity authors group they "I / we (the authors; the inclusive we of the worked argument)"
+entity approach abstract it "the standard approach: treating the hashes as random"
+entity data_structures abstract they "these kinds of data structures (probabilistic, hash-based)" generic
+entity result abstract it "a more general result"
+entity hash_functions abstract they "the hash functions"
+entity hash_outputs abstract they "their outputs: the hash outputs"
+entity randomness abstract it "this: the modelling of the hashes as random" of=hash_functions,hash_outputs
+topic t1 "modelling the hashes as random" hash_functions
+(S%t1 (SBAR.advcl As/SCONJ.mark is/AUX.cop=be{Fin,Pres}
+    (NP.head@approach the/DET.det standard/ADJ.amod approach/NOUN.head (PP.nmod for/ADP.case (NP.head@data_structures these/DET.det kinds/NOUN.head=kind (PP.nmod of/ADP.case data/NOUN.compound~abstract structures/NOUN.head=structure~abstract)))))
+  ,/PUNCT
+  (S.advcl in/ADP.mark order/NOUN.fixed~abstract to/PART.fixed get/VERB.head{Inf}
+    (NP.obj@result a/DET.det more/ADV.advmod~degree general/ADJ.amod result/NOUN.head))
+  ,/PUNCT
+  (NP.nsubj@authors we/PRON.head)
+  can/AUX.aux{Fin,Pres}
+  instead/ADV.advmod~manner
+  treat/VERB.head{Inf}
+  (NP.obj@hash_functions the/DET.det hash/NOUN.compound~abstract functions/NOUN.head=function and/CCONJ.cc (NP.conj@hash_outputs their/PRON.poss@hash_functions outputs/NOUN.head=output))
+  (ADJP.obl as/ADP.case random/ADJ.head)
+  (PRN.parataxis \(/PUNCT (FRAG.head (NP.head@randomness more/ADJ.head (PP.nmod on/ADP.case this/PRON.head)) later/ADV.advmod~time) \)/PUNCT)
+  ./PUNCT)

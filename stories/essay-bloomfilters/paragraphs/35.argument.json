@@ -1,0 +1,34 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "bitsIndependent",
+   "uses": [
+    "bit_vector",
+    "independence"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "formulaIfIndependent",
+   "premises": [
+    "singleBit",
+    "fpEquivKBits",
+    "bitsIndependent"
+   ],
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "bloomFormula",
+   "uses": [
+    "formulaIfIndependent"
+   ],
+   "s": 1
+  }
+ ]
+}

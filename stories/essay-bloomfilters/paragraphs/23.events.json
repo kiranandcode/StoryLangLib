@@ -1,0 +1,28 @@
+{
+ "text_sha": "5bef965a037e82ee",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 10,
+   "w": "becomes",
+   "kind": "generic"
+  },
+  {
+   "at": 24,
+   "w": "inserting",
+   "kind": "generic"
+  },
+  {
+   "at": 37,
+   "w": "querying",
+   "kind": "generic"
+  },
+  {
+   "at": 43,
+   "w": "returns",
+   "kind": "generic"
+  }
+ ]
+}

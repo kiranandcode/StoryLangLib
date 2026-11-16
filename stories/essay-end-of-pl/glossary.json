@@ -1,0 +1,186 @@
+{
+ "essay": "PL research is dead, the age of PL exploration is just beginning! (kirancodes.me, 2026)",
+ "note": "Characters of story.json keep their ids. Every other entity is kind abstract (or group/person for people not in the world); never object/place (the world does not declare them). Add new ids freely for things local to your paragraphs; reuse these when the text means them.",
+ "entities": [
+  {
+   "id": "authors",
+   "name": "I / we (Kiran; 'we' the PL community when she includes herself, or her team)",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "reader",
+   "name": "you, the reader (budding PL researchers)",
+   "kind": "person",
+   "pron": "they"
+  },
+  {
+   "id": "pessimists",
+   "name": "the researchers in the TYPES thread who fear for the field / some researchers",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "juniors",
+   "name": "junior researchers / students watching the discussion",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "seResearchers",
+   "name": "software engineering researchers",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "colleagues",
+   "name": "colleagues at my work who built dynestyx",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "thread",
+   "name": "the thread on the TYPES mailing list / this discussion",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "field",
+   "name": "our field / PL / programming languages research / PL research",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "ai_tools",
+   "name": "AI tools / LLMs / language models / agents / crazyyy smart tools",
+   "kind": "abstract",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "opinions",
+   "name": "the opinions in the thread",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "crisis",
+   "name": "an existential crisis",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "premise",
+   "name": "the central premise of this article",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "community",
+   "name": "we as a community (the PL community)",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "ego",
+   "name": "ego / the ego-driven defence of our work",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "exploration",
+   "name": "exploration / the joys of exploration",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "code",
+   "name": "code / programs (as a kind)",
+   "kind": "abstract",
+   "pron": "it",
+   "generic": true
+  },
+  {
+   "id": "humans",
+   "name": "humans (who write code)",
+   "kind": "group",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "programming_languages",
+   "name": "programming languages (the artefacts, as a kind)",
+   "kind": "abstract",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "applications",
+   "name": "applications / practical applications",
+   "kind": "abstract",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "ideas",
+   "name": "the beautiful ideas / insights / beauty of PL",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "users",
+   "name": "the users of programming languages",
+   "kind": "group",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "counterfactuals",
+   "name": "research counterfactuals",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "assumptions",
+   "name": "the presumptions / assumptions our software ecosystem is built upon",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "interpreters_project",
+   "name": "Ship your interpreters (the experiment)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "tooling_project",
+   "name": "AI-first Verified Tooling (the experiment)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "semantics_project",
+   "name": "Developing semantics for new languages (the dynestyx collaboration)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "dynestyx",
+   "name": "dynestyx, the colleagues' language for dynamical systems",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "theory",
+   "name": "theoretical work",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "craft",
+   "name": "my code / programming as a craft",
+   "kind": "abstract",
+   "pron": "it"
+  }
+ ]
+}

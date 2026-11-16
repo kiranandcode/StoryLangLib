@@ -1,0 +1,51 @@
+entity bloom person he "Burton Howard Bloom"
+entity authors group they "I (the author)"
+entity blooms_analysis abstract it "the analysis used by Bloom / the following, presented as Bloom's analysis / this proof"
+entity original_paper abstract it "Bloom's original paper"
+entity bloom_definition abstract it "Bloom's slightly different definition of a Bloom filter"
+entity usual_definition abstract it "the definition of a Bloom filter that is typically used"
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind)" generic
+entity hash_functions abstract they "the hash functions"
+entity distinctness abstract it "the hash functions being distinct"
+entity knuth person he "Knuth"
+entity knuth_variant abstract it "Knuth's variant of the Bloom filter"
+entity narrative abstract it "the narrative of the post"
+entity the_error abstract it "the error (assuming the bits independent)"
+topic t1 "whose analysis this is" blooms_analysis,bloom
+(FRAG%t1 Note/NOUN.head~abstract :/PUNCT
+  (S.parataxis
+    (NP.nsubj@blooms_analysis The/DET.det analysis/NOUN.head
+      used/VERB.acl=use{Part} (PP.obl by/ADP.case Bloom/PROPN.head@bloom)
+      (PP.obl in/ADP.case (NP.head@original_paper his/PRON.poss@bloom original/ADJ.amod paper/NOUN.head)))
+    (VP.head actually/ADV.advmod~degree uses/VERB.head=use{Fin,Pres}
+      (NP.obj@bloom_definition a/DET.det slightly/ADV.advmod~degree different/ADJ.amod definition/NOUN.head
+        (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloomfilter/NOUN.head))
+        (PP.nmod than/ADP.case (NP.head@usual_definition the/DET.det one/PRON.head
+          (SBAR.relcl that/PRON.nsubj is/AUX.aux=be{Fin,Pres} typically/ADV.advmod~degree used/VERB.head=use{Part})))))
+    (PRN.parataxis \(/PUNCT
+      (S.head Bloom/PROPN.nsubj@bloom
+        (VP.head assumes/VERB.head=assume{Fin,Pres}
+          (SBAR.ccomp that/SCONJ.mark
+            (S.head (NP.nsubj@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function) are/AUX.cop=be{Fin,Pres} distinct/ADJ.head
+              ,/PUNCT
+              (SBAR.relcl which/PRON.nsubj is/AUX.cop=be{Fin,Pres} typically/ADV.advmod~degree hard/ADJ.head
+                (VP.xcomp to/PART.mark achieve/VERB.head{Inf} (PP.obl in/ADP.case practice/NOUN.head~abstract)))))))
+      \)/PUNCT)
+    -/PUNCT
+    (S.parataxis (NP.nsubj@authors I/PRON.head)
+      (VP.head present/VERB.head{Fin,Pres} (NP.obj@blooms_analysis the/DET.det following/NOUN.head~abstract)
+        (SBAR.xcomp as/SCONJ.mark being/AUX.cop=be{Ger}
+          (NP.head@blooms_analysis "/PUNCT Bloom's/PROPN.poss@bloom "/PUNCT analysis/NOUN.head))
+        (VP.xcomp to/PART.mark follow/VERB.head{Inf} (NP.obj@narrative the/DET.det narrative/NOUN.head))))
+    ,/PUNCT
+    (S.conj but/CCONJ.cc (PP.obl in/ADP.case fact/NOUN.head~abstract)
+        (NP.nsubj@blooms_analysis this/DET.det proof/NOUN.head)
+        (VP.head is/AUX.aux=be{Fin,Pres} based/VERB.head=base{Part}
+          (PP.obl on/ADP.case (NP.head@knuth_variant the/DET.det Knuth's/PROPN.poss@knuth variant/NOUN.head
+            (PP.nmod of/ADP.case (NP.head@bloom_filter the/DET.det Bloomfilter/NOUN.head)))))
+        ,/PUNCT
+        (S.conj so/CCONJ.cc Bloom/PROPN.nsubj@bloom is/AUX.cop=be{Fin,Pres} not/PART.advmod
+          (NP.head the/DET.det one/PRON.head
+            (SBAR.relcl who/PRON.nsubj originally/ADV.advmod~time introduced/VERB.head=introduce{Fin,Past}
+              (NP.obj@the_error the/DET.det error/NOUN.head))))))
+  ./PUNCT)

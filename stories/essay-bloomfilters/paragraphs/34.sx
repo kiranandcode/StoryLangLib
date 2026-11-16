@@ -1,0 +1,22 @@
+entity single_bit_prob abstract it "this result: the single-bit probability"
+entity bloom person he "Burton Howard Bloom"
+entity authors group they "we (the authors and reader, following Bloom)"
+entity false_positive abstract it "the occurrence of a false-positive result"
+entity query_bits abstract they "each of the k bits selected by the hash functions"
+entity hash_functions abstract they "the k hash functions"
+topic t1 "Bloom generalises to k bits" false_positive,query_bits
+(S%t1
+  (VP.advcl In/ADP.mark order/NOUN.fixed~abstract to/PART.fixed generalise/VERB.head{Inf} (NP.obj@single_bit_prob this/DET.det result/NOUN.head))
+  ,/PUNCT Bloom/PROPN.nsubj@bloom then/ADV.advmod
+  (VP.head reasons/VERB.head=reason{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head (NP.nsubj@authors we/PRON.head)
+        (VP.head can/AUX.aux{Fin,Pres} interpret/VERB.head{Inf}
+          (NP.obj@false_positive the/DET.det occurrence/NOUN.head (PP.nmod of/ADP.case a/DET.det false-positive/ADJ.amod result/NOUN.head~abstract))
+          (SBAR.xcomp as/SCONJ.mark being/AUX.cop=be{Ger} equivalent/ADJ.head
+            (PP.obl to/ADP.case
+              (S.head
+                (NP.nsubj@query_bits each/PRON.head (PP.nmod of/ADP.case the/DET.det k/SYM.nummod bits/NOUN.head=bit~abstract
+                  (VP.acl selected/VERB.head=select{Part} (PP.obl by/ADP.case (NP.head@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function)))))
+                being/AUX.aux=be{Ger} raised/VERB.head=raise{Part})))))))
+  ./PUNCT)

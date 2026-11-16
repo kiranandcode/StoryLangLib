@@ -1,0 +1,13 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "biggerProblems",
+   "uses": [
+    "llms",
+    "pl_research"
+   ],
+   "s": 4
+  }
+ ]
+}

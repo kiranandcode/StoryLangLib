@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "motivate",
+   "t": "certified",
+   "uses": [
+    "contention"
+   ],
+   "s": 1
+  }
+ ]
+}

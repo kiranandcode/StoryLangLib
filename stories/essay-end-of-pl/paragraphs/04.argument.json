@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "excited",
+   "uses": [
+    "research"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "ideasPlentiful",
+   "uses": [
+    "research"
+   ],
+   "s": 2
+  }
+ ]
+}

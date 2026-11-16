@@ -1,0 +1,40 @@
+entity authors group they "I / we, the authors"
+entity reader person they "you, the reader"
+entity post place it "this post"
+entity practitioners group they "countless people who rely on Bloom filters"
+entity certified_proof abstract it "the very first certified proof of the false positive rate"
+entity coq abstract it "Rocq, the proof assistant"
+entity fpr abstract it "the false positive rate of a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter; a mechanism countless people rely on" generic
+entity contention abstract it "this saga of errors"
+entity errors abstract they "the errors in the literature"
+topic t1 "we certified the false positive rate" certified_proof,authors
+(S%t1 Well/INTJ.discourse ,/PUNCT
+  (VP.parataxis never/ADV.advmod~time fear/VERB.head{Inf})
+  ,/PUNCT
+  I/PRON.nsubj@authors
+  (VP.head am/AUX.aux=be{Fin,Pres} writing/VERB.head=write{Part}
+    (NP.obj@post this/DET.det post/NOUN.head)
+    (VP.advcl to/PART.mark inform/VERB.head{Inf} you/PRON.obj@reader
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head we/PRON.nsubj@authors
+          (VP.head have/AUX.aux{Fin,Pres} just/ADV.advmod~time recently/ADV.advmod~time used/VERB.head=use{Part}
+            Rocq/PROPN.obj@coq
+            (VP.advcl to/PART.mark produce/VERB.head{Inf}
+              (NP.obj@certified_proof the/DET.det very/ADV.advmod~degree first/ADJ.amod certified/ADJ.amod proof/NOUN.head
+                (PP.nmod of/ADP.case (NP.head@fpr the/DET.det false/ADJ.amod positive/ADJ.amod rate/NOUN.head
+                  (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head))))))
+            ,/PUNCT
+            (VP.advcl finally/ADV.advmod~time putting/VERB.head=put{Ger}
+              (NP.obj an/DET.det end/NOUN.head~abstract)
+              (PP.obl to/ADP.case (NP.head@contention this/DET.det saga/NOUN.head (PP.nmod of/ADP.case (NP.head@errors errors/NOUN.head=error))))
+              and/CCONJ.cc
+              (VP.conj returning/VERB.head=return{Ger}
+                (NP.obj certainty/NOUN.head~abstract)
+                (PRN.parataxis \(/PUNCT (VP.head pardon/VERB.head{Inf} (NP.obj the/DET.det pun/NOUN.head~abstract)) \)/PUNCT)
+                (PP.obl to/ADP.case (NP.head@bloom_filter a/DET.det mechanism/NOUN.head
+                  (SBAR.relcl that/PRON.obl@bloom_filter
+                    (S.head (NP.nsubj@practitioners countless/ADJ.amod~impression people/NOUN.head=person)
+                      (VP.head rely/VERB.head{Fin,Pres} on/ADP.case
+                        (NP.obl every/DET.det single/ADJ.amod day/NOUN.head~time)))))))))))))
+  ./PUNCT)

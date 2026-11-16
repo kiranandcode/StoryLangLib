@@ -1,0 +1,1 @@
+If you are interested, I'd recommend either reading our full paper (see here), or checking out my presentation of the paper for CAV (see here).

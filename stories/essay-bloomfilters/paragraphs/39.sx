@@ -1,0 +1,17 @@
+entity bloom person he "Bloom"
+entity bose group they "Bose et al."
+entity errors abstract it "this error: Bloom's mistaken independence assumption"
+entity bloom_pub abstract it "Bloom's original publication (1970)"
+entity bose_paper abstract it "Bose et al.'s 2008 paper"
+topic t1 "Bose et al. notice the error" bose,errors
+(S%t1 (PP.obl In/ADP.case fact/NOUN.head~abstract) ,/PUNCT
+  (NP.obl 30/NUM.nummod years/NOUN.head=year~time
+    (PP.nmod after/ADP.case (NP.head@bloom_pub Bloom's/PROPN.nmod@bloom original/ADJ.amod publication/NOUN.head
+      \(/PUNCT (NP.appos 1970/NUM.head) \)/PUNCT)))
+  ,/PUNCT
+  (NP.nsubj@errors this/DET.det error/NOUN.head)
+  (VP.head was/AUX.aux=be{Fin,Past} noticed/VERB.head=notice{Part}
+    (PP.obl by/ADP.case (NP.head@bose subsequent/ADJ.amod~impression researchers/NOUN.compound=researcher Bose/PROPN.head et/X.flat al/X.flat ./PUNCT))
+    (PP.obl in/ADP.case (NP.head@bose_paper a/DET.det 2008/NUM.nummod paper/NOUN.head)
+      \(/PUNCT (VP.parataxis see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place) \)/PUNCT))
+  ./PUNCT)

@@ -1,0 +1,41 @@
+{
+ "text_sha": "01d6cf5e528db5df",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader biggerProblems",
+   "at": 22,
+   "w": "tackle",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 0,
+   "w": "Fuck",
+   "kind": "generic"
+  },
+  {
+   "at": 4,
+   "w": "Fuck",
+   "kind": "generic"
+  },
+  {
+   "at": 8,
+   "w": "Let's",
+   "kind": "generic"
+  },
+  {
+   "at": 9,
+   "w": "do",
+   "kind": "generic"
+  },
+  {
+   "at": 31,
+   "w": "done",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,1621 @@
+{
+ "house": {
+  "styles": [
+   {
+    "rules": [
+     {
+      "rule": "agentless / clauses \u2264 1/10",
+      "name": "characters: few agentless passives",
+      "holds": true
+     },
+     {
+      "rule": "hiddenAction / sents \u2264 1/20",
+      "name": "actions: few hidden in nouns",
+      "holds": true
+     },
+     {
+      "rule": "inanimate \u2264 0",
+      "name": "no inanimate actors",
+      "holds": false
+     },
+     {
+      "rule": "nounStacks / sents \u2264 1/10",
+      "name": "few noun stacks",
+      "holds": true
+     },
+     {
+      "rule": "buried / sents \u2264 1/20",
+      "name": "point first",
+      "holds": true
+     },
+     {
+      "rule": "stacked / sents \u2264 1/20",
+      "name": "no stacked asides",
+      "holds": true
+     },
+     {
+      "rule": "nonSequiturs / sents \u2264 1/10",
+      "name": "no non-sequitur stacks",
+      "holds": false
+     }
+    ],
+    "name": "clarity",
+    "failing": [
+     "no inanimate actors",
+     "no non-sequitur stacks"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "slopEmphasis \u2264 0",
+      "name": "no slop emphasis",
+      "holds": true
+     },
+     {
+      "rule": "throat \u2264 0",
+      "name": "no throat-clearing",
+      "holds": false
+     },
+     {
+      "rule": "inflation \u2264 0",
+      "name": "no understated inflation",
+      "holds": true
+     },
+     {
+      "rule": "tricolons \u2264 0",
+      "name": "no tricolon with semicolons",
+      "holds": true
+     },
+     {
+      "rule": "pseudoClefts \u2264 0",
+      "name": "no deferred assertion",
+      "holds": true
+     },
+     {
+      "rule": "itClefts \u2264 0",
+      "name": "no emphatic cleft",
+      "holds": false
+     },
+     {
+      "rule": "andJoins / sents \u2264 1/10",
+      "name": "few observation-and-response joins",
+      "holds": true
+     },
+     {
+      "rule": "tetracola \u2264 0",
+      "name": "no mechanical tetracolon",
+      "holds": false
+     },
+     {
+      "rule": "initialConj \u2264 0",
+      "name": "no sentence-initial conjunctions",
+      "holds": false
+     },
+     {
+      "rule": "buzz \u2264 0",
+      "name": "no buzz words",
+      "holds": false
+     },
+     {
+      "rule": "intensifiers \u2264 0",
+      "name": "no empty intensifiers",
+      "holds": false
+     },
+     {
+      "rule": "usSpelling \u2264 0",
+      "name": "British spelling",
+      "holds": false
+     },
+     {
+      "rule": "trailingCadence \u2264 0",
+      "name": "no appositive-trailing cadence",
+      "holds": true
+     },
+     {
+      "rule": "dramaticTerminal \u2264 0",
+      "name": "no dramatic terminal sentences",
+      "holds": false
+     },
+     {
+      "rule": "summarisingPivots \u2264 0",
+      "name": "no summarising pivots",
+      "holds": false
+     },
+     {
+      "rule": "summaryClosers \u2264 0",
+      "name": "no summary closers",
+      "holds": false
+     },
+     {
+      "rule": "barePivots \u2264 0",
+      "name": "no bare pivot bridges",
+      "holds": true
+     },
+     {
+      "rule": "spuriousContrasts \u2264 0",
+      "name": "no spurious contrasts",
+      "holds": true
+     },
+     {
+      "rule": "bareRelatives \u2264 0",
+      "name": "no bare relative clauses",
+      "holds": false
+     },
+     {
+      "rule": "negDashes \u2264 0",
+      "name": "no not-X-dash-Y",
+      "holds": true
+     },
+     {
+      "rule": "abstractSig \u2264 0",
+      "name": "no abstract significance",
+      "holds": false
+     },
+     {
+      "rule": "weasels \u2264 0",
+      "name": "no vague attributions",
+      "holds": true
+     },
+     {
+      "rule": "fillers \u2264 0",
+      "name": "no filler phrases",
+      "holds": true
+     },
+     {
+      "rule": "hype \u2264 0",
+      "name": "no manufactured enthusiasm",
+      "holds": false
+     },
+     {
+      "rule": "exhortations / sents \u2264 1/20",
+      "name": "few exhortations",
+      "holds": true
+     },
+     {
+      "rule": "trendClaims \u2264 0",
+      "name": "no broader-trend claims",
+      "holds": true
+     }
+    ],
+    "name": "writelikeme",
+    "failing": [
+     "no throat-clearing",
+     "no emphatic cleft",
+     "no mechanical tetracolon",
+     "no sentence-initial conjunctions",
+     "no buzz words",
+     "no empty intensifiers",
+     "British spelling",
+     "no dramatic terminal sentences",
+     "no summarising pivots",
+     "no summary closers",
+     "no bare relative clauses",
+     "no abstract significance",
+     "no manufactured enthusiasm"
+    ]
+   }
+  ],
+  "flagged": {
+   "weasels": [],
+   "usSpelling": [
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     1
+    ]
+   ],
+   "tricolons": [],
+   "trendClaims": [],
+   "trailingCadence": [],
+   "throat": [
+    [
+     6,
+     1
+    ],
+    [
+     12,
+     3
+    ]
+   ],
+   "tetracola": [
+    [
+     19,
+     3
+    ]
+   ],
+   "summaryClosers": [
+    [
+     7,
+     4
+    ],
+    [
+     17,
+     4
+    ],
+    [
+     22,
+     12
+    ]
+   ],
+   "summarisingPivots": [
+    [
+     2,
+     2
+    ],
+    [
+     14,
+     2
+    ]
+   ],
+   "stacked": [],
+   "spuriousContrasts": [],
+   "slopEmphasis": [],
+   "pseudoClefts": [],
+   "opensContrast": [
+    [
+     10,
+     1
+    ],
+    [
+     10,
+     9
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     21,
+     6
+    ]
+   ],
+   "nounStacks": [],
+   "nonSequiturs": [
+    [
+     2,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     9,
+     2
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     10,
+     7
+    ],
+    [
+     10,
+     8
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     15,
+     2
+    ],
+    [
+     20,
+     2
+    ],
+    [
+     20,
+     4
+    ],
+    [
+     20,
+     6
+    ],
+    [
+     20,
+     7
+    ],
+    [
+     21,
+     2
+    ],
+    [
+     21,
+     3
+    ],
+    [
+     21,
+     4
+    ],
+    [
+     21,
+     5
+    ],
+    [
+     22,
+     2
+    ],
+    [
+     22,
+     3
+    ],
+    [
+     22,
+     7
+    ],
+    [
+     22,
+     8
+    ],
+    [
+     22,
+     9
+    ],
+    [
+     22,
+     10
+    ]
+   ],
+   "negDashes": [],
+   "itClefts": [
+    [
+     2,
+     3
+    ],
+    [
+     7,
+     1
+    ]
+   ],
+   "intensifiers": [
+    [
+     2,
+     2
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     10,
+     8
+    ],
+    [
+     11,
+     2
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     5
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     15,
+     1
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     17,
+     4
+    ],
+    [
+     19,
+     2
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     20,
+     1
+    ],
+    [
+     20,
+     2
+    ],
+    [
+     21,
+     7
+    ],
+    [
+     24,
+     1
+    ]
+   ],
+   "initialConj": [
+    [
+     7,
+     3
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     10,
+     6
+    ],
+    [
+     10,
+     9
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     21,
+     6
+    ]
+   ],
+   "inflation": [],
+   "inanimate": [
+    [
+     17,
+     2
+    ],
+    [
+     19,
+     2
+    ]
+   ],
+   "hype": [
+    [
+     4,
+     1
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     21,
+     1
+    ]
+   ],
+   "hiddenAction": [],
+   "fillers": [],
+   "exhortations": [
+    [
+     3,
+     2
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     21,
+     1
+    ]
+   ],
+   "dramaticTerminal": [
+    [
+     7,
+     4
+    ]
+   ],
+   "buzz": [
+    [
+     1,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     22,
+     10
+    ]
+   ],
+   "buried": [],
+   "bareRelatives": [
+    [
+     16,
+     1
+    ],
+    [
+     16,
+     2
+    ]
+   ],
+   "barePivots": [],
+   "bareAsides": [],
+   "andJoins": [
+    [
+     16,
+     2
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     22,
+     6
+    ],
+    [
+     24,
+     1
+    ]
+   ],
+   "agentless": [
+    [
+     12,
+     4
+    ],
+    [
+     16,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     18,
+     1
+    ]
+   ],
+   "abstractSig": [
+    [
+     24,
+     1
+    ]
+   ]
+  },
+  "features": {
+   "weasels": 0,
+   "usSpelling": 2,
+   "tricolons": 0,
+   "trendClaims": 0,
+   "trailingCadence": 0,
+   "throat": 2,
+   "tetracola": 1,
+   "summaryClosers": 3,
+   "summarisingPivots": 2,
+   "stacked": 0,
+   "spuriousContrasts": 0,
+   "slopEmphasis": 0,
+   "sents": 86,
+   "pseudoClefts": 0,
+   "passives": 4,
+   "nounStacks": 0,
+   "nonSequiturs": 30,
+   "negDashes": 0,
+   "itClefts": 2,
+   "intensifiers": 26,
+   "initialConj": 6,
+   "inflation": 0,
+   "inanimate": 2,
+   "hype": 3,
+   "hiddenAction": 0,
+   "fillers": 0,
+   "exhortations": 3,
+   "dramaticTerminal": 1,
+   "clauses": 196,
+   "buzz": 3,
+   "buried": 0,
+   "bareRelatives": 2,
+   "barePivots": 0,
+   "bareAsides": 0,
+   "andJoins": 4,
+   "agentless": 4,
+   "abstractSig": 1
+  }
+ },
+ "academic": {
+  "styles": [
+   {
+    "rules": [
+     {
+      "rule": "oldSubj / tracked \u2265 3/4",
+      "name": "old to new: subjects given",
+      "holds": true
+     },
+     {
+      "rule": "newLate / newEnts \u2265 2/3",
+      "name": "old to new: new comes late",
+      "holds": true
+     },
+     {
+      "rule": "firstSum / multiParas \u2265 2/3",
+      "name": "first sentence summarises",
+      "holds": true
+     },
+     {
+      "rule": "jit / reused \u2265 1/2",
+      "name": "just in time",
+      "holds": true
+     },
+     {
+      "rule": "motifs / paras \u2265 1/8",
+      "name": "motifs",
+      "holds": true
+     },
+     {
+      "rule": "unanswered \u2264 0",
+      "name": "questions answered",
+      "holds": false
+     }
+    ],
+    "name": "kiran",
+    "holds": false,
+    "failing": [
+     "questions answered"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "dashesDram \u2264 0",
+      "name": "no dramatic dashes",
+      "holds": true
+     },
+     {
+      "rule": "colonsDram \u2264 0",
+      "name": "no dramatic colons",
+      "holds": true
+     },
+     {
+      "rule": "antithesis \u2264 0",
+      "name": "no not-X-but-Y",
+      "holds": true
+     },
+     {
+      "rule": "rhetorical \u2264 0",
+      "name": "no rhetorical questions",
+      "holds": false
+     }
+    ],
+    "name": "llmism-free",
+    "holds": false,
+    "failing": [
+     "no rhetorical questions"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "dashes \u2264 0",
+      "name": "no em-dashes",
+      "holds": false
+     }
+    ],
+    "name": "no-em-dashes",
+    "holds": false,
+    "failing": [
+     "no em-dashes"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "untensed \u2264 0",
+      "name": "every verb has a form and finite ones a tense",
+      "holds": true
+     },
+     {
+      "rule": "unclassified \u2264 0",
+      "name": "every colon and dash classified",
+      "holds": true
+     },
+     {
+      "rule": "untagged \u2264 0",
+      "name": "every content word has a register",
+      "holds": true
+     }
+    ],
+    "name": "annotated",
+    "holds": true,
+    "failing": []
+   },
+   {
+    "rules": [
+     {
+      "rule": "unreadHedges \u2264 0",
+      "name": "hedges read",
+      "holds": true
+     },
+     {
+      "rule": "ungroundedHedges \u2264 0",
+      "name": "hedge readings grounded",
+      "holds": true
+     },
+     {
+      "rule": "unreadDenials \u2264 0",
+      "name": "denials read",
+      "holds": true
+     },
+     {
+      "rule": "ungroundedDenials \u2264 0",
+      "name": "denial readings grounded",
+      "holds": true
+     },
+     {
+      "rule": "unreadReasons \u2264 0",
+      "name": "reasons read",
+      "holds": true
+     }
+    ],
+    "name": "grounded",
+    "holds": true,
+    "failing": []
+   }
+  ],
+  "loreProblems": [],
+  "flagged": {
+   "untensed": [],
+   "unclassified": [],
+   "questions": [
+    [
+     7,
+     3
+    ],
+    [
+     8,
+     1
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     10,
+     1
+    ],
+    [
+     10,
+     2
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     20,
+     3
+    ],
+    [
+     20,
+     4
+    ],
+    [
+     20,
+     5
+    ],
+    [
+     20,
+     6
+    ]
+   ],
+   "newSubjects": [
+    [
+     2,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     10,
+     7
+    ],
+    [
+     10,
+     8
+    ],
+    [
+     11,
+     1
+    ],
+    [
+     14,
+     2
+    ],
+    [
+     16,
+     1
+    ]
+   ],
+   "negated": [
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     7
+    ],
+    [
+     10,
+     10
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     1
+    ],
+    [
+     18,
+     2
+    ],
+    [
+     19,
+     2
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     20,
+     7
+    ],
+    [
+     21,
+     7
+    ]
+   ],
+   "negTurns": [
+    [
+     9,
+     3
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     13,
+     1
+    ],
+    [
+     19,
+     2
+    ]
+   ],
+   "motifs": [
+    "pessimists",
+    "majority",
+    "theory",
+    "ideas",
+    "ai_tools",
+    "field",
+    "future"
+   ],
+   "hedged": [
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     14,
+     1
+    ],
+    [
+     18,
+     2
+    ],
+    [
+     21,
+     1
+    ]
+   ],
+   "firstNotSummary": [
+    4,
+    7,
+    15,
+    21,
+    22
+   ],
+   "dramaticDashes": [],
+   "dramaticColons": [],
+   "definingDashes": [
+    [
+     17,
+     1
+    ]
+   ],
+   "definingColons": [
+    [
+     2,
+     3
+    ],
+    [
+     6,
+     1
+    ]
+   ],
+   "causal": [
+    [
+     6,
+     2
+    ],
+    [
+     9,
+     1
+    ],
+    [
+     18,
+     2
+    ]
+   ]
+  },
+  "features": {
+   "words": 1301,
+   "unusedIntro": 82,
+   "untensed": 0,
+   "untagged": 0,
+   "unreadReasons": 0,
+   "unreadHedges": 0,
+   "unreadDenials": 0,
+   "ungroundedReasons": 0,
+   "ungroundedHedges": 0,
+   "ungroundedDenials": 0,
+   "unclassified": 0,
+   "unanswered": 8,
+   "tracked": 52,
+   "technical": 74,
+   "single": 57,
+   "shortClosers": 5,
+   "sents": 86,
+   "rhetorical": 8,
+   "reused": 35,
+   "questions": 11,
+   "punches": 1,
+   "promisedIntro": 3,
+   "paras": 24,
+   "oldSubj": 44,
+   "newLate": 36,
+   "newEnts": 46,
+   "neutral": 497,
+   "negTurns": 4,
+   "neededIntro": 9,
+   "multiParas": 18,
+   "motifs": 7,
+   "longestRun": 3,
+   "longRuns": 1,
+   "lenSum": 1205,
+   "lenSq": 32845,
+   "jumpSum": 465,
+   "jumpPairs": 53,
+   "jit": 22,
+   "informal": 52,
+   "hedgedSents": 5,
+   "gapFar": 12,
+   "gap6": 1,
+   "gap3": 7,
+   "gap1": 15,
+   "frontings": 11,
+   "formal": 33,
+   "firstSum": 13,
+   "deliberate": 0,
+   "dashesDram": 0,
+   "dashesDef": 1,
+   "dashes": 1,
+   "contentWords": 656,
+   "colonsDram": 0,
+   "colonsDef": 2,
+   "callbacks": 20,
+   "bridged": 1,
+   "bodySents": 76,
+   "asks": 11,
+   "antithesis": 0,
+   "answered": 3,
+   "announced": 0
+  }
+ },
+ "core": {
+  "styles": [
+   {
+    "rules": [
+     {
+      "rule": "footnotes / paras \u2265 1/2",
+      "name": "footnotes",
+      "holds": false
+     },
+     {
+      "rule": "every footnote anchored once, its sentence whole without it",
+      "name": "footnotes anchored",
+      "holds": true
+     },
+     {
+      "rule": "every footnote generalises",
+      "name": "footnotes generalise",
+      "holds": true
+     },
+     {
+      "rule": "footnoteWords / words \u2264 1/5",
+      "name": "footnotes brief",
+      "holds": true
+     },
+     {
+      "rule": "generics / sents \u2265 1/4",
+      "name": "generics",
+      "holds": true
+     },
+     {
+      "rule": "likeSimiles / paras \u2265 1/2",
+      "name": "similes",
+      "holds": false
+     },
+     {
+      "rule": "concepts / paras \u2265 1/2",
+      "name": "Concepts",
+      "holds": false
+     },
+     {
+      "rule": "asides / interior \u2265 2/1",
+      "name": "asides over interiority",
+      "holds": true
+     }
+    ],
+    "name": "pratchett",
+    "holds": false,
+    "failing": [
+     "footnotes",
+     "similes",
+     "Concepts"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "povClauses / charClauses \u2265 1/2",
+      "name": "close third",
+      "holds": true
+     },
+     {
+      "rule": "footnotes \u2264 0",
+      "name": "no footnotes",
+      "holds": true
+     },
+     {
+      "rule": "prn \u2264 0",
+      "name": "no parentheticals",
+      "holds": false
+     },
+     {
+      "rule": "generics / sents \u2264 1/20",
+      "name": "few generalisations",
+      "holds": false
+     },
+     {
+      "rule": "interior / asides \u2265 3/1",
+      "name": "interiority over asides",
+      "holds": false
+     },
+     {
+      "rule": "concepts \u2264 0",
+      "name": "no Concepts",
+      "holds": false
+     },
+     {
+      "rule": "quoteWords / words \u2265 1/10",
+      "name": "dialogue",
+      "holds": false
+     },
+     {
+      "rule": "fancyTags / tags \u2264 1/3",
+      "name": "plain tags",
+      "holds": true
+     }
+    ],
+    "name": "roof",
+    "holds": false,
+    "failing": [
+     "no parentheticals",
+     "few generalisations",
+     "interiority over asides",
+     "no Concepts",
+     "dialogue"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "words / sents \u2265 11/1",
+      "name": "mean sentence at least 11 words",
+      "holds": true
+     },
+     {
+      "rule": "words / sents \u2264 16/1",
+      "name": "mean sentence at most 16 words",
+      "holds": true
+     },
+     {
+      "rule": "short / sents \u2265 1/6",
+      "name": "short sentences",
+      "holds": true
+     },
+     {
+      "rule": "long / sents \u2265 1/20",
+      "name": "long sentences",
+      "holds": true
+     },
+     {
+      "rule": "punches / sents \u2265 1/60",
+      "name": "punches after long sentences",
+      "holds": true
+     },
+     {
+      "rule": "quoteWords / words \u2265 1/8",
+      "name": "dialogue",
+      "holds": false
+     },
+     {
+      "rule": "fancyTags / tags \u2265 1/2",
+      "name": "varied tags",
+      "holds": true
+     },
+     {
+      "rule": "povClauses / charClauses \u2265 1/2",
+      "name": "close to the point of view",
+      "holds": true
+     },
+     {
+      "rule": "interior / charClauses \u2265 1/20",
+      "name": "some interiority",
+      "holds": true
+     },
+     {
+      "rule": "intensifiers / sents \u2265 1/7",
+      "name": "intensifiers",
+      "holds": true
+     },
+     {
+      "rule": "repeats / sents \u2265 1/25",
+      "name": "repetition",
+      "holds": true
+     },
+     {
+      "rule": "checkIns / paras \u2265 1/7",
+      "name": "check-ins",
+      "holds": false
+     }
+    ],
+    "name": "ao3",
+    "holds": false,
+    "failing": [
+     "dialogue",
+     "check-ins"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "words / sents \u2265 11/1",
+      "name": "mean sentence at least 11 words",
+      "holds": true
+     },
+     {
+      "rule": "words / sents \u2264 16/1",
+      "name": "mean sentence at most 16 words",
+      "holds": true
+     },
+     {
+      "rule": "short / sents \u2265 1/6",
+      "name": "short sentences",
+      "holds": true
+     },
+     {
+      "rule": "long / sents \u2265 1/20",
+      "name": "long sentences",
+      "holds": true
+     },
+     {
+      "rule": "punches / sents \u2265 1/60",
+      "name": "punches after long sentences",
+      "holds": true
+     },
+     {
+      "rule": "quoteWords / words \u2265 1/8",
+      "name": "dialogue",
+      "holds": false
+     },
+     {
+      "rule": "fancyTags / tags \u2265 1/2",
+      "name": "varied tags",
+      "holds": true
+     },
+     {
+      "rule": "povClauses / charClauses \u2265 1/2",
+      "name": "close to the point of view",
+      "holds": true
+     },
+     {
+      "rule": "interior / charClauses \u2265 1/20",
+      "name": "some interiority",
+      "holds": true
+     },
+     {
+      "rule": "intensifiers / sents \u2265 1/7",
+      "name": "intensifiers",
+      "holds": true
+     },
+     {
+      "rule": "repeats / sents \u2265 1/25",
+      "name": "repetition",
+      "holds": true
+     },
+     {
+      "rule": "checkIns / paras \u2265 1/7",
+      "name": "check-ins",
+      "holds": false
+     },
+     {
+      "rule": "clinical / paras \u2265 1/2",
+      "name": "clinical interiority",
+      "holds": false
+     },
+     {
+      "rule": "firstPerson \u2264 0",
+      "name": "close third",
+      "holds": false
+     },
+     {
+      "rule": "generics / sents \u2264 1/20",
+      "name": "few generalisations",
+      "holds": false
+     },
+     {
+      "rule": "prn \u2264 0",
+      "name": "no parentheticals",
+      "holds": false
+     }
+    ],
+    "name": "roof-ran",
+    "holds": false,
+    "failing": [
+     "dialogue",
+     "check-ins",
+     "clinical interiority",
+     "close third",
+     "few generalisations",
+     "no parentheticals"
+    ]
+   },
+   {
+    "rules": [
+     {
+      "rule": "words / sents \u2265 11/1",
+      "name": "mean sentence at least 11 words",
+      "holds": true
+     },
+     {
+      "rule": "words / sents \u2264 16/1",
+      "name": "mean sentence at most 16 words",
+      "holds": true
+     },
+     {
+      "rule": "short / sents \u2265 1/6",
+      "name": "short sentences",
+      "holds": true
+     },
+     {
+      "rule": "long / sents \u2265 1/20",
+      "name": "long sentences",
+      "holds": true
+     },
+     {
+      "rule": "punches / sents \u2265 1/60",
+      "name": "punches after long sentences",
+      "holds": true
+     },
+     {
+      "rule": "quoteWords / words \u2265 1/8",
+      "name": "dialogue",
+      "holds": false
+     },
+     {
+      "rule": "fancyTags / tags \u2265 1/2",
+      "name": "varied tags",
+      "holds": true
+     },
+     {
+      "rule": "povClauses / charClauses \u2265 1/2",
+      "name": "close to the point of view",
+      "holds": true
+     },
+     {
+      "rule": "interior / charClauses \u2265 1/20",
+      "name": "some interiority",
+      "holds": true
+     },
+     {
+      "rule": "intensifiers / sents \u2265 1/7",
+      "name": "intensifiers",
+      "holds": true
+     },
+     {
+      "rule": "repeats / sents \u2265 1/25",
+      "name": "repetition",
+      "holds": true
+     },
+     {
+      "rule": "checkIns / paras \u2265 1/7",
+      "name": "check-ins",
+      "holds": false
+     },
+     {
+      "rule": "clinical / paras \u2265 1/2",
+      "name": "clinical interiority",
+      "holds": false
+     },
+     {
+      "rule": "playful / paras \u2265 1/3",
+      "name": "playful talk",
+      "holds": false
+     },
+     {
+      "rule": "quoteWords / words \u2265 1/5",
+      "name": "banter",
+      "holds": false
+     },
+     {
+      "rule": "firstPerson \u2264 0",
+      "name": "close third",
+      "holds": false
+     },
+     {
+      "rule": "generics / sents \u2264 1/20",
+      "name": "few generalisations",
+      "holds": false
+     },
+     {
+      "rule": "prn \u2264 0",
+      "name": "no parentheticals",
+      "holds": false
+     }
+    ],
+    "name": "fixpoint",
+    "holds": false,
+    "failing": [
+     "dialogue",
+     "check-ins",
+     "clinical interiority",
+     "playful talk",
+     "banter",
+     "close third",
+     "few generalisations",
+     "no parentheticals"
+    ]
+   }
+  ],
+  "pov": "authors",
+  "features": {
+   "wordsLate": 756,
+   "wordsEarly": 545,
+   "words": 1301,
+   "tags": 0,
+   "tagKinds": 0,
+   "similes": 3,
+   "short": 24,
+   "sents": 86,
+   "repeats": 16,
+   "quoteWords": 0,
+   "quoteLate": 0,
+   "quoteEarly": 0,
+   "punches": 4,
+   "prn": 3,
+   "povClauses": 40,
+   "playful": 0,
+   "paras": 24,
+   "openers": 13,
+   "openerKinds": 7,
+   "maxDepth": 14,
+   "long": 15,
+   "likeSimiles": 3,
+   "interior": 17,
+   "intensifiers": 31,
+   "generics": 112,
+   "frags": 10,
+   "footnotes": 0,
+   "footnoteWords": 0,
+   "footPaired": true,
+   "footGeneric": true,
+   "firstPerson": 44,
+   "fancyTags": 0,
+   "depthSum": 552,
+   "concepts": 11,
+   "clinical": 5,
+   "clauses": 196,
+   "choreo": 33,
+   "checkIns": 0,
+   "charClauses": 50,
+   "asides": 115,
+   "asIf": 0,
+   "asAs": 0,
+   "anchors": 0
+  }
+ },
+ "antithesis": [
+  "compromiseIdeas",
+  "colleaguesPL"
+ ],
+ "fails": {
+  "kiran": [
+   "questions answered"
+  ],
+  "llmism-free": [
+   "no not-X-but-Y",
+   "no rhetorical questions"
+  ],
+  "no-em-dashes": [
+   "no em-dashes"
+  ],
+  "annotated": [],
+  "grounded": [],
+  "pratchett": [
+   "footnotes",
+   "similes",
+   "Concepts"
+  ],
+  "roof": [
+   "no parentheticals",
+   "few generalisations",
+   "interiority over asides",
+   "no Concepts",
+   "dialogue"
+  ],
+  "ao3": [
+   "dialogue",
+   "check-ins"
+  ],
+  "roof-ran": [
+   "dialogue",
+   "check-ins",
+   "clinical interiority",
+   "close third",
+   "few generalisations",
+   "no parentheticals"
+  ],
+  "fixpoint": [
+   "dialogue",
+   "check-ins",
+   "clinical interiority",
+   "playful talk",
+   "banter",
+   "close third",
+   "few generalisations",
+   "no parentheticals"
+  ]
+ }
+}

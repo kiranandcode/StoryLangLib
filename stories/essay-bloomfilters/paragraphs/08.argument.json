@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "contention",
+   "uses": [
+    "bloomFormula"
+   ],
+   "s": 1
+  }
+ ]
+}

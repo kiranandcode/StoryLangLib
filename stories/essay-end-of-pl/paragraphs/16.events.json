@@ -1,0 +1,53 @@
+{
+ "text_sha": "9a4b9878a8f0165c",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader assumptionsUpturned",
+   "at": 10,
+   "w": "upturned",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader ideasPlentiful",
+   "at": 39,
+   "w": "get",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true assumptionsUpturned",
+   "at": 12,
+   "w": "There's"
+  }
+ ],
+ "judge": [
+  {
+   "at": 5,
+   "w": "build",
+   "kind": "content",
+   "lit": "assumptionsUpturned"
+  },
+  {
+   "at": 23,
+   "w": "built",
+   "kind": "content",
+   "lit": "assumptionsUpturned"
+  },
+  {
+   "at": 28,
+   "w": "hold",
+   "kind": "content",
+   "lit": "assumptionsUpturned"
+  },
+  {
+   "at": 32,
+   "w": "questioning",
+   "kind": "content",
+   "lit": "ideasPlentiful"
+  }
+ ]
+}

@@ -1,0 +1,37 @@
+entity premise abstract it "the central premise of this article"
+entity authors group they "I (Kiran)"
+entity article abstract it "this article"
+entity community group they "we as a community (the PL community)"
+entity ego abstract it "the ego-driven defense of our work"
+entity work abstract it "our work (the community's research)"
+entity demonstration abstract it "some kind of demonstration of effort or intelligence"
+entity motivation abstract it "the true and more noble motivation (exploration)"
+entity exploration abstract it "exploration"
+topic t1 "the central premise" premise
+(S%t1 (NP.nsubj@premise The/DET.det central/ADJ.amod premise/NOUN.head
+    (SBAR.relcl that/PRON.obj@premise
+      (S.head (NP.nsubj@authors I/PRON.head)
+        (VP.head want/VERB.head{Fin,Pres}
+          (VP.xcomp to/PART.mark put/VERB.head{Inf} down/ADP.compound
+            (PP.obl in/ADP.case (NP.head@article this/DET.det article/NOUN.head)))))))
+  (VP.head is/VERB.head=be{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head (PP.obl as/ADP.case (NP.head@community a/DET.det community/NOUN.head)) ,/PUNCT
+        (NP.nsubj@community we/PRON.head)
+        (VP.head need/VERB.head{Fin,Pres}
+          (VP.xcomp to/PART.mark shift/VERB.head{Inf} away/ADV.advmod~direction
+            (PP.obl from/ADP.case (NP.head@ego the/DET.det ego-driven/ADJ.amod defense/NOUN.head~abstract
+              (PP.nmod of/ADP.case (NP.head@work our/PRON.poss@community work/NOUN.head))
+              ,/PUNCT
+              (PP.nmod as/ADP.case (NP.head@demonstration some/DET.det kind/NOUN.head~kind
+                (PP.nmod of/ADP.case demonstration/NOUN.head~abstract
+                  (PP.nmod of/ADP.case "/PUNCT effort/NOUN.head~abstract "/PUNCT or/CCONJ.cc "/PUNCT intelligence/NOUN.conj~abstract "/PUNCT))))))
+            ,/PUNCT
+            (VP.conj and/CCONJ.cc shift/VERB.head{Inf}
+              (PP.obl to/ADP.case (NP.head@motivation the/DET.det (ADJP.amod true/ADJ.head and/CCONJ.cc more/ADV.advmod~degree noble/ADJ.conj) motivation/NOUN.head
+                (SBAR.relcl that/PRON.nsubj@motivation
+                  (VP.head should/AUX.aux{Fin,Pres} have/AUX.aux{Inf} been/AUX.aux=be{Part} underpinning/VERB.head=underpin{Part}
+                    (NP.obj@community us/PRON.head=we)
+                    (NP.obl the/DET.det whole/ADJ.amod time/NOUN.head~time)))))))))))
+  !/PUNCT)
+(FRAG%t1 (PP.head To/ADP.case (NP.head@motivation one/NUM.head (PP.nmod of/ADP.case (NP.head@exploration exploration/NOUN.head)))) !/PUNCT)

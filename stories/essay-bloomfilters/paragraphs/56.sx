@@ -1,0 +1,50 @@
+entity authors group they "we / our (the authors)"
+entity bose group they "Bose et al."
+entity reviewers group they "reviewers"
+entity bose_error abstract it "the error in Bose et al.'s paper; this error; that source of errors"
+entity bose_paper abstract it "Bose et al.'s paper"
+entity bad_defs abstract they "the incorrect definitions (by Bose et al.)"
+entity logical_step abstract it "an incorrect logical step"
+entity anecdote abstract it "an interesting anecdote"
+entity first_version abstract it "the first version of our work"
+entity research abstract it "our work"
+entity final_version abstract it "our final version"
+entity bose_defs abstract they "Bose et al.'s definitions"
+entity first_principles abstract they "first principles"
+topic t1 "the source of Bose et al.'s error" bose_error
+(S%t1 (ADVP.discourse To/PART.head be/AUX.fixed{Inf} fair/ADJ.fixed) ,/PUNCT
+  (NP.nsubj@bose_error the/DET.det error/NOUN.head
+    (PP.nmod in/ADP.case
+      (NP.head@bose_paper (NP.poss@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT '/PART.case s/PART.case) paper/NOUN.head)))
+  (VP.head was/AUX.cop=be{Fin,Past} primarily/ADV.advmod~degree
+    (ADJP.head due/ADJ.head
+      (PP.obl to/ADP.case
+        (NP.head@bad_defs incorrect/ADJ.amod definitions/NOUN.head=definition
+          rather/ADV.cc~degree than/ADP.fixed
+          (NP.conj@logical_step an/DET.det incorrect/ADJ.amod logical/ADJ.amod step/NOUN.head)))))
+  ./PUNCT)
+(S%t1 (PP.obl As/ADP.case (NP.head@anecdote an/DET.det interesting/ADJ.amod anecdote/NOUN.head)) ,/PUNCT
+  (NP.nsubj@first_version the/DET.det first/ADJ.amod version/NOUN.head
+    (PP.nmod of/ADP.case (NP.head@research our/PRON.poss@authors work/NOUN.head)))
+  (VP.head was/AUX.aux=be{Fin,Past} based/VERB.head=base{Part} off/ADP.compound
+    (NP.obj@bad_defs the/DET.det incorrect/ADJ.amod definitions/NOUN.head=definition
+      (PP.nmod by/ADP.case (NP.head@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT)))
+    and/CCONJ.cc
+    (VP.conj ended/VERB.head=end{Fin,Past} up/ADP.compound
+      (VP.xcomp being/AUX.aux=be{Ger} rejected/VERB.head=reject{Part}
+        (PP.obl by/ADP.case
+          (NP.head@reviewers reviewers/NOUN.head=reviewer
+            (SBAR.relcl who/PRON.nsubj@reviewers
+              (VP.head then/ADV.advmod~order rediscovered/VERB.head=rediscover{Fin,Past}
+                (NP.obj@bose_error this/DET.det error/NOUN.head))))))))
+  ./PUNCT)
+(S%t1 (PP.obl In/ADP.case (NP.head@final_version our/PRON.poss@authors final/ADJ.amod version/NOUN.head))
+  (NP.nsubj@authors we/PRON.head)
+  (VP.head ended/VERB.head=end{Fin,Past} up/ADP.compound
+    (VP.xcomp proving/VERB.head=prove{Ger}
+      (NP.obj@bose_defs (NP.poss@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT '/PART.case s/PART.case) definitions/NOUN.head=definition)
+      (PP.obl from/ADP.case (NP.head@first_principles first/ADJ.amod principles/NOUN.head=principle)))
+    ,/PUNCT
+    (VP.advcl thereby/ADV.advmod~manner eliding/VERB.head=elide{Ger}
+      (NP.obj@bose_error that/DET.det source/NOUN.head (PP.nmod of/ADP.case errors/NOUN.head=error~abstract))))
+  ./PUNCT)

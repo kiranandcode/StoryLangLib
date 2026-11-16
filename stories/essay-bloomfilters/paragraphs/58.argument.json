@@ -1,0 +1,23 @@
+{
+ "moves": [
+  {
+   "move": "deliver",
+   "t": "asymptoticOk",
+   "uses": [
+    "bloomFormula"
+   ],
+   "s": 1
+  },
+  {
+   "move": "infer",
+   "t": "impactPedantic",
+   "premises": [
+    "asymptoticOk"
+   ],
+   "uses": [
+    "bloomFormula"
+   ],
+   "s": 1
+  }
+ ]
+}

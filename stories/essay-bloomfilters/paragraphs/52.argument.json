@@ -1,0 +1,13 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "distinctSingleBit",
+   "uses": [
+    "hashesDistinct",
+    "singleBit"
+   ],
+   "s": 1
+  }
+ ]
+}

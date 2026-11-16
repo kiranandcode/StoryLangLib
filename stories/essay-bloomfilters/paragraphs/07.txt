@@ -1,0 +1,1 @@
+This mechanism works quite well, and the guarantees of a Bloom filter seem to be perfectly suited for this particular task, however it has one small problem, and that is: The widely cited expression for the false positive rate of a bloom filter is wrong!

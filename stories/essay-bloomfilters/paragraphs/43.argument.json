@@ -1,0 +1,24 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "noFurtherErrors",
+   "premises": [
+    "certified"
+   ],
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  },
+  {
+   "move": "hedge",
+   "t": "noFurtherErrors",
+   "sec": 0,
+   "uses": [
+    "certified"
+   ],
+   "s": 1
+  }
+ ]
+}

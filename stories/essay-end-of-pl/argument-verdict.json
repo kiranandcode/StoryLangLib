@@ -1,0 +1,64 @@
+{
+ "gaps": [
+  "claim majorityNegative is unsupported",
+  "claim excited is unsupported",
+  "claim ideasPlentiful is unsupported",
+  "claim explorationPremise is unsupported",
+  "claim llmsCodeWell is unsupported",
+  "claim humansStopCoding is unsupported",
+  "claim workOnIdeas is unsupported",
+  "claim practicalApps is unsupported",
+  "claim seMessy is unsupported",
+  "claim messNeeded is unsupported",
+  "claim ideasRemain is unsupported",
+  "claim fewUsers is unsupported",
+  "claim biggerProblems is unsupported",
+  "claim newIdeasDaily is unsupported",
+  "claim assumptionsUpturned is unsupported",
+  "claim novelIdeas is unsupported",
+  "claim llmsProve is unsupported",
+  "claim verifyBinary is unsupported",
+  "claim unthinkable is unsupported",
+  "claim toolingHuman is unsupported",
+  "claim llmsDiffer is unsupported",
+  "claim amazonExperiments is unsupported",
+  "claim dynestyx is unsupported",
+  "claim dynestyxUnifies is unsupported",
+  "claim iterateFast is unsupported",
+  "claim craftPride is unsupported",
+  "claim egoNotCuriosity is unsupported",
+  "claim expertiseNotNeeded is unsupported",
+  "claim explorationIsResearch is unsupported",
+  "claim transformative is unsupported"
+ ],
+ "deferred": [
+  [
+   "crisis",
+   "0"
+  ],
+  [
+   "juniorsWorry",
+   "0"
+  ],
+  [
+   "counterfactualsFast",
+   "0"
+  ],
+  [
+   "toolingPossible",
+   "0"
+  ],
+  [
+   "loss",
+   "0"
+  ]
+ ],
+ "antitheses": [
+  "compromiseIdeas",
+  "colleaguesPL"
+ ],
+ "contrasts": [
+  "applicationsMatter",
+  "llmsAffectEnthusiasm"
+ ]
+}

@@ -1,0 +1,37 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "bridge",
+   "premises": [],
+   "uses": [
+    "pl_research"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "workOnIdeas",
+   "uses": [
+    "pl_research"
+   ],
+   "s": 2
+  },
+  {
+   "move": "deny",
+   "t": "compromiseIdeas",
+   "uses": [
+    "workOnIdeas"
+   ],
+   "s": 3
+  },
+  {
+   "move": "claim",
+   "t": "practicalApps",
+   "uses": [
+    "pl_research"
+   ],
+   "s": 3
+  }
+ ]
+}

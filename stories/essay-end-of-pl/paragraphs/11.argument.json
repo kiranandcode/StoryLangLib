@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "ideasRemain",
+   "uses": [
+    "workOnIdeas"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "fewUsers",
+   "uses": [
+    "code"
+   ],
+   "s": 5
+  }
+ ]
+}

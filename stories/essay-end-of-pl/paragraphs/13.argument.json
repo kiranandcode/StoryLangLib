@@ -1,0 +1,33 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 2
+  },
+  {
+   "move": "deliver",
+   "t": "vision",
+   "uses": [
+    "llms"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deny",
+   "t": "llmsAffectEnthusiasm",
+   "uses": [
+    "llms"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "whyExcited",
+   "sec": 0,
+   "uses": [
+    "llms"
+   ],
+   "s": 1
+  }
+ ]
+}

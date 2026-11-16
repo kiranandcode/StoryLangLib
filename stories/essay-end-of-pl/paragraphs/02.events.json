@@ -1,0 +1,51 @@
+{
+ "text_sha": "3ddf458725d6d4dd",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader majorityNegative",
+   "at": 22,
+   "w": "negative",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader crisis",
+   "at": 30,
+   "w": "say",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true thread",
+   "at": 6,
+   "w": "a"
+  },
+  {
+   "c": "true thread",
+   "at": 14,
+   "w": "positive"
+  }
+ ],
+ "judge": [
+  {
+   "at": 28,
+   "w": "far",
+   "kind": "generic"
+  },
+  {
+   "at": 34,
+   "w": "feel",
+   "kind": "content",
+   "lit": "crisis"
+  },
+  {
+   "at": 38,
+   "w": "facing",
+   "kind": "content",
+   "lit": "crisis"
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+entity this_case abstract it "this: the argument of the previous paragraph (no false negatives)" of=para:18
+entity negative_results abstract they "negative results (of a query, as a kind)" generic
+entity positive_results abstract they "positive results (of a query, as a kind)" generic
+entity things abstract they "things: the analysis in general" generic
+entity possibility abstract it "the possibility of false positives"
+entity false_positive abstract it "a false positive (result)" generic
+topic t1 "negative versus positive results" positive_results
+(S%t1 (NP.nsubj@this_case This/PRON.head)
+  is/AUX.cop=be{Fin,Pres}
+  (NP.head the/DET.det case/NOUN.head~abstract (PP.nmod for/ADP.case (NP.head@negative_results negative/ADJ.amod results/NOUN.head=result)))
+  ;/PUNCT
+  (S.parataxis (NP.nsubj@things things/NOUN.head=thing)
+    get/VERB.head{Fin,Pres}
+    (ADJP.xcomp slightly/ADV.advmod~degree more/ADV.advmod~degree interesting/ADJ.head)
+    (PP.obl for/ADP.case (NP.head@positive_results positive/ADJ.amod results/NOUN.head=result))
+    (PP.obl due/ADP.case to/ADP.fixed (NP.head@possibility the/DET.det possibility/NOUN.head (PP.nmod of/ADP.case (NP.head@false_positive false/ADJ.amod positives/NOUN.head=positive)))))
+  ./PUNCT)

@@ -1,0 +1,1 @@
+This research was just recently presented at CAV2020 under the title "Certifying Certainty and Uncertainty in Approximate Membership Query Structures", you can find the paper here, and a video presentation of it here.

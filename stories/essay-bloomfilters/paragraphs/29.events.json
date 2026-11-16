@@ -1,0 +1,38 @@
+{
+ "text_sha": "1f051567e92275e3",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 9,
+   "w": "happens",
+   "kind": "generic"
+  },
+  {
+   "at": 11,
+   "w": "hit",
+   "kind": "generic"
+  },
+  {
+   "at": 19,
+   "w": "1",
+   "kind": "generic"
+  },
+  {
+   "at": 35,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 42,
+   "w": "misses",
+   "kind": "generic"
+  },
+  {
+   "at": 49,
+   "w": "1",
+   "kind": "generic"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 5
+  },
+  {
+   "move": "deliver",
+   "t": "hashedUrls",
+   "uses": [
+    "browsers"
+   ],
+   "s": 1
+  },
+  {
+   "move": "concede",
+   "t": "explanationExact",
+   "uses": [
+    "proxy"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deny",
+   "t": "historyAtRisk",
+   "uses": [
+    "hashedUrls"
+   ],
+   "s": 2
+  },
+  {
+   "move": "claim",
+   "t": "fingerprinting",
+   "uses": [
+    "hashedUrls"
+   ],
+   "s": 2
+  }
+ ]
+}

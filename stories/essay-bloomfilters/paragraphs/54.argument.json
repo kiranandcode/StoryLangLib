@@ -1,0 +1,15 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "bitsDependent",
+   "premises": [
+    "hashesDistinct"
+   ],
+   "uses": [
+    "bit_vector"
+   ],
+   "s": 1
+  }
+ ]
+}

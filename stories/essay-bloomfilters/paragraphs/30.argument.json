@@ -1,0 +1,16 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "unsetK",
+   "premises": [
+    "missProb",
+    "independence"
+   ],
+   "uses": [
+    "hash_functions"
+   ],
+   "s": 1
+  }
+ ]
+}

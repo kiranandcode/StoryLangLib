@@ -1,0 +1,1 @@
+In order to correct this issue, Bose et al. propose an alternative derivation which uses a balls-into-bins analogy to account for the possibility that the hash outputs overlap, and derive the false positive rate as being (see here for the Coq proof):

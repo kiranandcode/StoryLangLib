@@ -1,0 +1,22 @@
+entity reader person they "you, the reader"
+entity authors group they "I, our, my: the author"
+entity research abstract it "our full paper / the paper"
+entity presentation abstract it "my presentation of the paper for CAV"
+entity cav abstract it "CAV (the conference)"
+topic t1 "where to read more" research,reader
+(S%t1
+  (SBAR.advcl If/SCONJ.mark (NP.nsubj@reader you/PRON.head)
+    are/AUX.cop=be{Fin,Pres} interested/ADJ.head~impression)
+  ,/PUNCT
+  (NP.nsubj@authors I'd/PRON.head=I)
+  (VP.head recommend/VERB.head{Fin,Pres}
+    (VP.xcomp either/CCONJ.cc reading/VERB.head=read{Ger}
+      (NP.obj@research our/PRON.nmod@authors full/ADJ.amod paper/NOUN.head)
+      (FRAG.parataxis \(/PUNCT see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place \)/PUNCT)
+      ,/PUNCT or/CCONJ.cc
+      (VP.conj checking/VERB.head=check{Ger} out/ADP.compound
+        (NP.obj@presentation my/PRON.nmod@authors presentation/NOUN.head
+          (PP.nmod of/ADP.case (NP.head@research the/DET.det paper/NOUN.head))
+          (PP.nmod for/ADP.case (NP.head@cav CAV/PROPN.head)))
+        (FRAG.parataxis \(/PUNCT see/VERB.head{Fin,Pres,Mood=Imp} here/ADV.advmod~place \)/PUNCT))))
+  ./PUNCT)

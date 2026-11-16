@@ -1,0 +1,10 @@
+entity cited_expression abstract it "(1 - (1 - 1/m)^(kn))^k, Bloom's bound"
+entity fpr abstract it "the false positive (rate) of a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter" generic
+topic t1 "Bloom's bound is not the false positive rate" cited_expression,fpr
+(S%t1 So/CCONJ.cc clearly/ADV.advmod~impression this/PRON.nsubj@cited_expression is/AUX.cop=be{Fin,Pres} not/PART.advmod
+  (NP.head the/DET.det correct/ADJ.amod expression/NOUN.head~abstract
+    (PP.nmod for/ADP.case (NP.head@fpr the/DET.det false/ADJ.amod positive/NOUN.head~abstract
+      (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det bloom/NOUN.compound filter/NOUN.head)))))
+  ./PUNCT)
+(S%t1 So/CCONJ.cc what/PRON.head is/AUX.cop=be{Fin,Pres} ?/PUNCT)

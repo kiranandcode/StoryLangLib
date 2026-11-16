@@ -1,0 +1,30 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "hashRandom",
+   "uses": [
+    "hash_functions",
+    "probability"
+   ],
+   "s": 1
+  },
+  {
+   "move": "cite",
+   "t": "hashRandom",
+   "uses": [
+    "hash_functions"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "whyRandom",
+   "sec": 2,
+   "uses": [
+    "hashRandom"
+   ],
+   "s": 1
+  }
+ ]
+}

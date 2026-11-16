@@ -1,0 +1,34 @@
+{
+ "text_sha": "f71978c2ba5923d6",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "notice critics !boseDerivationSound inferred",
+   "at": 32,
+   "w": "found",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows authors boseFormula",
+   "at": 5,
+   "w": "know"
+  }
+ ],
+ "judge": [
+  {
+   "at": 16,
+   "w": "correct",
+   "kind": "content",
+   "lit": "boseFormula"
+  },
+  {
+   "at": 38,
+   "w": "throwing",
+   "kind": "content",
+   "lit": "!boseDerivationSound"
+  }
+ ]
+}

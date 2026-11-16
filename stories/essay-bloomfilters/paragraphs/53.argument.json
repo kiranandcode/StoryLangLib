@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "sameMistake",
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "citedWrong",
+   "uses": [
+    "hashesDistinct"
+   ],
+   "s": 2
+  }
+ ]
+}

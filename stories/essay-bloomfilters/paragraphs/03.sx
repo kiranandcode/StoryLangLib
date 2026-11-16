@@ -1,0 +1,22 @@
+entity url abstract it "a URL a user visits" generic
+entity users group they "a user / most users" generic
+entity external_service abstract it "some external service"
+entity third_parties group they "nefarious third parties" generic
+topic t1 "sending URLs out leaks browsing" url,external_service
+(S%t1 Conversely/ADV.advmod~order ,/PUNCT
+  (VP.csubj sending/VERB.head=send{Ger}
+    (NP.obj@url every/DET.det URL/NOUN.head
+      (SBAR.relcl that/PRON.obj@url (S.head (NP.nsubj@users a/DET.det user/NOUN.head) (VP.head visits/VERB.head=visit{Fin,Pres}))))
+    (PP.obl to/ADP.case (NP.head@external_service some/DET.det external/ADJ.amod service/NOUN.head
+      ,/PUNCT
+      (SBAR.relcl where/SCONJ.mark
+        (S.head it/PRON.nsubj@url
+          (VP.head could/AUX.aux{Fin,Past} be/AUX.aux{Inf} logged/VERB.head=log{Part} and/CCONJ.cc data-mined/VERB.conj=data-mine{Part}
+            (PP.obl by/ADP.case (NP.head@third_parties nefarious/ADJ.amod third/ADJ.amod parties/NOUN.head=party)))))
+      ,/PUNCT)))
+  (VP.head is/AUX.cop=be{Fin,Pres}
+    (NP.head something/PRON.head
+      (SBAR.relcl that/PRON.obl
+        (S.head (NP.nsubj@users most/ADJ.amod users/NOUN.head=user)
+          (VP.head should/AUX.aux{Fin,Pres} probably/ADV.advmod~degree not/PART.advmod be/AUX.cop{Inf} comfortable/ADJ.head~impression with/ADP.case)))))
+  ./PUNCT)

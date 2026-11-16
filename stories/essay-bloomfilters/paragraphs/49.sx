@@ -1,0 +1,19 @@
+entity research abstract it "our research"
+entity positives abstract they "positive results from a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind)" generic
+entity certainty abstract it "the certainty of positive results"
+topic t1 "what the research verifies" research
+(FRAG%t1
+  (PP.head In/ADP.case reference/NOUN.head~abstract
+    (PP.nmod to/ADP.case
+      (NP.head the/DET.det fact/NOUN.head~abstract
+        (SBAR.acl that/SCONJ.mark
+          (S.head (NP.nsubj@research the/DET.det research/NOUN.head)
+            (VP.head is/AUX.cop=be{Fin,Pres} entirely/ADV.advmod~degree
+              (PP.head about/ADP.mark
+                (VP.head verifying/VERB.head=verify{Ger}
+                  (NP.obj@certainty the/DET.det "/PUNCT certainty/NOUN.head "/PUNCT
+                    (PP.nmod of/ADP.case
+                      (NP.head@positives positive/ADJ.amod results/NOUN.head=result
+                        (PP.nmod from/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))))))))))))
+  ./PUNCT)

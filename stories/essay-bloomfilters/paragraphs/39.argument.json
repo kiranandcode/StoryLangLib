@@ -1,0 +1,25 @@
+{
+ "moves": [
+  {
+   "move": "heading",
+   "sec": 3
+  },
+  {
+   "move": "cite",
+   "t": "citedWrong",
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "distinctCaveat",
+   "sec": 5,
+   "uses": [
+    "blooms_analysis"
+   ],
+   "s": 1
+  }
+ ]
+}

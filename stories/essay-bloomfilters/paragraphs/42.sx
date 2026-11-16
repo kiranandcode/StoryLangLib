@@ -1,0 +1,31 @@
+entity authors group they "we, us, our: the authors"
+entity bose group they "Bose et al."
+entity contention abstract it "this: the history of errors just recounted" of=para:39,para:40,para:41
+entity research abstract it "our research, Ceramist (CAV 2020)"
+entity behaviour abstract they "the true behaviours of a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter (as a kind)" generic
+entity certified_proof abstract it "a certified proof of Bose et al.'s updated bound in Coq"
+entity bose_expression abstract it "Bose et al.'s updated bound"
+entity coq abstract it "Coq"
+topic t1 "our research: Ceramist" research,authors
+(S%t1 (NP.nsubj@contention This/PRON.head)
+  (VP.head finally/ADV.advmod~order brings/VERB.head=bring{Fin,Pres} (NP.obj@authors us/PRON.head)
+    (PP.obl to/ADP.case
+      (NP.head@research our/PRON.nmod@authors research/NOUN.head
+        -/PUNCT
+        (NP.appos@research Ceramist/PROPN.head
+          :/PUNCT
+          (NP.appos@research Certifying/PROPN.head Certainty/PROPN.flat and/CCONJ.flat Uncertainty/PROPN.flat in/ADP.flat Approximate/PROPN.flat Membership/PROPN.flat Query/PROPN.flat Structures/PROPN.flat))
+        ,/PUNCT
+        (SBAR.acl (PP.obl in/ADP.case which/PRON.head@research)
+          (S.head (NP.nsubj@authors we/PRON.head)
+            (VP.head manage/VERB.head{Fin,Pres}
+              (VP.xcomp to/PART.mark finally/ADV.advmod~order pin/VERB.head{Inf} down/ADP.compound
+                (NP.obj@behaviour the/DET.det true/ADJ.amod behaviours/NOUN.head=behaviour
+                  (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))
+                (SBAR.advcl by/SCONJ.mark
+                  (VP.head producing/VERB.head=produce{Ger}
+                    (NP.obj@certified_proof a/DET.det certified/ADJ.amod proof/NOUN.head
+                      (PP.nmod of/ADP.case (NP.head@bose_expression (NP.nmod@bose Bose/PROPN.head et/X.flat al/X.flat ./PUNCT '/PUNCT s/PART.case) updated/ADJ.amod bound/NOUN.head)))
+                    (PP.obl in/ADP.case (NP.head@coq Coq/PROPN.head)))))))))))
+  ./PUNCT)

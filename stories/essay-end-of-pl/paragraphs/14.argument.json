@@ -1,0 +1,30 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "counterfactualsFast",
+   "sec": 0,
+   "uses": [
+    "llms"
+   ],
+   "s": 1
+  },
+  {
+   "move": "claim",
+   "t": "counterfactualsFast",
+   "uses": [
+    "llms",
+    "research"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deliver",
+   "t": "whyExcited",
+   "uses": [
+    "counterfactualsFast"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "text_sha": "a600391312a17d4c",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "request authors reader transformative",
+   "at": 0,
+   "w": "Let",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 7,
+   "w": "begin",
+   "kind": "content",
+   "lit": "transformative"
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+These operations, while fairly straightforward, are actually entirely sufficient to ensure the No false negatives property (see here for Coq statement):

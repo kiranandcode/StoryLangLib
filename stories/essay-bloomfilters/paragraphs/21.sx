@@ -1,0 +1,27 @@
+entity authors group they "I / we (the authors)"
+entity frequency abstract it "the frequency at which false positives occur (the false positive rate, informally)"
+entity false_positive abstract they "these kinds of results: false positives" generic
+entity this_char abstract it "this: characterising the frequency of false positives" of=frequency
+entity hash_functions abstract they "the hash functions"
+entity analysis abstract it "our analysis (of the false positive rate)"
+topic t1 "the frequency of false positives depends on the hashes" frequency
+(S%t1 Ideally/ADV.advmod~manner ,/PUNCT
+  (NP.nsubj@authors we'd/PRON.head=we)
+  like/VERB.head{Fin,Pres}
+  (S.xcomp to/PART.mark characterise/VERB.head{Inf}
+    (NP.obj@frequency the/DET.det frequency/NOUN.head
+      (S.relcl (PP.obl at/ADP.case which/PRON.head) (NP.nsubj@false_positive these/DET.det kinds/NOUN.head=kind (PP.nmod of/ADP.case results/NOUN.head=result~abstract))
+        may/AUX.aux{Fin,Pres} occur/VERB.head{Inf})))
+  ,/PUNCT
+  (S.parataxis however/ADV.advmod~order
+    (NP.nsubj@this_char this/PRON.head)
+    will/AUX.aux{Fin,Pres}
+    generally/ADV.advmod~degree
+    be/AUX.cop{Inf}
+    highly/ADV.advmod~degree
+    dependent/ADJ.head
+    (PP.obl on/ADP.case (NP.head@hash_functions the/DET.det particular/ADJ.amod choice/NOUN.head~abstract (PP.nmod of/ADP.case hash/NOUN.compound~abstract functions/NOUN.head=function~abstract)))
+    ,/PUNCT
+    (S.advcl limiting/VERB.head=limit{Ger}
+      (NP.obj the/DET.det scope/NOUN.head~abstract (PP.nmod of/ADP.case (NP.head@analysis our/PRON.poss@authors analysis/NOUN.head)))))
+  ./PUNCT)

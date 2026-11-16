@@ -1,0 +1,54 @@
+{
+ "text_sha": "4afd32660df8526a",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader llmsCodeWell",
+   "at": 22,
+   "w": "good",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true humansStopCoding",
+   "at": 34,
+   "w": "going"
+  }
+ ],
+ "judge": [
+  {
+   "at": 0,
+   "w": "Let's",
+   "kind": "generic"
+  },
+  {
+   "at": 1,
+   "w": "dig",
+   "kind": "generic"
+  },
+  {
+   "at": 10,
+   "w": "let",
+   "kind": "generic"
+  },
+  {
+   "at": 12,
+   "w": "put",
+   "kind": "act"
+  },
+  {
+   "at": 24,
+   "w": "writing",
+   "kind": "content",
+   "lit": "llmsCodeWell"
+  },
+  {
+   "at": 37,
+   "w": "writing",
+   "kind": "content",
+   "lit": "humansStopCoding"
+  }
+ ]
+}

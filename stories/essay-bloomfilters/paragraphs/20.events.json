@@ -1,0 +1,96 @@
+{
+ "text_sha": "071c5ee927218675",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader falsePos",
+   "at": 70,
+   "w": "is",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 1,
+   "w": "see",
+   "kind": "generic"
+  },
+  {
+   "at": 5,
+   "w": "occur",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 7,
+   "w": "consider",
+   "kind": "generic"
+  },
+  {
+   "at": 12,
+   "w": "Suppose",
+   "kind": "generic"
+  },
+  {
+   "at": 14,
+   "w": "insert",
+   "kind": "act"
+  },
+  {
+   "at": 24,
+   "w": "Inserting",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 29,
+   "w": "result",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 40,
+   "w": "raised",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 49,
+   "w": "choose",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 51,
+   "w": "query",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 61,
+   "w": "Depending",
+   "kind": "generic"
+  },
+  {
+   "at": 81,
+   "w": "maps",
+   "kind": "generic"
+  },
+  {
+   "at": 85,
+   "w": "a",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 92,
+   "w": "raised",
+   "kind": "generic"
+  },
+  {
+   "at": 101,
+   "w": "return",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 111,
+   "w": "in",
+   "kind": "hypothetical"
+  }
+ ]
+}

@@ -1,0 +1,49 @@
+{
+ "text_sha": "02201e90de0734ba",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "ask authors reader plObsolete",
+   "at": 27,
+   "w": "care",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true humansStopCoding",
+   "at": 19,
+   "w": "going"
+  },
+  {
+   "c": "true humansStopCoding",
+   "at": 36,
+   "w": "going"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "worry",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 14,
+   "w": "becoming",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 22,
+   "w": "writing",
+   "kind": "content",
+   "lit": "humansStopCoding"
+  },
+  {
+   "at": 39,
+   "w": "writing",
+   "kind": "content",
+   "lit": "humansStopCoding"
+  }
+ ]
+}

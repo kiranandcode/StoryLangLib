@@ -1,0 +1,15 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "citedWrong",
+   "premises": [
+    "bitsDependent"
+   ],
+   "uses": [
+    "fpr"
+   ],
+   "s": 1
+  }
+ ]
+}

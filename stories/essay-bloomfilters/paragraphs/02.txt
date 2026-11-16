@@ -1,0 +1,1 @@
+While conceptually simple, this feature actually requires more engineering effort than one would expect - in particular, tracking the set of known malicious URLs in a practical manner turns out to be somewhat difficult.

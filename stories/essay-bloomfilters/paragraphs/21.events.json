@@ -1,0 +1,33 @@
+{
+ "text_sha": "0cd1f0bbd11638b1",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [],
+ "judge": [
+  {
+   "at": 3,
+   "w": "like",
+   "kind": "act"
+  },
+  {
+   "at": 5,
+   "w": "characterise",
+   "kind": "act"
+  },
+  {
+   "at": 15,
+   "w": "occur",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 23,
+   "w": "dependent",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 32,
+   "w": "limiting",
+   "kind": "hypothetical"
+  }
+ ]
+}

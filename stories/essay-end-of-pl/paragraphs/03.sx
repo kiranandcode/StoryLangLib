@@ -1,0 +1,42 @@
+entity authors group they "I (Kiran)"
+entity writing abstract it "this post (called 'this thread')"
+entity position abstract it "an alternative position (the essay's stance)"
+entity juniors group they "junior researchers / students watching the discussion"
+entity thread abstract it "this discussion (the TYPES thread)"
+entity task abstract it "the daunting task of charting their careers"
+entity careers abstract they "their careers"
+entity times abstract it "this tumultuous time / this climate"
+entity field abstract it "PL"
+entity vision abstract it "a slightly more positive vision"
+topic t1 "why this post" position
+topic t2 "the juniors watching" juniors
+(S%t1 (NP.nsubj@authors I/PRON.head)
+  (VP.head wanted/VERB.head=want{Fin,Past}
+    (VP.xcomp to/PART.mark write/VERB.head{Inf} (NP.obj@writing this/DET.det thread/NOUN.head)
+      (VP.advcl to/PART.mark present/VERB.head{Inf} (NP.obj@position an/DET.det alternative/ADJ.amod position/NOUN.head))))
+  ./PUNCT)
+(S%t2 (S.head (NP.nsubj@authors I/PRON.head)
+  (VP.head think/VERB.head{Fin,Pres}
+    (S.ccomp (NP.nsubj@juniors many/DET.det junior/ADJ.amod~impression researchers/NOUN.head=researcher (PP.nmod at/ADP.case the/DET.det moment/NOUN.head~time))
+      (VP.head are/AUX.aux=be{Fin,Pres} watching/VERB.head=watch{Part}
+        (NP.obj@thread this/DET.det discussion/NOUN.head)
+        (ADVP.advmod right/ADV.advmod~degree now/ADV.head~time)
+        ,/PUNCT
+        (NP.appos@juniors students/NOUN.head=student
+          (VP.acl reeling/VERB.head=reel{Ger}
+            (PP.obl with/ADP.case (NP.head@task the/DET.det daunting/ADJ.amod task/NOUN.head
+              (PP.nmod of/ADP.case (VP.head charting/VERB.head=chart{Ger} (NP.obj@careers their/PRON.poss@juniors careers/NOUN.head=career)
+                (PP.obl in/ADP.case (NP.head@times this/DET.det tumultuous/ADJ.amod time/NOUN.head))))))))
+        ,/PUNCT
+        (VP.conj and/CCONJ.cc worrying/VERB.head=worry{Part}
+          (SBAR.ccomp why/ADV.advmod~manner
+            (S.head (NP.nsubj@juniors they/PRON.head)
+              (VP.head should/AUX.aux{Fin,Pres} even/ADV.advmod~degree bother/VERB.head{Inf}
+                (VP.xcomp entering/VERB.head=enter{Ger} (NP.obj@field PL/PROPN.head)
+                  (PP.obl given/ADP.case (NP.head@times this/DET.det climate/NOUN.head)))))))))))
+  ,/PUNCT
+  (S.conj and/CCONJ.cc (NP.nsubj@authors I'd/PRON.head=I)
+    (VP.head like/VERB.head{Fin,Pres}
+      (VP.xcomp to/PART.mark give/VERB.head{Inf} (NP.obj@vision a/DET.det (ADJP.amod slightly/ADV.advmod~degree more/ADV.advmod~degree positive/ADJ.head) vision/NOUN.head)
+        (PP.obl for/ADP.case them/PRON.head@juniors))))
+  ./PUNCT)

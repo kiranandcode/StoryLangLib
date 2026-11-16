@@ -1,0 +1,18 @@
+entity reader person they "you, the reader"
+entity research abstract it "this research / the paper"
+entity video abstract it "a video presentation of the paper"
+topic t1 "where the research was presented" research
+(S%t1
+  (S.head (NP.nsubj@research This/DET.det research/NOUN.head)
+    (VP.head was/AUX.aux=be{Fin,Past} just/ADV.advmod~time recently/ADV.advmod~time presented/VERB.head=present{Part}
+      (PP.obl at/ADP.case (NP.head CAV2020/PROPN.head~event))
+      (PP.obl under/ADP.case (NP.head the/DET.det title/NOUN.head~abstract
+        (NP.appos@research "/PUNCT Certifying/PROPN.head~abstract Certainty/PROPN.flat~abstract and/CCONJ.cc Uncertainty/PROPN.flat~abstract in/ADP.case Approximate/PROPN.flat~abstract Membership/PROPN.flat~abstract Query/PROPN.flat~abstract Structures/PROPN.flat~abstract "/PUNCT)))))
+  ,/PUNCT
+  (S.parataxis you/PRON.nsubj@reader
+    (VP.head can/AUX.aux{Fin,Pres} find/VERB.head{Inf}
+      (NP.obj@research the/DET.det paper/NOUN.head) here/ADV.advmod~place
+      ,/PUNCT and/CCONJ.cc
+      (NP.conj@video a/DET.det video/NOUN.compound~digital presentation/NOUN.head (PP.nmod of/ADP.case (NP.head@research it/PRON.head)))
+      here/ADV.advmod~place))
+  ./PUNCT)

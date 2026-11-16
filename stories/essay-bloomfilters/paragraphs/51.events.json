@@ -1,0 +1,13 @@
+{
+ "text_sha": "4312768abddbb9ef",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "true !bloomFormula",
+   "at": 7,
+   "w": "incorrect"
+  }
+ ],
+ "judge": []
+}

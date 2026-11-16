@@ -1,0 +1,63 @@
+entity proxy abstract it "this proxy technique"
+entity privacy abstract it "the privacy of users / user privacy"
+entity users group they "millions of users" generic
+entity bloom_filter abstract it "a Bloom filter / Bloom filters" generic
+entity no_false_negatives abstract it "the No false negatives property"
+entity low_fpr abstract it "the Low false positive rate property"
+entity key_properties abstract they "two key properties of Bloom filters" of=no_false_negatives,low_fpr
+entity query abstract it "a query to the Bloom filter" generic
+entity url abstract it "an URL / any URL" generic
+entity malicious_urls abstract it "the set of malicious URLs"
+entity false_positive abstract it "a positive result" generic
+topic t1 "the two properties the proxy relies on" key_properties,bloom_filter
+(S%t1 (NP.nsubj@proxy This/DET.det proxy/NOUN.compound technique/NOUN.head ,/PUNCT
+    (SBAR.relcl which/PRON.nsubj@proxy
+      (VP.head safe-guards/VERB.head=safe-guard{Fin,Pres}
+        (NP.obj@privacy the/DET.det privacy/NOUN.head (PP.nmod of/ADP.case (NP.head millions/NOUN.head=million~abstract (PP.nmod of/ADP.case (NP.head@users users/NOUN.head=user)))))
+        (NP.obl ever/ADV.advmod~time day/NOUN.head~time)))
+    ,/PUNCT)
+  (VP.head depends/VERB.head=depend{Fin,Pres}
+    (PP.obl on/ADP.case (NP.head@key_properties two/NUM.nummod key/ADJ.amod properties/NOUN.head=property (PP.nmod of/ADP.case (NP.head@bloom_filter Bloom/PROPN.compound filters/NOUN.head=filter)))))
+  :/PUNCT)
+(FRAG%t1 (NP.head@no_false_negatives No/DET.det false/ADJ.amod negatives/NOUN.head=negative) :/PUNCT
+  (S.parataxis (NP.nsubj@no_false_negatives This/PRON.head)
+    (VP.head states/VERB.head=state{Fin,Pres}
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head
+          (SBAR.advcl if/SCONJ.mark
+            (S.head (NP.nsubj@query a/DET.det query/NOUN.head (PP.nmod for/ADP.case (NP.head@url an/DET.det URL/NOUN.head (PP.nmod in/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))))))
+              (VP.head returns/VERB.head=return{Fin,Pres} negative/ADJ.obj)))
+          ,/PUNCT then/ADV.advmod~order
+          (NP.nsubj@url the/DET.det queried/ADJ.amod item/NOUN.head)
+          (VP.head can/AUX.aux{Fin,Pres} be/AUX.aux{Inf} guaranteed/VERB.head=guarantee{Part}
+            (VP.xcomp to/PART.mark not/PART.advmod be/AUX.cop{Inf}
+              (ADJP.head present/ADJ.head (PP.obl in/ADP.case (NP.head@malicious_urls the/DET.det set/NOUN.head (PP.nmod of/ADP.case (NP.head malicious/ADJ.amod URLs/NOUN.head=URL~abstract))))))))
+      -/PUNCT
+      (S.parataxis (FRAG.advmod i/X.head ./PUNCT e/X.fixed)
+        (NP.nsubj@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head)
+        (VP.head is/AUX.aux=be{Fin,Pres} guaranteed/VERB.head=guarantee{Part}
+          (VP.xcomp to/PART.mark return/VERB.head{Inf}
+            (NP.obj@false_positive a/DET.det positive/ADJ.amod result/NOUN.head)
+            (PP.obl for/ADP.case (NP.head all/DET.det known/ADJ.amod malicious/ADJ.amod URLs/NOUN.head=URL~abstract)))))))
+  ./PUNCT)
+(FRAG%t1 (NP.head@low_fpr Low/ADJ.amod false/ADJ.amod positive/ADJ.amod rate/NOUN.head) :/PUNCT
+  (S.parataxis (NP.nsubj@low_fpr This/DET.det property/NOUN.head)
+    (VP.head states/VERB.head=state{Fin,Pres}
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head
+          (PP.obl for/ADP.case (NP.head@url any/DET.det URL/NOUN.head
+            (SBAR.relcl that/PRON.nsubj@url
+              (VP.head is/AUX.cop=be{Fin,Pres} not/PART.advmod
+                (PP.head in/ADP.case (NP.head@malicious_urls the/DET.det set/NOUN.head (PP.nmod of/ADP.case (NP.head malicious/ADJ.amod URLs/NOUN.head=URL~abstract))))))))
+          ,/PUNCT
+          (NP.nsubj the/DET.det likelihood/NOUN.head~abstract
+            (PP.nmod of/ADP.case
+              (S.head (NP.nsubj@query a/DET.det Bloom/PROPN.compound filter/NOUN.compound~digital query/NOUN.head)
+                (VP.head returning/VERB.head=return{Ger} (NP.obj@false_positive a/DET.det positive/ADJ.amod result/NOUN.head)))))
+          (VP.head should/AUX.aux{Fin,Pres} be/AUX.cop{Inf} fairly/ADV.advmod~degree low/ADJ.head
+            -/PUNCT
+            (VP.advcl thus/ADV.advmod~manner minimising/VERB.head=minimise{Ger}
+              (NP.obj the/DET.det number/NOUN.head~abstract
+                (PP.nmod of/ADP.case (NP.head unnecessary/ADJ.amod infractions/NOUN.head=infraction~abstract
+                  (PP.nmod on/ADP.case (NP.head@privacy user/NOUN.compound privacy/NOUN.head)))))))))))
+  ./PUNCT)

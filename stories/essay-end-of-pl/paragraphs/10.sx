@@ -1,0 +1,49 @@
+entity applications abstract they "applications / practical applications" generic
+entity authors group they "I (Kiran)"
+entity community group they "we (PL researchers)"
+entity se abstract it "software engineering (the field)"
+entity seResearchers group they "software engineering researchers"
+entity se_work abstract it "what software engineering research is like"
+entity se_coworkers group they "the software engineering researchers the author has worked with"
+entity se_systems abstract they "software engineering researchers' systems"
+entity reader person they "you (impersonal here, not tracked)"
+entity qualities abstract they "beauty and elegance"
+entity analysis abstract it "a static analysis capable of handling the entire Linux kernel" generic
+entity kernel abstract it "the entire Linux kernel"
+topic t1 "who cares about applications" applications
+topic t2 "software engineering research" se_systems
+(FRAG%t1 But/CCONJ.cc …/PUNCT actually/ADV.head~degree ?/PUNCT)
+(S%t1 (NP.nsubj who/PRON.head) (VP.head cares/VERB.head=care{Fin,Pres} (PP.obl about/ADP.case (NP.head@applications the/DET.det applications/NOUN.head=application))) ?/PUNCT)
+(S%t1 (NP.nsubj@authors I/PRON.head)
+  (VP.head mean/VERB.head{Fin,Pres}
+    (S.ccomp (NP.nsubj@community we/PRON.head)
+      (VP.head don't/AUX.aux=do{Fin,Pres} even/ADV.advmod~degree like/VERB.head{Inf} (NP.obj@applications applications/NOUN.head=application))))
+  ?/PUNCT)
+(S%t1 (SBAR.advcl If/SCONJ.mark (S.head (NP.nsubj@community we/PRON.head) did/VERB.head=do{Fin,Past}))
+  (NP.nsubj@community we'd/PRON.head=we) be/AUX.cop{Inf}
+  (PP.head in/ADP.case (NP.head@se software/NOUN.compound~digital engineering/NOUN.head))
+  ./PUNCT)
+(S%t2 (NP.nsubj@authors I've/PRON.head=I)
+  (VP.head worked/VERB.head=work{Part} (PP.obl with/ADP.case (NP.head@se_coworkers software/NOUN.compound~digital engineering/NOUN.compound~abstract researchers/NOUN.head=researcher)))
+  ./PUNCT)
+(S%t2 and/CCONJ.cc (VP.head believe/VERB.head{Fin,Pres,Mood=Imp} (NP.obj@authors me/PRON.head=I)) ./PUNCT)
+(S%t2 (NP.nsubj@se_work It/PRON.head) is/AUX.cop=be{Fin,Pres} NOT/PART.advmod pretty/ADJ.head ./PUNCT)
+(S%t2 (NP.nsubj@se_systems Their/PRON.poss@seResearchers systems/NOUN.head=system~digital)
+  are/AUX.cop=be{Fin,Pres}
+  (ADJP.head ad-hoc/ADJ.head ,/PUNCT hacky/ADJ.conj ,/PUNCT (ADJP.conj wildly/ADV.advmod~degree incomplete/ADJ.head) and/CCONJ.cc (ADJP.conj barely/ADV.advmod~degree functional/ADJ.head))
+  ./PUNCT)
+(S%t2 But/CCONJ.cc (NP.nsubj@se_systems they/PRON.head)
+  (VP.head need/VERB.head{Fin,Pres}
+    (S.xcomp to/PART.mark be/AUX.cop{Inf} (PP.head like/ADP.case that/PRON.head)))
+  ./PUNCT)
+(S%t2 You/PRON.nsubj
+  (VP.head can't/AUX.aux=can{Fin,Pres} settle/VERB.head{Inf}
+    (PP.obl for/ADP.case (NP.head@qualities beauty/NOUN.head~abstract and/CCONJ.cc elegance/NOUN.conj~abstract))
+    (SBAR.advcl if/SCONJ.mark
+      (S.head you/PRON.nsubj
+        (VP.head want/VERB.head{Fin,Pres}
+          (VP.xcomp to/PART.mark build/VERB.head{Inf}
+            (NP.obj@analysis a/DET.det static/ADJ.amod analysis/NOUN.head~abstract
+              (ADJP.amod capable/ADJ.head (SBAR.obl of/SCONJ.mark (VP.head handling/VERB.head=handle{Ger}
+                (NP.obj@kernel the/DET.det entire/ADJ.amod Linux/PROPN.compound kernel/NOUN.head~digital))))))))))
+  ./PUNCT)

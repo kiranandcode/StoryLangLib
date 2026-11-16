@@ -1,0 +1,11 @@
+entity ceramist_repo abstract it "the code and proofs; the Ceramist repo"
+entity research abstract it "this research project"
+topic t1 "the code is open source" ceramist_repo
+(S%t1 (NP.nsubj@ceramist_repo The/DET.det code/NOUN.head~digital and/CCONJ.cc proofs/NOUN.conj=proof~abstract
+    (VP.acl used/VERB.head=use{Part} (PP.obl in/ADP.case (NP.head@research this/DET.det research/NOUN.compound~abstract project/NOUN.head))))
+  (VP.head are/AUX.cop=be{Fin,Pres} FOSS/NOUN.head~abstract
+    ,/PUNCT and/CCONJ.cc
+    (VP.conj can/AUX.aux{Fin,Pres} be/AUX.aux{Inf} found/VERB.head=find{Part}
+      (PP.obl on/ADP.case (NP.head@ceramist_repo the/DET.det Ceramist/PROPN.compound repo/NOUN.head))
+      :/PUNCT
+      (NP.appos@ceramist_repo https/X.head :/PUNCT //PUNCT //PUNCT github/X.flat ./PUNCT com/X.flat //PUNCT verse-lab/X.flat //PUNCT ceramist/X.flat))))

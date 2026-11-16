@@ -1,0 +1,19 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "bloomFormula",
+   "sec": 0,
+   "uses": [],
+   "s": 2
+  },
+  {
+   "move": "deny",
+   "t": "bitsIndependent",
+   "uses": [
+    "bit_vector"
+   ],
+   "s": 3
+  }
+ ]
+}

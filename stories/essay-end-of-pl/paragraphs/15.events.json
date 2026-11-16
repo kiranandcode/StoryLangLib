@@ -1,0 +1,22 @@
+{
+ "text_sha": "77d6335efe33e773",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader excited",
+   "at": 9,
+   "w": "crazed",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader ideasPlentiful",
+   "at": 12,
+   "w": "run",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": []
+}

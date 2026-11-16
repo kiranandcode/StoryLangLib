@@ -1,0 +1,1 @@
+Let's dig into the fears of practicing researchers, and let me put down a few points: Language models are exceedingly good at writing code. As such, humans are increasingly not going to be writing code.

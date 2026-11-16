@@ -1,0 +1,41 @@
+{
+ "text_sha": "9a75e793b31dc28a",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader !bloomFormula",
+   "at": 48,
+   "w": "wrong",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 2,
+   "w": "works",
+   "kind": "generic"
+  },
+  {
+   "at": 13,
+   "w": "seem",
+   "kind": "generic"
+  },
+  {
+   "at": 17,
+   "w": "suited",
+   "kind": "generic"
+  },
+  {
+   "at": 25,
+   "w": "has",
+   "kind": "generic"
+  },
+  {
+   "at": 32,
+   "w": "is",
+   "kind": "generic"
+  }
+ ]
+}

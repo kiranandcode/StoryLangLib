@@ -1,0 +1,34 @@
+{
+ "text_sha": "8afb04635d8e79af",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "ask authors reader bloomFormula",
+   "at": 0,
+   "w": "Makes",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell authors reader !bitsIndependent",
+   "at": 17,
+   "w": "valid",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 3,
+   "w": "Seems",
+   "kind": "generic"
+  },
+  {
+   "at": 14,
+   "w": "independent",
+   "kind": "content",
+   "lit": "!bitsIndependent"
+  }
+ ]
+}

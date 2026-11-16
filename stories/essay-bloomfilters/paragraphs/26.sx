@@ -1,0 +1,27 @@
+entity bloom person he "Burton Howard Bloom"
+entity authors group they "I / we (the authors)"
+entity blooms_analysis abstract it "Bloom's analysis / derivation / proof"
+entity bit_behaviours abstract they "the behaviours of an arbitrary single bit"
+entity selected_bit abstract it "the selected bit b1"
+entity bit_vector abstract it "the bit-vector"
+entity single_bit_prob abstract it "the result for a single bit (the single-bit probability)"
+topic t1 "Bloom's plan: one bit, then generalise" blooms_analysis,selected_bit
+(S%t1 Bloom/PROPN.nsubj@bloom
+  (VP.head proposes/VERB.head=propose{Fin,Pres}
+    (S.ccomp (NP.nsubj@authors we/PRON.head)
+      (VP.head begin/VERB.head{Fin,Pres,Mood=Sub} (NP.obj@blooms_analysis the/DET.det analysis/NOUN.head)
+        (VP.advcl by/SCONJ.mark focusing/VERB.head=focus{Ger}
+          (PP.obl on/ADP.case (NP.head@bit_behaviours the/DET.det behaviours/NOUN.head=behaviour
+            (PP.nmod of/ADP.case (NP.head@selected_bit an/DET.det arbitrary/ADJ.amod single/ADJ.amod bit/NOUN.head
+              (PP.nmod of/ADP.case (NP.head@bit_vector the/DET.det bit-vector/NOUN.head))))))))
+      ,/PUNCT
+      (VP.conj and/CCONJ.cc then/ADV.advmod generalise/VERB.head{Fin,Pres,Mood=Sub}
+        (NP.obj@single_bit_prob the/DET.det result/NOUN.head)
+        (PP.obl at/ADP.case the/DET.det end/NOUN.head~time))))
+  -/PUNCT
+  (S.parataxis (PP.obl for/ADP.case the/DET.det purposes/NOUN.head=purpose~abstract (PP.nmod of/ADP.case illustration/NOUN.head~abstract))
+    ,/PUNCT
+    (VP.head suppose/VERB.head{Fin,Pres,Mood=Imp}
+      (SBAR.ccomp that/SCONJ.mark
+        (S.head (NP.nsubj@selected_bit this/DET.det bit/NOUN.head) is/AUX.cop=be{Fin,Pres} (NP.head@selected_bit b1/X.head)))))
+  ./PUNCT)

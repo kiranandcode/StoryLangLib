@@ -1,0 +1,280 @@
+{
+ "essay": "Bloom filters debunked (kirancodes.me, 2020)",
+ "note": "Characters of story.json keep their ids. Every other entity is kind abstract (or group/person for people not in the world); never object/place (the world does not declare them). Add new ids freely for things local to your paragraphs; reuse these when the text means them.",
+ "entities": [
+  {
+   "id": "authors",
+   "name": "I / we (Kiran and her co-authors); also the inclusive 'we' of a worked argument",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "reader",
+   "name": "you, the reader",
+   "kind": "person",
+   "pron": "they"
+  },
+  {
+   "id": "bloom",
+   "name": "Burton Howard Bloom (Bloom)",
+   "kind": "person",
+   "pron": "he"
+  },
+  {
+   "id": "bose",
+   "name": "Bose et al.",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "critics",
+   "name": "other researchers who found errors in Bose et al.'s derivation",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "practitioners",
+   "name": "countless people who rely on / cite Bloom filters",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "commenter",
+   "name": "a Hacker News commenter",
+   "kind": "person",
+   "pron": "they"
+  },
+  {
+   "id": "reviewers",
+   "name": "the reviewers who rejected the first version",
+   "kind": "group",
+   "pron": "they"
+  },
+  {
+   "id": "browsers",
+   "name": "modern web browsers / the browser / browsers",
+   "kind": "group",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "users",
+   "name": "users / the user / most users / millions of users",
+   "kind": "group",
+   "pron": "they",
+   "generic": true
+  },
+  {
+   "id": "safe_browsing",
+   "name": "this feature / this functionality / this mechanism: warning users about malicious URLs",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "malicious_urls",
+   "name": "the set / database of known malicious URLs",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "url",
+   "name": "a URL / the URL a user visits (as a kind)",
+   "kind": "abstract",
+   "pron": "it",
+   "generic": true
+  },
+  {
+   "id": "external_service",
+   "name": "some external service / an external database",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "bloom_filter",
+   "name": "a Bloom filter / Bloom filters / the Bloom filter bf (the data structure, as a kind)",
+   "kind": "abstract",
+   "pron": "it",
+   "generic": true
+  },
+  {
+   "id": "proxy",
+   "name": "the local-proxy technique / compromise: query the Bloom filter locally, the external database only on a positive",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "no_false_negatives",
+   "name": "the No false negatives property",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "low_fpr",
+   "name": "the Low false positive rate property",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "fpr",
+   "name": "the false positive rate / probability of a Bloom filter (the quantity)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "cited_expression",
+   "name": "the widely cited expression for the false positive rate, (1 - (1 - 1/m)^(kn))^k (Bloom's bound)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "contention",
+   "name": "30 years of contention / this history of errors / this saga of errors",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "errors",
+   "name": "the errors / corrections in the literature",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "research",
+   "name": "our research / this research / our work / the paper / Ceramist / the CAV 2020 paper",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "certified_proof",
+   "name": "the (very first) certified proof of the false positive rate, in Coq / Rocq",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "coq",
+   "name": "Coq / Rocq, the proof assistant",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "ceramist_repo",
+   "name": "the Ceramist repo, the code and proofs",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "questions",
+   "name": "the questions the post answers / leaves out",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "bit_vector",
+   "name": "the bit-vector (n or m bits)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "bits",
+   "name": "the bits of the bit-vector",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "hash_functions",
+   "name": "the k hash functions",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "hash_outputs",
+   "name": "the hash outputs",
+   "kind": "abstract",
+   "pron": "they"
+  },
+  {
+   "id": "insertion",
+   "name": "insertion (the operation)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "query",
+   "name": "a query / querying (the operation)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "x",
+   "name": "the value x",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "y",
+   "name": "the value y",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "false_positive",
+   "name": "a false positive (result)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "selected_bit",
+   "name": "the selected bit b1",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "blooms_analysis",
+   "name": "Bloom's analysis / derivation / proof",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "single_bit_prob",
+   "name": "the single-bit probability 1 - (1 - 1/m)^(kn)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "independence",
+   "name": "the assumption that the bits are independent",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "counterexample",
+   "name": "the counterexample: every hash function maps to the same bit",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "bose_derivation",
+   "name": "Bose et al.'s derivation (balls into bins)",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "bose_expression",
+   "name": "Bose et al.'s expression / updated bound / this new expression",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "first_principles",
+   "name": "first principles",
+   "kind": "abstract",
+   "pron": "it"
+  },
+  {
+   "id": "novel_structures",
+   "name": "the novel data structures",
+   "kind": "abstract",
+   "pron": "it"
+  }
+ ]
+}

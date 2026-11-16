@@ -1,0 +1,54 @@
+entity authors group they "I (the author)"
+entity explanation abstract it "this simplified explanation of the safe-browsing mechanism"
+entity safe_browsing abstract it "the mechanisms browsers use to detect malicious URLs"
+entity browsers group they "browsers / the browser" generic
+entity malicious_urls abstract they "malicious URLs"
+entity url abstract it "the URL a user visits" generic
+entity url_hash abstract it "a hash of the URL; this information"
+entity users group they "the user" generic
+entity history abstract it "the explicit browsing history of the user"
+entity user_info abstract it "information about the user"
+topic t1 "browsers send hashed URLs" url_hash
+(S%t1 I/PRON.nsubj@authors
+  (VP.head should/AUX.aux{Fin,Pres} note/VERB.head{Inf}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head this/PRON.nsubj@explanation
+        (VP.head is/AUX.cop=be{Fin,Pres}
+          (NP.head@explanation a/DET.det simplified/ADJ.amod explanation/NOUN.head
+            (PP.nmod of/ADP.case
+              (NP.head@safe_browsing the/DET.det mechanisms/NOUN.head=mechanism
+                (VP.acl used/VERB.head=use{Part}
+                  (PP.obl by/ADP.case browsers/NOUN.head=browser@browsers)
+                  (SBAR.advcl when/SCONJ.mark
+                    (VP.head detecting/VERB.head=detect{Ger}
+                      (NP.obj@malicious_urls malicious/ADJ.amod URLs/NOUN.head=URL)))))))))))
+  -/PUNCT
+  (S.parataxis (PP.obl in/ADP.case practice/NOUN.head~abstract)
+    (SBAR.advcl rather/ADV.mark~degree than/SCONJ.fixed
+      (VP.head sending/VERB.head=send{Ger} (NP.obj@url the/DET.det whole/ADJ.amod URL/NOUN.head)))
+    ,/PUNCT
+    (NP.nsubj@browsers the/DET.det browser/NOUN.head)
+    (VP.head will/AUX.aux{Fin,Pres} send/VERB.head{Inf}
+      (NP.obj@url_hash a/DET.det hash/NOUN.head (PP.nmod of/ADP.case (NP.head@url the/DET.det URL/NOUN.head)))))
+  ./PUNCT)
+(S%t1 This/PRON.nsubj@url_hash
+  (VP.head means/VERB.head=mean{Fin,Pres}
+    (SBAR.ccomp that/SCONJ.mark
+      (S.head
+        (NP.nsubj@history the/DET.det explicit/ADJ.amod browsing/NOUN.compound~event history/NOUN.head
+          (PP.nmod of/ADP.case (NP.head@users the/DET.det user/NOUN.head)))
+        (VP.head is/AUX.cop=be{Fin,Pres} not/PART.advmod
+          (PP.head at/ADP.case risk/NOUN.head~abstract)))))
+  ,/PUNCT
+  (S.conj but/CCONJ.cc it/PRON.expl
+    (VP.head should/AUX.aux{Fin,Pres} still/ADV.advmod~aspect be/AUX.aux{Inf} noted/VERB.head=note{Part}
+      (SBAR.csubj that/SCONJ.mark
+        (S.head (NP.nsubj@url_hash this/DET.det information/NOUN.head)
+          (VP.head could/AUX.aux{Fin,Past} still/ADV.advmod~aspect be/AUX.aux{Inf} used/VERB.head=use{Part}
+            (VP.xcomp to/PART.mark learn/VERB.head{Inf}
+              (NP.obj@user_info information/NOUN.head
+                (PP.nmod about/ADP.case (NP.head@users the/DET.det user/NOUN.head))))
+            (PRN.dep \(/PUNCT
+              (NP.appos@user_info fingerprinting/NOUN.head~event etc/X.conj ./PUNCT)
+              \)/PUNCT))))))
+  ./PUNCT)

@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "evaluate",
+   "t": "singleBit",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deny",
+   "t": "singleBitIsFpr",
+   "uses": [
+    "singleBit",
+    "fpr"
+   ],
+   "s": 1
+  }
+ ]
+}

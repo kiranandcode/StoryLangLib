@@ -1,0 +1,1 @@
+With this modelling assumption, the property of interest now becomes the False positive probability - that is: False positive probability: After inserting n elements into an empty Bloom filter bf, the probability that querying for an unseen value y returns a positive result.

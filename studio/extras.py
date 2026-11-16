@@ -27,9 +27,13 @@ _running: dict[tuple[str, str], asyncio.Task] = {}
 
 
 def papers() -> list[str]:
-    if not PAPERS.exists():
-        return []
-    return sorted(p.name for p in PAPERS.iterdir() if (p / "argument.py").exists())
+    """Private papers, and public essays (stories/essay-*: a story directory that is also read as a paper)."""
+    priv = sorted(p.name for p in PAPERS.iterdir() if (p / "argument.py").exists()) if PAPERS.exists() else []
+    return priv + sorted(p.name for p in STORIES.glob("essay-*") if (p / "argument.py").exists())
+
+
+def paper_dir(name: str) -> Path:
+    return PAPERS / name if (PAPERS / name).is_dir() else STORIES / name
 
 
 def _literals(path: Path, names: tuple[str, ...]) -> dict:
@@ -70,7 +74,7 @@ async def _story_readings(name: str) -> dict:
 
 
 async def _paper(name: str) -> dict:
-    d = PAPERS / name
+    d = paper_dir(name)
     lit = _literals(d / "argument.py", ("LORE", "EXCERPT", "LORE_RULES"))
     lore = json.dumps({"lore": lit.get("LORE", []), "excerpt": lit.get("EXCERPT", []),
                        "rules": [[list(b), h] for b, h in lit.get("LORE_RULES", [])]})

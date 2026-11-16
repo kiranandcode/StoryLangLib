@@ -1,0 +1,45 @@
+{
+ "text_sha": "65d6f84eec82a371",
+ "world_sha": "1613591f35727183",
+ "events": [
+  {
+   "e": "tell authors reader counterfactualsFast",
+   "at": 4,
+   "w": "think",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 7,
+   "w": "have",
+   "kind": "content",
+   "lit": "counterfactualsFast"
+  },
+  {
+   "at": 14,
+   "w": "allow",
+   "kind": "content",
+   "lit": "counterfactualsFast"
+  },
+  {
+   "at": 17,
+   "w": "answer",
+   "kind": "content",
+   "lit": "counterfactualsFast"
+  },
+  {
+   "at": 28,
+   "w": "seen",
+   "kind": "content",
+   "lit": "counterfactualsFast"
+  },
+  {
+   "at": 33,
+   "w": "crazy",
+   "kind": "generic"
+  }
+ ]
+}

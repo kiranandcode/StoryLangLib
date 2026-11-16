@@ -1,0 +1,29 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "theoryToo",
+   "uses": [
+    "llms",
+    "research"
+   ],
+   "s": 1
+  },
+  {
+   "move": "example",
+   "t": "theoryToo",
+   "uses": [
+    "llms"
+   ],
+   "s": 3
+  },
+  {
+   "move": "claim",
+   "t": "iterateFast",
+   "uses": [
+    "theoryToo"
+   ],
+   "s": 7
+  }
+ ]
+}

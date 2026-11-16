@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "motivate",
+   "t": "selected_bit",
+   "uses": [
+    "hash_functions"
+   ],
+   "s": 1
+  }
+ ]
+}

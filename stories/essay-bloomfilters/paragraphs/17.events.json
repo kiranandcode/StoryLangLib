@@ -1,0 +1,26 @@
+{
+ "text_sha": "e1cdb7b78770609e",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader noFalseNeg",
+   "at": 10,
+   "w": "sufficient",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [],
+ "judge": [
+  {
+   "at": 12,
+   "w": "ensure",
+   "kind": "generic"
+  },
+  {
+   "at": 19,
+   "w": "see",
+   "kind": "generic"
+  }
+ ]
+}

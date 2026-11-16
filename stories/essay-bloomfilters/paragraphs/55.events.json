@@ -1,0 +1,74 @@
+{
+ "text_sha": "861b3a6b9ca42cda",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [],
+ "claims": [
+  {
+   "c": "knows authors !bitsIndependent",
+   "at": 3,
+   "w": "suppose"
+  },
+  {
+   "c": "knows authors singleBit",
+   "at": 17,
+   "w": "observe"
+  },
+  {
+   "c": "knows bloom singleBit",
+   "at": 22,
+   "w": "derives"
+  },
+  {
+   "c": "true !bitsIndependent",
+   "at": 91,
+   "w": "independent"
+  }
+ ],
+ "judge": [
+  {
+   "at": 5,
+   "w": "use",
+   "kind": "act"
+  },
+  {
+   "at": 31,
+   "w": "raised",
+   "kind": "speech"
+  },
+  {
+   "at": 36,
+   "w": "1",
+   "kind": "speech"
+  },
+  {
+   "at": 44,
+   "w": "inserting",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 49,
+   "w": "learn",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 54,
+   "w": "raised",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 58,
+   "w": "means",
+   "kind": "generic"
+  },
+  {
+   "at": 71,
+   "w": "raised",
+   "kind": "generic"
+  },
+  {
+   "at": 81,
+   "w": "distinct",
+   "kind": "hypothetical"
+  }
+ ]
+}

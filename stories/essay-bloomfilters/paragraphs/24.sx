@@ -1,0 +1,22 @@
+entity bloom person he "Burton Howard Bloom (Bloom)"
+entity blooms_analysis abstract it "the analysis accompanying the original description (Bloom's analysis)"
+entity description abstract it "the original description of the Bloom filter (Bloom, 1970)"
+entity bloom_filter abstract it "the Bloom filter (the data structure, as a kind)" generic
+entity bloom_derivation abstract it "Bloom's derivation for the false positive rate"
+entity fpr abstract it "the false positive rate of a Bloom filter (the quantity)"
+topic t1 "Bloom's original derivation" bloom_derivation
+(S%t1 (PP.obl As/ADP.case part/NOUN.head~part
+    (PP.nmod of/ADP.case
+      (NP.head@blooms_analysis the/DET.det analysis/NOUN.head
+        (VP.acl accompanying/VERB.head=accompany{Ger}
+          (NP.obj@description the/DET.det original/ADJ.amod description/NOUN.head
+            (PP.nmod of/ADP.case (NP.head@bloom_filter the/DET.det Bloom/PROPN.compound filter/NOUN.head))
+            (PRN.nmod \(/PUNCT
+              (PP.head by/ADP.case (NP.head@bloom Burton/PROPN.head Howard/PROPN.flat Bloom/PROPN.flat))
+              (PP.nmod in/ADP.case 1970/NUM.head)
+              \)/PUNCT))))))
+  ,/PUNCT
+  Bloom/PROPN.nsubj@bloom
+  provides/VERB.head=provide{Fin,Pres}
+  (NP.obj@bloom_derivation a/DET.det derivation/NOUN.head (PP.nmod for/ADP.case (NP.head@fpr the/DET.det false/ADJ.amod positive/ADJ.amod rate/NOUN.head)))
+  ./PUNCT)

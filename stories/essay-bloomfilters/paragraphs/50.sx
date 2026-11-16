@@ -1,0 +1,37 @@
+entity hn_comment abstract it "a comment on Hacker News"
+entity hacker_news abstract it "Hacker News"
+entity bloom person he "Bloom"
+entity bloom_definition abstract it "Bloom's definition of a Bloom filter"
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind)" generic
+entity distinct_assumption abstract it "the assumption that the hash functions each produce k distinct bits"
+entity hash_functions abstract they "the k hash functions"
+entity distinct_bits abstract they "k distinct bits"
+entity counterexample abstract it "the counterexample I propose"
+entity authors group they "I (the author)"
+topic t1 "the Hacker News correction" hn_comment
+(S%t1 There/PRON.expl
+  (VP.head was/VERB.head=be{Fin,Past}
+    (NP.nsubj@hn_comment a/DET.det comment/NOUN.head
+      (PP.nmod on/ADP.case (NP.head@hacker_news Hacker/PROPN.compound News/PROPN.head))
+      (SBAR.acl that/PRON.nsubj@hn_comment
+        (VP.head accurately/ADV.advmod~manner pointed/VERB.head=point{Fin,Past} out/ADP.compound
+          (SBAR.ccomp that/SCONJ.mark
+            (S.head
+              (NP.nsubj@bloom_definition Bloom's/PROPN.poss=Bloom@bloom definition/NOUN.head
+                (PP.nmod of/ADP.case (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)))
+              (VP.head actually/ADV.advmod~degree makes/VERB.head=make{Fin,Pres}
+                (NP.obj@distinct_assumption the/DET.det assumption/NOUN.head
+                  (SBAR.acl that/SCONJ.mark
+                    (S.head (NP.nsubj@hash_functions the/DET.det hash/NOUN.compound functions/NOUN.head=function)
+                      (VP.head would/AUX.aux{Fin,Past} each/DET.advmod produce/VERB.head{Inf}
+                        (NP.obj@distinct_bits k/SYM.nummod distinct/ADJ.amod bits/NOUN.head=bit)))))
+                ,/PUNCT
+                (SBAR.advcl which/PRON.nsubj@distinct_assumption
+                  (VP.head means/VERB.head=mean{Fin,Pres}
+                    (SBAR.ccomp that/SCONJ.mark
+                      (S.head
+                        (NP.nsubj@counterexample the/DET.det counter-example/NOUN.head
+                          (SBAR.relcl (NP.nsubj@authors I/PRON.head) (VP.head propose/VERB.head{Fin,Pres})))
+                        (VP.head would/AUX.aux{Fin,Past} not/PART.advmod be/AUX.cop{Inf}
+                          (ADJP.head correct/ADJ.head)))))))))))))
+  ./PUNCT)

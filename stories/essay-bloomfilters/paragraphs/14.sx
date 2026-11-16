@@ -1,0 +1,17 @@
+entity bloom_filter abstract it "a Bloom filter (the data structure, as a kind)" generic
+entity properties abstract they "these important properties (no false negatives, low false positive rate)" of=no_false_negatives,low_fpr
+entity no_false_negatives abstract it "the No false negatives property"
+entity low_fpr abstract it "the Low false positive rate property"
+topic t1 "what a Bloom filter is" bloom_filter
+(S%t1 So/CCONJ.cc
+  (NP.nsubj what/PRON.head)
+  exactly/ADV.advmod~degree
+  is/AUX.cop=be{Fin,Pres}
+  (NP.head@bloom_filter a/DET.det Bloom/PROPN.compound filter/NOUN.head)
+  ?/PUNCT)
+(S%t1 and/CCONJ.cc how/ADV.advmod~manner exactly/ADV.advmod~degree
+  (VP.head does/AUX.aux=do{Fin,Pres}
+  (NP.nsubj@bloom_filter it/PRON.head)
+  achieve/VERB.head{Inf}
+    (NP.obj@properties these/DET.det important/ADJ.amod properties/NOUN.head=property))
+  ?/PUNCT)

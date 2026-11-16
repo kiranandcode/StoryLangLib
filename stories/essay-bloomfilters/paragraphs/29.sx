@@ -1,0 +1,28 @@
+entity hit_prob abstract it "the probability that the hash function hits the selected bit (1/m)"
+entity miss_prob abstract it "the probability that the hash output misses the selected bit (1 - 1/m)"
+entity hash_functions abstract it "the hash function (one of the k)"
+entity hash_outputs abstract it "the hash output"
+entity selected_bit abstract it "our selected bit b1"
+entity authors group they "we (the authors and reader)"
+entity bits abstract they "the bits of the bit-vector"
+topic t1 "hit and miss probabilities" hit_prob,miss_prob
+(S%t1 (PP.obl As/ADP.case such/ADJ.head) ,/PUNCT
+  (NP.nsubj@hit_prob the/DET.det probability/NOUN.head
+    (SBAR.acl that/SCONJ.mark
+      (S.head (NP.nsubj@hash_functions the/DET.det hash/NOUN.compound function/NOUN.head)
+        (VP.head happens/VERB.head=happen{Fin,Pres}
+          (VP.xcomp to/PART.mark hit/VERB.head{Inf} (NP.obj@selected_bit our/PRON.poss@authors selected/ADJ.amod bit/NOUN.head))))))
+  (VP.head will/AUX.aux{Fin,Pres} simply/ADV.advmod~degree be/AUX.cop{Inf} -/PUNCT
+    (NP.head@hit_prob 1/NUM.head (PP.nmod over/ADP.case (NP.head the/DET.det number/NOUN.head~abstract (PP.nmod of/ADP.case bits/NOUN.head=bit@bits)))
+      -/PUNCT (NP.appos@hit_prob 1/NUM.head //SYM.case m/SYM.nmod)))
+  ./PUNCT)
+(S%t1 Obviously/ADV.advmod~impression ,/PUNCT this/PRON.nsubj naturally/ADV.advmod~manner also/ADV.advmod~degree
+  (VP.head means/VERB.head=mean{Fin,Pres}
+    (S.ccomp
+      (NP.nsubj@miss_prob the/DET.det probability/NOUN.head
+        (SBAR.acl that/SCONJ.mark
+          (S.head (NP.nsubj@hash_outputs the/DET.det hash/NOUN.compound output/NOUN.head)
+            (VP.head misses/VERB.head=miss{Fin,Pres} (NP.obj@selected_bit our/PRON.poss@authors selected/ADJ.amod bit/NOUN.head)))))
+      (VP.head will/AUX.aux{Fin,Pres} just/ADV.advmod~degree be/AUX.cop{Inf}
+        (NP.head@miss_prob 1/NUM.head -/SYM.cc (NP.conj 1/NUM.head //SYM.case m/SYM.nmod)))))
+  ./PUNCT)

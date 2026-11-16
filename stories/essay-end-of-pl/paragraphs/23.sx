@@ -1,0 +1,6 @@
+entity era abstract it "the era of programming languages exploration"
+topic t1 "the era begins" era
+(S%t1 (VP.head Let/VERB.head=let{Fin,Pres,Mood=Imp}
+   (S.ccomp (NP.nsubj@era the/DET.det era/NOUN.head (PP.nmod of/ADP.case programming/NOUN.compound~abstract languages/NOUN.compound=language~abstract exploration/NOUN.head~abstract))
+     (VP.head begin/VERB.head{Inf})))
+  !/PUNCT)

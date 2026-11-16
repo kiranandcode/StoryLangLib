@@ -1,0 +1,38 @@
+{
+ "moves": [
+  {
+   "move": "deliver",
+   "t": "certified",
+   "uses": [
+    "boseFormula",
+    "coq"
+   ],
+   "s": 1
+  },
+  {
+   "move": "deliver",
+   "t": "trueFpr",
+   "uses": [
+    "boseFormula"
+   ],
+   "s": 1
+  },
+  {
+   "move": "evaluate",
+   "t": "certified",
+   "uses": [
+    "coq"
+   ],
+   "s": 1
+  },
+  {
+   "move": "promise",
+   "t": "altDerivation",
+   "sec": 5,
+   "uses": [
+    "certified"
+   ],
+   "s": 1
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+entity users group they "the users (of programming languages)" generic
+entity applications abstract they "the applications" generic
+entity research abstract it "some PL research"
+entity ai_tools abstract they "LLMs" generic
+entity community group they "we (PL researchers, the author among them)"
+entity problems abstract they "bigger and crazier problems" generic
+topic t1 "fuck the users" users
+topic t2 "bigger problems with LLMs" problems
+(S%t1 (VP.head Fuck/VERB.head=fuck{Fin,Pres,Mood=Imp} (NP.obj@users the/DET.det users/NOUN.head=user)) ./PUNCT)
+(S%t1 (VP.head Fuck/VERB.head=fuck{Fin,Pres,Mood=Imp} (NP.obj@applications the/DET.det applications/NOUN.head=application)) ./PUNCT)
+(S%t1 (VP.head Let's/VERB.head=let{Fin,Pres,Mood=Imp}
+    (VP.xcomp do/VERB.head{Inf} (NP.obj@research some/DET.det fucking/ADJ.amod PL/PROPN.compound research/NOUN.head)))
+  !/PUNCT)
+(S%t2 And/CCONJ.cc now/ADV.advmod~time (PP.obl with/ADP.case (NP.head@ai_tools LLMs/PROPN.head=LLM)) ,/PUNCT
+  (NP.nsubj@community we/PRON.head)
+  (VP.head can/AUX.aux{Fin,Pres} tackle/VERB.head{Inf}
+    (NP.obj@problems (ADJP.amod bigger/ADJ.head=big and/CCONJ.cc crazier/ADJ.conj=crazy) problems/NOUN.head=problem
+      (SBAR.advcl than/SCONJ.mark
+        (VP.head have/AUX.aux{Fin,Pres} ever/ADV.advmod~time been/AUX.aux=be{Part} done/VERB.head=do{Part} before/ADV.advmod~time))))
+  !/PUNCT)

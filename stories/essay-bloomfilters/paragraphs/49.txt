@@ -1,0 +1,1 @@
+In reference to the fact that the research is entirely about verifying the "certainty" of positive results from a Bloom filter.

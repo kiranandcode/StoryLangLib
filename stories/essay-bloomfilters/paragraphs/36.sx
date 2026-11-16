@@ -1,0 +1,9 @@
+entity independence abstract it "the claim that the bits are independent"
+entity bits abstract they "the bits a query checks"
+topic t1 "the independence claim is invalid" independence
+(S%t1 Makes/VERB.head=make{Fin,Pres} sense/NOUN.obj~abstract ?/PUNCT)
+(S%t1 Seems/VERB.head=seem{Fin,Pres} correct/ADJ.xcomp ?/PUNCT)
+(S%t1 Well/INTJ.discourse …/PUNCT
+  (NP.nsubj@independence The/DET.det claim/NOUN.head
+    (SBAR.acl that/SCONJ.mark (S.head (NP.nsubj@bits the/DET.det bits/NOUN.head=bit) are/AUX.cop=be{Fin,Pres} independent/ADJ.head)))
+  is/AUX.cop=be{Fin,Pres} not/PART.advmod valid/ADJ.head !/PUNCT)

@@ -1,0 +1,12 @@
+entity bloom person he "Bloom"
+entity blooms_analysis abstract it "Bloom's proof"
+entity independence abstract they "invalid independence assumptions"
+entity hn_point abstract it "the commenter's point (para 50)" of=para:50
+topic t1 "Bloom's proof still fails" blooms_analysis
+(S%t1 (PP.obl Despite/ADP.case (NP.head@hn_point this/PRON.head)) ,/PUNCT
+  (NP.nsubj@blooms_analysis Bloom's/PROPN.poss=Bloom@bloom proof/NOUN.head)
+  (VP.head is/AUX.cop=be{Fin,Pres} still/ADV.advmod~aspect
+    (ADJP.head incorrect/ADJ.head
+      (PP.obl due/ADP.case to/ADP.fixed
+        (NP.head@independence invalid/ADJ.amod independence/NOUN.compound~abstract assumptions/NOUN.head=assumption))))
+  ./PUNCT)

@@ -1,0 +1,39 @@
+{
+ "text_sha": "0aa11c65b881e983",
+ "world_sha": "d3397329ca4ed33a",
+ "events": [
+  {
+   "e": "tell authors reader noFurtherErrors",
+   "at": 11,
+   "w": "unlikely",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "knows authors certified",
+   "at": 2,
+   "w": "proven"
+  },
+  {
+   "c": "knows authors boseFormula",
+   "at": 30,
+   "w": "certain"
+  }
+ ],
+ "judge": [
+  {
+   "at": 18,
+   "w": "discovered",
+   "kind": "content",
+   "lit": "noFurtherErrors"
+  },
+  {
+   "at": 37,
+   "w": "model",
+   "kind": "content",
+   "lit": "boseFormula"
+  }
+ ]
+}
