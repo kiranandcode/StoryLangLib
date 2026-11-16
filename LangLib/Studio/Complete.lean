@@ -132,7 +132,10 @@ def modSenses : List String :=
 
 def speechVerbs : List String :=
   ["say", "tell", "ask", "answer", "order", "command", "give", "shout", "whisper", "call",
-   "explain", "announce", "reply"]
+   "explain", "announce", "reply",
+   -- the tags `Style.speechTagVerbs` rewards for variety are verbs of saying too
+   "insist", "admit", "add", "agree", "murmur", "mutter", "protest", "remark", "observe",
+   "breathe", "warn", "mention", "repeat", "declare", "cry"]
 
 def negWords : List String := ["not", "n't", "never", "no", "nothing", "nobody", "none", "neither", "nor"]
 def modalWords : List String := ["would", "could", "might", "may", "should", "can", "must"]
