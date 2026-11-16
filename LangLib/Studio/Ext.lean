@@ -72,6 +72,12 @@ structure XSpec where
   appraise : List (AffectRule Nat Nat Nat) := []
   startFeels : List (Nat × Nat × Nat) := []
   pov : Option Nat := none
+  /-- (a, c, need): `a` does not register `c`'s need unprompted (`a = c`: one's own) -/
+  blind : List (Nat × Nat × Nat) := []
+  /-- (character, emotion, n): the character takes the emotion as an anomaly, read as itself after `n` examinations -/
+  anomaly : List (Nat × Nat × Nat) := []
+  /-- (emotion, need): the emotion is the felt sign of the need -/
+  signals : List (Nat × Nat) := []
   deriving Repr, DecidableEq
 
 structure XCh (x : XSpec) where i : Nat deriving DecidableEq, Repr
@@ -92,6 +98,13 @@ instance : CareLaws (XK x) (XR x) where
   threat := x.threat.map (⟨·⟩)
   protects := x.protects.map (⟨·⟩)
 
+instance : CareSight (XCh x) (XK x) where
+  blind a c k := x.blind.contains (a.i, c.i, k.i)
+
+instance : AffectReading (XCh x) (XE x) (XK x) where
+  anomaly c e := ((x.anomaly.find? fun (c', e', _) => c' == c.i && e' == e.i).map (·.2.2))
+  signals e := (lookup x.signals e.i).map (⟨·⟩)
+
 instance : IdentityLaws (XCh x) String String (XR x) where
   pron c := x.pron.getD c.i .they
   names c := (lookup x.names c.i).getD []
@@ -109,6 +122,9 @@ structure XW (x : XSpec) where
   harms : List (IdHarm (XCh x) String String) := []
   /-- (character, emotion, level) -/
   affect : List (Nat × Nat × Nat) := []
+  registered : List (XCh x × XCh x × XK x × Bool) := []
+  examined : List (XCh x × XE x × Nat) := []
+  recognised : List (XCh x × XE x) := []
   deriving DecidableEq, Repr
 
 instance : HasTies (XW x) (XCh x) (XR x) where
@@ -123,6 +139,8 @@ instance : HasNeeds (XW x) (XCh x) (XK x) where
   setAccepted w a := { w with accepted := a }
   offers := XW.offers
   setOffers w o := { w with offers := o }
+  registered := XW.registered
+  setRegistered w r := { w with registered := r }
 
 instance : HasIdent (XW x) (XCh x) String String where
   knownNames := XW.names
@@ -138,12 +156,17 @@ instance : HasAffect (XW x) (XCh x) (XE x) where
   feels w c e := ((w.affect.find? fun (c', e', _) => c' == c.i && e' == e.i).map (·.2.2)).getD 0
   setFeels w c e n := { w with affect := (c.i, e.i, n) ::
     (w.affect.filter fun (c', e', _) => !(c' == c.i && e' == e.i)) }
+  examined := XW.examined
+  setExamined w l := { w with examined := l }
+  recognised := XW.recognised
+  setRecognised w l := { w with recognised := l }
 
 inductive XEv (x : XSpec) where
   | tie (e : TieEv (XCh x) (XR x))
   | care (e : CareEv (XCh x) (XK x))
   | id (e : IdEv (XCh x) String String)
   | aff (e : AffEv (XCh x) (XE x))
+  | read (e : ReadEv (XCh x) (XE x))
   deriving DecidableEq, Repr
 
 def XSpec.rules (x : XSpec) : List (AffectRule (XK x) (XR x) (XE x)) :=
@@ -153,15 +176,27 @@ def XSpec.rules (x : XSpec) : List (AffectRule (XK x) (XR x) (XE x)) :=
     | .onShield e d => .onShield ⟨e⟩ d
     | .onTie r e d => .onTie ⟨r⟩ ⟨e⟩ d
 
+/-- A feeling that signals a need is felt only where the need is (`Affect.signOk`). -/
+def affSignOk (w : XW x) : AffEv (XCh x) (XE x) → Bool
+  | .feel c e => signOk w c e
+  | .calm _ _ => true
+
 instance : Domain (XW x) (XEv x) where
-  ok w | .tie e => Domain.ok w e | .care e => Domain.ok w e | .id e => Domain.ok w e | .aff e => Domain.ok w e
+  ok w | .tie e => Domain.ok w e | .care e => Domain.ok w e | .id e => Domain.ok w e
+       | .aff e => Domain.ok w e && affSignOk w e | .read e => Domain.ok w e
   -- care and ties are appraised: what they make their target feel
   step w
     | .tie e => applyAffect (Domain.step w e) (appraise x.rules (.inr e))
     | .care e => applyAffect (Domain.step w e) (appraise x.rules (.inl e))
     | .id e => Domain.step w e
     | .aff e => Domain.step w e
-  why w | .tie e => Domain.why w e | .care e => Domain.why w e | .id e => Domain.why w e | .aff e => Domain.why w e
+    | .read e => Domain.step w e
+  why w
+    | .tie e => Domain.why w e | .care e => Domain.why w e | .id e => Domain.why w e
+    | .aff e => if affSignOk w e then Domain.why w e else
+        "out of character: this feeling is the felt sign of a need they do not register in themselves " ++
+        "(being told they have it is knowing, not feeling)"
+    | .read e => Domain.why w e
 
 instance : Perceive (XW x) (XEv x) := Perceive.none
 
@@ -275,8 +310,9 @@ def mentionOk (x : XSpec) (w : XW x) (evs : List (Nat × XEv x)) (m : XMention) 
       | none => true
     else p == IdentityLaws.pron String String (R := XR x) b || p == .they || readAsRefer p
 
-/-- A feeling named of `who` is felt then. -/
-def feelOk (w : XW x) (f : XFeel) : Bool := HasAffect.feels w (⟨f.who⟩ : XCh x) (⟨f.emo⟩ : XE x) > 0
+/-- A feeling named of `who` is felt then, and read by them as itself (not an anomaly still to explain). -/
+def feelOk (w : XW x) (f : XFeel) : Bool :=
+  HasAffect.feels w (⟨f.who⟩ : XCh x) (⟨f.emo⟩ : XE x) > 0 && readAs w (⟨f.who⟩ : XCh x) (⟨f.emo⟩ : XE x)
 
 /-- Walk a paragraph: events, references and named feelings in token order (an
 event at or before a word's token takes effect first). `none` if an event is
@@ -388,7 +424,25 @@ def xspecOfJson (s : Spec) (j : Json) : Except String XSpec := do
     match strsOf t with
     | [c, em, n] => pure (← ch c, ← emo em, n.toNat?.getD 1)
     | _ => throw "a feeling is [character, emotion, level]"
-  pure { chars, pron := s.chars.map fun c => (Pron.ofString? c.pron).getD .they,
+  -- blind spots: [who, "self" | "others" | character, need]
+  let blind ← (arr e "blind").flatMapM fun t => do
+    match strsOf t with
+    | [a, who, n] => do
+      let ai ← ch a
+      let k ← idxOf "need" needIds n
+      let cs ← match who with
+        | "self" => pure [ai]
+        | "others" => pure ((List.range chars.length).filter (· != ai))
+        | c => do pure [← ch c]
+      pure (cs.map fun c => (ai, c, k))
+    | _ => throw "a blind spot is [who, self|others|character, need]"
+  let anomaly ← (arr e "anomaly").mapM fun t => do
+    match strsOf t with
+    | [c, em, n] => pure (← ch c, ← emo em, n.toNat?.getD 1)
+    | _ => throw "an anomaly is [character, emotion, examinations]"
+  let signals ← (obj e "signals").mapM fun (em, v) => do
+    pure (← emo em, ← idxOf "need" needIds (v.getStr?.toOption.getD ""))
+  pure { chars, pron := s.chars.map fun c => (Pron.ofString? c.pron).getD .they, blind, anomaly, signals,
          emotions, lexicon, appraise, startFeels,
          ties, needs := needIds, consent, builds := ← optTie "builds", threat := ← optTie "threat",
          protects := ← optTie "protects", trust := ← optTie "trust", names, secrets,
@@ -412,6 +466,9 @@ def XSpec.ev (x : XSpec) (str : String) : Except String (XEv x) := do
   | ["decline", c, a, n] => return .care (.decline (← ch c) (← ch a) (← k n))
   | ["tend", a, c, n] => return .care (.tend (← ch a) (← ch c) (← k n))
   | ["shield", a, c, t] => return .care (.shield (← ch a) (← ch c) (← ch t))
+  | ["register", a, c, n] => return .care (.register (← ch a) (← ch c) (← k n))
+  | ["point", b, a, c, n] => return .care (.point (← ch b) (← ch a) (← ch c) (← k n))
+  | ["seek", c, a, n] => return .care (.seek (← ch c) (← ch a) (← k n))
   | ["introduce", a, b, n] => return .id (.introduce (← ch a) (← ch b) n)
   | ["tellName", a, b, c, n] => return .id (.tellName (← ch a) (← ch b) (← ch c) n)
   | ["learnName", a, b, n] => return .id (.learnName (← ch a) (← ch b) n)
@@ -425,6 +482,9 @@ def XSpec.ev (x : XSpec) (str : String) : Except String (XEv x) := do
   | ["out", a, b, s] => return .id (.out (← ch a) (← ch b) s)
   | ["feel", c, e] => return .aff (.feel (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
   | ["calm", c, e] => return .aff (.calm (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
+  | ["examine", c, e] => return .read (.examine (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
+  | ["recognise", c, e] => return .read (.recognise (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
+  | ["own", c, e] => return .read (.own (← ch c) ⟨← idxOf "emotion" x.emotions e⟩)
   | _ => throw s!"cannot read ext event \"{str}\""
 
 /-- A paragraph's ext reading, from its events file and annotation. -/
@@ -447,12 +507,17 @@ def XEv.str (x : XSpec) : XEv x → String
     | .lower a r b => s!"lower {x.chS a.i} {(x.ties[r.i]?.map (·.id)).getD "?"} {x.chS b.i}"
     | .unrelate a r b => s!"unrelate {x.chS a.i} {(x.ties[r.i]?.map (·.id)).getD "?"} {x.chS b.i}"
   | .care e => match e with
-    | .harm a c k | .offer a c k | .accept a c k | .acceptQuietly a c k | .decline a c k | .tend a c k =>
+    | .harm a c k | .offer a c k | .accept a c k | .acceptQuietly a c k | .decline a c k | .tend a c k
+    | .register a c k | .seek a c k =>
       s!"{reprStr e |>.splitOn " " |>.headD "" |>.replace "LangLib.World.CareEv." ""} {x.chS a.i} {x.chS c.i} {x.needs.getD k.i "?"}"
     | .shield a c t => s!"shield {x.chS a.i} {x.chS c.i} {x.chS t.i}"
+    | .point b a c k => s!"point {x.chS b.i} {x.chS a.i} {x.chS c.i} {x.needs.getD k.i "?"}"
   | .id e => (reprStr e).replace "LangLib.World.IdEv." ""
   | .aff (.feel c e) => s!"feel {x.chS c.i} {x.emotions.getD e.i "?"}"
   | .aff (.calm c e) => s!"calm {x.chS c.i} {x.emotions.getD e.i "?"}"
+  | .read (.examine c e) => s!"examine {x.chS c.i} {x.emotions.getD e.i "?"}"
+  | .read (.recognise c e) => s!"recognise {x.chS c.i} {x.emotions.getD e.i "?"}"
+  | .read (.own c e) => s!"own {x.chS c.i} {x.emotions.getD e.i "?"}"
 
 def harmS (x : XSpec) : IdHarm (XCh x) String String → String
   | .misgender a b p d => s!"{x.chS a.i} misgenders {x.chS b.i} ('{p.name}'){if d then ", knowing better" else ", having assumed"}"
@@ -475,12 +540,14 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
     let mut evJ : Array Json := #[]
     let mut ms := p.mentions
     let mut fs := p.feels
-    let feelIssue (f : XFeel) : String :=
-      s!"token {f.at_}: the prose says {x.chS f.who} feels {x.emotions.getD f.emo "?"}, but nothing has made them (read the event that does: a harm, a threat, or `feel`)"
+    let feelIssue (w : XW x) (f : XFeel) : String :=
+      if HasAffect.feels w (⟨f.who⟩ : XCh x) (⟨f.emo⟩ : XE x) > 0 then
+        s!"token {f.at_}: the prose names {x.chS f.who}'s {x.emotions.getD f.emo "?"} as itself, but they still take it as an anomaly to explain: out of character until they recognise it (`examine`, then `recognise`)"
+      else s!"token {f.at_}: the prose says {x.chS f.who} feels {x.emotions.getD f.emo "?"}, but nothing has made them (read the event that does: a harm, a threat, or `feel`)"
     for (a, e) in p.events do
       let (fb, fa) := fs.partition (·.at_ < a)
       for f in fb do
-        if !feelOk w f then issues := issues.push (feelIssue f)
+        if !feelOk w f then issues := issues.push (feelIssue w f)
       fs := fa
       let (before, after) := ms.partition (·.at_ < a)
       for m in before do
@@ -492,7 +559,7 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
       if !good then issues := issues.push s!"'{XEv.str x e}' (token {a}) cannot happen: {Domain.why w e}"
       w := Domain.step w e
     for f in fs do
-      if !feelOk w f then issues := issues.push (feelIssue f)
+      if !feelOk w f then issues := issues.push (feelIssue w f)
     for m in ms do
       if !mentionOk x w p.events m then issues := issues.push s!"{mentionS x m}, which they do not know (or, in speech, a misgendering not read as a `refer` event)"
     if !issues.isEmpty then ok := false
@@ -504,7 +571,11 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
         Json.str s!"{x.chS c}: {", ".intercalate (ks.map fun k => x.needs.getD k.i "?")}").toArray),
       ("harms", Json.arr (w.harms.map (Json.str ∘ harmS x)).toArray),
       ("feels", Json.arr (w.affect.filter (·.2.2 > 0) |>.map fun (c, e, n) =>
-        Json.str s!"{x.chS c} {x.emotions.getD e "?"} {n}").toArray)])
+        Json.str s!"{x.chS c} {x.emotions.getD e "?"} {n}").toArray),
+      ("registered", Json.arr (w.registered.map fun (a, c, k, f) =>
+        Json.str s!"{x.chS a.i} {if f then "feels" else "has been told of"} {x.chS c.i}'s need: {x.needs.getD k.i "?"}").toArray),
+      ("examined", Json.arr (w.examined.map fun (c, e, n) =>
+        Json.str s!"{x.chS c.i} {x.emotions.getD e.i "?"} {n}{if readAs w c e then " (recognised)" else ""}").toArray)])
   return Json.mkObj [("valid", ok && XValid x ps), ("paragraphs", Json.arr out)]
 
 private def readJson (p : System.FilePath) : IO (Option Json) := do
@@ -568,6 +639,16 @@ def extLean (dir : String) (ns : String) : IO String := do
     | .id (.introduce a _ n) => if ((nameEntry (X := String) (R := XR x) a n).map (·.2.2)).getD 0 > 0 then some e else none
     | .id (.disclose _ _ _) => some e
     | _ => none
+  -- every move the story's personas rule out unprompted (a blind spot, an anomaly not yet read)
+  -- was out of reach at the opening: what came between is what makes it in character
+  let persona := (paras.flatMap (·.events)).filterMap fun (_, e) => match e with
+    | .care (.seek c _ k) | .care (.register c _ k) => if x.blind.contains (c.i, c.i, k.i) then some e else none
+    | .care (.offer a c k) | .care (.tend a c k) => if x.blind.contains (a.i, c.i, k.i) then some e else none
+    | .read (.recognise c em) | .read (.own c em) => if (x.anomaly.any fun (c', e', _) => c' == c.i && e' == em.i) then some e else none
+    | _ => none
+  for (e, i) in persona.eraseDups.zipIdx do
+    out := out ++ s!"\n/-- {XEv.str x e}: out of character at the opening (a blind spot, or a feeling still an anomaly). -/\n" ++
+      s!"theorem persona_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
   for (e, i) in gated.zipIdx do
     out := out ++ s!"\n/-- {XEv.str x e}: not allowed at the opening, before any trust was earned. -/\n" ++
       s!"theorem gated_{i} : Domain.ok xspec.start ({rs e} : XEv xspec) = false := by decide +kernel\n"
