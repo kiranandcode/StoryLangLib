@@ -119,6 +119,11 @@ structure Held (C Φ : Type) where
 class HasMinds (W : Type) (C Φ : outParam Type) where
   beliefs : W → C → List (Held C Φ)
   setBeliefs : W → C → List (Held C Φ) → W
+  /-- the world's record of the permanent conclusions `c` has drawn (L5 in
+  `abstractions/ROUND-1.md`); `none`, the default, keeps no record and `view`
+  rebuilds the past views instead. -/
+  settled : W → C → Option (List (Φ × Bool)) := fun _ _ => none
+  setSettled : W → C → List (Φ × Bool) → W := fun w _ _ => w
 
 /-- A literal: a fact (`true`) or its denial (`false`). -/
 abbrev BLit (Φ : Type) := Φ × Bool
@@ -313,6 +318,22 @@ private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
 def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
   closure (admit (lits ((beliefs w c).filter (·.about ≤ t))))
 
+/- Where a world keeps each character's record of the permanent conclusions they
+have drawn (L5 in `abstractions/ROUND-1.md`): `HasMinds.settled`. Information
+enters a base stamped with the time it arrives and the clock only moves on, so
+the view a character had at a past time never changes: rather than rebuild every
+past view to find what was settled then, a world can record the conclusions at
+the end of each event (`recordSettled`, run by perception) and `view` reads the
+record. Worlds without one (`none`, the default) rebuild the past views
+(`settledAt`). The record lives in `HasMinds`, which `view` already takes, so a
+world's record is the one `view` sees (a separate class would be resolved to its
+default where `view` is defined). -/
+
+/-- The permanent rule conclusions in the view of a base, the ones a record keeps. -/
+def recordedHeads (hs : List (Held C Φ)) : List (BLit Φ) :=
+  (closure (admit (lits hs))).filter fun l =>
+    !Fluent.fluent l.1 && (Lore.rules (Φ := Φ)).any (·.head == l)
+
 /-- A conclusion stays settled only if some lore rule gave it from premises that
 are still believed (`now`) or merely went out of date (fluents); one drawn from a
 premise the character has since given up goes with it. -/
@@ -370,13 +391,22 @@ def view (w : W) (c : C) : List (BLit Φ) :=
   if (Lore.rules (Φ := Φ)).isEmpty then admitPlain (lits (beliefs w c)) else
   let base := lits (beliefs w c)
   let now := closure (admit base)
-  -- the history is only consulted when some rule's head could be settled (`settledAt_guard`)
+  -- the history is only consulted when some rule's head could be settled (`settledAt_guard`),
+  -- and from the record when the world keeps one: the past views it records, then now
   let settled := if ((Lore.rules (Φ := Φ)).any fun r =>
       !Fluent.fluent r.head.1 && !base.contains r.head && loreSurvives now r.head) then
-    settledAt w c base now else []
+    (match HasMinds.settled w c with
+     | some m => ((m ++ now).filter fun l =>
+         !Fluent.fluent l.1 && !base.contains l && loreSurvives now l).eraseDups
+     | none => settledAt w c base now) else []
   if settled.isEmpty then now else closure (admit (settled ++ base))
 
-theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
+/-- Without a record, `view` computes `viewSpec`. (With one, it does on every state
+the story reaches, as long as information is stamped with the time it arrives:
+the record holds exactly the past views' conclusions. The Studio checks that its
+reports are unchanged.) -/
+theorem view_eq_viewSpec (w : W) (c : C) (hrec : HasMinds.settled w c = none) :
+    view w c = viewSpec w c := by
   by_cases hr : Lore.rules (Φ := Φ) = []
   · have he : (Lore.rules (Φ := Φ)).isEmpty = true := List.isEmpty_iff.mpr hr
     have hz : ∀ ts : List Nat, (ts.flatMap fun t => (viewAt w c t).filter fun _ => false) = [] := by
@@ -390,7 +420,7 @@ theorem view_eq_viewSpec (w : W) (c : C) : view w c = viewSpec w c := by
       · rfl
       · exact absurd (List.isEmpty_iff.mp h) hr
     unfold view viewSpec
-    simp only [he, Bool.false_eq_true, ite_false, settledAt_guard]
+    simp only [he, Bool.false_eq_true, ite_false, hrec, settledAt_guard]
     split
     · rename_i h
       rw [List.isEmpty_iff.mp h]; rfl
@@ -410,7 +440,15 @@ def viewOf (w : W) (c d : C) : List (BLit Φ) :=
 theorem view_consistent (w : W) (c : C)
     (h : consistent (closure ([] : List (BLit Φ))) = true) :
     consistent (view w c) = true := by
-  rw [view_eq_viewSpec]; exact admit_consistent _ h
+  unfold view
+  split
+  · rename_i he
+    have hr := List.isEmpty_iff.mp he
+    rw [← admit_eq_admitPlain hr, ← closure_of_nil hr (admit _)]
+    exact admit_consistent _ h
+  · dsimp only
+    repeat' split
+    all_goals exact admit_consistent _ h
 
 /-- `c` now believes `φ` held at time `t`. -/
 def thinksWas (w : W) (c : C) (φ : Φ) (t : Nat) : Bool := (viewAt w c t).contains (φ, true)
@@ -576,11 +614,27 @@ def explain (w : W) (c : C) (l : BLit Φ) : List String :=
     return s!"{litStr l'} ({rs} = {s}; {reprStr h.up}): {status}"
 end
 
-/-- Witnessing: after each event, those present see what it showed. -/
+/-- At the end of an event, each character whose base changed records the
+permanent conclusions in their view (`HasMinds.settled`); nothing to do without lore
+or without a record. -/
+def recordSettled [Cast C] (before w : W) : W :=
+  if (Lore.rules (Φ := Φ)).isEmpty then w else
+  (Cast.all : List C).foldl (fun w c =>
+    match HasMinds.settled w c with
+    | none => w
+    | some m =>
+      -- by content, not length: a revision can replace a belief and keep the count
+      if decide (beliefs before c = beliefs w c) then w else
+      match (recordedHeads (beliefs w c)).filter (!m.contains ·) with
+      | [] => w
+      | hs => HasMinds.setSettled w c (m ++ hs)) w
+
+/-- Witnessing: after each event, those present see what it showed, and then
+record what they have settled. -/
 instance {E : Type} [Cast C] [Perceives W C] [Observable W E Φ P] : Perceive W E where
   perceive before e after :=
-    match Observable.seen before e with
-    | some (p, φs) => witness after p φs
-    | none => after
+    recordSettled before (match Observable.seen before e with
+      | some (p, φs) => witness after p φs
+      | none => after)
 
 end LangLib.World

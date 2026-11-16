@@ -176,6 +176,8 @@ structure W (s : Spec) where
   clock : Nat := 0
   /-- current values of the state atoms that have changed -/
   states : List (Nat × Bool) := []
+  /-- each character's record of the permanent conclusions they have drawn (`HasMinds.settled`) -/
+  settledT : List (Nat × List (SFact s × Bool)) := []
   deriving DecidableEq, Repr
 
 /-- A table's entry for `k`, or the default. -/
@@ -250,8 +252,11 @@ instance : PartialObj (W s) (Ob s) where
   objKnown w o := w.objKnown.contains o
   markObj w o := { w with objKnown := o :: w.objKnown }
 
-instance : HasMinds (W s) (Ch s) (SFact s) :=
-  ⟨W.beliefs, fun w c bs => { w with beliefsT := tset w.beliefsT c.i bs }⟩
+instance : HasMinds (W s) (Ch s) (SFact s) where
+  beliefs := W.beliefs
+  setBeliefs w c bs := { w with beliefsT := tset w.beliefsT c.i bs }
+  settled w c := some (tget w.settledT c.i [])
+  setSettled w c m := { w with settledT := tset w.settledT c.i m }
 
 instance : HasBonds (W s) (Ch s) where
   bond := W.bond
@@ -466,6 +471,11 @@ def Spec.start (s : Spec) : W s where
     match (s.knows.filter (·.1 == c)).map fun (_, l) => own l with
     | [] => none
     | bs => some (c, bs)
+  -- what each character had concluded when the story opens (the record then grows at each event)
+  settledT := (List.range s.chars.length).filterMap fun c =>
+    match recordedHeads (C := Ch s) ((s.knows.filter (·.1 == c)).map fun (_, l) => own l) with
+    | [] => none
+    | hs => some (c, hs)
   bondT := s.bonds.map fun (x, y, j, n) => ((x, y, j), n)
   goalsT := (List.range s.chars.length).filterMap fun c =>
     match (s.goals.filter (·.1 == c)).map fun (_, g) => lit g with

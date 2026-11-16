@@ -105,3 +105,25 @@ settled conclusions as a table in the state, extended at each learn by the heads
 in the view at the newest time, and written into the checkpoint literal. It
 changes `HasMinds` (shared with the Fight world and its generated snapshots), so
 it goes to Kiran with these numbers first.
+
+## L5 adopted: the past is frozen, so conclusions are recorded, not recomputed
+
+`HasMinds.settled`/`setSettled` (default: no record) hold each character's
+permanent rule conclusions; perception appends the new ones at the end of each
+event whose base changed (compared by content: a revision can keep the count),
+and `view` reads the record instead of rebuilding every past view. The record
+lives in `HasMinds` because `view` already takes it: as a separate class it was
+resolved to its no-record default where `view` is defined, so the Studio's
+record would never have been read. `view_eq_viewSpec` is proved for worlds
+without a record; with one, equality is checked on the corpus.
+
+Checked: every story's `langlib story` report is byte-identical with the
+Studio's record on and off (hxh, roof, roof-posthoc, roof-topdown,
+roof-pratchett, both AO3 chapters).
+
+| story | report, record off | record on | proofs |
+|---|---|---|---|
+| boyremoval (lore) | 67.9 s | 17.9 s | 349/349 in 208.5 s (did not finish before) |
+| sweet-girl (no lore: the plain path) | 6.2 s | 6.5 s | 831/831 in 347 s (334 s before; unaffected) |
+| roof | 0.12 s | 0.18 s | 94/94 in 8.3 s |
+| hxh | 1.0 s | 1.0 s | 66/66 in 5.4 s |

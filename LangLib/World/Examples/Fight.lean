@@ -241,7 +241,9 @@ instance : HasSpace NW Ch Pl Unit where
 
 instance : HasNen NW Ch Ab := ⟨NW.nen, fun w s => { w with nen := s }⟩
 /-- No minds: what is learned goes nowhere. -/
-instance : HasMinds NW Ch Fact := ⟨fun _ _ => [], fun w _ _ => w⟩
+instance : HasMinds NW Ch Fact where
+  beliefs _ _ := []
+  setBeliefs w _ _ := w
 
 inductive EN | space (x : SpaceEv Ch Pl Unit) | nen (x : NenEv Ch Ab)
   deriving DecidableEq, Repr, StoryEvent

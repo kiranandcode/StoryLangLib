@@ -66,7 +66,9 @@ instance : PartialLoc W Ch where
   assumeAt w a b := { w with loc := upd w.loc a (w.loc b), known := a :: w.known }
   markLoc w c := { w with known := c :: w.known }
 
-instance : HasMinds W Ch Fact := ⟨W.beliefs, fun w c bs => { w with beliefs := upd w.beliefs c bs }⟩
+instance : HasMinds W Ch Fact where
+  beliefs := W.beliefs
+  setBeliefs w c bs := { w with beliefs := upd w.beliefs c bs }
 instance : HasBonds W Ch where
   bond := W.bond
   setBond w a b k n := { w with bond := fun x y j => if x = a ∧ y = b ∧ j = k then n else w.bond x y j }
