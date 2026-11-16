@@ -1,0 +1,137 @@
+{
+ "text_sha": "24291522bfa22cbd",
+ "world_sha": "1d34e4a07f121afa",
+ "events": [
+  {
+   "e": "intend kiran coffeeRun",
+   "at": 5,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move kiran kitchen",
+   "at": 31,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "intend theo theNote",
+   "at": 58,
+   "w": "tore",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "drop theo note",
+   "at": 96,
+   "w": "slid",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move theo roof",
+   "at": 107,
+   "w": "took",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "true proofStuck",
+   "at": 13,
+   "w": "stopped"
+  },
+  {
+   "c": "at theo lab",
+   "at": 13,
+   "w": "stopped"
+  },
+  {
+   "c": "true proofStuck",
+   "at": 14,
+   "w": "making"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 26,
+   "w": "a"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 41,
+   "w": "stood"
+  },
+  {
+   "c": "true coffeeSlow",
+   "at": 47,
+   "w": "ground"
+  },
+  {
+   "c": "holds theo note",
+   "at": 58,
+   "w": "tore"
+  },
+  {
+   "c": "at theo lab",
+   "at": 58,
+   "w": "tore"
+  },
+  {
+   "c": "holds theo note",
+   "at": 92,
+   "w": "folded"
+  },
+  {
+   "c": "at theo roof",
+   "at": 107,
+   "w": "took"
+  },
+  {
+   "c": "at kiran kitchen",
+   "at": 47,
+   "w": "ground"
+  }
+ ],
+ "judge": [
+  {
+   "at": 8,
+   "w": "stood",
+   "kind": "act"
+  },
+  {
+   "at": 66,
+   "w": "wrote",
+   "kind": "act"
+  },
+  {
+   "at": 68,
+   "w": "stopping",
+   "kind": "act"
+  },
+  {
+   "at": 76,
+   "w": "want",
+   "kind": "speech"
+  },
+  {
+   "at": 78,
+   "w": "ask",
+   "kind": "speech"
+  },
+  {
+   "at": 92,
+   "w": "folded",
+   "kind": "act"
+  }
+ ],
+ "staging": [
+  {
+   "s": "above shelf kdesk",
+   "at": 102,
+   "w": "over"
+  }
+ ]
+}

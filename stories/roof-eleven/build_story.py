@@ -63,7 +63,7 @@ story = {
        {"id": "ledge", "what": "the low wall at the roof's edge", "words": ["ledge", "wall", "parapet"], "count": 1, "attrs": {"height": "low"}},
        {"id": "city", "what": "the city below, seen from the roof", "words": ["city"], "count": 1},
        {"id": "roofdoor", "what": "the door at the top of the stairs, which sticks", "words": ["door"], "count": 1},
-       {"id": "tank", "what": "the water tank on its steel legs, with a lee out of the wind", "words": ["tank"], "count": 1}
+       {"id": "tank", "what": "the water tank on its steel legs, with a lee out of the wind", "words": ["tank"], "count": 1, "attrs": {"kind": "water"}}
      ]},
     {"id": "quietRoom", "kind": "the quiet room off the corridor, where people nap through long runs", "words": ["room"],
      "attrs": {"kind": "quiet"},
@@ -73,10 +73,11 @@ story = {
        {"id": "qdoor", "what": "the quiet room's door, which locks from inside", "words": ["door", "lock"], "count": 1}
      ]}
   ],
-  "objects": [{"id": "note", "what": "Theo's note, a page torn from his notebook", "words": ["note", "page", "paper"]}],
+  "objects": [{"id": "note", "what": "Theo's note, a page torn from his notebook", "words": ["note", "page", "paper"], "owner": "theo"}],
   "scenery": [
     {"id": "noodles", "what": "the takeaway noodles Theo brings", "words": ["noodles", "carton", "container"], "owner": "theo", "count": 2},
     {"id": "mug", "what": "Kiran's mug", "words": ["mug", "cup"], "owner": "kiran", "count": 1},
+    {"id": "notebook", "what": "Theo's notebook", "words": ["notebook"], "owner": "theo", "count": 1},
     {"id": "coat", "what": "Theo's coat", "words": ["coat", "jacket"], "owner": "theo", "count": 1},
     {"id": "charger", "what": "Mara's laptop charger", "words": ["charger"], "owner": "mara", "count": 1},
     {"id": "blanket", "what": "the quiet room's blanket", "words": ["blanket"], "count": 1},
@@ -190,7 +191,7 @@ story = {
     "needs": [{"id": "food"}, {"id": "rest"}, {"id": "company"}, {"id": "comfort"}, {"id": "reassurance"},
               {"id": "warmth"}, {"id": "water"}],
     "builds": "trusts", "trust": "trusts",
-    "names": {"kiran": [["Kiran", "given", 0]], "theo": [["Theo", "given", 0]], "mara": [["Mara", "given", 0]], "family": []},
+    "names": {"kiran": [["Kiran", "given", 0]], "theo": [["Theo", "given", 0], ["T", "nick", 0]], "mara": [["Mara", "given", 0]], "family": []},
     "blind": [["kiran", "self", "food"], ["kiran", "self", "rest"], ["kiran", "self", "company"],
               ["kiran", "self", "comfort"], ["kiran", "self", "warmth"], ["kiran", "self", "water"],
               ["kiran", "others", "comfort"], ["kiran", "others", "company"], ["kiran", "others", "reassurance"]],

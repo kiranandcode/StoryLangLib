@@ -256,7 +256,10 @@
      "words": [
       "tank"
      ],
-     "count": 1
+     "count": 1,
+     "attrs": {
+      "kind": "water"
+     }
     }
    ]
   },
@@ -310,7 +313,8 @@
     "note",
     "page",
     "paper"
-   ]
+   ],
+   "owner": "theo"
   }
  ],
  "scenery": [
@@ -333,6 +337,15 @@
     "cup"
    ],
    "owner": "kiran",
+   "count": 1
+  },
+  {
+   "id": "notebook",
+   "what": "Theo's notebook",
+   "words": [
+    "notebook"
+   ],
+   "owner": "theo",
    "count": 1
   },
   {
@@ -1082,6 +1095,11 @@
     [
      "Theo",
      "given",
+     0
+    ],
+    [
+     "T",
+     "nick",
      0
     ]
    ],
