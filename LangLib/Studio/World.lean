@@ -112,6 +112,9 @@ structure Spec where
   bonds : List (Nat × Nat × Dim × Nat) := []
   /-- what characters know at the start (their own knowledge) -/
   knows : List (Nat × (Fact × Bool)) := []
+  /-- what characters believe at the start on weaker evidence than their own knowledge
+  (a chapter continuing another carries each belief with its evidence and rank) -/
+  held : List (Nat × (Fact × Bool) × Nat × Evid Nat) := []
   goals : List (Nat × (Fact × Bool)) := []
   /-- what kind of place each place is, by place index -/
   placeInfo : List (Nat × PlaceInfo) := []
@@ -459,6 +462,10 @@ def Ev.toE (s : Spec) : Ev → E s
 def own (l : Fact × Bool) : Held (Ch s) (SFact s) :=
   { b := ofLit (lit l), src := .self, rank := 10, stamp := 0, up := .hard }
 
+/-- A belief held at the opening on evidence `e`, at rank `r`. -/
+def heldOn (l : Fact × Bool) (r : Nat) (e : Evid Nat) : Held (Ch s) (SFact s) :=
+  { b := ofLit (lit l), src := Evid.toCh e, rank := r, stamp := 0, up := .radical }
+
 /-- The opening state. -/
 def Spec.start (s : Spec) : W s where
   -- characters whose place the text has not given are offstage (a place past
@@ -469,7 +476,8 @@ def Spec.start (s : Spec) : W s where
   objLocT := s.startObjAt.map fun (o, p) => (o, ⟨p⟩)
   objKnown := (s.startObjAt ++ s.startHeld).map (⟨·.1⟩)
   beliefsT := (List.range s.chars.length).filterMap fun c =>
-    match (s.knows.filter (·.1 == c)).map fun (_, l) => own l with
+    match (s.knows.filter (·.1 == c)).map (fun (_, l) => own l) ++
+        (s.held.filter (·.1 == c)).map (fun (_, l, r, e) => heldOn l r e) with
     | [] => none
     | bs => some (c, bs)
   -- no record yet: the opening knowledge is stamped 0, the time of the first event,

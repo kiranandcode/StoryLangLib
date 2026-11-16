@@ -98,8 +98,11 @@ theorem rec_start (s : Spec) : RecAt (Φ := SFact s) s.start := by
       split at hfa
       · cases hfa
       · cases hfa
-        obtain ⟨⟨_, l⟩, _, rfl⟩ := List.mem_map.mp hh
-        rfl
+        rcases List.mem_append.mp hh with h1 | h1
+        · obtain ⟨⟨_, l⟩, _, rfl⟩ := List.mem_map.mp h1
+          rfl
+        · obtain ⟨⟨_, l, r, e⟩, _, rfl⟩ := List.mem_map.mp h1
+          rfl
   · intro m hm
     have hm' : (if c.i < s.chars.length then some (tget ([] : List (Nat × List (SFact s × Bool))) c.i [])
         else none) = some m := hm

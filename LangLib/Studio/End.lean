@@ -75,9 +75,18 @@ def mainEndJson (s : Spec) (w : W s) : Json :=
       ("bonds", Json.mkObj ((pairs s).filterMap fun (a, b) =>
         let ds := dims.filterMap fun d => let v := HasBonds.bond w a b d; if v > 0 then some (d.name, Json.num v) else none
         if ds.isEmpty then none else some (s!"{n.chS a.i}>{n.chS b.i}", Json.mkObj ds))),
+      -- each belief with the evidence that holds it: own knowledge stays plain, the rest keep
+      -- their rank and evidence ("lit@rank:evidence"), so later evidence weighs against them as before
       ("knows", Json.mkObj (s.chs.filterMap fun c =>
         let ls := ((view w c).filter isAtom).eraseDups
-        if ls.isEmpty then none else some (n.chS c.i, sArr (ls.map fun l => n.litS (unlit l))))),
+        let shown (l : SFact s × Bool) : String :=
+          let hs := (HasMinds.beliefs w c).filter fun h => litOf h.b == some l && h.up != .note
+          match hs.foldl (fun (best : Option (Held (Ch s) (SFact s))) h =>
+              match best with | some b => if h.rank > b.rank then some h else some b | none => some h) none with
+          | some h => if h.src == .self || h.up == .hard then n.litS (unlit l)
+              else s!"{n.litS (unlit l)}@{h.rank}:{n.evidS (Evid.ofCh h.src)}"
+          | none => n.litS (unlit l)
+        if ls.isEmpty then none else some (n.chS c.i, sArr (ls.map shown)))),
       ("goals", Json.mkObj (s.chs.filterMap fun c =>
         let gs := goalsOf w c
         if gs.isEmpty then none else some (n.chS c.i, sArr (gs.map fun g => n.litS (unlit g)))))]),

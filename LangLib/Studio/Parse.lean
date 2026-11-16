@@ -339,17 +339,27 @@ def specOfJson (j : Json) : Except String Spec := do
       let some d := Dim.ofString? k | throw s!"unknown bond dimension \"{k}\""
       pure (a, b, d, (n.getNat?.toOption.getD 0))
     | _ => throw s!"bond \"{pair}\" should be an object"
-  let knows ← (obj st "knows").flatMapM fun (c, v) => do
+  -- "lit" is the character's own knowledge; "lit@rank:evidence" a belief held on weaker evidence
+  let knowsAll ← (obj st "knows").flatMapM fun (c, v) => do
     let c ← n0.ch c
     match v with
-    | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
+    | .arr ls => ls.toList.mapM fun l => do
+      let str ← need "literal" l.getStr?.toOption
+      match str.splitOn "@" with
+      | [li, rest] =>
+        match rest.splitOn ":" with
+        | r :: ev => pure (c, ← n0.lit li, some ((r.toNat?).getD 1, ← n0.evid (":".intercalate ev)))
+        | [] => throw s!"a held belief is lit@rank:evidence, not {str}"
+      | _ => pure (c, ← n0.lit str, none)
     | _ => pure []
+  let knows := knowsAll.filterMap fun (c, l, h) => if h.isNone then some (c, l) else none
+  let held := knowsAll.filterMap fun (c, l, h) => h.map fun (r, e) => (c, l, r, e)
   let goals ← (obj st "goals").flatMapM fun (c, v) => do
     let c ← n0.ch c
     match v with
     | .arr ls => ls.toList.mapM fun l => do pure (c, ← n0.lit (← need "literal" l.getStr?.toOption))
     | _ => pure []
-  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, goals,
+  pure { chars, places, objects, atoms, lore, plans, startAt, startObjAt, startHeld, bonds, knows, held, goals,
          placeInfo, things := fixtures ++ scenery, objWords, objOwner, layout,
          pov := ← (str j "pov").mapM n0.ch }
 
