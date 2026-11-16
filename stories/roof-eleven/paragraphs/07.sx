@@ -1,0 +1,46 @@
+ent kiran "Kiran" person she
+ent theo "Theo" person he
+ent stairs "the stairs" place they
+ent roofdoor "the door" object it
+ent city "the city" object it
+ent tank "the water tank" object it
+ent coat "his coat" object it
+topic t1 "Kiran goes up" kiran theo
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) took|VERB|head|l=take (NP obj ref=stairs the|DET|det stairs|NOUN|head)
+  (PP obl at|ADP|case an|DET|det even|ADJ|amod|sense=impression pace|NOUN|head|sense=abstract) .|PUNCT|punct)
+(S root topic=t1
+  (PP obl On|ADP|case the|DET|det last|ADJ|amod|sense=impression flight|NOUN|head|sense=part)
+  (NP nsubj the|DET|det pace|NOUN|head|sense=abstract) stopped|VERB|head|l=stop
+  (VP xcomp being|AUX|cop|l=be even|ADJ|head|sense=impression) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=roofdoor The|DET|det door|NOUN|head (PP nmod at|ADP|case the|DET|det top|NOUN|head|sense=part)) stuck|VERB|head|l=stick .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) put|VERB|head|l=put (NP obj her|PRON|poss|ref=kiran shoulder|NOUN|head|sense=body)
+  (PP obl into|ADP|case it|PRON|head|ref=roofdoor)
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj the|DET|det cold|NOUN|head|sense=weather) came|VERB|head|l=come in|ADV|advmod|sense=direction
+    (PP obl all|DET|det at|ADP|case once|ADV|head|sense=time)
+    ,|PUNCT|punct
+    (NP appos a|DET|det hard|ADJ|amod|sense=impression wind|NOUN|head|sense=weather)
+    ,|PUNCT|punct
+    (NP appos ref=city the|DET|det whole|ADJ|amod|sense=impression city|NOUN|head
+      (VP acl lit|VERB|head|l=light below|ADV|advmod|sense=place
+        (PP obl like|ADP|case a|DET|det cluster|NOUN|head|sense=figurative (PP nmod under|ADP|case load|NOUN|head|sense=figurative)))))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo Theo|PROPN|head) stood|VERB|head|l=stand
+  (PP obl in|ADP|case the|DET|det lee|NOUN|head|sense=part (PP nmod of|ADP|case (NP head ref=tank the|DET|det water|ADJ|amod tank|NOUN|head)))
+  (PP obl with|ADP|case his|PRON|poss|ref=theo coat|NOUN|compound|ref=coat collar|NOUN|head|sense=part up|ADV|advmod|sense=direction)
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) turned|VERB|head|l=turn
+  (SBAR advcl when|SCONJ|mark (S head (NP nsubj ref=roofdoor the|DET|det door|NOUN|head) banged|VERB|head|l=bang shut|ADJ|xcomp|sense=impression
+    (PP obl behind|ADP|case her|PRON|head|ref=kiran)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) did|AUX|aux|l=do not|PART|advmod look|VERB|head|l=look surprised|ADJ|xcomp|sense=impression
+  ,|PUNCT|punct only|ADV|advmod|sense=degree glad|ADJ|conj|sense=impression
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj ref=kiran she|PRON|head) had|VERB|head|l=have (NP obj no|DET|det model|NOUN|head|sense=abstract) (PP obl for|ADP|case that|PRON|head) either|ADV|advmod|sense=degree)
+  .|PUNCT|punct)
