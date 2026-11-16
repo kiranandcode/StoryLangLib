@@ -123,7 +123,7 @@ open HasLoc HasSpace PartialLoc PartialObj
 
 /-- Place `c` at `o` (when `c`'s location is unknown) or `o` at `c` (when the
 object's is), whichever is unknown, so that `c` can take `o`. -/
-private def meetObj (w : W) (c : C) (o : O) : W :=
+def meetObj (w : W) (c : C) (o : O) : W :=
   let w := if objKnown w o then w else markObj (setHolder (setObjLoc w o (loc w c)) o none) o
   if locKnown w c then w else markLoc (setLoc w c (objLoc w o)) c
 

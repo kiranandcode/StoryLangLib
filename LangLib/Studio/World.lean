@@ -255,7 +255,8 @@ instance : PartialObj (W s) (Ob s) where
 instance : HasMinds (W s) (Ch s) (SFact s) where
   beliefs := W.beliefs
   setBeliefs w c bs := { w with beliefsT := tset w.beliefsT c.i bs }
-  settled w c := some (tget w.settledT c.i [])
+  -- the cast keeps a record (`recordSettled` updates the cast); anyone else's view is rebuilt
+  settled w c := if c.i < s.chars.length then some (tget w.settledT c.i []) else none
   setSettled w c m := { w with settledT := tset w.settledT c.i m }
 
 instance : HasBonds (W s) (Ch s) where
@@ -471,11 +472,9 @@ def Spec.start (s : Spec) : W s where
     match (s.knows.filter (·.1 == c)).map fun (_, l) => own l with
     | [] => none
     | bs => some (c, bs)
-  -- what each character had concluded when the story opens (the record then grows at each event)
-  settledT := (List.range s.chars.length).filterMap fun c =>
-    match recordedHeads (C := Ch s) ((s.knows.filter (·.1 == c)).map fun (_, l) => own l) with
-    | [] => none
-    | hs => some (c, hs)
+  -- no record yet: the opening knowledge is stamped 0, the time of the first event,
+  -- which may still revise it; it is recorded at the end of that event
+  settledT := []
   bondT := s.bonds.map fun (x, y, j, n) => ((x, y, j), n)
   goalsT := (List.range s.chars.length).filterMap fun c =>
     match (s.goals.filter (·.1 == c)).map fun (_, g) => lit g with

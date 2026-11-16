@@ -69,7 +69,7 @@ def dialogueOk3 (w : W) : DialogueEv C Φ → Tri
   | .hint c d l | .sarcasm c d l => (together3 w c d).and (Tri.ofBool ((view w c).contains l))
 
 /-- Everyone with `c` other than `d` hears `c`'s literal words. -/
-private def overhear (w : W) (c d : C) (l : BLit Φ) : W :=
+def overhear (w : W) (c d : C) (l : BLit Φ) : W :=
   (Cast.all.filter fun x => x != c && x != d && loc w x == loc w c).foldl
     (fun w x => learn w x (ofLit l) (.told c)) w
 

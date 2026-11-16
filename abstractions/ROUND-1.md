@@ -115,7 +115,8 @@ and `view` reads the record instead of rebuilding every past view. The record
 lives in `HasMinds` because `view` already takes it: as a separate class it was
 resolved to its no-record default where `view` is defined, so the Studio's
 record would never have been read. `view_eq_viewSpec` is proved for worlds
-without a record; with one, equality is checked on the corpus.
+without a record; with one, equality was at first only checked on the corpus (it
+is now proved, below, after two fixes).
 
 Checked: every story's `langlib story` report is byte-identical with the
 Studio's record on and off (hxh, roof, roof-posthoc, roof-topdown,
@@ -127,3 +128,78 @@ roof-pratchett, both AO3 chapters).
 | sweet-girl (no lore: the plain path) | 6.2 s | 6.5 s | 831/831 in 347 s (334 s before; unaffected) |
 | roof | 0.12 s | 0.18 s | 94/94 in 8.3 s |
 | hxh | 1.0 s | 1.0 s | 66/66 in 5.4 s |
+
+## L5 proved: with the record, `view` is `viewSpec` on every reachable state
+
+The statement as first adopted was false; two worlds separate `view` from
+`viewSpec` (both are `decide` tests in `Studio/Record.lean`, `RecordCex`):
+
+* **The opening record was taken too early.** `Spec.start` recorded the heads of
+  the opening view, but opening knowledge is stamped 0 and the first event also
+  runs at time 0, so it can still revise that view. A character who knows `at c
+  b` (a fluent) at the start, with lore `at c b → read`, and whose first event is
+  `notice c (not at c b) self`: `viewAt 0` never has `read`, but the record did,
+  and `loreSurvives` keeps a head whose premises are fluents, so the old `view`
+  believed `read` and `viewSpec` did not.
+* **An empty base.** `view` added `now`'s heads to the record; with no
+  information at all `settledAt` has no times to visit, so with lore rules with
+  empty bodies (a fluent head first) `view` gave the same literals as `viewSpec`
+  in another order.
+
+A third gap: `recordSettled` only visits `Cast.all`, so a character outside the
+cast (a Studio index past `chars`) would keep a record that never grows.
+
+Fixes (every story's `langlib story` report is byte-identical before and after:
+hxh, roof, roof-posthoc, roof-topdown, roof-pratchett, roof-eleven, both AO3
+chapters, both papers; roof 94/94, hxh 66/66 and boyremoval 349/349 still
+prove, boyremoval in 345 s against 318–338 s for the old record on the same
+day's machine):
+
+* `Spec.start` keeps no record; at the end of the first event (time 0)
+  `recordSettled` records for everyone with a base, so the opening knowledge is
+  recorded after the event's revisions. After that it records, as before, for
+  characters whose base changed (it now also skips an empty base).
+  A first version tested for information about the present instead
+  (`any (·.about == now)`): provable, but it cost about 10% of boyremoval's
+  kernel time (paragraphs 30–33: 120 s → 131 s); the kernel decides an
+  unchanged base equal to itself almost for free.
+* `view`'s record branch settles nothing when the base is empty.
+* The Studio's `settled` is `none` outside the cast (their views are rebuilt).
+
+**The invariant** (`RecOk w c`, `Mind.lean`): `c`'s base, read without caught
+flags (`Held.plain`), is `B₁ ++ B₂` with every item of `B₁` about a time before
+`now` and every item of `B₂` about `now`; and if `c` has a record `m`, then `c`
+is in the cast and `m.eraseDups = (pastHeads B₁).eraseDups`, where `pastHeads`
+lists the recorded heads of the view at each time in the base, oldest first
+(what `settledAt` visits). `Rec w := ∀ c, RecOk w c`. Between events the
+invariant is `RecAt w := Rec w ∧ (now w = 0 ∨ every item is about a time before
+now)`: the second half is what lets `recordSettled` skip an unchanged base.
+
+**The laws** (`LawfulMinds`, a new class): `setBeliefs` and `setSettled` are lenses
+on separate fields that leave the clock alone (`setSettled` only where a record
+is kept); `Credence.onBetrayal` touches neither field nor the clock; `tick`
+keeps both and strictly increases `Clock.now`. And of a world's events,
+`∀ w e, Grows w (Domain.step w e)`: a step only appends items about `now` to
+bases (or catches sources out) and leaves records and clock alone.
+
+**Theorems.**
+
+* `view_eq_viewSpec_of_rec : RecOk w c → view w c = viewSpec w c`.
+* `grows_rec`: learning (`learnWith_grows`, `witness_grows`) keeps `RecOk`, so
+  views built mid-event (the liar check) agree too
+  (`view_eq_viewSpec_of_grows`).
+* `rec_recordSettled_tick`: from `Rec w` (and nothing about the present in a
+  base the event left unchanged), `RecAt (tick (recordSettled before w))`: the
+  present becomes the past and its views are in the record. This is where time
+  monotonicity enters: after the tick nothing is about the old `now` again, so
+  `viewAt` of every recorded time is frozen.
+* `rec_next`, `rec_run`, `view_run`: along any story from a world with `RecAt`.
+* Studio (`Studio/Record.lean`): `LawfulMinds (W s) (Ch s) (SFact s)`,
+  `rec_start`, `step_grows` (every space, mind, social, dialogue, state and goal
+  event), hence `view_run_start s es c : view (run s.start es) c = viewSpec (run
+  s.start es) c`, `view_atStep_start` (the states `Valid`, `Was`, `Throughout`
+  and the proof checkpoints read; no validity needed) and `view_within_event`.
+
+No `sorry`; the theorems use only `propext`, `Classical.choice`, `Quot.sound`.
+Generated `Proofs.lean` files carry checkpoint states, which now hold the new
+record: regenerate them with `langlib story-lean`.
