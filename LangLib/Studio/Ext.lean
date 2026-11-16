@@ -512,7 +512,18 @@ def XEv.str (x : XSpec) : XEv x → String
       s!"{reprStr e |>.splitOn " " |>.headD "" |>.replace "LangLib.World.CareEv." ""} {x.chS a.i} {x.chS c.i} {x.needs.getD k.i "?"}"
     | .shield a c t => s!"shield {x.chS a.i} {x.chS c.i} {x.chS t.i}"
     | .point b a c k => s!"point {x.chS b.i} {x.chS a.i} {x.chS c.i} {x.needs.getD k.i "?"}"
-  | .id e => (reprStr e).replace "LangLib.World.IdEv." ""
+  | .id e => match e with
+    | .introduce a b n => s!"introduce {x.chS a.i} {x.chS b.i} '{n}'"
+    | .tellName a b c n => s!"tellName {x.chS a.i} {x.chS b.i} {x.chS c.i} '{n}'"
+    | .learnName a b n => s!"learnName {x.chS a.i} {x.chS b.i} '{n}'"
+    | .coin a b n => s!"coin {x.chS a.i} {x.chS b.i} '{n}'"
+    | .call a b n => s!"call {x.chS a.i} {x.chS b.i} '{n}'"
+    | .assume a b p => s!"assume {x.chS a.i} {x.chS b.i} {p.name}"
+    | .learnPron a b p => s!"learnPron {x.chS a.i} {x.chS b.i} {p.name}"
+    | .tellPron a b c p => s!"tellPron {x.chS a.i} {x.chS b.i} {x.chS c.i} {p.name}"
+    | .refer a b p => s!"refer {x.chS a.i} {x.chS b.i} {p.name}"
+    | .disclose a b s => s!"disclose {x.chS a.i} {x.chS b.i} '{s}'"
+    | .out a b s => s!"out {x.chS a.i} {x.chS b.i} '{s}'"
   | .aff (.feel c e) => s!"feel {x.chS c.i} {x.emotions.getD e.i "?"}"
   | .aff (.calm c e) => s!"calm {x.chS c.i} {x.emotions.getD e.i "?"}"
   | .read (.examine c e) => s!"examine {x.chS c.i} {x.emotions.getD e.i "?"}"
@@ -575,7 +586,12 @@ def xreport (x : XSpec) (names : List String) (ps : List (XPara x)) : Json := Id
       ("registered", Json.arr (w.registered.map fun (a, c, k, f) =>
         Json.str s!"{x.chS a.i} {if f then "feels" else "has been told of"} {x.chS c.i}'s need: {x.needs.getD k.i "?"}").toArray),
       ("examined", Json.arr (w.examined.map fun (c, e, n) =>
-        Json.str s!"{x.chS c.i} {x.emotions.getD e.i "?"} {n}{if readAs w c e then " (recognised)" else ""}").toArray)])
+        Json.str s!"{x.chS c.i} {x.emotions.getD e.i "?"} {n}{if readAs w c e then " (recognised)" else ""}").toArray),
+      -- who knows what of whom (World/Identity): names, pronouns, private facts
+      ("knows", Json.arr ((w.names.map fun ((a, b, n) : XCh x × XCh x × String) => Json.mkObj [("who", x.chS a.i), ("of", x.chS b.i), ("kind", "name"), ("v", n)]) ++
+        (w.pron.map fun ((a, b, p) : XCh x × XCh x × Pron) => Json.mkObj [("who", x.chS a.i), ("of", x.chS b.i), ("kind", "pron"), ("v", p.name),
+          ("right", p == IdentityLaws.pron String String (R := XR x) b)]) ++
+        (w.secrets.map fun ((a, b, s) : XCh x × XCh x × String) => Json.mkObj [("who", x.chS a.i), ("of", x.chS b.i), ("kind", "secret"), ("v", s)])).toArray)])
   return Json.mkObj [("valid", ok && XValid x ps), ("paragraphs", Json.arr out)]
 
 private def readJson (p : System.FilePath) : IO (Option Json) := do

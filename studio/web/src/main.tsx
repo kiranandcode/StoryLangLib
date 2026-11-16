@@ -8,6 +8,7 @@ import '@fontsource/atkinson-hyperlegible/400-italic.css'
 import './theme.css'
 import './reading.css'
 import './logic.css'
+import './views.css'
 import './wrap.css'
 import { App } from './App'
 

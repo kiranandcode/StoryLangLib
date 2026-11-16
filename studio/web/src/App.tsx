@@ -8,6 +8,12 @@ import { ArgumentView } from './Argument'
 import { LinkLines } from './Links'
 import { LogicPanel } from './Logic'
 import { ProofView, RunsView, StoryView } from './StoryViews'
+import { MindsView } from './Minds'
+import { WorldView } from './World'
+import { StyleView } from './Style'
+import { PaperMain } from './PaperView'
+import { MORE_KINDS, MoreInspector, describeMore } from './InspectMore'
+import type { Readings } from './types'
 
 function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   const [v, setV] = useState<T>(() => {
@@ -17,10 +23,12 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'judgements' | 'argument' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
+type Tab = 'paragraphs' | 'judgements' | 'argument' | 'minds' | 'world' | 'style' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
+  const [papers, setPapers] = useState<string[]>([])
+  const [readings, setReadings] = useState<Readings | null>(null)
   const [story, setStory] = usePref<string>('studio.story', '')
   const [report, setReport] = useState<Report | null>(null)
   const [theme, setTheme] = usePref<'light' | 'dark'>('studio.theme',
@@ -54,18 +62,26 @@ export function App() {
     if (q.get('tab')) setTab(q.get('tab') as Tab)
   }, [])
 
+  const latest = useRef('')
   const load = useCallback((name: string) => {
     if (!name) return
-    fetch(`/api/story/${name}`).then(r => r.json()).then((r: Report) => { setReport(r.verdict || r.error ? r : { ...r, error: 'the server sent no verdict' }); setFlash(x => x + 1) }).catch(() => {})
+    latest.current = name
+    fetch(`/api/story/${name}`).then(r => r.json()).then((r: Report) => { if (latest.current !== name) return; setReport(r.verdict || r.error ? r : { ...r, error: 'the server sent no verdict' }); setFlash(x => x + 1) }).catch(() => {})
   }, [])
 
   useEffect(() => {
     fetch('/api/stories').then(r => r.json()).then((s: { name: string; title: string }[]) => {
       setStories(s)
-      if (s.length && !s.some(x => x.name === story)) setStory(s[0].name)
+      if (s.length && !story.startsWith('paper:') && !s.some(x => x.name === story)) setStory(s[0].name)
     }).catch(() => {})
   }, [])
-  useEffect(() => { load(story) }, [story, load])
+  const paper = story.startsWith('paper:') ? story.slice(6) : ''
+  const loadReadings = useCallback((name: string) => {
+    if (!name || name.startsWith('paper:')) return
+    fetch(`/api/story/${name}/readings`).then(r => r.json()).then((r: Readings) => { if (r.name === latest.current) setReadings(r) }).catch(() => {})
+  }, [])
+  useEffect(() => { setReadings(null); if (!story.startsWith('paper:')) { load(story); loadReadings(story) } }, [story, load, loadReadings])
+  useEffect(() => { fetch('/api/papers').then(r => r.json()).then(setPapers).catch(() => {}) }, [])
 
   const loadRequests = useCallback(() => {
     fetch('/api/requests').then(r => r.json()).then(setRequests).catch(() => {})
@@ -82,11 +98,11 @@ export function App() {
       const msg = JSON.parse(m.data)
       if (msg.type === 'requests') { loadRequests(); return }
       if (msg.story !== story) return
-      if (msg.type === 'story') load(story)
+      if (msg.type === 'story') { load(story); loadReadings(story) }
       if (msg.type === 'proofs') setReport(r => r ? { ...r, proofs: msg.proofs } : r)
     }
     return () => es.close()
-  }, [story, load, loadRequests])
+  }, [story, load, loadRequests, loadReadings])
 
   // the paragraph at the reading line (40% down) is current
   useEffect(() => {
@@ -142,7 +158,7 @@ export function App() {
   }, [report])
 
   const onContextMenu = (e: React.MouseEvent) => {
-    if (mode === 'chill' || !report || report.error) return  // chill is for reading: the native menu
+    if (paper || mode === 'chill' || !report || report.error) return  // chill is for reading: the native menu; papers have their own
     e.preventDefault()
     const targets = targetsAt(e.target as HTMLElement)
     const sel = window.getSelection()
@@ -153,7 +169,10 @@ export function App() {
       const [kind, key, idx] = t.split(':')
       const what = describeTarget(report, t)
       if (items.length) items.push({ label: '', run: () => {}, sep: true })
-      if (kind === 'char' || kind === 'fact' || kind === 'bond') {
+      if (MORE_KINDS.has(kind)) {
+        items.push({ label: `Inspect ${describeMore(report, t)}`, run: () => inspect(t) })
+        items.push({ label: `Ask the agent about ${describeMore(report, t)}…`, run: () => ask(t) })
+      } else if (kind === 'char' || kind === 'fact' || kind === 'bond') {
         items.push({ label: `Inspect ${what}`, run: () => inspect(t) })
         items.push({ label: `Ask the agent to change ${what}…`, run: () => ask(t) })
       } else if (kind === 'ev') {
@@ -203,18 +222,19 @@ export function App() {
     <div className={`shell ${mode !== 'chill' ? 'editing' : ''}`} onContextMenu={onContextMenu}>
       <header className="topbar">
         <span className="title">StoryLangLib Studio</span>
-        {stories.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
-          {stories.map(s => <option key={s.name} value={s.name}>{s.title}</option>)}</select>}
+        {stories.length + papers.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
+          <optgroup label="stories">{stories.map(s => <option key={s.name} value={s.name}>{s.title}</option>)}</optgroup>
+          {papers.length > 0 && <optgroup label="papers">{papers.map(p => <option key={p} value={`paper:${p}`}>{p} (paper)</option>)}</optgroup>}</select>}
         <span className="seg" role="group" aria-label="mode">
           <button className={mode === 'chill' ? 'on' : ''} onClick={() => setMode('chill')} title="just the prose (o)">Chill</button>
           <button className={mode === 'overview' ? 'on' : ''} onClick={() => setMode('overview')} title="annotations and logic (o)">Overview</button>
           <button className={mode === 'edit' ? 'on' : ''} onClick={() => setMode('edit')} title="right-click anything to inspect, adjust or ask the agent (e)">Edit</button>
         </span>
-        {overview && <button className={`btn ${pos === 'on' ? 'on' : ''}`} onClick={() => setPos(pos === 'on' ? 'off' : 'on')} title="tint parts of speech">POS</button>}
+        {overview && !paper && <button className={`btn ${pos === 'on' ? 'on' : ''}`} onClick={() => setPos(pos === 'on' ? 'off' : 'on')} title="tint parts of speech">POS</button>}
         <span className="spacer" />
-        {report && !report.error && overview && <span className={`badge ${report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}`}>
+        {report && !report.error && overview && !paper && <span className={`badge ${report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}`}>
           story {report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}</span>}
-        {report && overview && proofs && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
+        {report && overview && proofs && !paper && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
           onClick={() => setTab('proofs')} style={{ cursor: 'pointer' }}>
           {proofs.status === 'running' ? 'Lean: checking…' : proofs.status === 'none' ? 'Lean: –' : `Lean ${okThm}/${nThm}`}</span>}
         {pending > 0 && <button className="btn req-btn on" onClick={() => setTab('requests')}
@@ -225,7 +245,7 @@ export function App() {
         <button className="btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="dark or light (d)">{theme === 'dark' ? '☾' : '☀'}</button>
         <span className="live" title={live ? 'following the story files' : 'disconnected'}><span key={flash} className={`dot ${live ? 'on flash' : ''}`} />live</span>
       </header>
-      <div className="main">
+      {paper ? <PaperMain name={paper} size={size} face={face} /> : <div className="main">
         <div className="prose-pane" ref={proseRef}>
           {!report && <div className="prose"><p className="para empty">Loading…</p></div>}
           {report?.error && <div className="prose"><p className="para empty">The checker could not read this story: {report.error}</p></div>}
@@ -251,21 +271,26 @@ export function App() {
         {overview && report && !report.error && (
           <aside className="right">
             <nav className="tabs">
-              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument'] : []), 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
+              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument'] : []), 'minds', 'world', 'style', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
             {tab === 'judgements' && <div className="logic"><JudgementsView report={report} onSelect={select} /></div>}
             {tab === 'argument' && <div className="logic"><ArgumentView report={report} onSelect={select} /></div>}
+            {tab === 'minds' && <div className="logic"><MindsView report={report} current={current} /></div>}
+            {tab === 'world' && <div className="logic"><WorldView report={report} readings={readings} current={current} /></div>}
+            {tab === 'style' && <div className="logic">{readings ? <StyleView reports={[['style', readings.style], ['house', readings.house]]} /> : <div className="storyview dim">Reading the style…</div>}</div>}
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
-            {tab === 'inspect' && <div className="logic"><InspectorView report={report} target={inspecting} current={current} vocab={vocab} onAsk={t => ask(t)} /></div>}
+            {tab === 'inspect' && <div className="logic">{inspecting && MORE_KINDS.has(inspecting.split(':')[0])
+              ? <MoreInspector report={report} readings={readings} target={inspecting} current={current} onAsk={() => ask(inspecting)} />
+              : <InspectorView report={report} target={inspecting} current={current} vocab={vocab} onAsk={t => ask(t)} />}</div>}
             {tab === 'requests' && <div className="logic"><RequestsView requests={requests} story={story} onNew={() => openComposer()}
               onSelectPara={name => select(Math.max(0, report.paragraphs.findIndex(p => p.name === name)))} /></div>}
           </aside>
         )}
-      </div>
+      </div>}
       {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
       {draft && <Composer story={story} draft={draft} onClose={() => setDraft(null)} onSent={() => { loadRequests(); setTab('requests') }} />}
       <LinkLines />

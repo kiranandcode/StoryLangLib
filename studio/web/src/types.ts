@@ -192,3 +192,85 @@ export interface StudioRequest {
   history: { status: RequestStatus; reply?: string; by?: string; at: number }[]
   checks?: { check: string; ok: boolean; detail: string[] }[] | null
 }
+
+/** `langlib ext` (Studio/Ext.lean): ties, care, identity and affect per paragraph. */
+export interface ExtPara {
+  name: string
+  events: { e: string; at: number; ok: boolean; why: string }[]
+  issues: string[]
+  mentions: number
+  /** "a tie b n" */
+  ties: string[]
+  /** "c: need, need" */
+  needs: string[]
+  harms: string[]
+  /** "c emotion n" */
+  feels: string[]
+  knows?: { who: string; of: string; kind: 'name' | 'pron' | 'secret'; v: string; right?: boolean }[]
+}
+export interface ExtReport { valid: boolean; paragraphs: ExtPara[]; error?: string }
+
+/** `langlib consent` (Studio/Consent.lean): the refined consent reading. */
+export interface ConsentReport {
+  valid: boolean
+  plausible: boolean
+  cared: boolean
+  assumptions: { i: number; why: string }[]
+  firsts: string[]
+  relations: { pair: string; kinds: string[]; pending: string[] }[]
+  paragraphs: { name: string; events: { e: string; status: 'yes' | 'no' | 'assumed'; why?: string }[] }[]
+  error?: string
+}
+
+/** `langlib style` / `house` / `academic`: named rule sets over measured features. */
+export interface StyleReport {
+  styles: { name: string; holds?: boolean; failing: string[]; rules: { name: string; rule: string; holds: boolean }[] }[]
+  features?: Record<string, number | boolean>
+  flagged?: Record<string, unknown>
+  pov?: string
+  error?: string
+}
+
+export interface Readings {
+  name: string
+  ext: ExtReport | null
+  consent: ConsentReport | null
+  style: StyleReport | null
+  house: StyleReport | null
+  error?: string
+}
+
+/** `langlib argument` (Studio/PaperArg.lean): a paper's argument graph with its grounded labelling. */
+export interface PaperArgNode {
+  id: string
+  kind: 'claim' | 'definition' | 'lore' | 'term' | 'cite' | 'example' | 'evaluate' | 'deny' | 'concede' | 'promise' | 'contribution' | 'hedge' | 'deliver'
+  t: string
+  para: string
+  voice: 'author' | 'prior' | 'reader' | 'data'
+  note: string
+  label: 'in' | 'out' | 'undec'
+  held: '' | 'accepted' | "authors' word" | 'denied' | 'known'
+  support: ({ src: string; for: boolean; reasons: string[]; strength: number; attitude: string } | string)[]
+}
+export interface PaperArg {
+  valid: boolean
+  coherent: boolean
+  failure: { i: number; why: string } | null
+  paragraphs: { name: string; moves: { i: number; move: string; t?: string; a?: string; b?: string; sec?: number; uses?: string[]; premises?: string[]; ok: boolean; why: string }[] }[]
+  nodes: PaperArgNode[]
+  edges: { src: string; tgt: string; kind: 'support' | 'attack' | 'contrast' | 'delivers'; why: string }[]
+  gaps: { kind: string; t: string; sec?: number }[]
+  deferred: { t: string; sec: number }[]
+  antitheses: string[]
+  contrasts: string[]
+  error?: string
+}
+export interface Paper {
+  name: string
+  title: string
+  paragraphs: { name: string; text: string }[]
+  argument: PaperArg
+  academic: StyleReport
+  proved: { gaps: string[]; deferred: [string, string][]; antitheses: string[]; contrasts: string[] } | null
+  error?: string
+}

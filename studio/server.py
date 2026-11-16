@@ -21,6 +21,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from watchfiles import awatch
 
+import extras
 import freshness
 import procs
 import request_log
@@ -139,10 +140,18 @@ async def watch() -> None:
                 continue
             if p == LANGLIB:
                 touched |= set(story_dirs())
+                for name in extras.papers():
+                    extras.invalidate("paper", name)
+                    await broadcast({"type": "paper", "paper": name, "at": time.time()})
                 continue
             try:
                 rel = p.relative_to(STORIES)
             except ValueError:
+                continue
+            if rel.parts[:1] == ("private-papers",) and len(rel.parts) > 2:
+                if not rel.parts[2].startswith(".") and rel.parts[1] in extras.papers():
+                    extras.invalidate("paper", rel.parts[1])
+                    await broadcast({"type": "paper", "paper": rel.parts[1], "at": time.time()})
                 continue
             if p.name in ("Proofs.lean", "proofs.json") or p.name.startswith(".") or "runs" in rel.parts[1:2]:
                 continue
@@ -150,6 +159,7 @@ async def watch() -> None:
                 touched.add(rel.parts[0])
         for name in touched:
             if (STORIES / name / "story.json").exists():
+                extras.invalidate("story", name)
                 schedule_refresh(name)
 
 
@@ -167,10 +177,11 @@ async def warm() -> None:
             reports[name] = {"error": str(e), "name": name}
 
 
-def spawn(coro) -> None:
+def spawn(coro) -> asyncio.Task:
     t = asyncio.create_task(coro)
     background.add(t)
     t.add_done_callback(background.discard)
+    return t
 
 
 @app.on_event("startup")
@@ -202,6 +213,33 @@ async def get_story(name: str):
     if name not in reports:
         reports[name] = await run_report(name)
     return {**reports[name], "proofs": proofs.get(name, {"status": "none"})}
+
+
+@app.get("/api/story/{name}/readings")
+async def readings(name: str):
+    """ext, consent, style and house for the story (langlib, under its lock)."""
+    if name not in story_dirs():
+        raise HTTPException(404, f"no story {name}")
+    try:
+        return await extras.get("story", name, spawn)
+    except Exception as e:  # noqa: BLE001  a broken reading must not break the panel
+        return {"name": name, "error": str(e)}
+
+
+@app.get("/api/papers")
+async def list_papers():
+    return extras.papers()
+
+
+@app.get("/api/paper/{name}")
+async def get_paper(name: str):
+    """A paper's argument graph (`langlib argument`) and academic style."""
+    if name not in extras.papers():
+        raise HTTPException(404, f"no paper {name}")
+    try:
+        return await extras.get("paper", name, spawn)
+    except Exception as e:  # noqa: BLE001
+        return {"name": name, "error": str(e)}
 
 
 @app.post("/api/story/{name}/prove")

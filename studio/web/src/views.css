@@ -1,0 +1,147 @@
+/* The argument, minds, world and style views: docs/ui-visualisation.md §8.
+   Colours are theme tokens only, so both themes hold; every state is also a word. */
+
+.tabs { flex-wrap: wrap; row-gap: 0; }
+
+/* ---- argument trees: an outline, conclusion first; stubs taper from the source */
+.argtree, .argtree ul { list-style: none; margin: 0; padding: 0; }
+.argtree .tkids { margin-left: 14px; padding-left: 14px; border-left: 1.5px solid var(--rule-2); }
+.argtree .tb { position: relative; margin: 6px 0; }
+.argtree .tkids > .tb > .stub {
+  position: absolute; left: -14px; top: 13px; width: 14px; height: 7px;
+  background: var(--ink-3); clip-path: polygon(0 43%, 100% 0, 100% 100%, 0 57%);
+}
+.argtree .tkids > .tb.e-attack > .stub {
+  background: repeating-linear-gradient(90deg, var(--bad) 0 3px, transparent 3px 5px);
+}
+.argtree .tkids > .tb.e-attack { --edge: var(--bad); }
+.ewhy { display: block; font-size: 10.5px; color: var(--ink-3); margin: 0 0 1px; }
+.e-attack > .ewhy { color: var(--bad); }
+
+.tnode {
+  border: 1px solid var(--rule-2); border-left: 3px solid var(--lc, var(--rule-2)); border-radius: 6px;
+  background: var(--paper); padding: 4px 8px; cursor: default; min-width: 0;
+}
+.tnode[role], .tnode:has(.tn-more) { cursor: pointer; }
+.tnode.lab-out { border-style: solid; background: color-mix(in srgb, var(--bad) 6%, var(--paper)); }
+.tnode.lab-out .tn-text { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--bad) 60%, transparent); }
+.tnode.lab-undec { border-style: dashed; opacity: 0.8; }
+.tnode.faint { opacity: 0.45; }
+.tn-head { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.tn-kind { font-size: 10.5px; color: var(--ink-3); }
+.tn-more { margin-left: auto; font-size: 10.5px; color: var(--ink-2); }
+.tn-text { color: var(--ink); overflow-wrap: anywhere; }
+.tn-sub { font-size: 11px; color: var(--ink-2); overflow-wrap: anywhere; }
+.lab { font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; border-radius: 3px; padding: 0 4px; border: 1px solid currentColor; }
+.lab-in { color: var(--ok); }
+.lab-out { color: var(--bad); }
+.lab-undec { color: var(--ink-3); border-style: dashed; }
+.claimrow { margin: 6px 0; }
+.claimrow.here > .tnode { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+.claimrow > .btn.small { margin-bottom: 2px; }
+.argpaper h4 { text-transform: none; }
+.promises { list-style: none; padding: 0; margin: 0; }
+.promises li { padding: 3px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.promises li.ok { color: var(--ink); }
+.promises li.bad { color: var(--bad); }
+.papermoves { padding: 0 12px; }
+
+/* ---- minds: the belief table */
+.mtable {
+  display: grid; grid-template-columns: minmax(7em, 1.6fr) repeat(var(--n), minmax(3.6em, 1fr)) minmax(3.4em, 0.6fr);
+  gap: 2px; align-items: stretch; font-size: 12px; margin: 6px 0;
+}
+.mh { font-weight: 600; font-size: 11.5px; padding: 2px 4px; overflow-wrap: break-word; hyphens: manual; align-self: end; min-width: 0; }
+.ml { padding: 3px 4px; color: var(--ink-2); border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.mc {
+  font: inherit; font-size: 11.5px; text-align: center; padding: 3px 2px; border: 1px solid transparent;
+  border-radius: 4px; background: color-mix(in srgb, var(--ink) 10%, transparent); color: var(--ink); cursor: pointer; min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mc.none { background: none; color: var(--ink-3); cursor: default; }
+.mc.world { background: none; color: var(--ink-3); cursor: default; }
+.mc.att-conservative { background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink-2); }
+.mc.att-note { background: none; color: var(--ink-3); border: 1px dotted var(--rule-2); }
+.mc.wrong { border: 1.5px solid var(--bad); color: var(--bad); background: color-mix(in srgb, var(--bad) 7%, transparent); }
+.mc .ne, .ne { font-weight: 700; color: var(--bad); }
+.mc .act { color: var(--ink-2); font-size: 10.5px; }
+.mc.sel { box-shadow: 0 0 0 2px var(--accent); }
+.sources { border: 1px solid var(--rule-2); border-radius: 6px; padding: 6px 8px; margin: 4px 0 8px; background: var(--paper); }
+.sources .row { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.sources .btn.small { margin-left: auto; }
+.irony { margin: 0; padding-left: 18px; }
+.irony li { margin: 3px 0; overflow-wrap: anywhere; }
+.minds h3 select { font-size: 12px; text-transform: none; letter-spacing: 0; }
+.eyes { margin: 4px 0 8px; }
+.chainrow { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 3px 0; }
+.cchip { border: 1px solid var(--rule-2); border-radius: 9px; padding: 0 7px; font-size: 11.5px; font-weight: 600; }
+.cchip.prop { font-weight: 400; color: var(--ink); overflow-wrap: anywhere; min-width: 0; }
+.chainrow.wrong .cchip.prop { border-color: var(--bad); }
+.arr { color: var(--ink-3); }
+
+/* ---- minds: belief lanes */
+.lanes { margin: 4px 0; }
+.lanes summary { cursor: pointer; padding: 2px 0; }
+.lanegrid { display: grid; grid-template-columns: minmax(6em, 38%) 1fr; gap: 2px 8px; align-items: center; margin: 4px 0 8px; }
+.ll { font-size: 11.5px; color: var(--ink-2); overflow-wrap: anywhere; }
+.lb { width: 100%; height: 12px; display: block; background: color-mix(in srgb, var(--ink) 4%, transparent); border-radius: 2px; }
+.lbar { fill: var(--lc); }
+.lbar.false { fill: url(#mhatch); }
+.hatch-bg { fill: color-mix(in srgb, var(--bad) 18%, transparent); }
+.hatch-ln { stroke: var(--bad); }
+.lcur { stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0.7; }
+
+/* ---- world: sparklines on a shared scale, at least 24 px tall */
+.sparkgrid { display: grid; grid-template-columns: minmax(7em, 36%) 1fr auto; gap: 3px 8px; align-items: center; }
+.sl { font-size: 12px; overflow-wrap: anywhere; }
+.sv { font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.spark2 { width: 100%; height: 24px; display: block; }
+.sbase { stroke: var(--rule-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.scur { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 2; }
+.carelog { list-style: none; padding: 0; margin: 4px 0; font-size: 12px; }
+.carelog li { padding: 2px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.harms { margin: 4px 0; padding-left: 18px; }
+.harms li { margin: 2px 0; overflow-wrap: anywhere; }
+.idtable { display: flex; flex-direction: column; gap: 8px; }
+.idperson { border: 1px solid var(--rule); border-radius: 6px; padding: 4px 8px; }
+.idof { font-size: 11.5px; color: var(--ink-2); margin-bottom: 2px; }
+.idrow { display: grid; grid-template-columns: minmax(5em, 28%) 1fr; gap: 6px; padding: 2px 0; align-items: baseline; }
+.idrow .chip { margin: 1px 3px 1px 0; display: inline-block; }
+.chip.id-secret { border-style: dashed; }
+.chip.wrong { border-color: var(--bad); color: var(--bad); }
+.chip.on { border-color: var(--ink-2); font-weight: 600; }
+
+/* ---- world: consent lanes (bar = granted, cap = withdrawn, tick = check-in, dot = act) */
+.scene { border: 1px solid var(--rule); border-radius: 6px; padding: 6px 8px; margin: 8px 0; }
+.scene > .row { overflow-wrap: anywhere; }
+.clanes { display: grid; grid-template-columns: minmax(7em, 42%) 1fr; gap: 4px 8px; align-items: center; margin-top: 6px; }
+.cl { font-size: 12px; overflow-wrap: anywhere; }
+.cstate { font-size: 11px; }
+.cstate.ok { color: var(--ok); }
+.cstate.warn { color: var(--warn); }
+.cstate.bad { color: var(--bad); }
+.cstate.off { color: var(--ink-2); font-weight: 600; }
+.cwhy { font-size: 10.5px; color: var(--warn); }
+.cb { width: 100%; height: 16px; display: block; }
+.cbar { fill: color-mix(in srgb, var(--ok) 55%, transparent); }
+.cbar.off { fill: color-mix(in srgb, var(--ink-3) 50%, transparent); }
+.ccap { fill: var(--ink); }
+.ctick { stroke: var(--ink); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.ccur { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+.cact { fill: var(--ink); }
+.cact.st-assumed { fill: var(--paper); stroke: var(--warn); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.cact.st-no { fill: var(--bad); }
+
+/* ---- style */
+.stylebox { margin: 6px 0 10px; }
+.stylebox h4 { text-transform: none; margin: 4px 0; }
+.rules { list-style: none; margin: 0; padding: 0; }
+.rules li { padding: 2px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.rules li.bad { color: var(--ink); }
+.rules li.bad .st { color: var(--bad); }
+.rules li.ok .st { color: var(--ok); }
+
+@media (max-width: 760px) {
+  .mtable { grid-template-columns: minmax(6em, 1.3fr) repeat(var(--n), minmax(2.8em, 1fr)) minmax(2.6em, 0.5fr); font-size: 11.5px; }
+  .clanes, .lanegrid { grid-template-columns: minmax(6em, 45%) 1fr; }
+}
