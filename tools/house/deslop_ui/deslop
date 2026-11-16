@@ -2,6 +2,8 @@
 # deslop: the deslop UI (tools/house/deslop_ui) from anywhere.
 #   deslop                  start the server if needed and open the UI
 #   deslop FILE | -         new document from FILE (or stdin), queue annotate + rewrite, open it
+#   deslop add FILE | - [T] new document, nothing queued; prints its directory (for an agent working in-session)
+#   deslop open [ID]        open the UI at a document
 #   deslop worker           start an interactive Claude in the langlib repo serving the queue
 #   deslop stop             stop the server
 # DESLOP_PORT (default 8790); LANGLIB_ROOT (default ~/Documents/code/langlib).
@@ -28,24 +30,30 @@ case "${1:-}" in
   worker)
     cd "$ROOT" && exec claude "/verified-deslopify worker" ;;
   -h|--help)
-    sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' ;;
+    sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+  open)
+    start; open_url "$URL/${2:+?id=$2}"; echo "$URL/${2:+?id=$2}" ;;
   "")
     start; open_url "$URL"; echo "$URL" ;;
   *)
     start
-    if [ "$1" = "-" ]; then SRC=/dev/stdin; TITLE="${2:-Untitled}"; else SRC="$1"; TITLE="${2:-$(basename "${1%.*}")}"; fi
-    ID=$(python3 -c '
-import json, sys, urllib.request
+    QUEUE=1
+    if [ "$1" = "add" ]; then QUEUE=0; shift; fi
+    if [ "${1:-}" = "-" ] || [ -z "${1:-}" ]; then SRC=/dev/stdin; TITLE="${2:-Untitled}"; else SRC="$1"; TITLE="${2:-$(basename "${1%.*}")}"; fi
+    ID=$(QUEUE=$QUEUE python3 -c '
+import json, os, sys, urllib.request
 url, title = sys.argv[1], sys.argv[2]
 text = sys.stdin.read()
 def post(p, body):
     r = urllib.request.Request(url + p, json.dumps(body).encode(), {"content-type": "application/json"})
     return json.load(urllib.request.urlopen(r))
 doc = post("/api/new", {"title": title, "text": text})
-for a in ("annotate", "rewrite"):
-    post("/api/request", {"id": doc["id"], "action": a, "para": "", "note": ""})
+if os.environ.get("QUEUE") == "1":
+    for a in ("annotate", "rewrite"):
+        post("/api/request", {"id": doc["id"], "action": a, "para": "", "note": ""})
 print(doc["id"])
 ' "$URL" "$TITLE" < "$SRC")
+    if [ "$QUEUE" = 0 ]; then echo "$ROOT/$ID"; exit 0; fi
     open_url "$URL/?id=$ID"
     echo "$URL/?id=$ID  (annotate and rewrite queued; run 'deslop worker' if no worker is listening)" ;;
 esac
