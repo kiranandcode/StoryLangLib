@@ -278,12 +278,48 @@ structure XFeel where
   emo : Nat
   deriving DecidableEq, Repr
 
-/-- The emotion words a document says of characters. -/
+/-- The character a subject refers to: its own ref, or its only content leaf's. -/
+partial def subjRef (x : XSpec) : Tree → Option Nat
+  | .leaf w => w.ref.bind (x.chars.idxOf? ·)
+  | .node i ks => (i.ref.bind (x.chars.idxOf? ·)) <|>
+    match ks.filter (fun k => match k with | .leaf w => w.upos != .PUNCT && w.upos != .DET | _ => true) with
+    | [k] => subjRef x k
+    | _ => none
+
+/-- Feeling words said predicatively ("she was jealous", "I'm mortified"): an
+adjective heading a clause whose subject refers to a character, with a copula
+(or one contracted into the subject). -/
+partial def predFeelsIn (x : XSpec) : Tree → Nat → List XFeel × Nat
+  | .leaf _, p => ([], p + 1)
+  | .node _ kids, p =>
+    let (offs, end_) := kids.foldl (fun (acc, q) k => (acc ++ [q], q + k.render.length)) (([] : List Nat), p)
+    let placed := kids.zip offs
+    let subj := placed.find? fun (k, _) => match k with
+      | .leaf w => w.role == some .nsubj | .node i _ => i.role == some .nsubj
+    let cop := kids.any fun k => match k with | .leaf w => w.role == some .cop | _ => false
+    let fused := match subj with
+      | some (.leaf w, _) => w.form.contains '\'' || w.form.contains '’'
+      | _ => false
+    let here : List XFeel := match subj.bind (fun (k, _) => subjRef x k) with
+      | some c => if !(cop || fused) then [] else placed.filterMap fun (k, o) => match k with
+        | .leaf w => if w.upos == .ADJ && w.role == some .head then
+            ((x.lexicon.find? fun (_, ws) => ws.contains (w.lemma.getD w.form).toLower).map (·.1)).map
+              fun e => { at_ := o, who := c, emo := e }
+          else none
+        | _ => none
+      | none => []
+    (here ++ placed.flatMap (fun (k, o) => (predFeelsIn x k o).1), end_)
+
+def predFeelsOf (x : XSpec) (d : Doc) : List XFeel :=
+  (d.sentences.foldl (fun (acc, p) st => let (fs, p') := predFeelsIn x st.tree p; (acc ++ fs, p')) ([], 0)).1
+
+/-- The emotion words a document says of characters: attributively ("a frightened
+girl", via the completeness facts) or predicatively ("she was jealous"). -/
 def feelsOf (s : Spec) (x : XSpec) (d : Doc) : List XFeel :=
-  (treeFacts s d).mods.filterMap fun m => do
+  (treeFacts s d).mods.filterMap (fun m => do
     let c ← m.of
     let e ← (x.lexicon.find? fun (_, ws) => ws.contains m.word).map (·.1)
-    pure { at_ := m.at_, who := c, emo := e }
+    pure { at_ := m.at_, who := c, emo := e }) ++ predFeelsOf x d
 
 /-- A paragraph of the reading: its events with their tokens, its references
 and the feelings it names. -/

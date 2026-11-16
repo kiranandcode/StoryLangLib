@@ -28,3 +28,44 @@
 {"para": "10", "stage": "paragraph-check", "ok": false, "annotation": false, "verdict": "valid", "note": "the leaves do not match the passage: 165 tokens in the text, 165 in the tree, 1 differences: |   token 20 \"His\" was written as \"his\" (near: throw it out . His mouth was cold) | completeness: a judgement is anchored at '?' (token 165), which heads no clause | completeness: the clause at 'throw' (token 16) is read as hypothetical, but nothing in it is modal or conditional | completeness: the clause at 'pulling' (token 57) is about [LangLib.Studio.WId.ch 1], which its judgements do not mention | completeness: the clause at 'stopped' (token 68) is about [LangLib.Studio.WId.ch 1], which its judgements do not mention | completeness: the clause at 'separable' (token 70) is about [LangLib.Studio.WId.ch 1], which its judgements do not mention | completeness: the clause at 'kissed' (token 161) has no judgement: read it as an event, a claim, or say what it is (content, goal, act, speech, hypothetical, generic)", "t": 1794791921.7}
 {"stage": "prove", "ok": true, "note": "153/153; ", "t": 1794791929.6}
 {"para": "10", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794791932.7}
+{"para": "11", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792023.8}
+{"para": "12", "stage": "paragraph-check", "ok": false, "annotation": false, "verdict": "valid", "note": "no annotation yet: write stories/roof-eleven/paragraphs/12.json (eval/prompt.md; leaves = `tokens` output) | completeness: no annotation to judge", "t": 1794792104.3}
+{"para": "12", "stage": "paragraph-check", "ok": false, "annotation": true, "verdict": "valid", "note": "setting: 'floor' (token 24) is said of qlamp (the one floor lamp, on low), which is not declared so; its attributes: light low: declare the attribute, mark the word \"sense\": \"impression\", or change the prose | completeness: no reading to judge", "t": 1794792140.3}
+{"para": "12", "stage": "paragraph-check", "ok": false, "annotation": true, "verdict": "valid", "note": "completeness: the clause at 'went' (token 41) is about [LangLib.Studio.WId.ch 1], which its judgements do not mention | completeness: the clause at 'paused' (token 140) is about [LangLib.Studio.WId.ch 1], which its judgements do not mention", "t": 1794792158.8}
+{"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792170.9}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792172.2}
+{"para": "03", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792173.7}
+{"para": "04", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792175.4}
+{"para": "05", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792176.9}
+{"para": "06", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792178.6}
+{"para": "07", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792180.3}
+{"para": "08", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792181.7}
+{"para": "09", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792187.6}
+{"para": "10", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792191.2}
+{"para": "11", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792193.4}
+{"para": "12", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792196.7}
+{"para": "13", "stage": "paragraph-check", "ok": false, "annotation": false, "verdict": "valid", "note": "reference: pronoun \"them\" (token 16) refers to \"kiran\", whose pronouns are she | completeness: the clause at 'doing' (token 114) is read as a gesture, but its subject is not a character | ext: token 16: the narration (kiran) uses 'they' for kiran, which they do not know (or, in speech, a misgendering not read as a `refer` event)", "t": 1794792292.3}
+{"para": "13", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792305.2}
+{"stage": "ext-prove", "ok": true, "note": "", "t": 1794792322.6}
+{"stage": "prove", "ok": true, "note": "163/163; ", "t": 1794792354.0}
+{"stage": "ext-prove", "ok": true, "note": "", "t": 1794792355.6}
+{"para": "14", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792373.7}
+{"para": "15", "stage": "paragraph-check", "ok": false, "annotation": false, "verdict": "valid", "note": "reference: pronoun \"them\" (token 27) has no ref; give it (or its NP) a ref, or role expl", "t": 1794792449.4}
+{"para": "15", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792455.6}
+{"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792467.8}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792469.8}
+{"para": "03", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792471.9}
+{"para": "04", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792474.3}
+{"para": "05", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792476.8}
+{"para": "06", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792478.9}
+{"para": "07", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792481.3}
+{"para": "08", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792483.9}
+{"para": "09", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792486.3}
+{"para": "10", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792488.5}
+{"para": "11", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792490.5}
+{"para": "12", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792492.6}
+{"para": "13", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792495.6}
+{"para": "14", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792498.0}
+{"para": "15", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794792500.3}
+{"stage": "prove", "ok": true, "note": "167/167; ", "t": 1794794023.1}
+{"stage": "ext-prove", "ok": true, "note": "", "t": 1794794144.9}

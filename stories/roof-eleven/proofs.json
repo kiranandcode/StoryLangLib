@@ -1,6 +1,6 @@
 {
  "status": "ok",
- "secs": 134.4,
+ "secs": 140.7,
  "theorems": {
   "p01_checks": {
    "line": 104,
@@ -448,322 +448,392 @@
    "ok": true
   },
   "p09_checks": {
-   "line": 383,
+   "line": 387,
    "statement": "p09_checks :",
    "ok": true
   },
   "p09_step": {
-   "line": 390,
+   "line": 396,
    "statement": "p09_step : run c08 chunk09 = c09 := p09_checks.1",
    "ok": true
   },
   "p09_here": {
-   "line": 391,
+   "line": 397,
    "statement": "p09_here : Valid c08 chunk09 := p09_checks.2.1",
    "ok": true
   },
   "p09_claim0": {
-   "line": 393,
+   "line": 399,
    "statement": "p09_claim0 : (Claim.consented 1 0 (Act.kiss)).eval c09 = true := p09_checks.2.2.1",
    "ok": true
   },
   "p09_setting": {
-   "line": 394,
-   "statement": "p09_setting : spec.planSettingOk (sceneOf c08 chunk09 0) p09setting p09staging = true := p09_checks.2.2.2.1",
+   "line": 400,
+   "statement": "p09_setting : spec.settingOk (sceneOf c08 chunk09 0) p09uses p09staging = true := p09_checks.2.2.2.1",
    "ok": true
   },
-  "p09_seen": {
-   "line": 395,
-   "statement": "p09_seen : (perceptFrom c08 s08 false chunk09 []).2 = s09 := p09_checks.2.2.2.2",
+  "p09_perceived": {
+   "line": 401,
+   "statement": "p09_perceived : perceptFrom c08 s08 false chunk09 [21] = ([], s09) := p09_checks.2.2.2.2.1",
+   "ok": true
+  },
+  "p09_complete": {
+   "line": 402,
+   "statement": "p09_complete : completeOk ({ prior := [], items := p09.zip [61, 74, 88, 142], base := c08 } : ParaCtx spec) p09tree p09judges = true := p09_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p09_realises": {
+   "line": 403,
+   "statement": "p09_realises : Refines some p09 [Ev.adopt 0 (Fact.did 0 1 (Act.kiss), true), Ev.askAct 0 1 (Act.kiss), Ev.agree 1 0 (Act.kiss), Ev.agree 0 1 (Act.kiss)] := p09_checks.2.2.2.2.2.2",
    "ok": true
   },
   "p09_valid": {
-   "line": 396,
+   "line": 404,
    "statement": "p09_valid : Valid spec.start ((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) :=",
    "ok": true
   },
   "p09_run": {
-   "line": 398,
+   "line": 406,
    "statement": "p09_run : run spec.start ((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) = c09 := run_chain p08_run p09_step",
    "ok": true
   },
   "p10_checks": {
-   "line": 407,
+   "line": 419,
    "statement": "p10_checks :",
    "ok": true
   },
   "p10_step": {
-   "line": 415,
+   "line": 429,
    "statement": "p10_step : run c09 chunk10 = c10 := p10_checks.1",
    "ok": true
   },
   "p10_here": {
-   "line": 416,
+   "line": 430,
    "statement": "p10_here : Valid c09 chunk10 := p10_checks.2.1",
    "ok": true
   },
   "p10_claim0": {
-   "line": 418,
+   "line": 432,
    "statement": "p10_claim0 : (Claim.knows 0 (Fact.atom 4, true)).eval c10 = true := p10_checks.2.2.1",
    "ok": true
   },
   "p10_claim1": {
-   "line": 420,
+   "line": 434,
    "statement": "p10_claim1 : (Claim.knows 1 (Fact.atom 4, true)).eval c10 = true := p10_checks.2.2.2.1",
    "ok": true
   },
   "p10_setting": {
-   "line": 421,
-   "statement": "p10_setting : spec.planSettingOk (sceneOf c09 chunk10 0) p10setting p10staging = true := p10_checks.2.2.2.2.1",
+   "line": 435,
+   "statement": "p10_setting : spec.settingOk (sceneOf c09 chunk10 0) p10uses p10staging = true := p10_checks.2.2.2.2.1",
    "ok": true
   },
-  "p10_seen": {
-   "line": 422,
-   "statement": "p10_seen : (perceptFrom c09 s09 false chunk10 [4]).2 = s10 := p10_checks.2.2.2.2.2",
+  "p10_perceived": {
+   "line": 436,
+   "statement": "p10_perceived : perceptFrom c09 s09 false chunk10 [4, 18] = ([], s10) := p10_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p10_complete": {
+   "line": 437,
+   "statement": "p10_complete : completeOk ({ prior := [], items := p10.zip [1, 108, 151], base := c09 } : ParaCtx spec) p10tree p10judges = true := p10_checks.2.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p10_realises": {
+   "line": 438,
+   "statement": "p10_realises : Refines some p10 [Ev.act 0 1 (Act.kiss), Ev.notice 0 (Fact.atom 4, true) (Evid.sensed), Ev.tell 0 1 (Fact.atom 4, true)] := p10_checks.2.2.2.2.2.2.2",
    "ok": true
   },
   "p10_valid": {
-   "line": 423,
+   "line": 439,
    "statement": "p10_valid : Valid spec.start (((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) :=",
    "ok": true
   },
   "p10_run": {
-   "line": 425,
+   "line": 441,
    "statement": "p10_run : run spec.start (((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) = c10 := run_chain p09_run p10_step",
    "ok": true
   },
   "p11_checks": {
-   "line": 434,
+   "line": 454,
    "statement": "p11_checks :",
    "ok": true
   },
   "p11_step": {
-   "line": 441,
+   "line": 463,
    "statement": "p11_step : run c10 chunk11 = c11 := p11_checks.1",
    "ok": true
   },
   "p11_here": {
-   "line": 442,
+   "line": 464,
    "statement": "p11_here : Valid c10 chunk11 := p11_checks.2.1",
    "ok": true
   },
   "p11_claim0": {
-   "line": 444,
+   "line": 466,
    "statement": "p11_claim0 : (Claim.consented 0 1 (Act.sex)).eval c11 = true := p11_checks.2.2.1",
    "ok": true
   },
   "p11_setting": {
-   "line": 445,
-   "statement": "p11_setting : spec.planSettingOk (sceneOf c10 chunk11 0) p11setting p11staging = true := p11_checks.2.2.2.1",
+   "line": 467,
+   "statement": "p11_setting : spec.settingOk (sceneOf c10 chunk11 0) p11uses p11staging = true := p11_checks.2.2.2.1",
    "ok": true
   },
-  "p11_seen": {
-   "line": 446,
-   "statement": "p11_seen : (perceptFrom c10 s10 false chunk11 []).2 = s11 := p11_checks.2.2.2.2",
+  "p11_perceived": {
+   "line": 468,
+   "statement": "p11_perceived : perceptFrom c10 s10 false chunk11 [] = ([], s11) := p11_checks.2.2.2.2.1",
+   "ok": true
+  },
+  "p11_complete": {
+   "line": 469,
+   "statement": "p11_complete : completeOk ({ prior := [], items := p11.zip [9, 87, 87, 87, 87, 151, 151, 151], base := c10 } : ParaCtx spec) p11tree p11judges = true := p11_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p11_realises": {
+   "line": 470,
+   "statement": "p11_realises : Refines some p11 [Ev.askAct 1 0 (Act.sex), Ev.askAct 0 1 (Act.touch), Ev.agree 0 1 (Act.touch), Ev.agree 0 1 (Act.undress), Ev.agree 0 1 (Act.sex), Ev.agree 1 0 (Act.touch), Ev.agree 1 0 (Act.undress), Ev.agree 1 0 (Act.sex)] := p11_checks.2.2.2.2.2.2",
    "ok": true
   },
   "p11_valid": {
-   "line": 447,
+   "line": 471,
    "statement": "p11_valid : Valid spec.start ((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) :=",
    "ok": true
   },
   "p11_run": {
-   "line": 449,
+   "line": 473,
    "statement": "p11_run : run spec.start ((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) = c11 := run_chain p10_run p11_step",
    "ok": true
   },
   "p12_checks": {
-   "line": 458,
+   "line": 486,
    "statement": "p12_checks :",
    "ok": true
   },
   "p12_step": {
-   "line": 467,
+   "line": 497,
    "statement": "p12_step : run c11 chunk12 = c12 := p12_checks.1",
    "ok": true
   },
   "p12_here": {
-   "line": 468,
+   "line": 498,
    "statement": "p12_here : Valid c11 chunk12 := p12_checks.2.1",
    "ok": true
   },
   "p12_claim0": {
-   "line": 470,
+   "line": 500,
    "statement": "p12_claim0 : (Claim.holdsTrue (Fact.at_ 0 3, true)).eval c12 = true := p12_checks.2.2.1",
    "ok": true
   },
   "p12_claim1": {
-   "line": 472,
+   "line": 502,
    "statement": "p12_claim1 : (Claim.holdsTrue (Fact.atom 22, true)).eval c12 = true := p12_checks.2.2.2.1",
    "ok": true
   },
   "p12_claim2": {
-   "line": 474,
+   "line": 504,
    "statement": "p12_claim2 : (Claim.holdsTrue (Fact.atom 23, true)).eval c12 = true := p12_checks.2.2.2.2.1",
    "ok": true
   },
   "p12_setting": {
-   "line": 475,
-   "statement": "p12_setting : spec.planSettingOk (sceneOf c11 chunk12 0) p12setting p12staging = true := p12_checks.2.2.2.2.2.1",
+   "line": 505,
+   "statement": "p12_setting : spec.settingOk (sceneOf c11 chunk12 0) p12uses p12staging = true := p12_checks.2.2.2.2.2.1",
    "ok": true
   },
-  "p12_seen": {
-   "line": 476,
-   "statement": "p12_seen : (perceptFrom c11 s11 false chunk12 [23, 22]).2 = s12 := p12_checks.2.2.2.2.2.2",
+  "p12_perceived": {
+   "line": 506,
+   "statement": "p12_perceived : perceptFrom c11 s11 false chunk12 [23, 22] = ([], s12) := p12_checks.2.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p12_complete": {
+   "line": 507,
+   "statement": "p12_complete : completeOk ({ prior := [], items := p12.zip [1, 1, 15, 15, 32, 46, 46, 56, 56, 85, 85, 127, 127], base := c11 } : ParaCtx spec) p12tree p12judges = true := p12_checks.2.2.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p12_realises": {
+   "line": 508,
+   "statement": "p12_realises : Refines some p12 [Ev.intend 1 3, Ev.move 1 3, Ev.adopt 0 (Fact.at_ 0 3, true), Ev.move 0 3, Ev.make 1 23 true, Ev.adopt 0 (Fact.did 0 1 (Act.undress), true), Ev.act 0 1 (Act.undress), Ev.adopt 0 (Fact.did 0 1 (Act.touch), true), Ev.act 0 1 (Act.touch), Ev.adopt 1 (Fact.did 1 0 (Act.undress), true), Ev.act 1 0 (Act.undress), Ev.adopt 1 (Fact.did 1 0 (Act.touch), true), Ev.act 1 0 (Act.touch)] := p12_checks.2.2.2.2.2.2.2.2",
    "ok": true
   },
   "p12_valid": {
-   "line": 477,
+   "line": 509,
    "statement": "p12_valid : Valid spec.start (((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) :=",
    "ok": true
   },
   "p12_run": {
-   "line": 479,
+   "line": 511,
    "statement": "p12_run : run spec.start (((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) = c12 := run_chain p11_run p12_step",
    "ok": true
   },
   "p13_checks": {
-   "line": 488,
+   "line": 524,
    "statement": "p13_checks :",
    "ok": true
   },
   "p13_step": {
-   "line": 495,
+   "line": 533,
    "statement": "p13_step : run c12 chunk13 = c13 := p13_checks.1",
    "ok": true
   },
   "p13_here": {
-   "line": 496,
+   "line": 534,
    "statement": "p13_here : Valid c12 chunk13 := p13_checks.2.1",
    "ok": true
   },
   "p13_claim0": {
-   "line": 498,
+   "line": 536,
    "statement": "p13_claim0 : (Claim.consented 0 1 (Act.sex)).eval c13 = true := p13_checks.2.2.1",
    "ok": true
   },
   "p13_setting": {
-   "line": 499,
-   "statement": "p13_setting : spec.planSettingOk (sceneOf c12 chunk13 0) p13setting p13staging = true := p13_checks.2.2.2.1",
+   "line": 537,
+   "statement": "p13_setting : spec.settingOk (sceneOf c12 chunk13 0) p13uses p13staging = true := p13_checks.2.2.2.1",
    "ok": true
   },
-  "p13_seen": {
-   "line": 500,
-   "statement": "p13_seen : (perceptFrom c12 s12 false chunk13 []).2 = s13 := p13_checks.2.2.2.2",
+  "p13_perceived": {
+   "line": 538,
+   "statement": "p13_perceived : perceptFrom c12 s12 false chunk13 [] = ([], s13) := p13_checks.2.2.2.2.1",
+   "ok": true
+  },
+  "p13_complete": {
+   "line": 539,
+   "statement": "p13_complete : completeOk ({ prior := [], items := p13.zip [15, 56, 56, 128, 196], base := c12 } : ParaCtx spec) p13tree p13judges = true := p13_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p13_realises": {
+   "line": 540,
+   "statement": "p13_realises : Refines some p13 [Ev.act 1 0 (Act.touch), Ev.adopt 1 (Fact.did 1 0 (Act.sex), true), Ev.act 1 0 (Act.sex), Ev.withdraw 0 1 (Act.sex), Ev.agree 0 1 (Act.sex)] := p13_checks.2.2.2.2.2.2",
    "ok": true
   },
   "p13_valid": {
-   "line": 501,
+   "line": 541,
    "statement": "p13_valid : Valid spec.start ((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) :=",
    "ok": true
   },
   "p13_run": {
-   "line": 503,
+   "line": 543,
    "statement": "p13_run : run spec.start ((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) = c13 := run_chain p12_run p13_step",
    "ok": true
   },
   "p14_checks": {
-   "line": 512,
+   "line": 556,
    "statement": "p14_checks :",
    "ok": true
   },
   "p14_step": {
-   "line": 519,
+   "line": 565,
    "statement": "p14_step : run c13 chunk14 = c14 := p14_checks.1",
    "ok": true
   },
   "p14_here": {
-   "line": 520,
+   "line": 566,
    "statement": "p14_here : Valid c13 chunk14 := p14_checks.2.1",
    "ok": true
   },
   "p14_claim0": {
-   "line": 522,
+   "line": 568,
    "statement": "p14_claim0 : (Claim.consented 1 0 (Act.sex)).eval c14 = true := p14_checks.2.2.1",
    "ok": true
   },
   "p14_setting": {
-   "line": 523,
-   "statement": "p14_setting : spec.planSettingOk (sceneOf c13 chunk14 0) p14setting p14staging = true := p14_checks.2.2.2.1",
+   "line": 569,
+   "statement": "p14_setting : spec.settingOk (sceneOf c13 chunk14 0) p14uses p14staging = true := p14_checks.2.2.2.1",
    "ok": true
   },
-  "p14_seen": {
-   "line": 524,
-   "statement": "p14_seen : (perceptFrom c13 s13 false chunk14 []).2 = s14 := p14_checks.2.2.2.2",
+  "p14_perceived": {
+   "line": 570,
+   "statement": "p14_perceived : perceptFrom c13 s13 false chunk14 [] = ([], s14) := p14_checks.2.2.2.2.1",
+   "ok": true
+  },
+  "p14_complete": {
+   "line": 571,
+   "statement": "p14_complete : completeOk ({ prior := [], items := p14.zip [30, 30, 91, 91], base := c13 } : ParaCtx spec) p14tree p14judges = true := p14_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p14_realises": {
+   "line": 572,
+   "statement": "p14_realises : Refines some p14 [Ev.adopt 1 (Fact.did 1 0 (Act.sex), true), Ev.act 1 0 (Act.sex), Ev.adopt 0 (Fact.did 0 1 (Act.sex), true), Ev.act 0 1 (Act.sex)] := p14_checks.2.2.2.2.2.2",
    "ok": true
   },
   "p14_valid": {
-   "line": 525,
+   "line": 573,
    "statement": "p14_valid : Valid spec.start (((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) ++ chunk14) :=",
    "ok": true
   },
   "p14_run": {
-   "line": 527,
+   "line": 575,
    "statement": "p14_run : run spec.start (((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) ++ chunk14) = c14 := run_chain p13_run p14_step",
    "ok": true
   },
   "p15_checks": {
-   "line": 536,
+   "line": 588,
    "statement": "p15_checks :",
    "ok": true
   },
   "p15_step": {
-   "line": 543,
+   "line": 597,
    "statement": "p15_step : run c14 chunk15 = c15 := p15_checks.1",
    "ok": true
   },
   "p15_here": {
-   "line": 544,
+   "line": 598,
    "statement": "p15_here : Valid c14 chunk15 := p15_checks.2.1",
    "ok": true
   },
   "p15_claim0": {
-   "line": 546,
+   "line": 600,
    "statement": "p15_claim0 : (Claim.knows 1 (Fact.atom 12, true)).eval c15 = true := p15_checks.2.2.1",
    "ok": true
   },
   "p15_setting": {
-   "line": 547,
-   "statement": "p15_setting : spec.planSettingOk (sceneOf c14 chunk15 0) p15setting p15staging = true := p15_checks.2.2.2.1",
+   "line": 601,
+   "statement": "p15_setting : spec.settingOk (sceneOf c14 chunk15 0) p15uses p15staging = true := p15_checks.2.2.2.1",
    "ok": true
   },
-  "p15_seen": {
-   "line": 548,
-   "statement": "p15_seen : (perceptFrom c14 s14 false chunk15 [12]).2 = s15 := p15_checks.2.2.2.2",
+  "p15_perceived": {
+   "line": 602,
+   "statement": "p15_perceived : perceptFrom c14 s14 false chunk15 [12] = ([], s15) := p15_checks.2.2.2.2.1",
+   "ok": true
+  },
+  "p15_complete": {
+   "line": 603,
+   "statement": "p15_complete : completeOk ({ prior := [], items := p15.zip [75, 75, 125], base := c14 } : ParaCtx spec) p15tree p15judges = true := p15_checks.2.2.2.2.2.1",
+   "ok": true
+  },
+  "p15_realises": {
+   "line": 604,
+   "statement": "p15_realises : Refines some p15 [Ev.confide 0 1, Ev.tell 0 1 (Fact.atom 12, true), Ev.request 0 1 (Fact.at_ 1 3, true)] := p15_checks.2.2.2.2.2.2",
    "ok": true
   },
   "p15_valid": {
-   "line": 549,
+   "line": 605,
    "statement": "p15_valid : Valid spec.start ((((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) ++ chunk14) ++ chunk15) :=",
    "ok": true
   },
   "p15_run": {
-   "line": 551,
+   "line": 607,
    "statement": "p15_run : run spec.start ((((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) ++ chunk14) ++ chunk15) = c15 := run_chain p14_run p15_step",
    "ok": true
   },
   "story_chrono": {
-   "line": 553,
+   "line": 609,
    "statement": "story_chrono : story.chrono = ((((((((((((((chunk01 ++ chunk02) ++ chunk03) ++ chunk04) ++ chunk05) ++ chunk06) ++ chunk07) ++ chunk08) ++ chunk09) ++ chunk10) ++ chunk11) ++ chunk12) ++ chunk13) ++ chunk14) ++ chunk15)",
    "ok": true
   },
   "story_valid": {
-   "line": 554,
+   "line": 610,
    "statement": "story_valid : story.Valid spec.start :=",
    "ok": true
   },
   "layout_consistent": {
-   "line": 557,
+   "line": 613,
    "statement": "layout_consistent : spec.layoutOk = true",
    "ok": true
   },
   "beats_valid": {
-   "line": 565,
+   "line": 621,
    "statement": "beats_valid : Valid beats.start beatStory",
    "ok": true
   },
   "plans_refine_beats": {
-   "line": 566,
+   "line": 622,
    "statement": "plans_refine_beats : Refines beats.abs plans beatStory",
    "ok": true
   }
@@ -771,5 +841,5 @@
  "errors": [],
  "guards": [],
  "file": "stories/roof-eleven/Proofs.lean",
- "at": 1794791929.593332
+ "at": 1794794023.1012459
 }
