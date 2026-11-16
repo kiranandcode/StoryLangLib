@@ -75,7 +75,7 @@ story = {
   ],
   "objects": [{"id": "note", "what": "Theo's note, a page torn from his notebook", "words": ["note", "page", "paper"]}],
   "scenery": [
-    {"id": "noodles", "what": "the takeaway noodles Theo brings", "words": ["noodles", "carton", "container"], "owner": "theo"},
+    {"id": "noodles", "what": "the takeaway noodles Theo brings", "words": ["noodles", "carton", "container"], "owner": "theo", "count": 2},
     {"id": "mug", "what": "Kiran's mug", "words": ["mug", "cup"], "owner": "kiran", "count": 1},
     {"id": "coat", "what": "Theo's coat", "words": ["coat", "jacket"], "owner": "theo", "count": 1},
     {"id": "charger", "what": "Mara's laptop charger", "words": ["charger"], "owner": "mara", "count": 1},
@@ -94,7 +94,8 @@ story = {
     {"id": "kiranLikesTheo", "label": "Kiran wants Theo", "truth": True, "who": ["kiran", "theo"]},
     {"id": "theoReturns", "label": "Theo has come back to the lab after hours four nights running", "truth": True, "who": ["theo"]},
     {"id": "theoLeaving", "label": "tomorrow is Theo's last day in the lab", "truth": True, "who": ["theo"]},
-    {"id": "kiranUnfed", "label": "Kiran has not eaten since morning", "truth": True, "state": True, "who": ["kiran"]},
+    {"id": "kiranFed", "label": "Kiran has eaten since morning", "truth": False, "state": True, "who": ["kiran"]},
+    {"id": "noodlesHot", "label": "the noodles are still hot", "truth": True, "about": "noodles", "kind": "condition"},
     {"id": "kiranAlone", "label": "Kiran has worked alone in the lab every night for three years", "truth": True, "who": ["kiran"]},
     {"id": "kiranFriendless", "label": "Kiran counts nobody as a friend", "truth": True, "who": ["kiran"]},
     {"id": "maraFriend", "label": "Mara counts Kiran as a friend", "truth": True, "who": ["mara", "kiran"]},
@@ -138,7 +139,7 @@ story = {
     },
     "knows": {
       "kiran": ["kiranTrans", "kiranDisowned", "kiranFriendless", "theoLeaving", "kiranAlone", "proofStuck"],
-      "theo": ["theoLikesKiran", "noteForKiran", "!noteForMara", "!theoLikesMara", "theoLeaving", "theoReturns", "kiranTrans", "kiranUnfed"],
+      "theo": ["theoLikesKiran", "noteForKiran", "!noteForMara", "!theoLikesMara", "theoLeaving", "theoReturns", "kiranTrans", "!kiranFed"],
       "mara": ["maraFriend", "kiranFriendless", "kiranAlone", "theoLeaving", "kiranTrans"]
     }
   },

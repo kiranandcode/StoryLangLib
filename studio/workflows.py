@@ -405,6 +405,30 @@ def cmd_extract(a) -> int:
     return 0
 
 
+def persona_objections(st: Story, k: int) -> list[str]:
+    """When the story declares them, paragraph k's ext reading (ties, care,
+    identity, affect: the persona's blind spots and anomalies) and its consent
+    reading must hold too; a consent act resting on an assumption is an objection."""
+    out: list[str] = []
+    if "ext" in st.spec:
+        r = langlib("ext", str(st.d), timeout=300)
+        try:
+            rep = json.loads(r.stdout)
+            out += [f"ext: {i}" for p in rep["paragraphs"] if p["name"] == f"{k:02}" for i in p["issues"]]
+        except json.JSONDecodeError:
+            out.append(f"langlib ext failed: {(r.stderr or r.stdout)[-500:]}")
+    ev = st.f(k, "events.json")
+    if "consent" in st.spec and ev.exists() and json.loads(ev.read_text()).get("consent"):
+        r = langlib("consent", str(st.d), timeout=300)
+        try:
+            rep = json.loads(r.stdout)
+            out += [f"consent: {e['e']}: {e['status']}: {e.get('why', '')}" for p in rep["paragraphs"]
+                    if p["name"] == f"{k:02}" for e in p["events"] if e["status"] != "yes"]
+        except json.JSONDecodeError:
+            out.append(f"langlib consent failed: {(r.stderr or r.stdout)[-500:]}")
+    return out
+
+
 def cmd_paragraph_check(a) -> int:
     st, k = Story(a.story), a.n
     if not st.f(k, "txt").exists():
@@ -421,6 +445,7 @@ def cmd_paragraph_check(a) -> int:
         obj.append(f"reading not stamped: re-derive it from the current prose and world (`extract`) and record "
                    f"\"text_sha\": \"{fr['sha']}\", \"world_sha\": \"{ws}\" in {st.f(k, 'events.json').name}")
     obj += objections(r, k)
+    obj += persona_objections(st, k)
     p = para(r, k)
     log(a.story, a.log, para=f"{k:02}", stage="paragraph-check", ok=not (ann or obj),
         annotation=not ann, verdict=p and p["verdict"], note=" | ".join(ann[:3] + obj)[:1000])

@@ -322,7 +322,8 @@
     "carton",
     "container"
    ],
-   "owner": "theo"
+   "owner": "theo",
+   "count": 2
   },
   {
    "id": "mug",
@@ -453,13 +454,20 @@
    ]
   },
   {
-   "id": "kiranUnfed",
-   "label": "Kiran has not eaten since morning",
-   "truth": true,
+   "id": "kiranFed",
+   "label": "Kiran has eaten since morning",
+   "truth": false,
    "state": true,
    "who": [
     "kiran"
    ]
+  },
+  {
+   "id": "noodlesHot",
+   "label": "the noodles are still hot",
+   "truth": true,
+   "about": "noodles",
+   "kind": "condition"
   },
   {
    "id": "kiranAlone",
@@ -709,7 +717,7 @@
     "theoLeaving",
     "theoReturns",
     "kiranTrans",
-    "kiranUnfed"
+    "!kiranFed"
    ],
    "mara": [
     "maraFriend",

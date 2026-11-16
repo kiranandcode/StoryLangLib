@@ -1,0 +1,101 @@
+ent kiran "Kiran" person she
+ent theo "Theo" person he
+ent lab "the lab" place it
+ent rack "the cluster" object it
+ent coat "his coat" object it
+ent noodles "the noodles" object they
+ent laptop "her laptop" object it
+topic t1 "Theo comes back with dinner" kiran theo
+(S root topic=t1
+  (PP obl At|ADP|case twenty|NUM|nummod past|ADP|case ten|NUM|head)
+  (NP nsubj ref=lab the|DET|det lab|NOUN|head)
+  was|AUX|cop|l=be
+  (ADVP head down|ADV|head|sense=place
+    (PP obl to|ADP|case
+      (COORD head
+        (NP conj ref=kiran Kiran|PROPN|head)
+        ,|PUNCT|punct
+        (NP conj one|NUM|nummod lemma|NOUN|head|sense=abstract
+          (SBAR relcl that|PRON|nsubj would|AUX|aux not|PART|advmod close|VERB|head|l=close))
+        ,|PUNCT|punct
+        and|CCONJ|cc
+        (NP conj ref=rack the|DET|det cluster|NOUN|head
+          (VP acl humming|VERB|head|l=hum
+            (PP obl at|ADP|case the|DET|det far|ADJ|amod|sense=impression end|NOUN|head|sense=part))))))
+  .|PUNCT|punct)
+(S root topic=t1
+  Then|ADV|advmod|sense=order
+  (NP nsubj ref=theo Theo|PROPN|head)
+  came|VERB|head|l=come
+  in|ADV|advmod|sense=direction
+  (PP obl behind|ADP|case her|PRON|head|ref=kiran)
+  (PP obl with|ADP|case
+    (COORD head
+      (NP conj ref=coat his|PRON|poss|ref=theo coat|NOUN|head
+        (ADVP amod still|ADV|advmod|sense=aspect on|ADV|head|sense=place))
+      and|CCONJ|cc
+      (NP conj ref=noodles two|NUM|nummod cartons|NOUN|head|l=carton
+        (PP nmod of|ADP|case noodles|NOUN|head|ref=noodles)
+        (PP nmod in|ADP|case one|NUM|nummod hand|NOUN|head|sense=body))))
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=theo "|PUNCT|punct
+    (NP head The|DET|det fans|NOUN|head|sense=part (PP nmod on|ADP|case node|NOUN|head|sense=part six|NUM|nummod))
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=theo he|PRON|head)
+  said|VERB|head|l=say
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=theo "|PUNCT|punct
+    (S head Thought|VERB|head|l=think (S ccomp I'd|PRON|nsubj check|VERB|head|l=check))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head)
+  did|AUX|aux|l=do not|PART|advmod go|VERB|head|l=go
+  (PP obl near|ADP|case (NP head ref=rack the|DET|det rack|NOUN|head))
+  .|PUNCT|punct)
+(S root topic=t1
+  (S head It|PRON|expl was|AUX|cop|l=be
+    (NP head the|DET|det fourth|ADJ|amod|sense=impression night|NOUN|head|sense=time running|ADV|advmod|sense=time))
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj four|NUM|nsubj made|VERB|head|l=make (NP obj a|DET|det pattern|NOUN|head|sense=abstract))
+  ;|PUNCT|punct
+  (S parataxis
+    (NP nsubj ref=kiran she|PRON|head) logged|VERB|head|l=log (NP obj the|DET|det count|NOUN|head|sense=abstract)
+    ,|PUNCT|punct
+    (NP obl the|DET|det way|NOUN|head|sense=abstract
+      (S relcl (NP nsubj ref=kiran she|PRON|head) would|AUX|aux log|VERB|head|l=log
+        (NP obj any|DET|det effect|NOUN|head|sense=abstract
+          (S relcl that|PRON|nsubj kept|VERB|head|l=keep (VP xcomp replicating|VERB|head|l=replicate))))))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) set|VERB|head|l=set
+  (NP obj ref=noodles a|DET|det carton|NOUN|head)
+  (PP obl by|ADP|case (NP head ref=laptop her|PRON|poss|ref=kiran laptop|NOUN|head))
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=theo "|PUNCT|punct
+    (S head (NP nsubj ref=kiran You|PRON|head) haven't|AUX|aux|l=have eaten|VERB|head|l=eat
+      (PP obl since|ADP|case this|DET|det morning|NOUN|head|sense=time)
+      ,|PUNCT|punct (NP vocative ref=kiran Kiran|PROPN|head))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) checked|VERB|head|l=check
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj ref=theo he|PRON|head) was|AUX|cop|l=be right|ADJ|head|sense=impression)
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) had|AUX|aux|l=have been|AUX|cop|l=be present|ADJ|head|sense=impression
+  (NP obl the|DET|det whole|ADJ|amod|sense=impression time|NOUN|head|sense=time)
+  and|CCONJ|cc
+  (VP conj not|PART|advmod noticed|VERB|head|l=notice)
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=kiran "|PUNCT|punct Fuel|NOUN|head|sense=substance ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=kiran she|PRON|head) said|VERB|head|l=say
+  ,|PUNCT|punct and|CCONJ|cc
+  (VP conj ate|VERB|head|l=eat)
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=noodles The|DET|det noodles|NOUN|head) were|AUX|cop|l=be still|ADV|advmod|sense=aspect hot|ADJ|head|sense=impression
+  .|PUNCT|punct)

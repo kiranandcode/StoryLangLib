@@ -6,7 +6,7 @@ from pathlib import Path
 P = {
  1: dict(beat="lingers", setting=["lab", "kdesk", "rack", "labdoor", "noodles", "whiteboard"],
     events=["adopt theo at(theo,lab)", "move theo lab", "notice kiran theoReturns inferred",
-            "tell theo kiran kiranUnfed", "adopt kiran !kiranUnfed", "make kiran !kiranUnfed"],
+            "tell theo kiran !kiranFed", "notice kiran !kiranFed sensed", "adopt kiran kiranFed", "make kiran kiranFed"],
     claims=["at kiran lab", "true clusterHum", "knows kiran theoReturns"],
     ext=["point theo kiran kiran food", "offer theo kiran food", "accept kiran theo food", "tend theo kiran food"]),
  2: dict(beat="spark", setting=["tdesk", "whiteboard", "mug"],

@@ -1,0 +1,197 @@
+{
+ "text_sha": "2bf233691c55e617",
+ "world_sha": "cec01dc95a9315ec",
+ "events": [
+  {
+   "e": "adopt theo at(theo,lab)",
+   "at": 29,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "move theo lab",
+   "at": 29,
+   "w": "came",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran theoReturns inferred",
+   "at": 81,
+   "w": "made",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "tell theo kiran !kiranFed",
+   "at": 112,
+   "w": "eaten",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "notice kiran !kiranFed sensed",
+   "at": 121,
+   "w": "checked",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "adopt kiran kiranFed",
+   "at": 144,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "make kiran kiranFed",
+   "at": 147,
+   "w": "ate",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at kiran lab",
+   "at": 7,
+   "w": "down"
+  },
+  {
+   "c": "true labEmptied",
+   "at": 7,
+   "w": "down"
+  },
+  {
+   "c": "true clusterHum",
+   "at": 21,
+   "w": "humming"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 29,
+   "w": "came"
+  },
+  {
+   "c": "true clusterHum",
+   "at": 67,
+   "w": "go"
+  },
+  {
+   "c": "true theoReturns",
+   "at": 74,
+   "w": "the"
+  },
+  {
+   "c": "knows kiran theoReturns",
+   "at": 86,
+   "w": "logged"
+  },
+  {
+   "c": "knows kiran !kiranFed",
+   "at": 126,
+   "w": "right"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 131,
+   "w": "present"
+  },
+  {
+   "c": "true noodlesHot",
+   "at": 153,
+   "w": "hot"
+  },
+  {
+   "c": "at kiran lab",
+   "at": 21,
+   "w": "humming"
+  },
+  {
+   "c": "at theo lab",
+   "at": 67,
+   "w": "go"
+  },
+  {
+   "c": "at theo lab",
+   "at": 126,
+   "w": "right"
+  }
+ ],
+ "judge": [
+  {
+   "at": 16,
+   "w": "close",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 56,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 59,
+   "w": "Thought",
+   "kind": "speech"
+  },
+  {
+   "at": 61,
+   "w": "check",
+   "kind": "speech"
+  },
+  {
+   "at": 67,
+   "w": "go",
+   "kind": "act"
+  },
+  {
+   "at": 94,
+   "w": "log",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 98,
+   "w": "kept",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 99,
+   "w": "replicating",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 102,
+   "w": "set",
+   "kind": "act"
+  },
+  {
+   "at": 137,
+   "w": "noticed",
+   "kind": "act"
+  }
+ ],
+ "staging": [],
+ "ext": [
+  {
+   "e": "offer theo kiran food",
+   "at": 102,
+   "w": "set"
+  },
+  {
+   "e": "point theo kiran kiran food",
+   "at": 112,
+   "w": "eaten"
+  },
+  {
+   "e": "accept kiran theo food",
+   "at": 144,
+   "w": "said"
+  },
+  {
+   "e": "tend theo kiran food",
+   "at": 147,
+   "w": "ate"
+  }
+ ]
+}

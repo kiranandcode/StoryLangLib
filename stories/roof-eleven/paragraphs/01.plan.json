@@ -4,9 +4,10 @@
   "adopt theo at(theo,lab)",
   "move theo lab",
   "notice kiran theoReturns inferred",
-  "tell theo kiran kiranUnfed",
-  "adopt kiran !kiranUnfed",
-  "make kiran !kiranUnfed"
+  "tell theo kiran !kiranFed",
+  "notice kiran !kiranFed sensed",
+  "adopt kiran kiranFed",
+  "make kiran kiranFed"
  ],
  "claims": [
   "at kiran lab",
