@@ -69,7 +69,7 @@ story = {
      "attrs": {"kind": "quiet"},
      "fixtures": [
        {"id": "couch", "what": "the long couch under the window", "words": ["couch", "sofa"], "count": 1},
-       {"id": "qlamp", "what": "the one floor lamp, on low", "words": ["lamp"], "count": 1, "attrs": {"light": "low"}},
+       {"id": "qlamp", "what": "the one floor lamp, on low", "words": ["lamp"], "count": 1, "attrs": {"light": "low", "kind": "floor"}},
        {"id": "qdoor", "what": "the quiet room's door, which locks from inside", "words": ["door", "lock"], "count": 1}
      ]}
   ],
@@ -79,6 +79,9 @@ story = {
     {"id": "mug", "what": "Kiran's mug", "words": ["mug", "cup"], "owner": "kiran", "count": 1},
     {"id": "notebook", "what": "Theo's notebook", "words": ["notebook"], "owner": "theo", "count": 1},
     {"id": "coat", "what": "Theo's coat", "words": ["coat", "jacket"], "owner": "theo", "count": 1},
+    {"id": "kclothes", "what": "Kiran's clothes: a jumper, a bra, jeans", "words": ["jumper", "bra", "jeans", "clothes", "waistband"], "owner": "kiran"},
+    {"id": "tshirt", "what": "Theo's shirt", "words": ["shirt"], "owner": "theo", "count": 1},
+    {"id": "condom", "what": "a condom from Theo's wallet", "words": ["condom"], "owner": "theo", "count": 1},
     {"id": "charger", "what": "Mara's laptop charger", "words": ["charger"], "owner": "mara", "count": 1},
     {"id": "blanket", "what": "the quiet room's blanket", "words": ["blanket"], "count": 1},
     {"id": "bottle", "what": "a bottle of water", "words": ["bottle", "water"], "count": 1}
@@ -162,7 +165,7 @@ story = {
       {"id": "negotiate", "label": "He won't take 'whatever you want'; she names it", "pre": ["kissed"], "add": ["negotiated"], "keys": ["askAct theo kiran sex"]},
       {"id": "undress", "label": "The quiet room; undressing", "pre": ["negotiated"], "add": ["bare"], "keys": ["act theo kiran undress"]},
       {"id": "pause", "label": "Too much data: she stops him, and he stops", "pre": ["bare"], "add": ["paused"], "keys": ["withdraw kiran theo sex"]},
-      {"id": "sex", "label": "Sex, asked for again", "pre": ["paused"], "add": ["lovers"], "keys": ["act theo kiran sex"]},
+      {"id": "sex", "label": "Sex, asked for again", "pre": ["paused"], "add": ["lovers"], "keys": ["act kiran theo sex"]},
       {"id": "stay", "label": "Aftercare; she asks him to stay", "pre": ["lovers"], "add": ["stays"], "keys": ["request kiran theo at(theo,quietRoom)"]}
     ],
     "story": ["lingers", "spark", "note", "misread", "maraUp", "amends", "climb", "confess", "test", "kiss",

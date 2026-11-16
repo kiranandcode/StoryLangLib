@@ -1,0 +1,174 @@
+{
+ "text_sha": "18738bf373a31aa2",
+ "world_sha": "60f49e7eb44217f5",
+ "events": [
+  {
+   "e": "adopt kiran did(kiran,theo,kiss)",
+   "at": 61,
+   "w": "like",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "askAct kiran theo kiss",
+   "at": 74,
+   "w": "kiss",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "agree theo kiran kiss",
+   "at": 88,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  },
+  {
+   "e": "agree kiran theo kiss",
+   "at": 142,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at kiran roof",
+   "at": 39,
+   "w": "a"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 44,
+   "w": "fit"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 49,
+   "w": "predicted"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 56,
+   "w": "testable"
+  },
+  {
+   "c": "at kiran roof",
+   "at": 118,
+   "w": "stepped"
+  },
+  {
+   "c": "true tankLee",
+   "at": 118,
+   "w": "stepped"
+  },
+  {
+   "c": "consented theo kiran kiss",
+   "at": 142,
+   "w": "said"
+  }
+ ],
+ "judge": [
+  {
+   "at": 1,
+   "w": "Go",
+   "kind": "speech"
+  },
+  {
+   "at": 6,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 10,
+   "w": "what",
+   "kind": "speech"
+  },
+  {
+   "at": 11,
+   "w": "wanting",
+   "kind": "speech"
+  },
+  {
+   "at": 13,
+   "w": "feels",
+   "kind": "speech"
+  },
+  {
+   "at": 18,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 30,
+   "w": "told",
+   "kind": "speech"
+  },
+  {
+   "at": 33,
+   "w": "look",
+   "kind": "speech"
+  },
+  {
+   "at": 63,
+   "w": "run",
+   "kind": "speech"
+  },
+  {
+   "at": 69,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 79,
+   "w": "went",
+   "kind": "act"
+  },
+  {
+   "at": 96,
+   "w": "null",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 99,
+   "w": "tell",
+   "kind": "speech"
+  },
+  {
+   "at": 104,
+   "w": "go",
+   "kind": "speech"
+  },
+  {
+   "at": 111,
+   "w": "report",
+   "kind": "speech"
+  },
+  {
+   "at": 129,
+   "w": "see",
+   "kind": "act"
+  },
+  {
+   "at": 131,
+   "w": "breathe",
+   "kind": "act"
+  },
+  {
+   "at": 136,
+   "w": "kiss",
+   "kind": "speech"
+  },
+  {
+   "at": 146,
+   "w": "part",
+   "kind": "speech"
+  }
+ ],
+ "staging": [],
+ "consent": [
+  "ask kiran theo kiss",
+  "grant theo kiran kiss verbal",
+  "grant kiran theo kiss verbal"
+ ]
+}

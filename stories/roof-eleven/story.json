@@ -290,7 +290,8 @@
      ],
      "count": 1,
      "attrs": {
-      "light": "low"
+      "light": "low",
+      "kind": "floor"
      }
     },
     {
@@ -354,6 +355,36 @@
    "words": [
     "coat",
     "jacket"
+   ],
+   "owner": "theo",
+   "count": 1
+  },
+  {
+   "id": "kclothes",
+   "what": "Kiran's clothes: a jumper, a bra, jeans",
+   "words": [
+    "jumper",
+    "bra",
+    "jeans",
+    "clothes",
+    "waistband"
+   ],
+   "owner": "kiran"
+  },
+  {
+   "id": "tshirt",
+   "what": "Theo's shirt",
+   "words": [
+    "shirt"
+   ],
+   "owner": "theo",
+   "count": 1
+  },
+  {
+   "id": "condom",
+   "what": "a condom from Theo's wallet",
+   "words": [
+    "condom"
    ],
    "owner": "theo",
    "count": 1
@@ -937,7 +968,7 @@
      "lovers"
     ],
     "keys": [
-     "act theo kiran sex"
+     "act kiran theo sex"
     ]
    },
    {
