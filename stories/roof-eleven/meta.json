@@ -1,9 +1,0 @@
-{
-  "persona": "set by Kiran (2026-11-15), in her words: Kiran doesn't have any friends; she only has her research. She lacks a sense of humanity that others have, and never had it, even before being disowned; she's an excellent researcher because of that. Most people need social support to live, like air, but she's been deprived of it so long she doesn't know what it feels like to even need it. Formalised in story.json: traits skeptical, confident, proud, honest (not stubborn: she revises on evidence); values curiosity > pride > honesty > desire > safety; ext.blind (needs she does not register, in herself or others), ext.ties (no friends tie from her; Mara's to her is one-way; estranged from her family), ext.anomaly and ext.signals (affection and desire read first as anomalies; loneliness, the felt sign of needing company, never felt)",
-  "explicitness": "explicit (set by Kiran, 2026-11-15: 'make it spicier'): on-page sex between consenting adults, named acts and bodies in plain words, no fade to black; every act inside World/Consent (negotiated by name, check-ins, a safeword, withdrawal honoured). Any place the writer holds back below this level is said plainly in the report and the Studio, with options.",
-  "pov": "close third person, past tense; Kiran's point of view throughout (Theo's note is written in a 'meanwhile' cut, as in stories/roof)",
-  "writer": "interactive Claude session (Opus 5.5), no headless model calls",
-  "annotator": "interactive Claude session (Opus 5.5), no headless model calls",
-  "cast": "Kiran (based on Kiran), Theo (the visiting engineer), Mara (her labmate); her family offstage",
-  "sources": "pacing, tropes and intensity drawn from the private AO3 stress tests (the refused blanket offer and named wants, check-ins and a pause that binds; care that builds trust; one-sided ties), never their sentences"
-}
