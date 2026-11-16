@@ -57,6 +57,21 @@ def interiorVerbs : List String :=
    "understand", "guess", "like", "taste",
    "smell", "sense", "recognise", "recognize", "trust", "dread", "miss"]
 
+/-- Adverbs that turn the heat up: degree words used for intensity. -/
+def intensifierWords : List String :=
+  ["so", "very", "really", "too", "just", "completely", "entirely", "utterly", "totally", "fully",
+   "absolutely", "deeply", "hard", "harder", "all", "only", "even", "still", "much", "more", "most"]
+
+/-- Verbs of a researcher's attention: logging, testing, measuring. Said of the
+point-of-view character, they make interiority clinical. -/
+def clinicalVerbs : List String :=
+  ["log", "note", "file", "test", "measure", "check", "examine", "explain", "record", "count",
+   "calculate", "compute", "estimate", "observe", "verify", "classify", "flag", "run", "try", "report"]
+
+/-- First-person forms: narration in them is first person. -/
+def firstPersonForms : List String :=
+  ["i", "me", "my", "mine", "myself", "i'm", "i've", "i'd", "i'll"]
+
 /-- Openers that relate a sentence to the one before. -/
 def connectiveRoles : List Role := [.cc, .advmod, .mark, .discourse]
 
@@ -132,6 +147,18 @@ structure Sent where
   choreo : Nat := 0
   /-- clauses outside quotes whose subject is the point-of-view character -/
   povClauses : Nat := 0
+  /-- the sentence is a fragment of narration: its root is `FRAG`, outside quotes -/
+  frag : Bool := false
+  /-- first-person forms in narration (outside quotes) -/
+  firstPerson : Nat := 0
+  /-- intensifying adverbs, anywhere -/
+  intens : Nat := 0
+  /-- repeated content words: occurrences of a content lemma beyond its first in the sentence -/
+  repeats : Nat := 0
+  /-- check-ins: quoted questions of at most five words ("Okay?", "Still yes?") -/
+  checkIns : Nat := 0
+  /-- clauses outside quotes in which the point-of-view character logs, tests, measures... -/
+  clinical : Nat := 0
   deriving Repr, DecidableEq, Inhabited
 
 /-- Counts one tree contributes (merged bottom-up). -/
@@ -147,6 +174,7 @@ structure Acc where
   interior : Nat := 0
   choreo : Nat := 0
   povClauses : Nat := 0
+  clinical : Nat := 0
   deriving Inhabited
 
 def Acc.add (a b : Acc) : Acc :=
@@ -154,7 +182,7 @@ def Acc.add (a b : Acc) : Acc :=
     likeSimiles := a.likeSimiles + b.likeSimiles, asIf := a.asIf + b.asIf, asAs := a.asAs + b.asAs,
     quoteWords := a.quoteWords + b.quoteWords, tags := a.tags ++ b.tags,
     interior := a.interior + b.interior, choreo := a.choreo + b.choreo,
-    povClauses := a.povClauses + b.povClauses }
+    povClauses := a.povClauses + b.povClauses, clinical := a.clinical + b.clinical }
 
 /-- Who the story is about: its point-of-view character and its cast. -/
 structure Ctx where
@@ -221,7 +249,8 @@ partial def accOf (cx : Ctx) (d : Down) : Tree → Acc
           !(match subj with | some e => cx.specific.contains e | none => false) then 1 else 0,
         interior := if interior then 1 else 0,
         choreo := if !quoted && charSubj && !interior then 1 else 0,
-        povClauses := if !quoted && subj == some cx.pov then 1 else 0 }
+        povClauses := if !quoted && subj == some cx.pov then 1 else 0,
+        clinical := if !quoted && subj == some cx.pov && clinicalVerbs.contains lem then 1 else 0 }
     let prn : Acc := if info.cat == .PRN && !quoted then { prn := 1 } else {}
     -- a "like" phrase attached to a noun ("languages like C and C++") gives
     -- examples; only one attached to a verb or clause compares
@@ -273,6 +302,30 @@ def conceptCount (ws : List Word) : Nat :=
       if isWord w then some "" else prev))
     (0, (none : Option String))).1
 
+/-- Quoted questions of at most five words: check-ins. -/
+partial def checkInsOf : Tree → Nat
+  | .leaf _ => 0
+  | .node i kids =>
+    if i.cat == .QUOTE then
+      let ws := kids.flatMap leaves
+      let words := (ws.filter isWord).length
+      if words ≥ 1 && words ≤ 5 && ws.any (·.form == "?") then 1 else 0
+    else (kids.map checkInsOf).foldl (· + ·) 0
+
+/-- Leaves outside quotes. -/
+partial def narrLeaves : Tree → List Word
+  | .leaf w => [w]
+  | .node i kids => if i.cat == .QUOTE then [] else kids.flatMap narrLeaves
+
+/-- Occurrences of a content lemma beyond its first ("built and built"). -/
+def repeatsOf (ws : List Word) : Nat :=
+  let ls := (ws.filter fun w => [UPOS.NOUN, .VERB, .ADJ, .ADV].contains w.upos && w.form.length > 2).map lemmaOf
+  ls.length - (distinct' ls).length
+where
+  distinct' : List String → List String
+    | [] => []
+    | x :: xs => let r := distinct' xs; if r.contains x then r else x :: r
+
 /-- Read one sentence. -/
 def sentOf (cx : Ctx) (para : Nat) (t : Tree) : Sent :=
   let ls := leaves t
@@ -298,7 +351,12 @@ def sentOf (cx : Ctx) (para : Nat) (t : Tree) : Sent :=
     anchors, footnote := footMark, wholeWithout := whole,
     clauses := a.clauses, generics := a.generics, likeSimiles := a.likeSimiles, asIf := a.asIf,
     asAs := a.asAs, concepts := conceptCount ls, quoteWords := a.quoteWords, tags := a.tags,
-    opener, interior := a.interior, choreo := a.choreo, povClauses := a.povClauses }
+    opener, interior := a.interior, choreo := a.choreo, povClauses := a.povClauses,
+    frag := (match t with | .node i _ => i.cat == .FRAG | _ => false),
+    firstPerson := ((narrLeaves t).filter fun w => w.upos == .PRON && firstPersonForms.contains (lower w.form)).length,
+    intens := (ls.filter fun w => w.upos == .ADV && intensifierWords.contains (lower w.form)).length,
+    repeats := repeatsOf ls,
+    checkIns := checkInsOf t, clinical := a.clinical }
 
 /-- Read a paragraph's document. -/
 def sentsOfDoc (cx : Ctx) (para : Nat) (d : Doc) : List Sent :=
@@ -373,7 +431,29 @@ structure Features where
   asides : Nat
   footPaired : Bool
   footGeneric : Bool
+  /-- narration fragments -/
+  frags : Nat := 0
+  firstPerson : Nat := 0
+  intensifiers : Nat := 0
+  repeats : Nat := 0
+  checkIns : Nat := 0
+  clinical : Nat := 0
+  /-- short sentences (at most 6 words) right after a long one (at least 15) in the same paragraph -/
+  punches : Nat := 0
+  /-- words and quoted words in the first and second halves of the story, by paragraph -/
+  wordsEarly : Nat := 0
+  quoteEarly : Nat := 0
+  wordsLate : Nat := 0
+  quoteLate : Nat := 0
   deriving Repr, DecidableEq, Inhabited
+
+/-- Short sentences right after a long one in the same paragraph. -/
+def punchCount : List Sent → Nat
+  | a :: b :: rest => (if a.para == b.para && a.words ≥ 15 && b.words ≤ 6 then 1 else 0) + punchCount (b :: rest)
+  | _ => 0
+
+/-- The last paragraph's number. -/
+def lastPara (ss : List Sent) : Nat := (ss.map (·.para)).foldl max 0
 
 def Features.ofSents (ss : List Sent) : Features :=
   let tags := ss.flatMap (·.tags)
@@ -409,13 +489,25 @@ def Features.ofSents (ss : List Sent) : Features :=
     povClauses := sumBy (·.povClauses) ss
     asides := generics + prn + footnotes
     footPaired := footnotesPaired ss
-    footGeneric := footnotesGeneric ss }
+    footGeneric := footnotesGeneric ss
+    frags := countIf (·.frag) ss
+    firstPerson := sumBy (·.firstPerson) ss
+    intensifiers := sumBy (·.intens) ss
+    repeats := sumBy (·.repeats) ss
+    checkIns := sumBy (·.checkIns) ss
+    clinical := sumBy (·.clinical) ss
+    punches := punchCount ss
+    wordsEarly := sumBy (fun s => if 2 * s.para ≤ lastPara ss then s.words else 0) ss
+    quoteEarly := sumBy (fun s => if 2 * s.para ≤ lastPara ss then s.quoteWords else 0) ss
+    wordsLate := sumBy (fun s => if 2 * s.para > lastPara ss then s.words else 0) ss
+    quoteLate := sumBy (fun s => if 2 * s.para > lastPara ss then s.quoteWords else 0) ss }
 
 /-- A numeric feature, by name. -/
 inductive Feat where
   | paras | sents | words | clauses | depthSum | maxDepth | short | long | prn | anchors
   | footnotes | footnoteWords | generics | likeSimiles | asIf | asAs | similes | concepts
   | quoteWords | tags | tagKinds | fancyTags | openers | openerKinds | interior | choreo | povClauses | charClauses | asides
+  | frags | firstPerson | intensifiers | repeats | checkIns | punches | wordsEarly | quoteEarly | wordsLate | quoteLate | clinical
   deriving Repr, DecidableEq, Inhabited
 
 def Features.get (f : Features) : Feat → Nat
@@ -429,6 +521,10 @@ def Features.get (f : Features) : Feat → Nat
   | .fancyTags => f.fancyTags | .openers => f.openers | .openerKinds => f.openerKinds
   | .interior => f.interior | .choreo => f.choreo | .povClauses => f.povClauses
   | .charClauses => f.interior + f.choreo | .asides => f.asides
+  | .frags => f.frags | .firstPerson => f.firstPerson | .intensifiers => f.intensifiers
+  | .repeats => f.repeats | .checkIns => f.checkIns | .punches => f.punches
+  | .wordsEarly => f.wordsEarly | .quoteEarly => f.quoteEarly | .wordsLate => f.wordsLate | .quoteLate => f.quoteLate
+  | .clinical => f.clinical
 
 def Feat.name : Feat → String
   | .paras => "paras" | .sents => "sents" | .words => "words" | .clauses => "clauses"
@@ -440,11 +536,16 @@ def Feat.name : Feat → String
   | .fancyTags => "fancyTags" | .openers => "openers" | .openerKinds => "openerKinds"
   | .interior => "interior" | .choreo => "choreo" | .povClauses => "povClauses"
   | .charClauses => "charClauses" | .asides => "asides"
+  | .frags => "frags" | .firstPerson => "firstPerson" | .intensifiers => "intensifiers"
+  | .repeats => "repeats" | .checkIns => "checkIns" | .punches => "punches"
+  | .wordsEarly => "wordsEarly" | .quoteEarly => "quoteEarly" | .wordsLate => "wordsLate" | .quoteLate => "quoteLate"
+  | .clinical => "clinical"
 
 def Feat.all : List Feat :=
   [.paras, .sents, .words, .clauses, .depthSum, .maxDepth, .short, .long, .prn, .anchors,
    .footnotes, .footnoteWords, .generics, .likeSimiles, .asIf, .asAs, .similes, .concepts,
-   .quoteWords, .tags, .tagKinds, .fancyTags, .openers, .openerKinds, .interior, .choreo, .povClauses, .charClauses, .asides]
+   .quoteWords, .tags, .tagKinds, .fancyTags, .openers, .openerKinds, .interior, .choreo, .povClauses, .charClauses, .asides,
+   .frags, .firstPerson, .intensifiers, .repeats, .checkIns, .punches, .wordsEarly, .quoteEarly, .wordsLate, .quoteLate, .clinical]
 
 /-! ## Rules and styles -/
 
@@ -460,6 +561,9 @@ inductive Rule where
   | footnotesPaired
   /-- every footnote contains a generic statement -/
   | footnotesGeneric
+  /-- `a / b ≥ c / d`, as `a * d ≥ c * b`: one ratio of the story at least another
+  (talk in the second half at least its share in the first) -/
+  | crossAtLeast (a b c d : Feat)
   deriving Repr, DecidableEq, Inhabited
 
 def Rule.holds (f : Features) : Rule → Bool
@@ -469,6 +573,7 @@ def Rule.holds (f : Features) : Rule → Bool
   | .ratioAtMost a b p q => f.get a * q ≤ p * f.get b
   | .footnotesPaired => f.footPaired
   | .footnotesGeneric => f.footGeneric
+  | .crossAtLeast a b c d => f.get a * f.get d ≥ f.get c * f.get b
 
 def Rule.show : Rule → String
   | .atLeast x n => s!"{x.name} ≥ {n}"
@@ -477,6 +582,7 @@ def Rule.show : Rule → String
   | .ratioAtMost a b p q => s!"{a.name} / {b.name} ≤ {p}/{q}"
   | .footnotesPaired => "every footnote anchored once, its sentence whole without it"
   | .footnotesGeneric => "every footnote generalises"
+  | .crossAtLeast a b c d => s!"{a.name} / {b.name} ≥ {c.name} / {d.name}"
 
 /-- A style: named decidable rules. -/
 structure Style where

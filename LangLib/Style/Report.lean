@@ -2,6 +2,7 @@ import Lean.Data.Json
 import LangLib.Json
 import LangLib.Style.Pratchett
 import LangLib.Style.Roof
+import LangLib.Style.Ao3
 
 /-!
 # `langlib style <dir>`
@@ -16,7 +17,7 @@ definition a theorem file can restate (`Theorems.lean`).
 namespace LangLib.Style
 open Lean LangLib
 
-def knownStyles : List Style := [pratchett, roofStyle]
+def knownStyles : List Style := [pratchett, roofStyle, ao3, roofRan]
 
 /-- A paragraph annotation file: `NN.json`, two digits. -/
 def isParaDoc (n : String) : Bool :=
