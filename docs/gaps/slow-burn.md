@@ -103,10 +103,17 @@ chained and checked before any prose. The ext start state gained `examined`,
 
 **Still open.** The link is checked by the CLI (the same Lean definitions
 compute both sides), not proved in one kernel term: each chapter's
-`Proofs.lean` proves its own story from its literal opening. Evidence does not
-cross a chapter break: a view becomes own knowledge, so what a character only
-noted (a tell she did not believe) is lost at the break; the conviction's count
-carries in the ext state, which is where the burn needs it.
+`Proofs.lean` proves its own story from its literal opening.
+
+**Caught by the chain check, fixed.** The first version carried each view as
+its holder's own knowledge (rank 10). Chapter 4 then could not let Kiran see
+that the walk was never on his way: her chapter-1 inference that it was had
+become unrevisable at the break. A belief now crosses with its rank and
+evidence (`"walkOnHisWay@3:inferred"` in `knows`, `Spec.held`), so later
+evidence weighs against it as before; `rec_start` (the L5 record invariant) is
+re-proved for openings with such beliefs. What a character only noted (a tell
+she did not believe) still does not cross; the conviction's count carries in
+the ext state, which is where the burn needs it.
 
 ## 7. Talk across places (open)
 
@@ -139,7 +146,14 @@ holds because no event in any reading tells her otherwise, which is checked
 only by reading the plans. Proposed: a story-level theorem over all chapters'
 events (no `tell _ kiran !kiranLifeIsWork`), once chapters chain in Lean.
 
-## 11. Voice measured by proxy
+## 11. A lexicon word with two senses
+
+The story's emotion lexicon listed "hungry" under desire; "She had not known she
+was hungry" then read as desire she could not yet feel (the bond gate), when it
+was the food need she is blind to. The checker was right about the words; the
+lexicon was wrong. Emotion words that also name a need belong to neither list.
+
+## 12. Voice measured by proxy
 
 The `fixpoint` style (`Style/Fixpoint.lean`) adds `playful` (interjections and
 exclamation marks inside quotes) for her cutesy talk, alongside clinical
