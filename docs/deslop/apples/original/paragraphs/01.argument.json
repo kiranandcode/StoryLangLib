@@ -1,0 +1,30 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "widely_grown",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "significance_beyond",
+   "uses": [
+    "apple",
+    "nutrition",
+    "agriculture",
+    "mythology",
+    "science"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "role_in_civilisation",
+   "uses": [
+    "apple",
+    "history"
+   ]
+  }
+ ]
+}

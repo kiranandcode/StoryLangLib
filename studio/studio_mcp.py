@@ -73,12 +73,16 @@ DESLOP_HOW = {
     "annotate": ("Follow ~/.claude/skills/verified-deslopify (Setup, step 2): annotate every paragraph of "
                  "<doc_dir>/original that has no NN.sx (or only paragraph <para>), decide its word classes in "
                  "original/lexicon.local.json, then run `python3 tools/house/certify.py <doc_dir>/original`. "
+                 "Then read the argument: original/argument.json (lore, and a gloss and kind for every term: fact, "
+                 "evaluation, summary, definition, saying, promise) and paragraphs/NN.argument.json (claim, cite, "
+                 "example, infer, hedge, promise, deny, define moves); docs/deslop/apples has the format. "
                  "Reply done with the rule count."),
     "rewrite": ("Follow ~/.claude/skills/verified-deslopify (step 3): rewrite paragraph <para> of <doc_dir>/original "
                 "(every paragraph when <para> is empty) into <doc_dir>/rewrite/paragraphs/NN.txt with the same NN, "
                 "in Kiran's voice, keeping its facts; annotate it (NN.sx), decide word classes in "
                 "rewrite/lexicon.local.json, and run certify.py on <doc_dir>/rewrite until no rule flags the "
-                "paragraph. To drop a paragraph, write rewrite/notes.json {\"NN\": {\"dropped\": why}}; record "
+                "paragraph, and write its NN.argument.json (and the terms it adds to rewrite/argument.json) as for "
+                "the original. To drop a paragraph, write rewrite/notes.json {\"NN\": {\"dropped\": why}}; record "
                 "dropped claims there too ({\"NN\": {\"dropped_claims\": [...]}}). Kiran's note is in `text`. "
                 "Reply done with what changed and what was dropped."),
     "certify": "Run `python3 tools/house/certify.py <doc_dir>/original` and `.../rewrite`; fix annotation problems; reply.",

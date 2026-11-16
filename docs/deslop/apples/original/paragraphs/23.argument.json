@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "promise",
+   "t": "deeper_examination",
+   "sec": 9,
+   "uses": [
+    "genetics"
+   ]
+  }
+ ]
+}

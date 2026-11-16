@@ -1,0 +1,18 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "china_largest",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "other_producers",
+   "uses": [
+    "apple"
+   ]
+  }
+ ]
+}

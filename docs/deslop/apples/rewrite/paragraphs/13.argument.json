@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "temp_needs",
+   "uses": [
+    "apple",
+    "climate"
+   ]
+  },
+  {
+   "move": "hedge",
+   "t": "regions_suitability",
+   "sec": 0,
+   "uses": [
+    "temp_needs",
+    "climate"
+   ]
+  }
+ ]
+}

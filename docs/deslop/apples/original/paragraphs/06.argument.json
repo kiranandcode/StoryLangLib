@@ -1,0 +1,18 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "calories_95",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "satiety",
+   "uses": [
+    "nutrients"
+   ]
+  }
+ ]
+}

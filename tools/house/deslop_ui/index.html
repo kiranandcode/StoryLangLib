@@ -110,6 +110,29 @@ body.nohl .tok { background: none !important; box-shadow: none !important; }
 .parallel .col p.prose { font: 17px/1.66 var(--serif); margin: 0 0 1em; }
 .parallel .col .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
 @media (max-width: 900px) { .parallel { grid-template-columns: 1fr; } }
+/* the sceptical reader */
+.strip { max-width: 1000px; margin: 0 auto 4px; }
+.strip svg rect.col:hover { opacity: 1 !important; }
+.margin .compact { display: flex; gap: 3px; align-items: center; flex-wrap: wrap; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.margin { position: relative; }
+.margin .full { position: absolute; top: 22px; left: 0; display: none; margin-top: 8px; padding: 10px 12px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.18); position: relative; z-index: 3; width: 340px; }
+.rp:hover .margin .full, .rp.pinned .margin .full { display: block; }
+.rp:hover p.prose, .rp.pinned p.prose { background: color-mix(in srgb, var(--accent) 5%, transparent); border-radius: 4px; }
+.full h4 { margin: 0 0 6px; font: 600 12px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.claim { margin: 0 0 8px; color: var(--ink); font-size: 12.5px; line-height: 1.4; }
+.claim .tags { display: block; color: var(--muted); font-size: 11.5px; margin-top: 1px; }
+.ask { font: italic 13px/1.4 var(--serif); color: var(--ink); margin: 0 0 6px; padding-left: 10px; border-left: 2px solid var(--warn); }
+.ask .src { font: 11px var(--sans); color: var(--muted); font-style: normal; display: block; }
+.hp { position: relative; }
+.hp .hc { display: none; position: absolute; top: 0; width: 360px; z-index: 6; padding: 10px 12px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.25); }
+.hp .hc.original { left: calc(100% + 24px); }
+.hp .hc.rewrite { right: calc(100% + 24px); }
+.hp:hover .hc, .hp.pinned .hc { display: block; }
+.hp:hover p.prose, .hp.pinned p.prose { background: color-mix(in srgb, var(--accent) 6%, transparent); border-radius: 4px; }
+.stylerules { margin-top: 8px; color: var(--muted); font-size: 11.5px; }
 </style>
 </head>
 <body>
@@ -202,6 +225,24 @@ const RULE = {
   "no not-X-but-Y (unless it denies what the text put forward)": "Denying what nobody claimed, to set up what you claim.",
   "every word class the rules read is decided": "The annotation decided every verb, likely nominalisation and -ize spelling.",
 };
+const VERDICT = {
+  info: ["var(--ok)", "information the reader can check"],
+  accepted: ["#2f9e44", "the reader accepts it (cited, shown, or reasoned from what they accept)"],
+  faith: ["#e8b100", "a fact taken on the author's word"],
+  importance: ["#e03131", "importance asserted, not shown"],
+  restates: ["#868e96", "restates what came before"],
+  open: ["#4dabf7", "a question or promise left open"],
+  other: ["#adb5bd", "definition or saying"],
+};
+function verdict(c) {
+  if (!c) return "other";
+  if (c.kind === "summary") return "restates";
+  if (c.kind === "evaluation" && c.held !== "accepted") return "importance";
+  if (c.moves?.some(m => m.move === "hedge" || m.move === "promise")) return "open";
+  if (c.held === "accepted") return "accepted";
+  if (c.kind === "fact") return "faith";
+  return "other";
+}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 let state = { docs: [], id: null, doc: null, tab: "read", side: "original", sel: null, on: new Set(DEFAULT_ON), version: 0, marks: true, hl: false };
@@ -263,16 +304,18 @@ function scorePill(label, rep) {
 function render() {
   const d = state.doc;
   $("#scores").innerHTML = scorePill("before", d.original?.report) + scorePill("after", d.rewrite?.report);
-  const tabs = [["read", "Read"], ["analysis", "Analysis"], ["requests", `Requests (${d.requests.length})`], ["source", "Source"]];
+  const tabs = [["read", "Read"], ["argument", "Argument"], ["rules", "Style rules"], ["requests", `Requests (${d.requests.length})`], ["source", "Source"]];
+  if (state.tab === "analysis") state.tab = "argument";
   if (state.tab === "compare") state.tab = "read";
-  document.querySelector("main").classList.toggle("reading", state.tab === "read");
+  document.querySelector("main").classList.toggle("reading", state.tab === "read" || state.tab === "argument");
   document.body.classList.toggle("nomarks", !state.marks);
   document.body.classList.toggle("nohl", !state.hl);
   $("#tabs").innerHTML = tabs.map(([k, l]) => `<button class="${state.tab === k ? "on" : ""}" data-tab="${k}">${l}</button>`).join("");
   const v = $("#view");
   if (state.tab === "read") v.innerHTML = readView();
   else if (state.tab === "compare") v.innerHTML = compareView();
-  else if (state.tab === "analysis") v.innerHTML = analysisView();
+  else if (state.tab === "argument") v.innerHTML = argumentView();
+  else if (state.tab === "rules") v.innerHTML = `<section class="card"><h2>Style rules, before and after</h2>${ruleTable()}</section>`;
   else if (state.tab === "requests") v.innerHTML = requestsView();
   else v.innerHTML = `<section class="card"><h2>Source</h2><pre style="white-space:pre-wrap">${esc(d.source)}</pre></section>`;
   renderInspector();
@@ -367,7 +410,42 @@ function proseHTML(side, p) {
   }
   return html + esc(p.text.slice(pos));
 }
+function readerMargin(side, p) {
+  const R = state.doc[side]?.reader; if (!R || R.error) return "";
+  const rp = R.paragraphs[p.nn]; if (!rp) return "";
+  const made = rp.made.map(m => R.claims[m.t]).filter(Boolean);
+  const dots = made.map(c => `<span class="dot" style="background:${VERDICT[verdict(c)][0]}" title="${esc(c.gloss)}"></span>`).join("");
+  const byQ = {};
+  for (const c of made) for (const q of c.questions || []) (byQ[q] ||= []).push(c.gloss);
+  const asks = Object.entries(byQ).map(([q, abouts]) => ({ q: R.questions[q], about: abouts }));
+  const carried = rp.open.filter(o => !made.some(c => c.t === o.t));
+  const faith = made.filter(c => c.held !== "accepted" && c.kind !== "definition" && c.kind !== "saying").length;
+  const compact = `<div class="compact">${dots}<span>${made.length} claim${made.length === 1 ? "" : "s"}${faith ? ` · ${faith} on faith` : ""}${asks.length ? ` · ${asks.reduce((n, a) => n + a.about.length, 0)} doubt${asks.reduce((n, a) => n + a.about.length, 0) > 1 ? "s" : ""}` : ""}${carried.length ? ` · ${carried.length} still open` : ""}</span></div>`;
+  const claimHTML = c => {
+    const v = verdict(c);
+    const held = c.held === "accepted" ? "accepted" : c.held === "authors' word" ? (v === "faith" ? "" : "on the author's word") : c.held === "denied" ? "denied" : "";
+    const use = c.usedBy.length ? `built on in ¶${c.usedBy.map(x => +x).join(", ¶")}` : "nothing later builds on it";
+    return `<div class="claim"><span class="dot" style="background:${VERDICT[v][0]}"></span> ${esc(c.gloss)}<span class="tags">${[VERDICT[v][1], held, use].filter(Boolean).map(esc).join(" · ")}</span></div>`;
+  };
+  const askHTML = asks.map(a => `<div class="ask">${esc(a.q)}${a.about.map(x => `<span class="src">· ${esc(x)}</span>`).join("")}</div>`).join("")
+    + carried.map(o => `<div class="ask">${esc(o.why === "promise" ? "Still waiting for what was promised." : "Still unsettled.")}<span class="src">${esc(o.gloss)} (since ¶${+o.para})</span></div>`).join("");
+  const st = rp.state;
+  return { compact, full: `<h4>The sceptical reader after ¶${p.n}</h4>${made.map(claimHTML).join("") || `<p class="small muted">No claims here.</p>`}
+    ${askHTML ? `<h4 style="margin-top:10px">In their head</h4>${askHTML}` : ""}
+    <p class="small muted" style="margin:8px 0 0">So far: ${st.accepted} accepted, ${st.facts} facts on faith, ${st.evaluations} importance claims, ${st.restated} restatements, ${st.open} open.</p>` };
+}
 function marginHTML(side, p) {
+  const rm = readerMargin(side, p);
+  if (rm) {
+    const hard = [...new Set(p.sentences.flatMap(s => s.flags.filter(f => !f.endsWith("(within limits)"))))];
+    return `<div class="margin">${rm.compact}<div class="full">${rm.full}
+      ${hard.length ? `<div class="stylerules">Style rules: ${hard.map(esc).join(", ")}</div>` : ""}
+      <div class="acts" style="opacity:1"><input placeholder="${side === "original" ? "note for the rewrite" : "what to change"}" data-note="${p.nn}">
+      <button data-act="rewrite" data-para="${p.nn}">${side === "original" ? "Rewrite ¶" + p.n : "Redo ¶" + p.n}</button></div></div></div>`;
+  }
+  return marginRules(side, p);
+}
+function marginRules(side, p) {
   const hard = [...new Set(p.sentences.flatMap(s => s.flags.filter(f => !f.endsWith("(within limits)"))))];
   const reqs = state.doc.requests.filter(r => r.para === p.nn), last = reqs[reqs.length - 1];
   let m = "";
@@ -390,7 +468,7 @@ function articleHTML(side, withMargin) {
   for (const p of sd.paragraphs) {
     const head = p.heading ? `<h2 class="rh">${esc(p.heading)}</h2>` : "";
     const body = p.dropped ? `<p class="prose drop">Paragraph ${p.n} dropped: ${esc(p.dropped)}</p>` : `<p class="prose">${proseHTML(side, p)}</p>`;
-    h += withMargin ? `<div class="rp">${head}${head ? "<div></div>" : ""}${body}${marginHTML(side, p)}</div>` : head + body;
+    h += withMargin ? `<div class="rp" id="${side}-${p.nn}">${head}${head ? "<div></div>" : ""}${body}${marginHTML(side, p)}</div>` : `<div id="${side}-${p.nn}">${head + body}</div>`;
   }
   return h;
 }
@@ -404,13 +482,20 @@ function colHead(side) {
   const sd = state.doc[side], sc = score(sd?.report);
   return `<h1>${esc(sd?.title || state.doc.title)}</h1><div class="byline">${side === "original" ? "Before" : "After"} · ${sc ? `${sc.holds}/${sc.of} rules hold${sc.cert ? " · certified" : ""}` : "not certified yet"}</div>`;
 }
+function hoverCard(side, p) {
+  const rm = p && !p.dropped ? readerMargin(side, p) : null;
+  return rm ? `<div class="hc ${side}">${rm.full}</div>` : "";
+}
 function pBlock(side, p) {
   if (!p) return `<p class="prose drop"></p>`;
   const head = p.heading ? `<h2 class="rh">${esc(p.heading)}</h2>` : "";
-  return head + (p.dropped ? `<p class="prose drop">Dropped: ${esc(p.dropped)}</p>` : `<p class="prose">${proseHTML(side, p)}</p>`);
+  return head + `<div class="hp" id="${side}-${p.nn}">` + (p.dropped ? `<p class="prose drop">Dropped: ${esc(p.dropped)}</p>` : `<p class="prose">${proseHTML(side, p)}</p>`) + hoverCard(side, p) + `</div>`;
 }
 function sideBySide() {
-  if (!aligned()) return `<div class="parallel"><div class="col">${articleHTML("original", false).replace('class="doc-title"', "")}</div><div class="col">${articleHTML("rewrite", false).replace('class="doc-title"', "")}</div></div>`;
+  if (!aligned()) {
+    const col = side => `${colHead(side)}${state.doc[side].paragraphs.map(p => pBlock(side, p)).join("")}`;
+    return `<div class="parallel"><div class="col">${col("original")}</div><div class="col">${col("rewrite")}</div></div>`;
+  }
   const o = Object.fromEntries(state.doc.original.paragraphs.map(p => [p.nn, p]));
   const r = Object.fromEntries(state.doc.rewrite.paragraphs.map(p => [p.nn, p]));
   const nns = [...new Set([...Object.keys(o), ...Object.keys(r)])].sort();
@@ -457,11 +542,39 @@ function diffView() {
   }
   return html + "</p></div></article>";
 }
+function strip(side, label) {
+  const R = state.doc[side]?.reader; if (!R || R.error) return "";
+  const ps = (state.doc[side].paragraphs || []).filter(p => R.paragraphs[p.nn]);
+  if (!ps.length) return "";
+  const W = 1000, H = 64, lw = label ? 54 : 0, cw = (W - lw) / ps.length;
+  const max = Math.max(...ps.map(p => { const s = R.paragraphs[p.nn].state; return s.accepted + s.facts + s.evaluations + s.restated; }), 1);
+  let svg = `<svg width="100%" viewBox="0 0 ${W} ${H + 14}" preserveAspectRatio="none" style="display:block">`;
+  if (label) svg += `<text x="0" y="${H / 2 + 4}" font-size="11" fill="var(--muted)">${label}</text>`;
+  ps.forEach((p, i) => {
+    const s = R.paragraphs[p.nn].state, x = lw + i * cw;
+    let y = H;
+    for (const [k, v] of [["accepted", s.accepted], ["faith", s.facts], ["importance", s.evaluations], ["restates", s.restated]]) {
+      const h = v / max * (H - 6); y -= h;
+      svg += `<rect x="${x + 1}" y="${y}" width="${Math.max(1, cw - 2)}" height="${h}" fill="${VERDICT[k][0]}" opacity=".85"/>`;
+    }
+    for (let j = 0; j < s.open; j++) svg += `<circle cx="${x + cw / 2}" cy="${H + 6 + 0}" r="3" fill="${VERDICT.open[0]}" transform="translate(${(j - (s.open - 1) / 2) * 7},0)"/>`;
+    svg += `<rect class="col" data-jump="${side}-${p.nn}" x="${x}" y="0" width="${cw}" height="${H + 14}" fill="transparent" style="cursor:pointer"><title>¶${p.n} — so far: ${s.accepted} accepted, ${s.facts} facts on faith, ${s.evaluations} importance claims, ${s.restated} restatements, ${s.open} open</title></rect>`;
+  });
+  return svg + "</svg>";
+}
+function stripBlock() {
+  const both = state.side === "both" || state.side === "diff";
+  const sides = both ? ["original", "rewrite"] : [state.side === "rewrite" ? "rewrite" : "original"];
+  const svgs = sides.map(sd => strip(sd, both ? (sd === "original" ? "before" : "after") : "")).filter(Boolean);
+  if (!svgs.length) return "";
+  return `<div class="strip">${svgs.join("")}<div class="small muted">What the sceptical reader holds after each paragraph:
+    ${["accepted", "faith", "importance", "restates", "open"].map(k => `<span class="sw" style="background:${VERDICT[k][0]};border-radius:50%"></span> ${esc(VERDICT[k][1])}`).join(" &nbsp;")}. Click a column to jump there.</div></div>`;
+}
 function readView() {
-  if (state.side === "both" && state.doc.rewrite) return readerOpts() + sideBySide();
-  if (state.side === "diff" && state.doc.rewrite) return readerOpts() + diffView();
+  if (state.side === "both" && state.doc.rewrite) return readerOpts() + stripBlock() + sideBySide();
+  if (state.side === "diff" && state.doc.rewrite) return readerOpts() + stripBlock() + diffView();
   const side = state.side === "rewrite" && state.doc.rewrite ? "rewrite" : "original";
-  return readerOpts() + `<article class="reader">${articleHTML(side, true)}</article>`;
+  return readerOpts() + stripBlock() + `<article class="reader">${articleHTML(side, true)}</article>`;
 }
 function compareView() { state.side = "both"; return readView(); }
 
@@ -582,6 +695,45 @@ function features() {
   ${audit.length ? `<p class="small">Base lexicon overridden (before): ${audit.map(esc).join("; ")}</p>` : ""}`;
 }
 
+function claimMap(side) {
+  const R = state.doc[side]?.reader; if (!R || R.error) return `<p class="muted">No argument annotation for this side yet.</p>`;
+  const paras = Object.keys(R.paragraphs).sort();
+  const by = {}; Object.values(R.claims).forEach(c => (by[c.para] ||= []).push(c));
+  const cw = 64, rh = 22, H = 30 + Math.max(...paras.map(nn => (by[nn] || []).length), 1) * rh + 10, W = paras.length * cw + 20;
+  const pos = {};
+  paras.forEach((nn, i) => (by[nn] || []).forEach((c, j) => pos[c.t] = [10 + i * cw + cw / 2, 30 + j * rh]));
+  let svg = `<svg width="${W}" height="${H}" font-size="10">`;
+  paras.forEach((nn, i) => svg += `<text x="${10 + i * cw + cw / 2}" y="14" text-anchor="middle" fill="var(--muted)">¶${+nn}</text><line x1="${10 + i * cw}" x2="${10 + i * cw}" y1="20" y2="${H}" stroke="var(--line)"/>`);
+  for (const c of Object.values(R.claims)) for (const l of c.links || []) {
+    const a = pos[c.t], b = pos[l.t]; if (!a || !b) continue;
+    svg += `<path d="M${a[0]},${a[1]} C${(a[0] + b[0]) / 2},${a[1] - 24} ${(a[0] + b[0]) / 2},${b[1] - 24} ${b[0]},${b[1]}" fill="none" stroke="var(--accent)" opacity=".45"/>`;
+  }
+  for (const c of Object.values(R.claims)) {
+    const p = pos[c.t]; if (!p) continue;
+    svg += `<circle cx="${p[0]}" cy="${p[1]}" r="7" fill="${VERDICT[verdict(c)][0]}"><title>${esc(c.gloss)}\n${esc(VERDICT[verdict(c)][1])}; ${c.usedBy.length ? "built on in ¶" + c.usedBy.map(x => +x).join(", ¶") : "nothing builds on it"}</title></circle>`;
+  }
+  return `<div class="treewrap">${svg}</svg></div>`;
+}
+function claimTable(side) {
+  const R = state.doc[side]?.reader; if (!R || R.error) return "";
+  const rank = { importance: 0, restates: 1, open: 2, faith: 3, other: 4, accepted: 5 };
+  const cs = Object.values(R.claims).sort((a, b) => rank[verdict(a)] - rank[verdict(b)] || a.para.localeCompare(b.para));
+  return `<table><tr><th></th><th>claim</th><th>¶</th><th>the reader</th><th>built on in</th></tr>${cs.map(c => `<tr>
+    <td><span class="dot" style="background:${VERDICT[verdict(c)][0]}"></span></td><td>${esc(c.gloss)}<div class="small muted">${esc(VERDICT[verdict(c)][1])}</div></td>
+    <td>${+c.para}</td><td class="small">${esc(c.held || "noted")}${(c.support || []).length ? `<div class="muted">${c.support.map(x => esc(x.src) + (x.strength != null ? " (" + x.strength + ")" : "")).join("; ")}</div>` : ""}</td>
+    <td class="small">${c.usedBy.length ? "¶" + c.usedBy.map(x => +x).join(", ¶") : `<span style="color:var(--bad)">nothing</span>`}</td></tr>`).join("")}</table>`;
+}
+function argumentView() {
+  const has = s => !!state.doc[s]?.reader && !state.doc[s].reader.error;
+  const tally = s => { const R = state.doc[s]?.reader; if (!R?.claims) return ""; const c = {}; Object.values(R.claims).forEach(x => c[verdict(x)] = (c[verdict(x)] || 0) + 1);
+    return Object.entries(VERDICT).filter(([k]) => c[k]).map(([k, [col, t]]) => `<span class="pill"><span class="dot" style="background:${col}"></span> ${c[k]} ${esc(t)}</span>`).join(" "); };
+  if (!has("original") && !has("rewrite")) return `<section class="card"><h2>Argument</h2><p class="muted">No argument annotation yet. A worker writes one per paragraph (NN.argument.json: the claims, citations, examples, inferences, hedges and promises) when asked to annotate.</p></section>`;
+  return `<section class="card"><h2>What the reader is asked to believe</h2>
+    <p class="small muted">Each claim the text makes, read by World/Argument's sceptical reader: a claim is <b>accepted</b> when it is cited, shown by example, or reasoned from accepted claims, and otherwise held on the author's word. A claim's value is what it gives the reader (a fact, or only asserted importance or a restatement) and whether anything later builds on it. Arcs: a later claim that uses this one.</p>
+    ${["original", "rewrite"].filter(has).map(s => `<h3>${s === "original" ? "Before" : "After"}</h3><div class="row" style="margin-bottom:6px">${tally(s)}</div>${claimMap(s)}`).join("")}</section>
+  ${["original", "rewrite"].filter(has).map(s => `<section class="card"><h2>${s === "original" ? "Before" : "After"}: claims, weakest first</h2>${claimTable(s)}</section>`).join("")}`;
+}
+
 // ------------------------------------------------------------ requests
 function requestsView() {
   const rs = [...state.doc.requests].reverse();
@@ -661,6 +813,8 @@ function legendHelp() {
 
 // ------------------------------------------------------------ events
 document.addEventListener("click", async e => {
+  const j = e.target.closest("[data-jump]");
+  if (j) { document.getElementById(j.dataset.jump)?.scrollIntoView({ behavior: "smooth", block: "center" }); document.querySelectorAll(".pinned").forEach(x => x.classList.remove("pinned")); document.getElementById(j.dataset.jump)?.classList.add("pinned"); return; }
   const t = e.target.closest("[data-tab],[data-side-btn],[data-at],[data-act],[data-cert],#closeinsp,#newbtn,#newok,#newcancel,#bigtree,#treeclose");
   if (!t) return;
   if (t.dataset.tab) { state.tab = t.dataset.tab; save(); render(); }

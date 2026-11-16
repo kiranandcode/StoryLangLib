@@ -1,0 +1,20 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "diversity_remarkable",
+   "uses": [
+    "apple",
+    "genetics"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "thousands_cultivars",
+   "uses": [
+    "apple",
+    "genetics"
+   ]
+  }
+ ]
+}

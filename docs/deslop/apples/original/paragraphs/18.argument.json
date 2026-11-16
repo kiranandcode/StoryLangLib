@@ -1,0 +1,11 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "popular_fraction",
+   "uses": [
+    "thousands_cultivars"
+   ]
+  }
+ ]
+}

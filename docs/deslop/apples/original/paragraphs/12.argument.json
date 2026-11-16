@@ -1,0 +1,16 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "ordinary_to_symbol",
+   "premises": [
+    "golden_apples",
+    "eden_apple",
+    "newton_story"
+   ],
+   "uses": [
+    "meanings_beyond"
+   ]
+  }
+ ]
+}

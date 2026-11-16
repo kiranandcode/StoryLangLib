@@ -1,0 +1,26 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "major_component",
+   "uses": [
+    "apple",
+    "agriculture"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "china_largest",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "other_producers",
+   "uses": [
+    "apple"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "nutrients",
+   "uses": [
+    "apple",
+    "nutrition"
+   ]
+  },
+  {
+   "move": "hedge",
+   "t": "pectin_cholesterol",
+   "sec": 0,
+   "uses": [
+    "nutrients",
+    "health"
+   ]
+  }
+ ]
+}

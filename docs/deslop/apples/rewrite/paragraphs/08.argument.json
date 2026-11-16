@@ -1,0 +1,11 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "golden_apples",
+   "uses": [
+    "mythology"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "spread_trade",
+   "uses": [
+    "origin_asia",
+    "trade"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "silk_road_hybrid",
+   "uses": [
+    "spread_trade"
+   ]
+  }
+ ]
+}

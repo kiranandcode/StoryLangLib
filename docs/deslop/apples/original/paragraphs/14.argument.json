@@ -1,0 +1,25 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "challenges",
+   "uses": [
+    "agriculture"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "diseases",
+   "uses": [
+    "disease"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "balance_env",
+   "uses": [
+    "growers"
+   ]
+  }
+ ]
+}

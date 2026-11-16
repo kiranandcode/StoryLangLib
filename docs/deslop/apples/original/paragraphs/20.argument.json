@@ -1,0 +1,15 @@
+{
+ "moves": [
+  {
+   "move": "infer",
+   "t": "conservation_value",
+   "premises": [
+    "preserve_important",
+    "wild_reservoirs"
+   ],
+   "uses": [
+    "genetics"
+   ]
+  }
+ ]
+}

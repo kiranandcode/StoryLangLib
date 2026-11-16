@@ -1,0 +1,11 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "newton_story",
+   "uses": [
+    "science"
+   ]
+  }
+ ]
+}

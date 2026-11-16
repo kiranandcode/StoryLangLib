@@ -1,0 +1,19 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "eden_apple",
+   "uses": [
+    "art"
+   ]
+  },
+  {
+   "move": "infer",
+   "t": "temptation_symbol",
+   "premises": [
+    "eden_apple"
+   ],
+   "uses": []
+  }
+ ]
+}

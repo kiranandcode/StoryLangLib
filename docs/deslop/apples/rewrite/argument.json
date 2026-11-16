@@ -1,0 +1,148 @@
+{
+ "lore": [
+  "apple",
+  "fruit",
+  "agriculture",
+  "nutrition",
+  "mythology",
+  "science",
+  "trade",
+  "health",
+  "disease",
+  "climate",
+  "genetics",
+  "breeding",
+  "history",
+  "diet",
+  "art",
+  "growers"
+ ],
+ "excerpt": [],
+ "rules": [],
+ "terms": {
+  "widely_grown": {
+   "gloss": "Apples are among the most widely grown fruits.",
+   "kind": "fact"
+  },
+  "origin_asia": {
+   "gloss": "Domesticated apples come from wild apples in Central Asia, especially Kazakhstan.",
+   "kind": "fact"
+  },
+  "sieversii": {
+   "gloss": "Their main wild ancestor, Malus sieversii, still grows there.",
+   "kind": "fact"
+  },
+  "spread_trade": {
+   "gloss": "Apples spread west and east with migration and trade.",
+   "kind": "fact"
+  },
+  "silk_road_hybrid": {
+   "gloss": "Along the Silk Road, apple populations crossed and gained new traits.",
+   "kind": "fact"
+  },
+  "grafting": {
+   "gloss": "Grafting: attaching a branch of a variety onto a rootstock.",
+   "kind": "definition"
+  },
+  "seeds_unreliable": {
+   "gloss": "Apple trees grown from seed do not reliably resemble their parents.",
+   "kind": "fact"
+  },
+  "grafting_needed": {
+   "gloss": "So growers propagate apples by grafting.",
+   "kind": "fact"
+  },
+  "grafting_preserves": {
+   "gloss": "Grafting keeps a variety's flavour, texture and look across generations.",
+   "kind": "fact"
+  },
+  "nutrients": {
+   "gloss": "Apples contain fibre, vitamin C and polyphenols.",
+   "kind": "fact"
+  },
+  "pectin_cholesterol": {
+   "gloss": "Pectin may help regulate cholesterol.",
+   "kind": "fact"
+  },
+  "calories_95": {
+   "gloss": "A medium apple has about 95 calories.",
+   "kind": "fact"
+  },
+  "satiety": {
+   "gloss": "Apples' water and fibre make them filling.",
+   "kind": "fact"
+  },
+  "apple_a_day": {
+   "gloss": "\"An apple a day keeps the doctor away.\"",
+   "kind": "saying"
+  },
+  "no_single_fruit": {
+   "gloss": "No single fruit guarantees health or prevents disease.",
+   "kind": "fact"
+  },
+  "golden_apples": {
+   "gloss": "Golden apples in Greek myth stand for beauty, desire, immortality or conflict.",
+   "kind": "fact"
+  },
+  "eden_apple": {
+   "gloss": "Christian art shows Eden's fruit as an apple, though the Bible names no species.",
+   "kind": "fact"
+  },
+  "temptation_symbol": {
+   "gloss": "So the apple became a symbol of temptation and knowledge.",
+   "kind": "fact"
+  },
+  "newton_story": {
+   "gloss": "Newton reportedly said a falling apple set him thinking about gravity.",
+   "kind": "fact"
+  },
+  "china_largest": {
+   "gloss": "China grows more apples than any other country.",
+   "kind": "fact"
+  },
+  "other_producers": {
+   "gloss": "The US, Türkiye, Poland and India also grow apples at scale.",
+   "kind": "fact"
+  },
+  "diseases": {
+   "gloss": "Orchards suffer apple scab, fire blight and insect pests.",
+   "kind": "fact"
+  },
+  "balance_env": {
+   "gloss": "Growers must balance yields against pesticides, soil and water.",
+   "kind": "fact"
+  },
+  "temp_needs": {
+   "gloss": "Apple trees need particular temperatures to flower and fruit.",
+   "kind": "fact"
+  },
+  "regions_suitability": {
+   "gloss": "Climate change may make some growing regions less suitable.",
+   "kind": "fact"
+  },
+  "breeding_goals": {
+   "gloss": "Breeders want disease resistance, climate resilience, flavour and storage life.",
+   "kind": "fact"
+  },
+  "thousands_cultivars": {
+   "gloss": "There are thousands of named cultivars, varying in taste, texture and colour.",
+   "kind": "fact"
+  },
+  "popular_fraction": {
+   "gloss": "The popular varieties are a small fraction of them.",
+   "kind": "fact"
+  },
+  "traits_useful": {
+   "gloss": "Less commercial varieties may carry traits useful for breeding.",
+   "kind": "fact"
+  },
+  "preserve_important": {
+   "gloss": "So preserving less commercial varieties matters.",
+   "kind": "evaluation"
+  },
+  "wild_reservoirs": {
+   "gloss": "Wild apples are a valuable source of disease resistance and stress tolerance.",
+   "kind": "fact"
+  }
+ }
+}

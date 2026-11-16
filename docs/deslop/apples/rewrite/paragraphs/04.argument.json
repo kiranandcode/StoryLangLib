@@ -1,0 +1,35 @@
+{
+ "moves": [
+  {
+   "move": "define",
+   "t": "grafting",
+   "uses": [
+    "growers"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "seeds_unreliable",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "infer",
+   "t": "grafting_needed",
+   "premises": [
+    "seeds_unreliable"
+   ],
+   "uses": [
+    "grafting"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "grafting_preserves",
+   "uses": [
+    "grafting"
+   ]
+  }
+ ]
+}

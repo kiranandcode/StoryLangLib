@@ -1,0 +1,27 @@
+{
+ "moves": [
+  {
+   "move": "cite",
+   "t": "apple_a_day",
+   "uses": [
+    "apple",
+    "health"
+   ]
+  },
+  {
+   "move": "deny",
+   "t": "apple_a_day",
+   "uses": [
+    "health"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "no_single_fruit",
+   "uses": [
+    "health",
+    "diet"
+   ]
+  }
+ ]
+}

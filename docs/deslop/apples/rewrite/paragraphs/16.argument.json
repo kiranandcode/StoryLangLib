@@ -1,0 +1,30 @@
+{
+ "moves": [
+  {
+   "move": "hedge",
+   "t": "traits_useful",
+   "sec": 0,
+   "uses": [
+    "breeding"
+   ]
+  },
+  {
+   "move": "infer",
+   "t": "preserve_important",
+   "premises": [
+    "traits_useful"
+   ],
+   "uses": [
+    "thousands_cultivars"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "wild_reservoirs",
+   "uses": [
+    "disease",
+    "genetics"
+   ]
+  }
+ ]
+}

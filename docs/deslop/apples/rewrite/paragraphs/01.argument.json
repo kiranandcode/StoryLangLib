@@ -1,0 +1,18 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "widely_grown",
+   "uses": [
+    "apple"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "origin_asia",
+   "uses": [
+    "apple"
+   ]
+  }
+ ]
+}

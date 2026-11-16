@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "useful_perspective",
+   "uses": [
+    "apple",
+    "agriculture"
+   ]
+  }
+ ]
+}

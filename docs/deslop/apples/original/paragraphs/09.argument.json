@@ -1,0 +1,18 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "golden_apples",
+   "uses": [
+    "mythology"
+   ]
+  },
+  {
+   "move": "example",
+   "t": "meanings_beyond",
+   "uses": [
+    "golden_apples"
+   ]
+  }
+ ]
+}

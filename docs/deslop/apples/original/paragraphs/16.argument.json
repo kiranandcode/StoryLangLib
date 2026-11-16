@@ -1,0 +1,13 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "breeding_goals",
+   "uses": [
+    "breeding",
+    "diseases",
+    "climate"
+   ]
+  }
+ ]
+}

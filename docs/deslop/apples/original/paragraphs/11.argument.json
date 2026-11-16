@@ -1,0 +1,26 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "folklore_position",
+   "uses": [
+    "apple",
+    "science"
+   ]
+  },
+  {
+   "move": "cite",
+   "t": "newton_story",
+   "uses": [
+    "science"
+   ]
+  },
+  {
+   "move": "example",
+   "t": "meanings_beyond",
+   "uses": [
+    "newton_story"
+   ]
+  }
+ ]
+}

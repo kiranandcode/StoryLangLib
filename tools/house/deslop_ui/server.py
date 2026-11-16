@@ -183,7 +183,126 @@ def side_data(side: Path) -> dict | None:
             paras.append({"n": int(nn), "nn": nn, "dropped": note["dropped"], "note": note, "text": "",
                           "heading": headings.get(str(int(nn))), "sentences": [], "entities": {}})
     paras.sort(key=lambda p: p["n"])
-    return {"paragraphs": paras, "report": rep, "title": headings.get("title")}
+    return {"paragraphs": paras, "report": rep, "title": headings.get("title"), "reader": reader_model(side)}
+
+
+# ---------------------------------------------------------------- the reader
+
+_arg_cache: dict[str, tuple[float, dict]] = {}
+
+QUESTIONS = {
+    "evaluation": "Says who? The text asserts this and nothing shows it.",
+    "summary": "This restates what came before. What does it add?",
+    "unused": "Nothing later builds on this. Why is it here?",
+    "hedge": "Is it, though? The text raises this and never settles it.",
+    "promise": "The text promises this and never delivers it.",
+    "unsupported": "Where does this come from? No source, example or reason is given.",
+}
+
+
+def reader_model(side: Path) -> dict | None:
+    """The argument read as a sceptical reader would: `langlib argument` (the
+    World/Argument reader's mind) plus, per claim, its kind, whether anything
+    later builds on it, and the questions left in the reader's head."""
+    aj = side / "argument.json"
+    pdir = side / "paragraphs"
+    files = sorted(pdir.glob("[0-9][0-9].argument.json"))
+    if not aj.exists() or not files:
+        return None
+    stamp = max(f.stat().st_mtime for f in [aj, *files])
+    key = str(side)
+    if key in _arg_cache and _arg_cache[key][0] == stamp:
+        return _arg_cache[key][1]
+    meta = json.loads(aj.read_text())
+    lore = {k: meta.get(k, []) for k in ("lore", "excerpt", "rules")}
+    p = subprocess.run(["nice", "-n", "10", str(certify.LANGLIB), "argument", str(side), json.dumps(lore)],
+                       capture_output=True, text=True, timeout=120)
+    try:
+        arg = json.loads(p.stdout)
+    except json.JSONDecodeError:
+        return {"error": (p.stdout + p.stderr)[-1500:]}
+    terms = meta.get("terms", {})
+    held = {}
+    support = {}
+    for n in arg["nodes"]:
+        if n["id"].startswith("P:"):
+            held[n["t"]] = n.get("held") or n["kind"]
+            support[n["t"]] = [{"src": x.get("src"), "strength": x.get("strength"), "for": x.get("for"),
+                                "reasons": x.get("reasons", [])} for x in n.get("support", [])]
+    claims: dict[str, dict] = {}
+    open_q: dict[str, dict] = {}          # hedges and promises not yet paid
+    paras = []
+    order = [pp["name"] for pp in arg["paragraphs"]]
+    for pp in arg["paragraphs"]:
+        nn = pp["name"]
+        made, asks = [], []
+        for m in pp["moves"]:
+            mv, t = m.get("move"), m.get("t", "")
+            for u in (m.get("uses") or []) + (m.get("premises") or []):
+                if u in claims and claims[u]["para"] != nn:
+                    if nn not in claims[u]["usedBy"]:
+                        claims[u]["usedBy"].append(nn)
+                    if t and t != u and {"para": nn, "t": t} not in claims[u]["links"]:
+                        claims[u]["links"].append({"para": nn, "t": t})
+            if mv in ("claim", "infer", "cite", "example", "hedge", "deny", "define", "promise", "evaluate"):
+                tk = terms.get(t, {})
+                kind = tk.get("kind", "fact")
+                if t not in claims:
+                    claims[t] = {"t": t, "gloss": tk.get("gloss", t.replace("_", " ")), "kind": kind, "para": nn,
+                                 "moves": [], "usedBy": [], "links": [], "held": held.get(t, ""), "support": support.get(t, [])}
+                c = claims[t]
+                c["moves"].append({"move": mv, "para": nn})
+                if mv in ("cite", "example", "evaluate", "deliver") and c["para"] != nn:
+                    if nn not in c["usedBy"]:
+                        c["usedBy"].append(nn)
+                if mv in ("claim", "infer", "hedge", "promise", "define") or (mv == "cite" and c["para"] == nn):
+                    if not any(x["t"] == t for x in made):
+                        made.append({"t": t, "move": mv})
+                if mv == "hedge":
+                    open_q[t] = {"t": t, "why": "hedge", "para": nn}
+                if mv == "promise":
+                    open_q[t] = {"t": t, "why": "promise", "para": nn}
+            if mv in ("deliver", "evaluate") and t in open_q:
+                del open_q[t]
+        paras.append({"nn": nn, "made": made, "open": [dict(q) for q in open_q.values()]})
+    # verdicts, now that later uses are known
+    for c in claims.values():
+        last = order[-1] if order else ""
+        q = []
+        if c["kind"] == "evaluation" and c["held"] != "accepted":
+            q.append("evaluation")
+        if c["kind"] == "summary":
+            q.append("summary")
+        if c["kind"] in ("fact", "evaluation") and not c["usedBy"] and c["para"] != last and c["held"] != "accepted":
+            q.append("unused")
+        if c["kind"] == "fact" and c["held"] == "authors' word" and not q:
+            q.append("unsupported")
+        c["questions"] = q
+        c["value"] = ("restates" if c["kind"] == "summary" else
+                      "asserted importance" if c["kind"] == "evaluation" else
+                      "definition" if c["kind"] == "definition" else
+                      "promise" if c["kind"] == "promise" else
+                      "saying" if c["kind"] == "saying" else "information")
+    for pp in paras:
+        for q in pp["open"]:
+            q["gloss"] = claims.get(q["t"], {}).get("gloss", q["t"])
+    # running state after each paragraph
+    seen: list[str] = []
+    for pp in paras:
+        seen += [m["t"] for m in pp["made"] if m["t"] not in seen]
+        cs = [claims[t] for t in seen if t in claims]
+        pp["state"] = {
+            "accepted": sum(1 for c in cs if c["held"] == "accepted"),
+            "facts": sum(1 for c in cs if c["kind"] == "fact" and c["held"] != "accepted"),
+            "evaluations": sum(1 for c in cs if c["kind"] == "evaluation" and c["held"] != "accepted"),
+            "restated": sum(1 for c in cs if c["kind"] == "summary"),
+            "open": len(pp["open"]),
+        }
+    out = {"claims": claims, "paragraphs": {pp["nn"]: pp for pp in paras}, "gaps": arg.get("gaps", []),
+           "deferred": arg.get("deferred", []), "edges": arg.get("edges", []), "valid": arg.get("valid"),
+           "questions": QUESTIONS}
+    _arg_cache[key] = (stamp, out)
+    return out
 
 
 def doc_data(doc_id: str) -> dict:

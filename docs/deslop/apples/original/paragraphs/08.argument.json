@@ -1,0 +1,12 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "meanings_beyond",
+   "uses": [
+    "apple",
+    "agriculture"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,208 @@
+{
+ "lore": [
+  "apple",
+  "fruit",
+  "agriculture",
+  "nutrition",
+  "mythology",
+  "science",
+  "trade",
+  "health",
+  "disease",
+  "climate",
+  "genetics",
+  "breeding",
+  "history",
+  "diet",
+  "art",
+  "growers"
+ ],
+ "excerpt": [],
+ "rules": [],
+ "terms": {
+  "widely_grown": {
+   "gloss": "Apples are among the most widely grown fruits.",
+   "kind": "fact"
+  },
+  "significance_beyond": {
+   "gloss": "The apple matters beyond nutrition: to agriculture, economics, myth and science.",
+   "kind": "evaluation"
+  },
+  "role_in_civilisation": {
+   "gloss": "The apple has played an important role in human civilisation.",
+   "kind": "evaluation"
+  },
+  "origin_asia": {
+   "gloss": "Domesticated apples come from wild apples in Central Asia, especially Kazakhstan.",
+   "kind": "fact"
+  },
+  "sieversii": {
+   "gloss": "Their main wild ancestor, Malus sieversii, still grows there.",
+   "kind": "fact"
+  },
+  "spread_trade": {
+   "gloss": "Apples spread west and east with migration and trade.",
+   "kind": "fact"
+  },
+  "silk_road_hybrid": {
+   "gloss": "Along the Silk Road, apple populations crossed and gained new traits.",
+   "kind": "fact"
+  },
+  "grafting": {
+   "gloss": "Grafting: attaching a branch of a variety onto a rootstock.",
+   "kind": "definition"
+  },
+  "seeds_unreliable": {
+   "gloss": "Apple trees grown from seed do not reliably resemble their parents.",
+   "kind": "fact"
+  },
+  "grafting_needed": {
+   "gloss": "So growers propagate apples by grafting.",
+   "kind": "fact"
+  },
+  "grafting_preserves": {
+   "gloss": "Grafting keeps a variety's flavour, texture and look across generations.",
+   "kind": "fact"
+  },
+  "nutrients": {
+   "gloss": "Apples contain fibre, vitamin C and polyphenols.",
+   "kind": "fact"
+  },
+  "pectin_cholesterol": {
+   "gloss": "Pectin may help regulate cholesterol.",
+   "kind": "fact"
+  },
+  "calories_95": {
+   "gloss": "A medium apple has about 95 calories.",
+   "kind": "fact"
+  },
+  "satiety": {
+   "gloss": "Apples' water and fibre make them filling.",
+   "kind": "fact"
+  },
+  "apple_a_day": {
+   "gloss": "\"An apple a day keeps the doctor away.\"",
+   "kind": "saying"
+  },
+  "no_single_fruit": {
+   "gloss": "No single fruit guarantees health or prevents disease.",
+   "kind": "fact"
+  },
+  "meanings_beyond": {
+   "gloss": "Apples have acquired meanings far beyond agriculture.",
+   "kind": "evaluation"
+  },
+  "golden_apples": {
+   "gloss": "Golden apples in Greek myth stand for beauty, desire, immortality or conflict.",
+   "kind": "fact"
+  },
+  "eden_apple": {
+   "gloss": "Christian art shows Eden's fruit as an apple, though the Bible names no species.",
+   "kind": "fact"
+  },
+  "temptation_symbol": {
+   "gloss": "So the apple became a symbol of temptation and knowledge.",
+   "kind": "fact"
+  },
+  "folklore_position": {
+   "gloss": "The apple holds a prominent place in scientific folklore.",
+   "kind": "evaluation"
+  },
+  "newton_story": {
+   "gloss": "Newton reportedly said a falling apple set him thinking about gravity.",
+   "kind": "fact"
+  },
+  "ordinary_to_symbol": {
+   "gloss": "An ordinary product can become a powerful cultural symbol.",
+   "kind": "summary"
+  },
+  "major_component": {
+   "gloss": "Apple production is a major part of the global fruit industry.",
+   "kind": "evaluation"
+  },
+  "china_largest": {
+   "gloss": "China grows more apples than any other country.",
+   "kind": "fact"
+  },
+  "other_producers": {
+   "gloss": "The US, Türkiye, Poland and India also grow apples at scale.",
+   "kind": "fact"
+  },
+  "challenges": {
+   "gloss": "Commercial cultivation presents several challenges.",
+   "kind": "evaluation"
+  },
+  "diseases": {
+   "gloss": "Orchards suffer apple scab, fire blight and insect pests.",
+   "kind": "fact"
+  },
+  "balance_env": {
+   "gloss": "Growers must balance yields against pesticides, soil and water.",
+   "kind": "fact"
+  },
+  "climate_uncertainty": {
+   "gloss": "Climate change introduces further uncertainty.",
+   "kind": "evaluation"
+  },
+  "temp_needs": {
+   "gloss": "Apple trees need particular temperatures to flower and fruit.",
+   "kind": "fact"
+  },
+  "regions_suitability": {
+   "gloss": "Climate change may make some growing regions less suitable.",
+   "kind": "fact"
+  },
+  "breeding_goals": {
+   "gloss": "Breeders want disease resistance, climate resilience, flavour and storage life.",
+   "kind": "fact"
+  },
+  "diversity_remarkable": {
+   "gloss": "Genetic diversity is one of the apple's most remarkable features.",
+   "kind": "evaluation"
+  },
+  "thousands_cultivars": {
+   "gloss": "There are thousands of named cultivars, varying in taste, texture and colour.",
+   "kind": "fact"
+  },
+  "popular_fraction": {
+   "gloss": "The popular varieties are a small fraction of them.",
+   "kind": "fact"
+  },
+  "traits_useful": {
+   "gloss": "Less commercial varieties may carry traits useful for breeding.",
+   "kind": "fact"
+  },
+  "preserve_important": {
+   "gloss": "So preserving less commercial varieties matters.",
+   "kind": "evaluation"
+  },
+  "wild_reservoirs": {
+   "gloss": "Wild apples are a valuable source of disease resistance and stress tolerance.",
+   "kind": "fact"
+  },
+  "conservation_value": {
+   "gloss": "Conserving apple diversity is a cultural responsibility and a practical investment.",
+   "kind": "evaluation"
+  },
+  "complex_relationship": {
+   "gloss": "The apple illustrates the complex relationship between people and cultivated plants.",
+   "kind": "summary"
+  },
+  "history_reflects": {
+   "gloss": "Its history reflects migration, trade, innovation and cultural exchange.",
+   "kind": "summary"
+  },
+  "reveals_genetics": {
+   "gloss": "Its biology shows the importance of genetics; its economics the challenges of food production.",
+   "kind": "summary"
+  },
+  "useful_perspective": {
+   "gloss": "The apple gives a useful perspective on agriculture and humanity's relation to nature.",
+   "kind": "summary"
+  },
+  "deeper_examination": {
+   "gloss": "A deeper look at domestication and genetics would be an interesting extension.",
+   "kind": "promise"
+  }
+ }
+}

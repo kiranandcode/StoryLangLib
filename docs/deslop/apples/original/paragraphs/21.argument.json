@@ -1,0 +1,28 @@
+{
+ "moves": [
+  {
+   "move": "claim",
+   "t": "complex_relationship",
+   "uses": [
+    "apple",
+    "agriculture"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "history_reflects",
+   "uses": [
+    "spread_trade",
+    "history"
+   ]
+  },
+  {
+   "move": "claim",
+   "t": "reveals_genetics",
+   "uses": [
+    "genetics",
+    "challenges"
+   ]
+  }
+ ]
+}
