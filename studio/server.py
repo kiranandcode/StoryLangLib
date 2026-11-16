@@ -163,6 +163,7 @@ async def watch() -> None:
                 await broadcast({"type": "paper", "paper": name, "at": time.time()})
             if (STORIES / name / "story.json").exists():
                 extras.invalidate("story", name)
+                extras.invalidate("power", name)
                 schedule_refresh(name)
 
 
@@ -226,6 +227,17 @@ async def readings(name: str):
     try:
         return await extras.get("story", name, spawn)
     except Exception as e:  # noqa: BLE001  a broken reading must not break the panel
+        return {"name": name, "error": str(e)}
+
+
+@app.get("/api/story/{name}/power")
+async def power(name: str):
+    """The story's power system, move by move (`langlib power`; studio/power-schema.md)."""
+    if name not in story_dirs():
+        raise HTTPException(404, f"no story {name}")
+    try:
+        return await extras.get("power", name, spawn)
+    except Exception as e:  # noqa: BLE001
         return {"name": name, "error": str(e)}
 
 

@@ -274,3 +274,32 @@ export interface Paper {
   proved: { gaps: string[]; deferred: [string, string][]; antitheses: string[]; contrasts: string[] } | null
   error?: string
 }
+
+/** `langlib power <dir>`: a rule-based module's moves, checks and states (studio/power-schema.md). */
+export interface PCheck { id: string; kind: string; label: string; pass: boolean; why: string }
+export interface PState {
+  actors: Record<string, {
+    status: string[]; resources: Record<string, number>
+    fields: { key: string; label: string; value: unknown }[]
+    marks: { kind: string; by: string; via: string; note: string }[]
+  }>
+  active: { by: string; what: string; on: string[] }[]
+  relations: { from: string; to: string; kind: string; label: string }[]
+  clocks: { id: string; label: string; actor: string; target: string; start: number; due: number; status: string }[]
+  knowledge: { who: string; of: string; what: string; holds: boolean; true: boolean }[]
+}
+export interface PMove {
+  i: number; para: string; at: number | null; actor: string; kind: string; text: string; raw: string
+  targets: string[]; t: number | null; ok: boolean; why: string; checks: PCheck[]; agrees: boolean; state: PState
+}
+export interface PowerExport {
+  schema: number; system: string; title: string; story: string; source: string
+  valid: boolean; failure: { move: number; why: string } | null
+  actors: { id: string; name: string; kind: string; of?: string }[]
+  resources: { id: string; label: string; max: Record<string, number> }[]
+  glossary: Record<string, string>
+  start: PState
+  moves: PMove[]
+  counterfactuals: { id: string; label: string; theorem: string; change: string; move: number | null; para: string; why: string; checks: PCheck[] }[]
+  error?: string
+}

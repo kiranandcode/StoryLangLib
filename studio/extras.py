@@ -1,7 +1,7 @@
 """The readings beside `langlib story`: ties, care and identity (`langlib ext`),
 the refined consent reading (`langlib consent`), the style verdicts
 (`langlib style`, `house`, `academic`) and a paper's argument graph
-(`langlib argument`). Each runs through procs.arun (its lock, nice, timeout,
+(`langlib argument`) and a power system's moves (`langlib power`). Each runs through procs.arun (its lock, nice, timeout,
 process-group reaping) and is cached until the story's files change.
 
 Requests for the same reading share one run. The run is a task in the
@@ -73,6 +73,11 @@ async def _story_readings(name: str) -> dict:
     return out
 
 
+async def _power(name: str) -> dict:
+    """A rule-based module's export (studio/power-schema.md), if the story has one."""
+    return await _cli("power", str(STORIES / name), timeout=300)
+
+
 async def _paper(name: str) -> dict:
     d = paper_dir(name)
     lit = _literals(d / "argument.py", ("LORE", "EXCERPT", "LORE_RULES"))
@@ -94,7 +99,7 @@ async def get(kind: str, name: str, spawn: Callable) -> dict:
         return _cache[key]
     t = _running.get(key)
     if t is None or t.done():
-        coro = _story_readings(name) if kind == "story" else _paper(name)
+        coro = {"story": _story_readings, "power": _power, "paper": _paper}[kind](name)
 
         async def go():
             try:

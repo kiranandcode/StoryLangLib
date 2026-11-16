@@ -13,7 +13,8 @@ import { WorldView } from './World'
 import { StyleView } from './Style'
 import { PaperMain } from './PaperView'
 import { MORE_KINDS, MoreInspector, describeMore } from './InspectMore'
-import type { Readings } from './types'
+import type { PowerExport, Readings } from './types'
+import { POWER_KINDS, PowerInspector, PowerView } from './Power'
 
 function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   const [v, setV] = useState<T>(() => {
@@ -23,12 +24,13 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'judgements' | 'argument' | 'minds' | 'world' | 'style' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
+type Tab = 'paragraphs' | 'judgements' | 'argument' | 'power' | 'minds' | 'world' | 'style' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
   const [papers, setPapers] = useState<string[]>([])
   const [readings, setReadings] = useState<Readings | null>(null)
+  const [power, setPower] = useState<PowerExport | null>(null)
   const [story, setStory] = usePref<string>('studio.story', '')
   const [report, setReport] = useState<Report | null>(null)
   const [theme, setTheme] = usePref<'light' | 'dark'>('studio.theme',
@@ -79,8 +81,9 @@ export function App() {
   const loadReadings = useCallback((name: string) => {
     if (!name || name.startsWith('paper:')) return
     fetch(`/api/story/${name}/readings`).then(r => r.json()).then((r: Readings) => { if (r.name === latest.current) setReadings(r) }).catch(() => {})
+    fetch(`/api/story/${name}/power`).then(r => r.json()).then((r: PowerExport & { name?: string }) => { if (latest.current === name) setPower(r) }).catch(() => {})
   }, [])
-  useEffect(() => { setReadings(null); if (!story.startsWith('paper:')) { load(story); loadReadings(story) } }, [story, load, loadReadings])
+  useEffect(() => { setReadings(null); setPower(null); if (!story.startsWith('paper:')) { load(story); loadReadings(story) } }, [story, load, loadReadings])
   useEffect(() => { fetch('/api/papers').then(r => r.json()).then(setPapers).catch(() => {}) }, [])
 
   const loadRequests = useCallback(() => {
@@ -169,7 +172,9 @@ export function App() {
       const [kind, key, idx] = t.split(':')
       const what = describeTarget(report, t)
       if (items.length) items.push({ label: '', run: () => {}, sep: true })
-      if (MORE_KINDS.has(kind)) {
+      if (POWER_KINDS.has(kind) && power && kind !== 'pcheck' && kind !== 'pknow') {
+        items.push({ label: `Inspect ${kind === 'pmove' ? `move ${Number(key) + 1}` : kind === 'pcf' ? 'this key turn' : kind === 'pactive' ? 'this effect' : (power.actors.find(a => a.id === key.split('|')[0])?.name ?? key)}`, run: () => inspect(t) })
+      } else if (MORE_KINDS.has(kind)) {
         items.push({ label: `Inspect ${describeMore(report, t)}`, run: () => inspect(t) })
         items.push({ label: `Ask the agent about ${describeMore(report, t)}…`, run: () => ask(t) })
       } else if (kind === 'char' || kind === 'fact' || kind === 'bond') {
@@ -271,19 +276,22 @@ export function App() {
         {overview && report && !report.error && (
           <aside className="right">
             <nav className="tabs">
-              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument'] : []), 'minds', 'world', 'style', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
+              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument'] : []), ...(power && !power.error ? ['power'] : []), 'minds', 'world', 'style', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
             {tab === 'judgements' && <div className="logic"><JudgementsView report={report} onSelect={select} /></div>}
             {tab === 'argument' && <div className="logic"><ArgumentView report={report} onSelect={select} /></div>}
+            {tab === 'power' && <div className="logic"><PowerView report={report} power={power} current={current} onSelect={select} /></div>}
             {tab === 'minds' && <div className="logic"><MindsView report={report} current={current} /></div>}
             {tab === 'world' && <div className="logic"><WorldView report={report} readings={readings} current={current} /></div>}
             {tab === 'style' && <div className="logic">{readings ? <StyleView reports={[['style', readings.style], ['house', readings.house]]} /> : <div className="storyview dim">Reading the style…</div>}</div>}
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
-            {tab === 'inspect' && <div className="logic">{inspecting && MORE_KINDS.has(inspecting.split(':')[0])
+            {tab === 'inspect' && <div className="logic">{inspecting && power && POWER_KINDS.has(inspecting.split(':')[0])
+              ? <PowerInspector power={power} target={inspecting} report={report} />
+              : inspecting && MORE_KINDS.has(inspecting.split(':')[0])
               ? <MoreInspector report={report} readings={readings} target={inspecting} current={current} onAsk={() => ask(inspecting)} />
               : <InspectorView report={report} target={inspecting} current={current} vocab={vocab} onAsk={t => ask(t)} />}</div>}
             {tab === 'requests' && <div className="logic"><RequestsView requests={requests} story={story} onNew={() => openComposer()}

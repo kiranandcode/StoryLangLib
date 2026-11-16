@@ -1,5 +1,6 @@
 import LangLib
 import LangLib.Studio.PaperArg
+import LangLib.World.Examples.FightPower
 open LangLib LangLib.Scene Lean
 
 def usage : String := "usage:
@@ -16,12 +17,17 @@ def usage : String := "usage:
   langlib ext <dir> [--lean ns]             ties, care and identity (World/Ties, Care, Identity), or as Lean theorems
   langlib end <dir>                         the end state of every reading, as the next chapter's opening (JSON)
   langlib chain-lean <prev> <next> <ns>     the link between two chapters as Lean theorems (Chain.lean)
-  langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling"
+  langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling
+  langlib power <dir>                       a rule-based module's moves, checks and states (studio/power-schema.md)"
 
 def readDoc (p : String) : IO Doc := do
   match docOfString (← IO.FS.readFile p) with
   | .ok d => pure d
   | .error e => throw (IO.userError s!"parse error: {e}")
+
+/-- The Power exports, by story directory (studio/power-schema.md): one line per module. -/
+def powerExports : List (String × (Unit → Json)) :=
+  [("hxh-chrollo-hisoka", fun _ => LangLib.World.Fight.powerExport.toJson)]
 
 def main : List String → IO UInt32
   | ["tokenize", f] => do
@@ -99,4 +105,10 @@ def main : List String → IO UInt32
   | ["argument", dir, lore] => do
     IO.println (← LangLib.Studio.PaperArg.argumentMain dir lore).compress
     pure 0
+  | ["power", dir] => do
+    let name := ((System.FilePath.mk dir).fileName.getD dir)
+    match powerExports.find? (·.1 == name) with
+    | some (_, f) => IO.println (f ()).compress; pure 0
+    | none => IO.println (Json.mkObj [("error", s!"no power export for {name}"),
+        ("available", toJson (powerExports.map (·.1)))]).compress; pure 1
   | _ => do IO.eprintln usage; pure 64
