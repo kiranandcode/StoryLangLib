@@ -1,0 +1,81 @@
+ent kiran "Kiran" person she
+ent theo "Theo" person he
+ent tdesk "the borrowed desk" object it
+ent noodles "his own carton" object it
+ent whiteboard "the board" object it
+topic t1 "He flirts; she logs an anomaly" kiran theo
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) sat|VERB|head|l=sit
+  (PP obl on|ADP|case the|DET|det edge|NOUN|head|sense=part (PP nmod of|ADP|case (NP head ref=tdesk the|DET|det borrowed|ADJ|amod|sense=impression desk|NOUN|head)))
+  (PP obl with|ADP|case (NP head ref=noodles his|PRON|poss|ref=theo own|ADJ|amod|sense=impression carton|NOUN|head))
+  and|CCONJ|cc
+  (VP conj watched|VERB|head|l=watch (S ccomp (NP nsubj ref=kiran her|PRON|head) eat|VERB|head|l=eat))
+  ,|PUNCT|punct
+  (SBAR advcl as|SCONJ|mark if|SCONJ|fixed (S head that|PRON|nsubj were|AUX|cop|l=be worth|ADJ|head (VP xcomp watching|VERB|head|l=watch)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=theo "|PUNCT|punct
+    (S head (NP nsubj ref=theo I|PRON|head) didn't|AUX|aux|l=do come|VERB|head|l=come back|ADV|advmod|sense=direction
+      (PP obl for|ADP|case the|DET|det fans|NOUN|head|sense=part))
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=theo he|PRON|head) said|VERB|head|l=say
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=theo "|PUNCT|punct
+    (SBAR head In|ADP|mark case|NOUN|fixed|sense=abstract (S head that|PRON|nsubj wasn't|AUX|cop|l=be clear|ADJ|head))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (QUOTE ccomp spk=kiran "|PUNCT|punct
+    (S head It|PRON|expl was|AUX|cop|l=be clear|ADJ|head)
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=kiran Kiran|PROPN|head) said|VERB|head|l=say
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=kiran "|PUNCT|punct
+    (S head (NP nsubj Node|NOUN|head|sense=part six|NUM|nummod) has|AUX|aux|l=have been|AUX|cop|l=be fine|ADJ|head
+      (PP obl since|ADP|case Tuesday|PROPN|head|sense=time))
+    .|PUNCT|punct))
+(S root topic=t1
+  (QUOTE head spk=kiran
+    (S head (NP nsubj ref=kiran I|PRON|head) checked|VERB|head|l=check (NP obj the|DET|det logs|NOUN|head|sense=digital))
+    .|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) laughed|VERB|head|l=laugh ,|PUNCT|punct low|ADV|advmod|sense=manner ,|PUNCT|punct
+  and|CCONJ|cc
+  (VP conj leaned|VERB|head|l=lean in|ADV|advmod|sense=direction
+    (PP obl over|ADP|case her|PRON|poss|ref=kiran shoulder|NOUN|head|sense=body)
+    ,|PUNCT|punct
+    (VP advcl reading|VERB|head|l=read (NP obj ref=whiteboard the|DET|det board|NOUN|head)))
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj her|PRON|poss|ref=kiran pulse|NOUN|head|sense=body) went|VERB|head|l=go up|ADV|advmod|sense=direction
+    (PP obl by|ADP|case an|DET|det amount|NOUN|head|sense=abstract
+      (S relcl (NP nsubj ref=kiran she|PRON|head) could|AUX|aux have|AUX|aux measured|VERB|head|l=measure)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) noted|VERB|head|l=note (NP obj the|DET|det rise|NOUN|head|sense=abstract)
+  .|PUNCT|punct)
+(S root topic=t1
+  (FRAG head Caffeine|NOUN|head|sense=substance ,|PUNCT|punct probably|ADV|advmod|sense=impression)
+  ;|PUNCT|punct
+  (S parataxis (NP nsubj ref=kiran she|PRON|head) had|AUX|aux|l=have drunk|VERB|head|l=drink (NP obj four|NUM|nummod coffees|NOUN|head|sense=substance))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) tapped|VERB|head|l=tap (NP obj the|DET|det lemma|NOUN|head|sense=abstract)
+  (PP obl with|ADP|case one|NUM|nummod finger|NOUN|head|sense=body)
+  .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=theo "|PUNCT|punct
+    (S head That's|AUX|cop|l=be (NP head the|DET|det one|NOUN|head|sense=abstract
+      (VP acl keeping|VERB|head|l=keep (NP obj ref=kiran you|PRON|head) here|ADV|advmod|sense=place)))
+    ?|PUNCT|punct "|PUNCT|punct))
+(S root topic=t1
+  (QUOTE ccomp spk=kiran "|PUNCT|punct
+    (S head It's|AUX|cop|l=be (NP head the|DET|det one|NOUN|head|sense=abstract
+      (S relcl I'm|AUX|aux|l=be keeping|VERB|head|l=keep)))
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=kiran she|PRON|head) said|VERB|head|l=say
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj ref=theo he|PRON|head) grinned|VERB|head|l=grin
+    (SBAR advcl as|SCONJ|mark though|SCONJ|fixed (S head (NP nsubj ref=kiran she|PRON|head) had|AUX|aux|l=have said|VERB|head|l=say
+      (NP obj something|PRON|head else|ADV|advmod|sense=manner) entirely|ADV|advmod|sense=degree)))
+  .|PUNCT|punct)

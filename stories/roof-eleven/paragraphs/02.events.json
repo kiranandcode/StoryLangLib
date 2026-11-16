@@ -1,0 +1,160 @@
+{
+ "text_sha": "db1004018b1b59fb",
+ "world_sha": "cec01dc95a9315ec",
+ "events": [
+  {
+   "e": "flirt theo kiran",
+   "at": 36,
+   "w": "said",
+   "phase": "main",
+   "src": "text"
+  }
+ ],
+ "claims": [
+  {
+   "c": "at theo lab",
+   "at": 1,
+   "w": "sat"
+  },
+  {
+   "c": "bond kiran theo attraction >= 2",
+   "at": 144,
+   "w": "grinned"
+  }
+ ],
+ "judge": [
+  {
+   "at": 14,
+   "w": "watched",
+   "kind": "act"
+  },
+  {
+   "at": 16,
+   "w": "eat",
+   "kind": "act"
+  },
+  {
+   "at": 22,
+   "w": "worth",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 23,
+   "w": "watching",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 28,
+   "w": "come",
+   "kind": "speech"
+  },
+  {
+   "at": 43,
+   "w": "clear",
+   "kind": "speech"
+  },
+  {
+   "at": 49,
+   "w": "clear",
+   "kind": "speech"
+  },
+  {
+   "at": 53,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 60,
+   "w": "fine",
+   "kind": "speech"
+  },
+  {
+   "at": 65,
+   "w": "checked",
+   "kind": "speech"
+  },
+  {
+   "at": 71,
+   "w": "laughed",
+   "kind": "act"
+  },
+  {
+   "at": 76,
+   "w": "leaned",
+   "kind": "act"
+  },
+  {
+   "at": 82,
+   "w": "reading",
+   "kind": "act"
+  },
+  {
+   "at": 89,
+   "w": "went",
+   "kind": "act"
+  },
+  {
+   "at": 97,
+   "w": "measured",
+   "kind": "hypothetical"
+  },
+  {
+   "at": 100,
+   "w": "noted",
+   "kind": "act"
+  },
+  {
+   "at": 110,
+   "w": "drunk",
+   "kind": "act"
+  },
+  {
+   "at": 115,
+   "w": "tapped",
+   "kind": "act"
+  },
+  {
+   "at": 124,
+   "w": "the",
+   "kind": "speech"
+  },
+  {
+   "at": 126,
+   "w": "keeping",
+   "kind": "speech"
+  },
+  {
+   "at": 133,
+   "w": "the",
+   "kind": "speech"
+  },
+  {
+   "at": 136,
+   "w": "keeping",
+   "kind": "speech"
+  },
+  {
+   "at": 140,
+   "w": "said",
+   "kind": "act"
+  },
+  {
+   "at": 149,
+   "w": "said",
+   "kind": "hypothetical"
+  }
+ ],
+ "staging": [],
+ "ext": [
+  {
+   "e": "feel kiran affection",
+   "at": 89,
+   "w": "went"
+  },
+  {
+   "e": "examine kiran affection",
+   "at": 100,
+   "w": "noted"
+  }
+ ]
+}

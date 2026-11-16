@@ -3,3 +3,7 @@
 {"para": "01", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794790956.5}
 {"stage": "prove", "ok": true, "note": "139/139; ", "t": 1794790982.6}
 {"stage": "ext-prove", "ok": true, "note": "", "t": 1794790993.3}
+{"para": "02", "stage": "paragraph-check", "ok": false, "annotation": true, "verdict": "valid", "note": "setting: 'case' (token 40) is a noun with neither a ref to a world thing nor a sense: give it (or its phrase) a ref, or a sense (abstract, time, event, body, weather, light, sound, substance, digital, figurative, part, person, offstage, kind)", "t": 1794791070.1}
+{"para": "02", "stage": "paragraph-check", "ok": true, "annotation": true, "verdict": "valid", "note": "", "t": 1794791073.9}
+{"stage": "prove", "ok": true, "note": "141/141; ", "t": 1794791117.7}
+{"stage": "ext-prove", "ok": true, "note": "", "t": 1794791118.5}
