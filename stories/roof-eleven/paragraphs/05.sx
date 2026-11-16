@@ -1,0 +1,52 @@
+ent kiran "Kiran" person she
+ent mara "Mara" person she
+ent theo "Theo" person he
+ent window "the dark window" object it
+ent note "the note" object it
+ent line "one line" abstract it
+ent fall "the fall under her ribs" event it
+topic t1 "Mara goes up; Kiran runs the anomaly like a fault" kiran mara
+(S root topic=t1
+  (PP obl At|ADP|case five|NUM|nummod to|ADP|case eleven|NUM|head)
+  (NP nsubj ref=mara Mara|PROPN|head) checked|VERB|head|l=check (NP obj her|PRON|poss|ref=mara face|NOUN|head|sense=body)
+  (PP obl in|ADP|case (NP head ref=window the|DET|det dark|ADJ|amod|sense=impression window|NOUN|head))
+  ,|PUNCT|punct
+  (VP conj pushed|VERB|head|l=push (NP obj her|PRON|poss|ref=mara wet|ADJ|amod|sense=impression hair|NOUN|head|sense=body) back|ADV|advmod|sense=direction twice|ADV|advmod|sense=time)
+  ,|PUNCT|punct and|CCONJ|cc
+  (VP conj went|VERB|head|l=go up|ADV|advmod|sense=direction
+    (PP obl with|ADP|case (NP head ref=note the|DET|det note|NOUN|head) (PP nmod in|ADP|case her|PRON|poss|ref=mara pocket|NOUN|head|sense=part)))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran Kiran|PROPN|head) turned|VERB|head|l=turn back|ADV|advmod|sense=direction
+  (PP obl to|ADP|case the|DET|det lemma|NOUN|head|sense=abstract) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) wrote|VERB|head|l=write (NP obj ref=line one|NUM|nummod line|NOUN|head|sense=abstract)
+  and|CCONJ|cc (VP conj deleted|VERB|head|l=delete (NP obj ref=line it|PRON|head)) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=fall The|DET|det fall|NOUN|head|sense=event (PP nmod under|ADP|case her|PRON|poss|ref=kiran ribs|NOUN|head|sense=body))
+  had|AUX|aux|l=have not|PART|advmod resolved|VERB|head|l=resolve .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) ran|VERB|head|l=run (NP obj ref=fall it|PRON|head)
+  (PP obl like|ADP|case any|DET|det fault|NOUN|head|sense=abstract) .|PUNCT|punct)
+(S root topic=t1
+  (S head Hunger|NOUN|nsubj|sense=abstract was|AUX|cop|l=be out|ADV|head|sense=place)
+  ;|PUNCT|punct
+  (S parataxis (NP nsubj ref=kiran she|PRON|head) had|AUX|aux|l=have eaten|VERB|head|l=eat) .|PUNCT|punct)
+(S root topic=t1
+  (S head Fatigue|NOUN|nsubj|sense=abstract was|AUX|cop|l=be out|ADV|head|sense=place)
+  ;|PUNCT|punct
+  (S parataxis (NP nsubj ref=kiran she|PRON|head) had|AUX|aux|l=have been|AUX|cop|l=be tired|ADJ|head|sense=impression
+    (NP obl all|DET|det week|NOUN|head|sense=time) (PP obl without|ADP|case it|PRON|head|ref=fall)) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj Every|DET|det hypothesis|NOUN|head|sense=abstract) failed|VERB|head|l=fail
+  (PP obl on|ADP|case the|DET|det timing|NOUN|head|sense=abstract)
+  :|PUNCT|punct
+  (S parataxis (NP nsubj the|DET|det effect|NOUN|head|sense=abstract) had|AUX|aux|l=have started|VERB|head|l=start
+    (PP obl at|ADP|case (QUOTE head spk=mara "|PUNCT|punct (S head (NP nsubj ref=theo He|PRON|head) wants|VERB|head|l=want (NP obj ref=mara me|PRON|head)) ,|PUNCT|punct "|PUNCT|punct))
+    (ADVP advmod not|PART|advmod a|DET|det second|NOUN|head|sense=time before|ADV|advmod|sense=time))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) had|VERB|head|l=have (NP obj no|DET|det name|NOUN|head|sense=abstract) (PP obl for|ADP|case it|PRON|head|ref=fall) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) wrote|VERB|head|l=write (NP obj that|PRON|head) down|ADV|advmod|sense=direction
+  (PP obl instead|ADV|case|sense=manner of|ADP|fixed the|DET|det lemma|NOUN|head|sense=abstract) .|PUNCT|punct)
