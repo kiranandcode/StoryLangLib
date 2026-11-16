@@ -1,0 +1,67 @@
+ent kiran "Kiran" person she
+ent theo "Theo" person he
+ent meas "a first measurement" abstract it
+ent heat "heat" event it
+ent expl "the simplest explanation" abstract it
+topic t1 "The kiss, and the result" kiran theo
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) kissed|VERB|head|l=kiss (NP obj ref=theo him|PRON|head)
+  (NP obl the|DET|det way|NOUN|head|sense=abstract
+    (S relcl (NP nsubj ref=kiran she|PRON|head) would|AUX|aux take|VERB|head|l=take (NP obj ref=meas a|DET|det first|ADJ|amod|sense=impression measurement|NOUN|head|sense=abstract)))
+  ,|PUNCT|punct carefully|ADV|advmod|sense=manner ,|PUNCT|punct
+  (ADJP advcl ready|ADJ|head|sense=impression (VP xcomp to|PART|mark throw|VERB|head|l=throw (NP obj ref=meas it|PRON|head) out|ADP|compound))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj His|PRON|poss|ref=theo mouth|NOUN|head|sense=body) was|AUX|cop|l=be cold|ADJ|head|sense=impression
+  (PP obl for|ADP|case a|DET|det second|NOUN|head|sense=time) and|CCONJ|cc then|ADV|advmod|sense=order not|PART|advmod
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) made|VERB|head|l=make (NP obj a|DET|det low|ADJ|amod|sense=impression sound|NOUN|head|sense=event)
+  and|CCONJ|cc
+  (VP conj kissed|VERB|head|l=kiss (NP obj ref=kiran her|PRON|head) back|ADV|advmod|sense=direction
+    ,|PUNCT|punct
+    (NP dep one|NUM|nummod hand|NOUN|head|sense=body (PP nmod at|ADP|case her|PRON|poss|ref=kiran jaw|NOUN|head|sense=body)
+      and|CCONJ|cc
+      (NP conj the|DET|det other|ADJ|head|sense=impression flat|ADJ|amod|sense=impression
+        (PP nmod at|ADP|case the|DET|det small|NOUN|head|sense=body (PP nmod of|ADP|case her|PRON|poss|ref=kiran back|NOUN|head|sense=body))))
+    ,|PUNCT|punct
+    (VP advcl pulling|VERB|head|l=pull (NP obj ref=kiran her|PRON|head) in|ADV|advmod|sense=direction
+      (PP obl out|ADP|case of|ADP|fixed the|DET|det wind|NOUN|head|sense=weather)))
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj the|DET|det readings|NOUN|head|sense=abstract) stopped|VERB|head|l=stop (VP xcomp being|AUX|cop|l=be separable|ADJ|head|sense=impression))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=heat Heat|NOUN|head|sense=event) went|VERB|head|l=go (PP obl down|ADP|case her|PRON|poss|ref=kiran spine|NOUN|head|sense=body)
+  and|CCONJ|cc (VP conj pooled|VERB|head|l=pool low|ADV|advmod|sense=place) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) tried|VERB|head|l=try (NP obj caffeine|NOUN|head|sense=substance) (PP obl on|ADP|case it|PRON|head|ref=heat)
+  ,|PUNCT|punct then|ADV|advmod|sense=order (NP conj the|DET|det cold|NOUN|head|sense=weather)
+  ,|PUNCT|punct then|ADV|advmod|sense=order (NP conj adrenaline|NOUN|head|sense=substance) and|CCONJ|cc (NP conj the|DET|det height|NOUN|head|sense=abstract)
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj Nothing|PRON|head else|ADV|advmod|sense=manner) fit|VERB|head|l=fit .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=expl It|PRON|head) was|AUX|cop|l=be (NP head the|DET|det simplest|ADJ|amod|sense=impression explanation|NOUN|head|sense=abstract) .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) took|VERB|head|l=take (NP obj ref=expl it|PRON|head)
+  ,|PUNCT|punct and|CCONJ|cc
+  (S conj (NP nsubj the|DET|det anomaly|NOUN|head|sense=abstract) turned|VERB|head|l=turn over|ADP|compound
+    (PP obl in|ADP|case her|PRON|poss|ref=kiran hands|NOUN|head|sense=body)
+    and|CCONJ|cc
+    (VP conj became|VERB|head|l=become (NP obj a|DET|det want|NOUN|head|sense=abstract)
+      ,|PUNCT|punct (ADJP advmod plain|ADJ|head|sense=impression (PP obl as|ADP|case a|DET|det solved|ADJ|amod|sense=impression lemma|NOUN|head|sense=abstract))))
+  .|PUNCT|punct)
+(S root topic=t1
+  (NP nsubj ref=kiran She|PRON|head) pulled|VERB|head|l=pull back|ADV|advmod|sense=direction (NP obl an|DET|det inch|NOUN|head|sense=abstract) .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE ccomp spk=kiran "|PUNCT|punct
+    (FRAG head The|DET|det result's|NOUN|nsubj|sense=abstract not|PART|advmod null|ADJ|head|sense=impression)
+    ,|PUNCT|punct "|PUNCT|punct)
+  (NP nsubj ref=kiran she|PRON|head) said|VERB|head|l=say (PP obl against|ADP|case his|PRON|poss|ref=theo mouth|NOUN|head|sense=body) .|PUNCT|punct)
+(S root topic=t1
+  (QUOTE head spk=kiran "|PUNCT|punct
+    (S head (NP nsubj ref=kiran I|PRON|head) want|VERB|head|l=want (NP obj ref=theo you|PRON|head) .|PUNCT|punct)
+    "|PUNCT|punct))
+(S root topic=t1
+  (NP nsubj ref=theo He|PRON|head) laughed|VERB|head|l=laugh ,|PUNCT|punct breathless|ADJ|advmod|sense=impression ,|PUNCT|punct
+  and|CCONJ|cc (VP conj kissed|VERB|head|l=kiss (NP obj ref=kiran her|PRON|head) again|ADV|advmod|sense=time) .|PUNCT|punct)
