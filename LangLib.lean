@@ -23,6 +23,9 @@ import LangLib.World.Examples.Mage
 import LangLib.World.Examples.Fight
 import LangLib.World.Examples.FightSnaps
 import LangLib.World.Examples.FightMinds
+import LangLib.World.DeathNote
+import LangLib.World.Mystery
+import LangLib.World.Examples.DeathNoteArc
 import LangLib.World.Examples.Gossip
 import LangLib.World.Lexicon
 import LangLib.World.Examples.OfficeText
