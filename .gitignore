@@ -18,3 +18,7 @@ stories/roof/paragraphs/*.sx
 stories/roof-pratchett/paragraphs/[0-9][0-9].txt
 stories/roof-pratchett/paragraphs/[0-9][0-9].json
 stories/roof-pratchett/paragraphs/*.sx
+
+# folio_sync.py state: comment -> request map, relay cursor
+studio/folio-sync.json
+studio/folio-sync.tmp
