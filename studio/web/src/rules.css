@@ -75,6 +75,13 @@
 /* the rule in plain words */
 .rv-reads { font-size: 12.5px; color: var(--rv-ink-2); margin: -2px 0 8px; line-height: 1.5; }
 
+.rv-role { display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--rv-accent); white-space: nowrap; }
+.rv-steps > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 0 8px; margin: 2px 0; }
+.rv-steps > div.dim { display: block; margin-top: 4px; }
+.rv-steps .rv-role { text-align: right; padding-top: 2px; }
+.rv-steps .so { color: var(--rv-ink); font-weight: 600; border-top: 1px dashed var(--rv-rule); padding-top: 3px; }
+.rv-unstated { font-size: 11px; color: var(--rv-ink-3); font-style: italic; margin: -2px 0 6px; }
+
 /* proof-tree layout: the rules a rule rests on stacked above it */
 .rv-proof .rv-kids { margin: 0 0 6px 0; padding: 0 0 0 12px; }
 

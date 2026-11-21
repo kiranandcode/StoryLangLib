@@ -12,7 +12,8 @@ verbatim quotes, its conclusion, strict or defeasible, its scheme, its
 critical questions (answered, open, or pressed), the attacks on it, and its
 grounded label with and without the sceptic's questions.
 
-An `infer` move carries its rule in a `rule` field:
+An `infer` move carries its rule in a `rule` field (`roles` names the part
+each premise plays in the scheme, e.g. "needs" and "provides"):
 
 ```
 {"move": "infer", "t": "k", "premises": ["p", "q"], "uses": [],
@@ -82,6 +83,7 @@ structure Info where
   quote : String
   quotes : Json
   notes : Json
+  roles : Json := Json.mkObj []
   attacks : List Json
 
 /-- The tag of a term from the move that put it forward. -/
@@ -145,7 +147,7 @@ def rulesMain (dir : String) : IO Json := do
             let atts := match rj.getObjVal? "attacks" with | .ok (.arr a) => a.toList | _ => []
             infos := infos.push
               { id := r.id, para := (if str rj "para" == "" then nm else str rj "para"), quote := str rj "quote", quotes := obj rj "quotes",
-                notes := obj rj "notes", attacks := atts }
+                notes := obj rj "notes", roles := obj rj "roles", attacks := atts }
           | .error e => errs := errs.push e
       let t := str m "t"
       if !(seen.any (·.1 == t)) && t != "" then seen := seen ++ [(t, mv)]
@@ -169,7 +171,7 @@ def rulesMain (dir : String) : IO Json := do
       ("kind", match r.kind with | .strict => "strict" | .defeasible => "defeasible"),
       ("scheme", r.scheme.name), ("side", match r.side with | .text => "text" | .opponent => "opponent"),
       ("premises", Json.arr (r.premises.map fun (p, t) => Json.mkObj [
-        ("t", p), ("tag", tagS t), ("quote", qtext p), ("gloss", gl p), ("para", paraOf p),
+        ("t", p), ("tag", tagS t), ("quote", qtext p), ("gloss", gl p), ("para", paraOf p), ("role", field info.roles p),
         ("sub", match concluder rs p with | some s => Json.str s.id | none => Json.null)]).toArray),
       ("cqs", Json.arr ((List.range r.scheme.cqs.length).map fun i =>
         let (q, how) := r.scheme.cqs.getD i ("", .undercut)

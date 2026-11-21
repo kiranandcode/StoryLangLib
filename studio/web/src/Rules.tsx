@@ -13,6 +13,8 @@ import './rules.css'
 
 export interface RPremise {
   t: string; tag: string; tagLabel?: string | null; quote: string; gloss?: string; para: string; sub: string | null; fail?: string
+  /** the part the premise plays in its scheme ("needs", "provides", "goal", ...) */
+  role?: string
 }
 export interface RCq { i: number; q: string; attack: string; status: 'answered' | 'open' | 'pressed'; note: string }
 export type Lab = 'in' | 'out' | 'undec'
@@ -44,14 +46,14 @@ const LAB: Record<Lab, string> = { in: 'IN', out: 'OUT', undec: 'UNDEC' }
 export const SCHEME_WHAT: Record<string, string> = {
   'definition': 'it follows from what the term means',
   'deduction': 'it follows necessarily from the premises',
-  'example to generalisation': 'the cases given are taken to hold in general',
-  'practical reasoning': 'a goal and a way to reach it, so do it',
-  'abduction (best explanation)': 'this is taken as the best explanation of what was seen',
+  'example to generalisation': 'these cases are taken to hold in general',
+  'practical reasoning': 'we have a goal, this action reaches it and can be done, so do it',
+  'abduction (best explanation)': 'this is taken as the best explanation of what was observed',
   'track record → capability': 'they did related work before, so they can do this',
   'expert opinion': 'an expert says so',
   'cause to effect': 'this cause is taken to bring about that effect',
   'analogy': 'it worked in a similar case, so it will work here',
-  'requirement matches capability': 'the task needs these things, and this provides them',
+  'requirement matches capability': 'the task needs certain things, this provides them, so this suits the task',
   'counterexample': 'one case where a general claim fails',
 }
 const lc = (s: string) => s && !/^.[A-Z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s
@@ -60,6 +62,7 @@ const unstop = (s: string) => s.replace(/[.\s]+$/, '')
 /** The rule in one plain sentence, from the reading's glosses: "Because P and Q, C (scheme: what it claims)." */
 function readsAs(r: RRule): string | null {
   if (!r.gloss) return null
+  if (r.premises.length && r.premises.every(p => p.role)) return null  // shown as role lines (Steps)
   const ps = r.premises.map(p => p.gloss).filter((g): g is string => !!g).map(g => lc(unstop(g)))
   const c = unstop(r.gloss)
   if (ps.length > 3) return `${c}, from the ${ps.length} reasons below.`
@@ -219,16 +222,19 @@ function Tag({ p }: { p: RPremise }) {
     {p.tagLabel && p.tag !== 'check' ? p.tagLabel : TAG[p.tag] ?? p.tag}{p.tag === 'check' && p.tagLabel ? ` · ${p.tagLabel}` : ''}</span>
 }
 
-/** One premise per row: what it rests on at the left (a tag, or the rule that concludes it), the quote after. */
+/** One premise per row: its role (or what it rests on) at the left, the quote after. */
 function Premise({ p, sub }: { p: RPremise; sub: string | null }) {
   const { toggle, isOpen, ix } = useContext(C)
   const sr = sub ? ix.by.get(sub) : null
+  const ref = sub
+    ? <button className={`rv-subref lab-${sr?.label ?? 'undec'}`} onClick={e => { e.stopPropagation(); toggle(sub, 1) }}
+      title={isOpen(sub, 1) ? `fold ${sub}` : `show the rule ${sub} that concludes this, below`}>{isOpen(sub, 1) ? '▾' : '▸'} {sub}</button>
+    : <Tag p={p} />
+  const text = p.quote || (sr?.quote ?? '')
   return <li className={`rv-prem ${p.fail ? 'fails' : ''}`}>
-    <span className="rv-pk">{sub
-      ? <button className={`rv-subref lab-${sr?.label ?? 'undec'}`} onClick={e => { e.stopPropagation(); toggle(sub, 1) }}
-        title={isOpen(sub, 1) ? `fold ${sub}` : `show the rule ${sub} that concludes this, below`}>{isOpen(sub, 1) ? '▾' : '▸'} {sub}</button>
-      : <Tag p={p} />}</span>
-    <span className="rv-pq"><Quote text={p.quote} gloss={p.gloss || p.t} para={p.para} />
+    <span className="rv-pk">{p.role ? <span className="rv-role">{p.role}</span> : ref}</span>
+    <span className="rv-pq"><Quote text={text} gloss={p.gloss || sr?.gloss || p.t} para={p.quote ? p.para : sr?.para ?? ''} />
+      {p.role && <> {ref}</>}
       {p.fail && <span className="rv-fail"> ✕ {p.fail}</span>}</span>
   </li>
 }
@@ -253,6 +259,18 @@ function Margin({ r }: { r: RRule }) {
   </ul>
 }
 
+/** A rule whose premises have roles, in plain words: one line per role, then "so". */
+function Steps({ r }: { r: RRule }) {
+  const { ix } = useContext(C)
+  if (!r.gloss || !r.premises.length || !r.premises.every(p => p.role)) return null
+  const gl = (p: RPremise) => p.gloss || (p.sub ? ix.by.get(p.sub)?.gloss : '') || p.t
+  return <div className="rv-reads rv-steps">
+    {r.premises.map((p, k) => <div key={k}><span className="rv-role">{p.role}</span>{gl(p)}</div>)}
+    <div className="so"><span className="rv-role">so</span>{r.gloss}</div>
+    <div className="dim">{r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]}</div>
+  </div>
+}
+
 /** A rule as a card: a header (id, scheme, kind, label), its premises one per
  *  row above the line, the conclusion below. */
 function RuleCard({ r, depth }: { r: RRule; depth: number }) {
@@ -271,6 +289,8 @@ function RuleCard({ r, depth }: { r: RRule; depth: number }) {
       <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
       {other !== lab && <span className="rv-was">{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
     </div>
+    {!r.quote && <div className="rv-unstated">an unstated step: the reading's grouping, not a sentence in the text</div>}
+    {cx.layout === 'plain' && <Steps r={r} />}
     {readsAs(r) && <div className="rv-reads">{readsAs(r)} <span className="dim">({r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]})</span></div>}
     {cx.layout !== 'plain' && r.premises.length > 0 && <ul className="rv-prems">
       {r.premises.map((p, k) => <Premise key={k} p={p} sub={p.sub && cx.ix.by.has(p.sub) && p.sub !== r.id ? p.sub : null} />)}
