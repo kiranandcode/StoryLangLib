@@ -56,6 +56,35 @@ export const SCHEME_WHAT: Record<string, string> = {
   'requirement matches capability': 'the task needs certain things, this provides them, so this suits the task',
   'counterexample': 'one case where a general claim fails',
 }
+/** Hover help for the view's vocabulary. */
+const ROLE_WHAT: Record<string, string> = {
+  goal: 'what the argument wants to achieve', problem: 'what stands in the way of the goal', means: 'the action proposed to reach the goal',
+  feasible: 'why the action can be carried out', who: 'why this actor should be the one to do it', so: 'the conclusion drawn',
+  needs: 'what the task requires', provides: 'what the proposal supplies', but: 'a limit on what is provided',
+  case: 'a single instance offered as evidence', 'case (future)': 'an instance that has not happened yet',
+  observed: 'something seen that needs explaining', principle: 'a general maxim brought in as support',
+  cause: 'what is said to bring the effect about', general: 'the general claim', instance: 'a particular instance of the general claim',
+  definition: 'what the term means', 'past work': 'something done before, offered as a track record', 'self-assessment': 'the authors rating themselves',
+  'it worked here': 'the source case of an analogy', 'and here': 'the target case of an analogy', 'similar because': 'the respect in which the cases are alike',
+  'claim it breaks': 'the general claim the counterexample defeats', result: 'what came out of the case',
+}
+const LAB_WHAT: Record<Lab, string> = {
+  in: 'IN: accepted. Every argument attacking it is itself defeated (or nothing attacks it).',
+  out: 'OUT: defeated. Some argument attacking it is accepted.',
+  undec: 'UNDEC: undecided. It and an attacker defeat each other, so neither wins (grounded semantics).',
+}
+const TAG_WHAT: Record<string, string> = {
+  fact: 'a fact the reader could check', example: 'a worked example in the text', citation: 'a cited source',
+  authors: "only the authors' word: nothing in the text supports it", hedge: 'a hedge: put as possible, not asserted',
+  promise: 'a promise: something the authors will do, not something done',
+}
+const KIND_WHAT: Record<string, string> = {
+  strict: 'strict (solid line): if the premises hold, the conclusion must',
+  defeasible: 'defeasible (dashed line): the premises make the conclusion likely, open to exceptions',
+  unclassified: 'unread: no scheme has been read for this inference yet',
+}
+export const roleWhat = (r: string) => ROLE_WHAT[r] ?? ''
+
 const lc = (s: string) => s && !/^.[A-Z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s
 const unstop = (s: string) => s.replace(/[.\s]+$/, '')
 
@@ -207,7 +236,7 @@ const C = createContext<Ctx>(null as unknown as Ctx)
 const OPEN_DEPTH = 0
 
 export function LabelBadge({ l, title }: { l: Lab; title?: string }) {
-  return <span className={`rv-lab lab-${l}`} title={title}>{LAB[l]}</span>
+  return <span className={`rv-lab lab-${l}`} title={title ? `${LAB_WHAT[l]}\n${title}` : LAB_WHAT[l]}>{LAB[l]}</span>
 }
 
 function Quote({ text, gloss, para }: { text: string; gloss?: string; para: string }) {
@@ -218,7 +247,7 @@ function Quote({ text, gloss, para }: { text: string; gloss?: string; para: stri
 }
 
 function Tag({ p }: { p: RPremise }) {
-  return <span className={`rv-tag ${WEAK.has(p.tag) ? 'weak' : ''}`} title={p.tagLabel ? `${TAG[p.tag] ?? p.tag}: ${p.tagLabel}` : undefined}>
+  return <span className={`rv-tag ${WEAK.has(p.tag) ? 'weak' : ''}`} title={p.tagLabel ? `${TAG[p.tag] ?? p.tag}: ${p.tagLabel}` : TAG_WHAT[p.tag]}>
     {p.tagLabel && p.tag !== 'check' ? p.tagLabel : TAG[p.tag] ?? p.tag}{p.tag === 'check' && p.tagLabel ? ` · ${p.tagLabel}` : ''}</span>
 }
 
@@ -232,7 +261,7 @@ function Premise({ p, sub }: { p: RPremise; sub: string | null }) {
     : <Tag p={p} />
   const text = p.quote || (sr?.quote ?? '')
   return <li className={`rv-prem ${p.fail ? 'fails' : ''}`}>
-    <span className="rv-pk">{p.role ? <span className="rv-role">{p.role}</span> : ref}</span>
+    <span className="rv-pk">{p.role ? <span className="rv-role" title={roleWhat(p.role)}>{p.role}</span> : ref}</span>
     <span className="rv-pq"><Quote text={text} gloss={p.gloss || sr?.gloss || p.t} para={p.quote ? p.para : sr?.para ?? ''} />
       {p.role && <> {ref}</>}
       {p.fail && <span className="rv-fail"> ✕ {p.fail}</span>}</span>
@@ -265,8 +294,8 @@ function Steps({ r }: { r: RRule }) {
   if (!r.gloss || !r.premises.length || !r.premises.every(p => p.role)) return null
   const gl = (p: RPremise) => p.gloss || (p.sub ? ix.by.get(p.sub)?.gloss : '') || p.t
   return <div className="rv-reads rv-steps">
-    {r.premises.map((p, k) => <div key={k}><span className="rv-role">{p.role}</span>{gl(p)}</div>)}
-    <div className="so"><span className="rv-role">so</span>{r.gloss}</div>
+    {r.premises.map((p, k) => <div key={k}><span className="rv-role" title={roleWhat(p.role!)}>{p.role}</span>{gl(p)}</div>)}
+    <div className="so"><span className="rv-role" title={ROLE_WHAT.so}>so</span>{r.gloss}</div>
     <div className="dim">{r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]}</div>
   </div>
 }
@@ -287,7 +316,7 @@ function RuleCard({ r, depth }: { r: RRule; depth: number }) {
       <span className="rv-grow" />
       {r.para && <span className="rv-id">¶{r.para}</span>}
       <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
-      {other !== lab && <span className="rv-was">{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
+      {other !== lab && <span className="rv-was" title={cx.mode === 'label' ? "if a sceptical reader pressed the critical questions the text leaves open" : "under only the attacks the text itself makes"}>{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
     </div>
     {!r.quote && <div className="rv-unstated">an unstated step: the reading's grouping, not a sentence in the text</div>}
     {cx.layout === 'plain' && <Steps r={r} />}
@@ -296,7 +325,7 @@ function RuleCard({ r, depth }: { r: RRule; depth: number }) {
       {r.premises.map((p, k) => <Premise key={k} p={p} sub={p.sub && cx.ix.by.has(p.sub) && p.sub !== r.id ? p.sub : null} />)}
     </ul>}
     {cx.layout !== 'plain' && <>
-      <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme" title={SCHEME_WHAT[r.scheme]}>{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
+      <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme" title={`${r.scheme}: ${SCHEME_WHAT[r.scheme] ?? ''}\n${KIND_WHAT[r.kind] ?? ''}`}>{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
       <div className="rv-concl"><Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} /></div></>}
     <Margin r={r} />
   </div>

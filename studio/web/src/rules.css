@@ -75,6 +75,7 @@
 /* the rule in plain words */
 .rv-reads { font-size: 12.5px; color: var(--rv-ink-2); margin: -2px 0 8px; line-height: 1.5; }
 
+.rv-role[title], .rv-tag[title], .rv-lab[title], .rv-scheme[title], .rv-was[title] { cursor: help; }
 .rv-role { display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--rv-accent); white-space: nowrap; }
 .rv-steps > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 0 8px; margin: 2px 0; }
 .rv-steps > div.dim { display: block; margin-top: 4px; }
