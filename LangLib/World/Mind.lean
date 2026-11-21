@@ -317,6 +317,815 @@ private def lits (hs : List (Held C Φ)) : List (BLit Φ) :=
   let hs := adoptable hs
   (ordered (hs.filter fun h => !stale hs h)).filterMap fun h => litOf h.b
 
+/-! ## The kernel's view (`abstractions/ROUND-2.md`)
+
+`lits` and `admitPlain` are the definition; `litsK` and `admitK` compute them,
+and are what `view` runs (`litsK_eq`, `admitK_eq`). The kernel spends most of a
+story's proof in views (each witness rebuilds one at every learn), and there:
+
+* each literal is tested against every literal kept so far, and each test walks
+  `Supersedes`, so `admitPlain` is quadratic in the base with a large constant.
+  `admitK` keeps three bit masks over what it has kept (the `Supersedes.code` of
+  each positive and each negative literal, the `cls` of each positive one). A
+  literal whose bits are clear clashes with nothing kept, and the scan is
+  skipped; only a literal that may clash is scanned, as before. In a story,
+  that is almost only the ones the view then drops;
+* `stale` asks the same question of the information that could outdate an
+  item, so the same masks spare `lits` its scans;
+* `before` compares with `Nat.blt`/`Nat.ble` and a match, not `decide`;
+* the loops are `K` functions, which the kernel reduces by their recursors.
+
+Masks are `Nat`s: the kernel's bit operations on literals are single steps. -/
+
+/-- Bit `n` of `m`. -/
+def bitOf (m n : Nat) : Bool := Nat.beq ((m >>> n) % 2) 1
+
+/-- `m` with bit `n` set. -/
+def addBit (m n : Nat) : Nat := m ||| (1 <<< n)
+
+theorem nbeq_eq (a b : Nat) : Nat.beq a b = decide (a = b) :=
+  Bool.eq_iff_iff.mpr (by simp [Nat.beq_eq_true_eq])
+
+theorem nblt_eq (a b : Nat) : Nat.blt a b = decide (a < b) :=
+  Bool.eq_iff_iff.mpr (by simp [Nat.blt_eq])
+
+theorem nble_eq (a b : Nat) : Nat.ble a b = decide (a ≤ b) :=
+  Bool.eq_iff_iff.mpr (by simp [Nat.ble_eq])
+
+theorem bitOf_eq_testBit (m n : Nat) : bitOf m n = m.testBit n := by
+  rw [bitOf, nbeq_eq, Nat.testBit_eq_decide_div_mod_eq, Nat.shiftRight_eq_div_pow]
+
+theorem bitOf_addBit (m n k : Nat) : bitOf (addBit m n) k = (bitOf m k || decide (n = k)) := by
+  simp only [bitOf_eq_testBit, addBit, Nat.testBit_or, Nat.one_shiftLeft, Nat.testBit_two_pow]
+
+/-- What a set of literals has, as bits: the codes of its positive and its negative
+literals, and the classes of its positive ones. -/
+structure Masks where
+  pos : Nat := 0
+  neg : Nat := 0
+  cls : Nat := 0
+
+def Masks.add (m : Masks) (l : BLit Φ) : Masks :=
+  if l.2 then
+    { m with pos := addBit m.pos (Supersedes.code l.1),
+             cls := let c := Supersedes.cls l.1; if Nat.beq c 0 then m.cls else addBit m.cls c }
+  else { m with neg := addBit m.neg (Supersedes.code l.1) }
+
+/-- `l` may clash with a literal the masks have: some bit `l` would clash with is set. -/
+def Masks.maybe (m : Masks) (l : BLit Φ) : Bool :=
+  if l.2 then bitOf m.neg (Supersedes.code l.1) ||
+    (let c := Supersedes.cls l.1; !Nat.beq c 0 && bitOf m.cls c)
+  else bitOf m.pos (Supersedes.code l.1)
+
+/-- The masks have every literal of `L`. -/
+def Masks.Has (m : Masks) (L : List (BLit Φ)) : Prop :=
+  ∀ y ∈ L, (y.2 = true → bitOf m.pos (Supersedes.code y.1) = true ∧
+      (Supersedes.cls y.1 ≠ 0 → bitOf m.cls (Supersedes.cls y.1) = true)) ∧
+    (y.2 = false → bitOf m.neg (Supersedes.code y.1) = true)
+
+theorem Masks.has_nil (m : Masks) : m.Has ([] : List (BLit Φ)) := fun _ h => nomatch h
+
+theorem Masks.has_add {m : Masks} {L : List (BLit Φ)} (h : m.Has L) (l : BLit Φ) :
+    (m.add l).Has (L ++ [l]) := by
+  intro y hy
+  rcases List.mem_append.mp hy with hy | hy
+  · obtain ⟨h1, h2⟩ := h y hy
+    unfold Masks.add
+    split
+    · refine ⟨fun hp => ⟨?_, fun hc => ?_⟩, fun hn => h2 hn⟩
+      · simp [bitOf_addBit, (h1 hp).1]
+      · simp only []
+        split <;> simp [bitOf_addBit, (h1 hp).2 hc]
+    · exact ⟨fun hp => h1 hp, fun hn => by simp [bitOf_addBit, h2 hn]⟩
+  · obtain rfl := List.mem_singleton.mp hy
+    unfold Masks.add
+    split
+    · rename_i hp
+      refine ⟨fun _ => ⟨by simp [bitOf_addBit], fun hc => ?_⟩, fun hn => by simp_all⟩
+      simp only []
+      have : Nat.beq (Supersedes.cls y.1) 0 = false := by rw [nbeq_eq]; simpa using hc
+      rw [this]; simp [bitOf_addBit]
+    · rename_i hp
+      exact ⟨fun h => absurd h hp, fun _ => by simp [bitOf_addBit]⟩
+
+/-- Every bit the masks have set is a literal of `L`. -/
+def Masks.Sound (m : Masks) (L : List (BLit Φ)) : Prop :=
+  ∀ k, (bitOf m.pos k = true → ∃ y ∈ L, y.2 = true ∧ Supersedes.code y.1 = k) ∧
+    (bitOf m.neg k = true → ∃ y ∈ L, y.2 = false ∧ Supersedes.code y.1 = k)
+
+/-- The masks of exactly `L`'s literals. -/
+def Masks.Ok (m : Masks) (L : List (BLit Φ)) : Prop := m.Has L ∧ m.Sound L
+
+theorem bitOf_zero (k : Nat) : bitOf 0 k = false := by
+  rw [bitOf_eq_testBit]; exact Nat.zero_testBit k
+
+theorem Masks.ok_nil : ({} : Masks).Ok ([] : List (BLit Φ)) :=
+  ⟨Masks.has_nil _, fun k => ⟨fun h => by simp [bitOf_zero] at h, fun h => by simp [bitOf_zero] at h⟩⟩
+
+theorem Masks.ok_add {m : Masks} {L : List (BLit Φ)} (h : m.Ok L) (l : BLit Φ) :
+    (m.add l).Ok (L ++ [l]) := by
+  refine ⟨Masks.has_add h.1 l, fun k => ?_⟩
+  obtain ⟨hp, hn⟩ := h.2 k
+  have up : ∀ y, y ∈ L → y ∈ L ++ [l] := fun y hy => List.mem_append_left _ hy
+  unfold Masks.add
+  obtain ⟨φ, b⟩ := l
+  cases b
+  · simp only [Bool.false_eq_true, ↓reduceIte, bitOf_addBit, Bool.or_eq_true, decide_eq_true_eq]
+    refine ⟨fun h => ?_, fun h => ?_⟩
+    · obtain ⟨y, hy, h1, h2⟩ := hp h; exact ⟨y, up y hy, h1, h2⟩
+    · rcases h with h | h
+      · obtain ⟨y, hy, h1, h2⟩ := hn h; exact ⟨y, up y hy, h1, h2⟩
+      · exact ⟨(φ, false), by simp, rfl, h⟩
+  · simp only [↓reduceIte, bitOf_addBit, Bool.or_eq_true, decide_eq_true_eq]
+    refine ⟨fun h => ?_, fun h => ?_⟩
+    · rcases h with h | h
+      · obtain ⟨y, hy, h1, h2⟩ := hp h; exact ⟨y, up y hy, h1, h2⟩
+      · exact ⟨(φ, true), by simp, rfl, h⟩
+    · obtain ⟨y, hy, h1, h2⟩ := hn h; exact ⟨y, up y hy, h1, h2⟩
+
+/-- A literal that clashes with one the masks have has a bit set. -/
+theorem Masks.maybe_of_clash {m : Masks} {L : List (BLit Φ)} (h : m.Has L) (l y : BLit Φ)
+    (hy : y ∈ L) (hc : clash l y = true ∨ clash y l = true) : m.maybe l = true := by
+  obtain ⟨h1, h2⟩ := h y hy
+  obtain ⟨φ, b⟩ := l
+  obtain ⟨ψ, b'⟩ := y
+  have hsup : ∀ x z : Φ, Supersedes.supersedes x z = true →
+      Supersedes.cls x = Supersedes.cls z ∧ Supersedes.cls x ≠ 0 := Supersedes.cls_sup
+  unfold Masks.maybe
+  unfold clash at hc
+  cases b <;> cases b' <;> simp [nbeq_eq] at hc h1 h2 ⊢
+  · rcases hc with rfl | rfl <;> exact h1.1
+  · rcases hc with rfl | rfl <;> simp [h2]
+  · right
+    rcases hc with ⟨_, hs⟩ | ⟨_, hs⟩
+    · obtain ⟨hc, h0⟩ := hsup φ ψ hs
+      exact ⟨h0, hc ▸ h1.2 (hc ▸ h0)⟩
+    · obtain ⟨hc, h0⟩ := hsup ψ φ hs
+      exact ⟨hc ▸ h0, hc ▸ h1.2 h0⟩
+
+/-- A literal whose bits are clear clashes with nothing the masks have. -/
+theorem Masks.no_clash {m : Masks} {L : List (BLit Φ)} (h : m.Has L) (l : BLit Φ)
+    (hm : m.maybe l = false) : ∀ y ∈ L, clash l y = false ∧ clash y l = false := by
+  intro y hy
+  refine ⟨?_, ?_⟩
+  · cases hc : clash l y
+    · rfl
+    · have := Masks.maybe_of_clash h l y hy (Or.inl hc); rw [hm] at this; exact absurd this (by decide)
+  · cases hc : clash y l
+    · rfl
+    · have := Masks.maybe_of_clash h l y hy (Or.inr hc); rw [hm] at this; exact absurd this (by decide)
+
+/-- One step of `admitK`: what has been kept, and its masks. -/
+def admitKStep (st : List (BLit Φ) × Masks) (l : BLit Φ) : List (BLit Φ) × Masks :=
+  if st.2.maybe l && !(K.all st.1 fun y => !clash l y && !clash y l) then st
+  else (K.append st.1 [l], st.2.add l)
+
+/-- `admitPlain`, deciding most literals by bit tests (`admitK_eq`). -/
+def admitK (ls : List (BLit Φ)) : List (BLit Φ) :=
+  (K.foldl admitKStep ([], {}) ls).1
+
+theorem clash_self (l : BLit Φ) : clash l l = false := by
+  unfold clash; simp
+
+theorem admitKStep_spec (st : List (BLit Φ) × Masks) (hst : st.2.Has st.1) (l : BLit Φ) :
+    (admitKStep st l).1 = (if !clash l l && st.1.all (fun y => !clash l y && !clash y l)
+      then st.1 ++ [l] else st.1) ∧ (admitKStep st l).2.Has (admitKStep st l).1 := by
+  unfold admitKStep
+  rw [K.all_eq, K.append_eq, clash_self]
+  cases hm : st.2.maybe l
+  · have hall : (st.1.all fun y => !clash l y && !clash y l) = true := by
+      rw [List.all_eq_true]
+      intro y hy
+      obtain ⟨h1, h2⟩ := Masks.no_clash hst l hm y hy
+      simp [h1, h2]
+    simp only [hall, Bool.false_and, Bool.false_eq_true, ↓reduceIte, Bool.not_false, Bool.true_and]
+    exact ⟨by first | rfl | trivial, Masks.has_add hst l⟩
+  · cases hall : (st.1.all fun y => !clash l y && !clash y l)
+    · simp only [Bool.not_false, Bool.and_self, ↓reduceIte, Bool.and_false, Bool.false_eq_true]
+      exact ⟨by first | rfl | trivial, hst⟩
+    · simp only [Bool.not_true, Bool.and_false, Bool.false_eq_true, ↓reduceIte, Bool.not_false,
+        Bool.and_self]
+      exact ⟨by first | rfl | trivial, Masks.has_add hst l⟩
+
+theorem admitK_eq (ls : List (BLit Φ)) : admitK ls = admitPlain ls := by
+  unfold admitK admitPlain
+  rw [K.foldl_eq]
+  suffices ∀ st : List (BLit Φ) × Masks, st.2.Has st.1 →
+      (ls.foldl admitKStep st).1 = ls.foldl (fun kept l => if !clash l l && kept.all
+        (fun y => !clash l y && !clash y l) then kept ++ [l] else kept) st.1 from
+    this ([], {}) (Masks.has_nil _)
+  induction ls with
+  | nil => intro _ _; rfl
+  | cons l ls ih =>
+    intro st hst
+    obtain ⟨e, hh⟩ := admitKStep_spec st hst l
+    simp only [List.foldl_cons]
+    rw [ih _ hh, e]
+
+/-! ### The lore's closure is a least fixpoint, and `admit` with lore
+
+`closure` runs `|rules| + 1` passes of the lore. A pass that changes the list adds
+the head of a rule whose head was missing, so the passes run out of changes before
+they run out, and the list `closure` returns is closed under the rules
+(`closure_closed`). So what it contains is what the lore derives from what its
+argument contains (`mem_closure`), and `consistent (closure (kept ++ [l]))`, the
+test `admit` runs at every literal, depends only on that. `admitL` keeps the
+closure of what it has kept, with its masks, and checks only what a literal adds
+to it (`admitL_eq`). -/
+
+/-- `x` follows from `ls` by the lore. -/
+inductive Derivable (ls : List (BLit Φ)) : BLit Φ → Prop
+  | base {x : BLit Φ} : x ∈ ls → Derivable ls x
+  | rule (r : LoreRule Φ) : r ∈ Lore.rules (Φ := Φ) → (∀ b ∈ r.body, Derivable ls b) →
+      Derivable ls r.head
+
+/-- One pass of the lore (the `step` of `closure`). -/
+def closureStep (ls : List (BLit Φ)) : List (BLit Φ) :=
+  (Lore.rules (Φ := Φ)).foldl (fun acc r =>
+    if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) ls
+
+theorem closure_eq_go (ls : List (BLit Φ)) :
+    closure ls = closure.go closureStep ((Lore.rules (Φ := Φ)).length + 1) ls := rfl
+
+private theorem foldl_step_prefix (rs : List (LoreRule Φ)) (acc : List (BLit Φ)) :
+    ∃ X, rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) acc = acc ++ X := by
+  induction rs generalizing acc with
+  | nil => exact ⟨[], by simp⟩
+  | cons r rs ih =>
+    simp only [List.foldl_cons]
+    split
+    · obtain ⟨X, hX⟩ := ih (acc ++ [r.head]); exact ⟨[r.head] ++ X, by simp [hX]⟩
+    · exact ih acc
+
+theorem closureStep_prefix (ls : List (BLit Φ)) : ∃ X, closureStep ls = ls ++ X :=
+  foldl_step_prefix _ ls
+
+theorem closure_go_prefix (f : List (BLit Φ) → List (BLit Φ)) (hf : ∀ l, ∃ X, f l = l ++ X) :
+    ∀ n ls, ∃ X, closure.go f n ls = ls ++ X
+  | 0, ls => ⟨[], by simp [closure.go]⟩
+  | n + 1, ls => by
+    obtain ⟨X, hX⟩ := hf ls
+    obtain ⟨Y, hY⟩ := closure_go_prefix f hf n (f ls)
+    refine ⟨X ++ Y, ?_⟩
+    show closure.go f n (f ls) = _
+    rw [hY, hX, List.append_assoc]
+
+theorem closure_prefix (ls : List (BLit Φ)) : ∃ X, closure ls = ls ++ X :=
+  closure_go_prefix _ closureStep_prefix _ _
+
+private theorem foldl_step_sound (L : List (BLit Φ)) (rs : List (LoreRule Φ))
+    (hrs : ∀ r ∈ rs, r ∈ Lore.rules (Φ := Φ)) (acc : List (BLit Φ)) (hacc : ∀ y ∈ acc, Derivable L y) :
+    ∀ y ∈ rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) acc,
+      Derivable L y := by
+  induction rs generalizing acc with
+  | nil => simpa using hacc
+  | cons r rs ih =>
+    simp only [List.foldl_cons]
+    split
+    · rename_i hfire
+      apply ih (fun r' h => hrs r' (List.mem_cons_of_mem _ h))
+      intro y hy
+      rcases List.mem_append.mp hy with hy | hy
+      · exact hacc y hy
+      · obtain rfl := List.mem_singleton.mp hy
+        simp only [Bool.and_eq_true, List.all_eq_true, List.contains_iff_mem] at hfire
+        exact .rule r (hrs r List.mem_cons_self) fun b hb => hacc b (hfire.1 b hb)
+    · exact ih (fun r' h => hrs r' (List.mem_cons_of_mem _ h)) acc hacc
+
+theorem mem_closure_sound (ls : List (BLit Φ)) : ∀ y ∈ closure ls, Derivable ls y := by
+  rw [closure_eq_go]
+  suffices ∀ n acc, (∀ y ∈ acc, Derivable ls y) → ∀ y ∈ closure.go closureStep n acc, Derivable ls y from
+    this _ ls fun y hy => .base hy
+  intro n
+  induction n with
+  | zero => intro acc h; simpa [closure.go] using h
+  | succ n ih =>
+    intro acc h
+    exact ih _ (foldl_step_sound ls _ (fun r h => h) acc h)
+
+/-- Rules whose head the list lacks. -/
+private def missing (L : List (BLit Φ)) : Nat :=
+  ((Lore.rules (Φ := Φ)).filter fun r => !L.contains r.head).length
+
+private theorem length_filter_le_of_imp {α : Type} (p q : α → Bool) :
+    ∀ rs : List α, (∀ r ∈ rs, q r = true → p r = true) → (rs.filter q).length ≤ (rs.filter p).length
+  | [], _ => by simp
+  | r :: rs, h => by
+    have ih := length_filter_le_of_imp p q rs (fun x hx => h x (List.mem_cons_of_mem _ hx))
+    have hr := h r List.mem_cons_self
+    cases hq : q r <;> cases hp : p r <;> simp only [List.filter_cons, hq, hp, Bool.false_eq_true,
+      ↓reduceIte, List.length_cons] <;> first | omega | exact absurd (hr hq) (by simp [hp])
+
+private theorem length_filter_lt {α : Type} (p q : α → Bool) :
+    ∀ rs : List α, (∀ r ∈ rs, q r = true → p r = true) → (∃ r ∈ rs, p r = true ∧ q r = false) →
+      (rs.filter q).length < (rs.filter p).length
+  | [], _, ⟨_, h, _⟩ => nomatch h
+  | r :: rs, hqp, ⟨r', hr', hp', hq'⟩ => by
+    have hqp' : ∀ x ∈ rs, q x = true → p x = true := fun x h => hqp x (List.mem_cons_of_mem _ h)
+    have hle := length_filter_le_of_imp p q rs hqp'
+    rcases List.mem_cons.mp hr' with rfl | hr'
+    · simp only [List.filter_cons, hp', hq', Bool.false_eq_true, ↓reduceIte, List.length_cons]; omega
+    · have ih := length_filter_lt p q rs hqp' ⟨r', hr', hp', hq'⟩
+      have hr := hqp r List.mem_cons_self
+      cases hq : q r <;> cases hp : p r <;> simp only [List.filter_cons, hq, hp, Bool.false_eq_true,
+        ↓reduceIte, List.length_cons] <;> first | omega | exact absurd (hr hq) (by simp [hp])
+
+private theorem foldl_step_change (rs : List (LoreRule Φ)) (acc : List (BLit Φ)) :
+    rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) acc = acc ∨
+    ∃ r ∈ rs, r.head ∉ acc ∧ r.head ∈ rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) acc := by
+  induction rs generalizing acc with
+  | nil => exact .inl rfl
+  | cons r rs ih =>
+    simp only [List.foldl_cons]
+    split
+    · rename_i hfire
+      right
+      refine ⟨r, List.mem_cons_self, ?_, ?_⟩
+      · have h2 : acc.contains r.head = false := by
+          simp only [Bool.and_eq_true, Bool.not_eq_true'] at hfire; exact hfire.2
+        intro hm
+        rw [List.contains_iff_mem.mpr hm] at h2; exact absurd h2 (by decide)
+      · obtain ⟨X, hX⟩ := foldl_step_prefix rs (acc ++ [r.head])
+        rw [hX]; simp
+    · rcases ih acc with h | ⟨r', hr', h1, h2⟩
+      · exact .inl h
+      · exact .inr ⟨r', List.mem_cons_of_mem _ hr', h1, h2⟩
+
+private theorem closureStep_progress (L : List (BLit Φ)) :
+    closureStep L = L ∨ missing (closureStep L) < missing L := by
+  rcases foldl_step_change (Lore.rules (Φ := Φ)) L with h | ⟨r, hr, h1, h2⟩
+  · exact .inl h
+  · right
+    obtain ⟨X, hX⟩ := closureStep_prefix L
+    unfold missing
+    apply length_filter_lt
+    · intro r' _ hq
+      simp only [Bool.not_eq_true'] at hq ⊢
+      cases hc : L.contains r'.head
+      · rfl
+      · have : (closureStep L).contains r'.head = true := by
+          rw [hX]; simp only [List.contains_append, hc, Bool.true_or]
+        rw [this] at hq; exact absurd hq (by decide)
+    · refine ⟨r, hr, ?_, ?_⟩
+      · simpa using h1
+      · have : r.head ∈ closureStep L := h2
+        simpa using this
+
+/-- Closed under the lore. -/
+def LoreClosed (L : List (BLit Φ)) : Prop :=
+  ∀ r ∈ Lore.rules (Φ := Φ), (∀ b ∈ r.body, b ∈ L) → r.head ∈ L
+
+private theorem foldl_step_fixed (rs : List (LoreRule Φ)) (acc : List (BLit Φ))
+    (h : rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) acc = acc) :
+    ∀ r ∈ rs, (∀ b ∈ r.body, b ∈ acc) → r.head ∈ acc := by
+  induction rs generalizing acc with
+  | nil => intro r hr; nomatch hr
+  | cons r rs ih =>
+    simp only [List.foldl_cons] at h
+    split at h
+    · obtain ⟨X, hX⟩ := foldl_step_prefix rs (acc ++ [r.head])
+      rw [hX] at h
+      have := congrArg List.length h
+      simp at this
+    · rename_i hnot
+      intro r' hr' hb
+      rcases List.mem_cons.mp hr' with rfl | hr'
+      · cases hc : acc.contains r'.head
+        · exfalso
+          apply hnot
+          simp only [Bool.and_eq_true, List.all_eq_true, hc, Bool.not_false, and_true]
+          exact fun b hb' => List.contains_iff_mem.mpr (hb b hb')
+        · exact List.contains_iff_mem.mp hc
+      · exact ih acc h r' hr' hb
+
+private theorem closure_go_fixed (L : List (BLit Φ)) (h : closureStep L = L) :
+    ∀ n, closure.go closureStep n L = L
+  | 0 => rfl
+  | n + 1 => by simp only [closure.go, h]; exact closure_go_fixed L h n
+
+private theorem closure_go_closed : ∀ n (L : List (BLit Φ)), missing L < n →
+    LoreClosed (closure.go closureStep n L)
+  | 0, _, h => absurd h (Nat.not_lt_zero _)
+  | n + 1, L, h => by
+    simp only [closure.go]
+    rcases closureStep_progress L with he | hlt
+    · rw [he, closure_go_fixed L he]
+      exact foldl_step_fixed _ L he
+    · exact closure_go_closed n _ (by omega)
+
+theorem closure_closed (ls : List (BLit Φ)) : LoreClosed (closure ls) := by
+  rw [closure_eq_go]
+  exact closure_go_closed _ _ (Nat.lt_succ_of_le (List.length_filter_le _ _))
+
+theorem mem_closure (ls : List (BLit Φ)) (x : BLit Φ) : x ∈ closure ls ↔ Derivable ls x := by
+  constructor
+  · exact mem_closure_sound ls x
+  · intro h
+    induction h with
+    | base hx =>
+      obtain ⟨X, hX⟩ := closure_prefix ls
+      rw [hX]; exact List.mem_append_left _ hx
+    | rule r hr _ ih => exact closure_closed ls r hr ih
+
+theorem Derivable.mono {A B : List (BLit Φ)} (h : ∀ y ∈ A, Derivable B y) {x : BLit Φ}
+    (hx : Derivable A x) : Derivable B x := by
+  induction hx with
+  | base hy => exact h _ hy
+  | rule r hr _ ih => exact .rule r hr ih
+
+theorem consistent_congr {A B : List (BLit Φ)} (h : ∀ x, x ∈ A ↔ x ∈ B) :
+    consistent A = consistent B := by
+  apply Bool.eq_iff_iff.mpr
+  simp only [consistent, List.all_eq_true, h]
+
+/-- What a closure adds to a consistent list need only be checked against it and itself. -/
+theorem consistent_append (C N : List (BLit Φ)) (hC : consistent C = true) :
+    consistent (C ++ N) = N.all fun x => (C ++ N).all fun y => !clash x y && !clash y x := by
+  have hC' : ∀ x ∈ C, ∀ y ∈ C, clash x y = false := by
+    simpa [consistent, List.all_eq_true] using hC
+  apply Bool.eq_iff_iff.mpr
+  simp only [consistent, List.all_eq_true, Bool.and_eq_true, Bool.not_eq_true', List.mem_append]
+  constructor
+  · intro h x hx y hy
+    exact ⟨h x (.inr hx) y hy, h y hy x (.inr hx)⟩
+  · intro h x hx y hy
+    rcases hx with hx | hx
+    · rcases hy with hy | hy
+      · exact hC' x hx y hy
+      · exact (h y hy x (.inl hx)).2
+    · exact (h x hx y hy).1
+
+/-- `l ∈ L` as the masks see it: a clear bit means absent (`containsK_eq`). -/
+def containsK (m : Masks) (L : List (BLit Φ)) (x : BLit Φ) : Bool :=
+  (if x.2 then bitOf m.pos (Supersedes.code x.1) else bitOf m.neg (Supersedes.code x.1)) &&
+    (Supersedes.codeInj (Φ := Φ) || L.contains x)
+
+theorem containsK_eq {m : Masks} {L : List (BLit Φ)} (h : m.Ok L) (x : BLit Φ) :
+    containsK m L x = L.contains x := by
+  unfold containsK
+  cases hc : L.contains x
+  · simp only [Bool.or_false]
+    cases hi : Supersedes.codeInj (Φ := Φ)
+    · simp
+    · -- an injective code: a set bit is a literal of `L` with that very fact
+      obtain ⟨φ, b⟩ := x
+      cases b
+      · cases hb : bitOf m.neg (Supersedes.code φ)
+        · rfl
+        · obtain ⟨y, hy, h1, h2⟩ := (h.2 _).2 hb
+          have := Supersedes.code_inj hi _ _ h2
+          obtain ⟨ψ, b'⟩ := y
+          simp only [] at h1 this; subst h1; subst this
+          rw [List.contains_iff_mem.mpr hy] at hc; exact absurd hc (by decide)
+      · cases hb : bitOf m.pos (Supersedes.code φ)
+        · rfl
+        · obtain ⟨y, hy, h1, h2⟩ := (h.2 _).1 hb
+          have := Supersedes.code_inj hi _ _ h2
+          obtain ⟨ψ, b'⟩ := y
+          simp only [] at h1 this; subst h1; subst this
+          rw [List.contains_iff_mem.mpr hy] at hc; exact absurd hc (by decide)
+  · have hx := (h.1 x (List.contains_iff_mem.mp hc))
+    obtain ⟨φ, b⟩ := x
+    cases b <;> simp_all
+
+/-- One rule of a pass, with the masks of what has been derived and whether a rule fired. -/
+def closureRuleK (st : List (BLit Φ) × Masks × Bool) (r : LoreRule Φ) : List (BLit Φ) × Masks × Bool :=
+  if K.all r.body (containsK st.2.1 st.1) && !containsK st.2.1 st.1 r.head
+  then (K.append st.1 [r.head], st.2.1.add r.head, true) else st
+
+/-- One pass of the lore, with the masks of what has been derived; `true` if a rule fired. -/
+def closureStepK (st : List (BLit Φ) × Masks) : List (BLit Φ) × Masks × Bool :=
+  K.foldl closureRuleK (st.1, st.2, false) (Lore.rules (Φ := Φ))
+
+private theorem closureRuleK_spec (st : List (BLit Φ) × Masks × Bool) (h : st.2.1.Ok st.1) (r : LoreRule Φ) :
+    (closureRuleK st r).1 = (if r.body.all st.1.contains && !st.1.contains r.head then
+      st.1 ++ [r.head] else st.1) ∧ (closureRuleK st r).2.1.Ok (closureRuleK st r).1 ∧
+      ((closureRuleK st r).2.2 = false → st.2.2 = false ∧ (closureRuleK st r).1 = st.1) := by
+  unfold closureRuleK
+  rw [K.all_eq, K.append_eq]
+  have hb : (r.body.all (containsK st.2.1 st.1)) = r.body.all st.1.contains := by
+    congr 1; funext x; exact containsK_eq h x
+  rw [hb, containsK_eq h]
+  split
+  · exact ⟨rfl, Masks.ok_add h r.head, fun h => nomatch h⟩
+  · exact ⟨rfl, h, fun h => ⟨h, rfl⟩⟩
+
+private theorem closureStepK_go (rs : List (LoreRule Φ)) : ∀ st : List (BLit Φ) × Masks × Bool,
+    st.2.1.Ok st.1 →
+    (rs.foldl closureRuleK st).1 = rs.foldl (fun acc r =>
+      if r.body.all acc.contains && !acc.contains r.head then acc ++ [r.head] else acc) st.1 ∧
+    (rs.foldl closureRuleK st).2.1.Ok (rs.foldl closureRuleK st).1 ∧
+    ((rs.foldl closureRuleK st).2.2 = false → st.2.2 = false ∧ (rs.foldl closureRuleK st).1 = st.1) := by
+  induction rs with
+  | nil => intro st h; exact ⟨rfl, h, fun h => ⟨h, rfl⟩⟩
+  | cons r rs ih =>
+    intro st h
+    simp only [List.foldl_cons]
+    obtain ⟨e1, h1, f1⟩ := closureRuleK_spec st h r
+    obtain ⟨e2, h2, f2⟩ := ih _ h1
+    rw [e1] at e2
+    refine ⟨e2, h2, fun hf => ?_⟩
+    obtain ⟨hf1, hl⟩ := f2 hf
+    obtain ⟨hf0, hl0⟩ := f1 hf1
+    exact ⟨hf0, hl.trans hl0⟩
+
+theorem closureStepK_eq (st : List (BLit Φ) × Masks) (h : st.2.Ok st.1) :
+    (closureStepK st).1 = closureStep st.1 ∧ (closureStepK st).2.1.Ok (closureStepK st).1 ∧
+      ((closureStepK st).2.2 = false → closureStep st.1 = st.1) := by
+  unfold closureStepK
+  rw [K.foldl_eq]
+  obtain ⟨e, hh, hf⟩ := closureStepK_go (Lore.rules (Φ := Φ)) (st.1, st.2, false) h
+  refine ⟨e, hh, fun hb => ?_⟩
+  have h2 := (hf hb).2
+  calc closureStep st.1 = (List.foldl closureRuleK (st.1, st.2, false) Lore.rules).1 := e.symm
+    _ = st.1 := h2
+
+/-- `closure.go`, with masks, stopping at the first pass that changes nothing (the
+rest would change nothing either: `closure_go_fixed`). -/
+def closureGoK : Nat → List (BLit Φ) × Masks → List (BLit Φ) × Masks
+  | 0, st => st
+  | n + 1, st =>
+    let r := closureStepK st
+    if r.2.2 then closureGoK n (r.1, r.2.1) else (r.1, r.2.1)
+
+theorem closureGoK_eq : ∀ n (st : List (BLit Φ) × Masks), st.2.Ok st.1 →
+    (closureGoK n st).1 = closure.go closureStep n st.1 ∧ (closureGoK n st).2.Ok (closureGoK n st).1
+  | 0, _, h => ⟨rfl, h⟩
+  | n + 1, st, h => by
+    obtain ⟨e, h', hf⟩ := closureStepK_eq st h
+    simp only [closureGoK, closure.go]
+    split
+    · have := closureGoK_eq n ((closureStepK st).1, (closureStepK st).2.1) h'
+      exact ⟨this.1.trans (by rw [e]), this.2⟩
+    · rename_i hb
+      simp only [Bool.not_eq_true] at hb
+      have hfix := hf hb
+      refine ⟨?_, h'⟩
+      simp only []
+      rw [e, hfix, closure_go_fixed _ hfix]
+
+/-- The masks of a list. -/
+def masksOf (L : List (BLit Φ)) : Masks := K.foldl Masks.add {} L
+
+theorem masksOf_ok (L : List (BLit Φ)) : (masksOf L).Ok L := by
+  unfold masksOf
+  rw [K.foldl_eq]
+  suffices ∀ (m : Masks) (A : List (BLit Φ)), m.Ok A → (L.foldl Masks.add m).Ok (A ++ L) by
+    simpa using this {} [] Masks.ok_nil
+  induction L with
+  | nil => intro m A h; simpa using h
+  | cons x L ih =>
+    intro m A h
+    simpa using ih (m.add x) (A ++ [x]) (Masks.ok_add h x)
+
+/-- `closure`, testing membership by masks first (`closureK_eq`). -/
+def closureK (ls : List (BLit Φ)) : List (BLit Φ) :=
+  (closureGoK ((Lore.rules (Φ := Φ)).length + 1) (ls, masksOf ls)).1
+
+theorem closureK_eq (ls : List (BLit Φ)) : closureK ls = closure ls := by
+  unfold closureK
+  rw [(closureGoK_eq _ _ (masksOf_ok ls)).1]; rfl
+
+/-- One step of `admitL`: what has been kept, its closure, and the closure's masks. -/
+def admitLStep (st : List (BLit Φ) × List (BLit Φ) × Masks) (l : BLit Φ) :
+    List (BLit Φ) × List (BLit Φ) × Masks :=
+  let C := st.2.1
+  let m := st.2.2
+  let r := closureGoK ((Lore.rules (Φ := Φ)).length + 1) (K.append C [l], m.add l)
+  let N := r.1.drop C.length
+  if K.all N (fun x => (!m.maybe x || K.all C fun y => !clash x y && !clash y x) &&
+      K.all N fun y => !clash x y && !clash y x)
+  then (K.append st.1 [l], r.1, r.2) else st
+
+/-- `admit`: the greedy consistent prefix under the lore, checking each literal by what
+it adds to the closure so far (`admitL_eq`). -/
+def admitL (ls : List (BLit Φ)) : List (BLit Φ) :=
+  let C₀ := closureK []
+  if consistent C₀ then (K.foldl admitLStep ([], C₀, masksOf C₀) ls).1 else []
+
+private theorem consistent_mono {A B : List (BLit Φ)} (h : ∀ x ∈ A, x ∈ B) (hB : consistent B = true) :
+    consistent A = true := by
+  simp only [consistent, List.all_eq_true, Bool.not_eq_true'] at hB ⊢
+  exact fun x hx y hy => hB x (h x hx) y (h y hy)
+
+theorem admit_nil_of_inconsistent (h : consistent (closure ([] : List (BLit Φ))) = false)
+    (ls : List (BLit Φ)) : admit ls = [] := by
+  unfold admit
+  suffices ∀ ls : List (BLit Φ), ls.foldl (fun kept l =>
+      if consistent (closure (kept ++ [l])) then kept ++ [l] else kept) [] = [] from this ls
+  intro ls
+  induction ls with
+  | nil => rfl
+  | cons l ls ih =>
+    simp only [List.foldl_cons, List.nil_append]
+    have : consistent (closure [l]) = false := by
+      cases hc : consistent (closure [l])
+      · rfl
+      · have := consistent_mono (A := closure []) (B := closure [l]) (fun x hx => by
+          rw [mem_closure] at hx ⊢
+          exact Derivable.mono (fun y hy => by simp at hy) hx) hc
+        rw [h] at this; exact absurd this (by decide)
+    rw [this]; exact ih
+
+/-- What `admitLStep` keeps: its closure has what the lore derives from what was kept. -/
+private def LInv (st : List (BLit Φ) × List (BLit Φ) × Masks) : Prop :=
+  (∀ y, y ∈ st.2.1 ↔ Derivable st.1 y) ∧ consistent st.2.1 = true ∧ st.2.2.Ok st.2.1
+
+private theorem admitLStep_spec (st : List (BLit Φ) × List (BLit Φ) × Masks) (hst : LInv st)
+    (l : BLit Φ) : (admitLStep st l).1 =
+      (if consistent (closure (st.1 ++ [l])) then st.1 ++ [l] else st.1) ∧ LInv (admitLStep st l) := by
+  obtain ⟨kept, C, m⟩ := st
+  obtain ⟨hmem, hcon, hhas⟩ := hst
+  simp only [] at hmem hcon hhas
+  unfold admitLStep
+  simp only []
+  rw [K.append_eq]
+  obtain ⟨e, hr⟩ := closureGoK_eq ((Lore.rules (Φ := Φ)).length + 1) (C ++ [l], m.add l)
+    (Masks.ok_add hhas l)
+  generalize hR : closureGoK ((Lore.rules (Φ := Φ)).length + 1) (C ++ [l], m.add l) = R at e hr
+  simp only [] at e
+  rw [← closure_eq_go] at e
+  -- the closure of `C ++ [l]` has what the closure of `kept ++ [l]` has
+  have hsame : ∀ x, x ∈ closure (C ++ [l]) ↔ x ∈ closure (kept ++ [l]) := by
+    intro x
+    rw [mem_closure, mem_closure]
+    constructor
+    · exact Derivable.mono fun y hy => by
+        rcases List.mem_append.mp hy with hy | hy
+        · exact Derivable.mono (fun z hz => .base (List.mem_append_left _ hz)) ((hmem y).mp hy)
+        · exact .base (List.mem_append_right _ hy)
+    · exact Derivable.mono fun y hy => by
+        rcases List.mem_append.mp hy with hy | hy
+        · exact .base (List.mem_append_left _ ((hmem y).mpr (.base hy)))
+        · exact .base (List.mem_append_right _ hy)
+  obtain ⟨X, hX⟩ := closure_prefix (C ++ [l])
+  have hsplit : R.1 = C ++ R.1.drop C.length := by
+    rw [e, hX]; simp
+  generalize hN : R.1.drop C.length = N at hsplit
+  have hcons : consistent (closure (kept ++ [l])) =
+      N.all fun x => (C ++ N).all fun y => !clash x y && !clash y x := by
+    rw [← consistent_congr hsame, ← e, hsplit, consistent_append _ _ hcon]
+  -- the test, by masks against `C` and by scanning what is new
+  have htest : (K.all N fun x => (!m.maybe x || K.all C fun y => !clash x y && !clash y x) &&
+      K.all N fun y => !clash x y && !clash y x) = consistent (closure (kept ++ [l])) := by
+    rw [hcons]
+    simp only [K.all_eq]
+    congr 1; funext x
+    rw [List.all_append]
+    congr 1
+    cases hm : m.maybe x
+    · simp only [Bool.not_false, Bool.true_or]
+      symm; rw [List.all_eq_true]
+      intro y hy
+      obtain ⟨h1, h2⟩ := Masks.no_clash hhas.1 x hm y hy
+      simp [h1, h2]
+    · simp
+  rw [htest]
+  cases hc : consistent (closure (kept ++ [l]))
+  · simp only [Bool.false_eq_true, ↓reduceIte]
+    exact ⟨by first | rfl | trivial, hmem, hcon, hhas⟩
+  · simp only [↓reduceIte]
+    refine ⟨by first | rfl | trivial, fun y => ?_, ?_, hr⟩
+    · rw [e, hsame, mem_closure]; try exact Iff.rfl
+    · rw [e, consistent_congr hsame, hc]
+
+theorem admitL_eq (ls : List (BLit Φ)) : admitL ls = admit ls := by
+  unfold admitL
+  simp only [closureK_eq]
+  split
+  · rename_i h0
+    rw [K.foldl_eq]
+    unfold admit
+    suffices ∀ st : List (BLit Φ) × List (BLit Φ) × Masks, LInv st →
+        (ls.foldl admitLStep st).1 = ls.foldl (fun kept l =>
+          if consistent (closure (kept ++ [l])) then kept ++ [l] else kept) st.1 from
+      this _ ⟨fun y => by rw [mem_closure], h0, masksOf_ok _⟩
+    induction ls with
+    | nil => intro _ _; rfl
+    | cons l ls ih =>
+      intro st hst
+      obtain ⟨e, hh⟩ := admitLStep_spec st hst l
+      simp only [List.foldl_cons]
+      rw [ih _ hh, e]
+  · rename_i h0
+    simp only [Bool.not_eq_true] at h0
+    exact (admit_nil_of_inconsistent h0 ls).symm
+
+private def isCons : Upgrade → Bool
+  | .conservative => true
+  | _ => false
+
+/-- `before`, by `Nat.blt`/`Nat.ble` and a match (`beforeK_eq`). -/
+def beforeK (x y : Held C Φ) : Bool :=
+  Nat.blt y.rank x.rank || (Nat.beq x.rank y.rank &&
+    (if Nat.ble y.stamp x.stamp then !isCons x.up else isCons y.up))
+
+theorem beforeK_eq : (beforeK : Held C Φ → Held C Φ → Bool) = before := by
+  funext x y
+  unfold beforeK before
+  have e : (x.rank == y.rank) = decide (x.rank = y.rank) := Bool.eq_iff_iff.mpr (by simp)
+  rw [nblt_eq, nble_eq, nbeq_eq, e]
+  have u : ∀ u : Upgrade, (u != .conservative) = !isCons u ∧ (u == .conservative) = isCons u := by
+    intro u; cases u <;> decide
+  simp only [(u x.up).1, (u y.up).2]
+  by_cases h3 : y.stamp ≤ x.stamp <;> simp [h3]
+
+/-- The masks of the items that can outdate others (`stale`): fluent and adopted. -/
+private def staleMasks (A : List (Held C Φ)) : Masks :=
+  K.foldl (fun m h => if isFluent h && h.up != .note then
+    (match litOf h.b with | some l => m.add l | none => m) else m) {} A
+
+/-- `stale`, over the items that can outdate others (fluent, adopted), comparing times
+first (`staleK_eq`). -/
+def staleK (cands : List (Held C Φ)) (h : Held C Φ) : Bool :=
+  K.any cands fun h' => Nat.blt h.about h'.about &&
+    match litOf h.b, litOf h'.b with
+    | some l, some l' => clash l l'
+    | _, _ => false
+
+theorem staleK_eq (A : List (Held C Φ)) (h : Held C Φ) (hf : isFluent h = true) :
+    staleK (A.filter fun h => isFluent h && h.up != .note) h = stale A h := by
+  unfold staleK stale
+  rw [K.any_eq, hf, List.any_filter, Bool.true_and]
+  congr 1; funext h'
+  rw [nblt_eq]
+  cases isFluent h' <;> cases (h'.up != Upgrade.note) <;> simp [Bool.and_assoc]
+
+/-- `lits`, sparing `stale`'s scan where the masks show nothing could outdate an item (`litsK_eq`). -/
+def litsK (hs : List (Held C Φ)) : List (BLit Φ) :=
+  let A := K.filter (fun h => h.up != .note && (litOf h.b).isSome) hs
+  let m := staleMasks A
+  let cands := K.filter (fun h => isFluent h && h.up != .note) A
+  K.filterMap (fun h => litOf h.b) (K.sortBy beforeK (K.filter (fun h =>
+    !(isFluent h && (match litOf h.b with | some l => m.maybe l | none => false) && staleK cands h)) A))
+
+private theorem staleMasks_has (A : List (Held C Φ)) :
+    (staleMasks A).Has ((A.filter fun h => isFluent h && h.up != .note).filterMap fun h => litOf h.b) := by
+  unfold staleMasks
+  rw [K.foldl_eq]
+  suffices ∀ (m : Masks) (L : List (BLit Φ)), m.Has L →
+      (A.foldl (fun m h => if isFluent h && h.up != .note then
+        (match litOf h.b with | some l => m.add l | none => m) else m) m).Has
+        (L ++ (A.filter fun h => isFluent h && h.up != .note).filterMap fun h => litOf h.b) by
+    simpa using this {} [] (Masks.has_nil _)
+  induction A with
+  | nil => intro m L h; simpa using h
+  | cons a A ih =>
+    intro m L h
+    by_cases ha : (isFluent a && a.up != .note) = true
+    · simp only [List.foldl_cons, List.filter_cons, ha, ↓reduceIte, List.filterMap_cons]
+      cases hl : litOf a.b with
+      | none => simpa using ih m L h
+      | some l => simpa using ih (m.add l) (L ++ [l]) (Masks.has_add h l)
+    · simp only [List.foldl_cons, List.filter_cons, ha, Bool.false_eq_true, ↓reduceIte]
+      exact ih m L h
+
+theorem litsK_eq (hs : List (Held C Φ)) : litsK hs = lits hs := by
+  have hA : K.filter (fun h : Held C Φ => h.up != .note && (litOf h.b).isSome) hs = adoptable hs := by
+    rw [K.filter_eq]; rfl
+  unfold litsK lits ordered
+  dsimp only
+  rw [hA]
+  simp only [K.filterMap_eq, K.sortBy_eq, K.filter_eq, beforeK_eq]
+  congr 2
+  apply List.filter_congr
+  intro h _
+  have hk : (isFluent h && (match litOf h.b with | some l => (staleMasks (adoptable hs)).maybe l | none => false) &&
+      staleK ((adoptable hs).filter fun h => isFluent h && h.up != .note) h) =
+      (isFluent h && (match litOf h.b with | some l => (staleMasks (adoptable hs)).maybe l | none => false) &&
+      stale (adoptable hs) h) := by
+    cases hf : isFluent h
+    · simp
+    · rw [staleK_eq _ _ hf]
+  rw [hk]
+  -- a stale item is fluent and clashes with an adopted fluent item, which the masks have
+  cases hs' : stale (adoptable hs) h
+  · simp
+  · have hst := hs'
+    unfold stale at hst
+    simp only [Bool.and_eq_true, List.any_eq_true] at hst
+    obtain ⟨hf, h', hm', ⟨⟨hf', hn'⟩, _⟩, hc⟩ := hst
+    cases hl : litOf h.b with
+    | none => rw [hl] at hc; simp at hc
+    | some l =>
+      cases hl' : litOf h'.b with
+      | none => rw [hl, hl'] at hc; simp at hc
+      | some l' =>
+        rw [hl, hl'] at hc
+        dsimp only at hc
+        cases hmb : (staleMasks (adoptable hs)).maybe l
+        · have hin : l' ∈ ((adoptable hs).filter fun h => isFluent h && h.up != .note).filterMap
+              fun h => litOf h.b :=
+            List.mem_filterMap.mpr ⟨h', List.mem_filter.mpr ⟨hm', by simp [hf', hn']⟩, hl'⟩
+          have := (Masks.no_clash (staleMasks_has _) l hmb l' hin).1
+          rw [this] at hc; exact absurd hc (by decide)
+        · simp [hf, hmb]
+
 /-- What `c` now believes held at time `t`: their information about times up to `t`. -/
 def viewAt (w : W) (c : C) (t : Nat) : List (BLit Φ) :=
   closure (admit (lits ((beliefs w c).filter (·.about ≤ t))))
@@ -390,7 +1199,7 @@ theorem settledAt_guard (w : W) (c : C) (base now : List (BLit Φ)) :
 change it. With no lore rules nothing is settled, so the per-time views are not
 built; with nothing settled the view is `now`, which is not admitted twice
 (`view_eq_viewSpec`). -/
-def view (w : W) (c : C) : List (BLit Φ) :=
+def viewDef (w : W) (c : C) : List (BLit Φ) :=
   if (Lore.rules (Φ := Φ)).isEmpty then admitPlain (lits (beliefs w c)) else
   let base := lits (beliefs w c)
   let now := closure (admit base)
@@ -408,6 +1217,30 @@ def view (w : W) (c : C) : List (BLit Φ) :=
      | none => settledAt w c base now) else []
   if settled.isEmpty then now else closure (admit (settled ++ base))
 
+/-- `viewDef`, computed by the kernel's view (`litsK`, `admitK`): this is what every
+check runs (`view_eq_viewDef`). -/
+def view (w : W) (c : C) : List (BLit Φ) :=
+  if (Lore.rules (Φ := Φ)).isEmpty then admitK (litsK (beliefs w c)) else
+  let base := litsK (beliefs w c)
+  let now := closureK (admitL base)
+  -- the history is only consulted when some rule's head could be settled (`settledAt_guard`),
+  -- and from the record when the world keeps one: the past views it records, then now
+  let settled := if ((Lore.rules (Φ := Φ)).any fun r =>
+      !Fluent.fluent r.head.1 && !base.contains r.head && loreSurvives now r.head) then
+    (match HasMinds.settled w c with
+     | some m =>
+       -- an empty base has no past views, so nothing settled (`now` would add the
+       -- heads of rules with empty bodies, and in another order)
+       if (beliefs w c).isEmpty then [] else
+       ((m ++ now).filter fun l =>
+         !Fluent.fluent l.1 && !base.contains l && loreSurvives now l).eraseDups
+     | none => settledAt w c base now) else []
+  if settled.isEmpty then now else closureK (admitL (settled ++ base))
+
+theorem view_eq_viewDef (w : W) (c : C) : view w c = viewDef w c := by
+  unfold view viewDef
+  simp only [litsK_eq, admitK_eq, admitL_eq, closureK_eq]
+
 /-- Without a record, `view` computes `viewSpec`. With one, it does whenever the
 record is right (`view_eq_viewSpec_of_rec`), which every event keeps
 (`rec_next`); for the Studio, on every state a story reaches
@@ -418,7 +1251,7 @@ theorem view_eq_viewSpec (w : W) (c : C) (hrec : HasMinds.settled w c = none) :
   · have he : (Lore.rules (Φ := Φ)).isEmpty = true := List.isEmpty_iff.mpr hr
     have hz : ∀ ts : List Nat, (ts.flatMap fun t => (viewAt w c t).filter fun _ => false) = [] := by
       intro ts; induction ts <;> simp_all
-    unfold view viewSpec settledAt loreSurvives
+    rw [view_eq_viewDef]; unfold viewDef viewSpec settledAt loreSurvives
     simp only [if_true, hr, List.any_nil, Bool.and_false, hz]
     simp only [List.isEmpty_nil, ite_true, List.eraseDups_nil, List.nil_append]
     rw [closure_of_nil hr, admit_eq_admitPlain hr]
@@ -426,7 +1259,7 @@ theorem view_eq_viewSpec (w : W) (c : C) (hrec : HasMinds.settled w c = none) :
       cases h : (Lore.rules (Φ := Φ)).isEmpty
       · rfl
       · exact absurd (List.isEmpty_iff.mp h) hr
-    unfold view viewSpec
+    rw [view_eq_viewDef]; unfold viewDef viewSpec
     simp only [he, Bool.false_eq_true, ite_false, hrec, settledAt_guard]
     split
     · rename_i h
@@ -447,7 +1280,8 @@ def viewOf (w : W) (c d : C) : List (BLit Φ) :=
 theorem view_consistent (w : W) (c : C)
     (h : consistent (closure ([] : List (BLit Φ))) = true) :
     consistent (view w c) = true := by
-  unfold view
+  rw [view_eq_viewDef]
+  unfold viewDef
   split
   · rename_i he
     have hr := List.isEmpty_iff.mp he
@@ -522,9 +1356,11 @@ def learnWith (check : Bool) (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W 
   let w := setBeliefs w c hs
   if !check || !e.perceptual then w else
   let v := view w c
+  -- a report clashes with the view only if its bits are set in the view's masks (`liar_test`)
+  let mv := masksOf v
   let liars := (beliefs w c).filterMap fun h =>
     match h.src.speaker, litOf h.b with
-    | some d, some l => if !h.caught && h.up != .note && v.any (clash l) then some (h, d) else none
+    | some d, some l => if !h.caught && h.up != .note && (mv.maybe l && K.any v (clash l)) then some (h, d) else none
     | _, _ => none
   let w := setBeliefs w c ((beliefs w c).map fun h =>
     -- stamps are unique within a base, so comparing them finds the same items
@@ -533,6 +1369,19 @@ def learnWith (check : Bool) (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W 
   liars.foldl (fun w (_, d) => Credence.onBetrayal (Φ := Φ) w c d) w
 
 def learn (w : W) (c : C) (b : Belief C Φ) (e : Evid C) : W := learnWith true w c b e
+
+/-- The liar check `learnWith` runs: a literal clashes with the view only if its bits
+are set in the view's masks, so the scan can wait for them. -/
+theorem liar_test (v : List (BLit Φ)) (l : BLit Φ) :
+    ((masksOf v).maybe l && K.any v (clash l)) = v.any (clash l) := by
+  rw [K.any_eq]
+  cases hm : (masksOf v).maybe l
+  · simp only [Bool.false_and]
+    symm
+    rw [List.any_eq_false]
+    intro y hy
+    simp [(Masks.no_clash (masksOf_ok v).1 l hm y hy).1]
+  · simp
 
 /-- Everyone at `p` who perceives sees `φs`, and sees the other perceivers see
 them.
@@ -563,7 +1412,7 @@ def mindOk3 [Perceives W C] (w : W) : MindEv C Φ → Tri
     if !Perceives.perceives w c || !Perceives.perceives w d then .no else
     Tri.ofBool ((view w c).contains l)
   | .notice c l e => Tri.ofBool (Perceives.perceives w c && (!e.perceptual || truthLit w l))
-  | .realise c l => Tri.ofBool (Perceives.perceives w c && truthLit w l && (closure (view w c)).contains l)
+  | .realise c l => Tri.ofBool (Perceives.perceives w c && truthLit w l && (closureK (view w c)).contains l)
 
 /-- Who in a mind event cannot perceive, said as a reason. -/
 def mindDead [Perceives W C] (w : W) : MindEv C Φ → Option String
@@ -626,6 +1475,15 @@ def explain (w : W) (c : C) (l : BLit Φ) : List String :=
     return s!"{litStr l'} ({rs} = {s}; {reprStr h.up}): {status}"
 end
 
+/-- `recordedHeads`, computed by the kernel's view (`recordedHeadsK_eq`). -/
+def recordedHeadsK (hs : List (Held C Φ)) : List (BLit Φ) :=
+  (closureK (admitL (litsK hs))).filter fun l =>
+    !Fluent.fluent l.1 && (Lore.rules (Φ := Φ)).any (·.head == l)
+
+theorem recordedHeadsK_eq (hs : List (Held C Φ)) : recordedHeadsK hs = recordedHeads hs := by
+  unfold recordedHeadsK recordedHeads
+  rw [litsK_eq, admitL_eq, closureK_eq]
+
 /-- One character's turn in `recordSettled`: the new permanent conclusions in their
 view, if they have a record and (after the first event) their base changed in this
 event (`before` is the state the event started from). -/
@@ -637,7 +1495,7 @@ def recordOne (before w : W) (c : C) : W :=
     -- the kernel decides an unchanged base equal at once (cheaper than looking
     -- through the base for information about the present)
     if (beliefs w c).isEmpty || (decide (beliefs before c = beliefs w c) && Clock.now w != 0) then w else
-    match (recordedHeads (beliefs w c)).filter (!m.contains ·) with
+    match (recordedHeadsK (beliefs w c)).filter (!m.contains ·) with
     | [] => w
     | hs => HasMinds.setSettled w c (m ++ hs)
 
@@ -906,7 +1764,7 @@ theorem view_eq_viewSpec_of_rec [Cast C] (w : W) (c : C) (h : RecOk (Φ := Φ) w
   · have he : (Lore.rules (Φ := Φ)).isEmpty = true := List.isEmpty_iff.mpr hr0
     have hz : ∀ ts : List Nat, (ts.flatMap fun t => (viewAt w c t).filter fun _ => false) = [] := by
       intro ts; induction ts <;> simp_all
-    unfold view viewSpec settledAt loreSurvives
+    rw [view_eq_viewDef]; unfold viewDef viewSpec settledAt loreSurvives
     simp only [hr0, List.any_nil, Bool.and_false, hz]
     simp only [List.isEmpty_nil, ite_true, List.eraseDups_nil, List.nil_append]
     rw [closure_of_nil hr0, admit_eq_admitPlain hr0]
@@ -957,7 +1815,7 @@ theorem view_eq_viewSpec_of_rec [Cast C] (w : W) (c : C) (h : RecOk (Φ := Φ) w
           simp only [hf, Bool.true_and]
           exact List.any_eq_true.mpr ⟨r, hr, hrl.1⟩
       · rfl
-    unfold view viewSpec
+    rw [view_eq_viewDef]; unfold viewDef viewSpec
     simp only [he, Bool.false_eq_true, ite_false, hm]
     rw [key _ _ rfl rfl]
     split
@@ -1134,6 +1992,7 @@ theorem recordOne_frame [LawfulMinds W C Φ] (before w : W) (x : C) :
     Clock.now (recordOne before w x) = Clock.now w ∧ (∀ c, beliefs (recordOne before w x) c = beliefs w c) ∧
     (∀ c, c ≠ x → HasMinds.settled (recordOne before w x) c = HasMinds.settled w c) := by
   unfold recordOne
+  simp only [recordedHeadsK_eq]
   split
   · exact ⟨rfl, fun _ => rfl, fun _ _ => rfl⟩
   · rename_i m hm
@@ -1156,6 +2015,7 @@ theorem recordOne_done [LawfulMinds W C Φ] [Cast C] (before w : W) (x : C) (B�
     RecHolds (recordOne before w x) x (B₁ ++ B₂) := by
   intro m' hm'
   unfold recordOne at hm'
+  simp only [recordedHeadsK_eq] at hm'
   cases hs : HasMinds.settled w x with
   | none => simp only [hs] at hm'; cases hm'
   | some m =>

@@ -230,7 +230,92 @@ def Fact.fluent (s : Spec) : Fact → Bool
   | .atom i => (s.atoms[i]?.map (·.state)).getD false
   | _ => false
 
-instance : Supersedes (SFact s) := ⟨fun a b => a.f.supersedes s b.f⟩
+/-- An injective pairing: `s = a + b` is recovered as the largest `s` with `s * s ≤ npair a b`. -/
+def npair (a b : Nat) : Nat := (a + b) * (a + b) + b
+
+theorem npair_inj {a b c d : Nat} (h : npair a b = npair c d) : a = c ∧ b = d := by
+  unfold npair at h
+  have key : ∀ s t x y : Nat, x ≤ s → s < t → s * s + x < t * t + y := by
+    intro s t x y hx hst
+    have h1 : (s + 1) * (s + 1) ≤ t * t := Nat.mul_le_mul hst hst
+    have h2 : (s + 1) * (s + 1) = s * s + 2 * s + 1 := by
+      rw [Nat.add_mul, Nat.mul_add, Nat.one_mul, Nat.mul_one]; omega
+    omega
+  rcases Nat.lt_trichotomy (a + b) (c + d) with hlt | heq | hgt
+  · exact absurd h (Nat.ne_of_lt (key _ _ _ _ (by omega) hlt))
+  · rw [heq] at h; omega
+  · exact absurd h.symm (Nat.ne_of_lt (key _ _ _ _ (by omega) hgt))
+
+def actIdx : Act → Nat
+  | .holdHands => 0 | .kiss => 1 | .touch => 2 | .undress => 3 | .sex => 4
+
+theorem actIdx_inj {x y : Act} (h : actIdx x = actIdx y) : x = y := by
+  cases x <;> cases y <;> simp_all [actIdx]
+
+/-- A number for each fact, for the kernel's consistency masks (`Supersedes.code`):
+injective (`Fact.code_inj`), so a set bit is the fact itself. -/
+def Fact.code : Fact → Nat
+  | .at_ c p => 5 * npair c p
+  | .objAt o p => 5 * npair o p + 1
+  | .holds c o => 5 * npair c o + 2
+  | .did a b x => 5 * npair (npair a b) (actIdx x) + 3
+  | .atom i => 5 * i + 4
+
+theorem Fact.code_inj {x y : Fact} (h : x.code = y.code) : x = y := by
+  cases x <;> cases y <;> simp only [Fact.code] at h <;> try omega
+  case at_.at_ c p c' p' =>
+    have e := npair_inj (show npair c p = npair c' p' by omega); rw [e.1, e.2]
+  case objAt.objAt o p o' p' =>
+    have e := npair_inj (show npair o p = npair o' p' by omega); rw [e.1, e.2]
+  case holds.holds c o c' o' =>
+    have e := npair_inj (show npair c o = npair c' o' by omega); rw [e.1, e.2]
+  case did.did a b x a' b' x' =>
+    have e := npair_inj (show npair (npair a b) (actIdx x) = npair (npair a' b') (actIdx x') by omega)
+    have e' := npair_inj e.1
+    rw [e'.1, e'.2, actIdx_inj e.2]
+  case atom.atom i j => rw [show i = j by omega]
+
+/-- An atom's exclusion group (0: none). -/
+def Spec.gid (s : Spec) (i : Nat) : Nat := (s.atoms[i]?.map (·.gid)).getD 0
+
+/-- Facts that can supersede each other share a class (`Supersedes.cls`): a
+character's places, an object's places and holders, the atoms of one group; 0 for
+the rest. -/
+def Fact.cls (s : Spec) : Fact → Nat
+  | .at_ c _ => 3 * c + 1
+  | .objAt o _ | .holds _ o => 3 * o + 2
+  | .atom i => if Nat.beq (s.gid i) 0 then 0 else 3 * s.gid i + 3
+  | .did .. => 0
+
+theorem Fact.cls_sup (s : Spec) (x y : Fact) (h : x.supersedes s y = true) :
+    x.cls s = y.cls s ∧ x.cls s ≠ 0 := by
+  cases x <;> cases y <;> simp only [Fact.supersedes, Bool.false_eq_true] at h
+  all_goals first
+    | (simp only [beq_iff_eq] at h; subst h; simp [Fact.cls])
+    | skip
+  case atom.atom i j =>
+    simp only [Bool.and_eq_true, bne_iff_ne] at h
+    obtain ⟨_, h⟩ := h
+    cases hi : s.atoms[i]? with
+    | none => simp [hi] at h
+    | some a =>
+      cases hj : s.atoms[j]? with
+      | none => simp [hi, hj] at h
+      | some b =>
+        simp only [hi, hj, Bool.and_eq_true, bne_iff_ne, beq_iff_eq] at h
+        have gi : s.gid i = a.gid := by simp [Spec.gid, hi]
+        have gj : s.gid j = b.gid := by simp [Spec.gid, hj]
+        have e : s.gid i = s.gid j := by rw [gi, gj, h.2]
+        have hb : Nat.beq (s.gid i) 0 = false := by rw [nbeq_eq, gi]; simpa using h.1
+        simp [Fact.cls, ← e, hb]
+
+instance : Supersedes (SFact s) where
+  supersedes a b := a.f.supersedes s b.f
+  code a := a.f.code
+  cls a := a.f.cls s
+  cls_sup a b h := Fact.cls_sup s a.f b.f h
+  codeInj := true
+  code_inj _ a b h := by cases a; cases b; exact congrArg _ (Fact.code_inj h)
 instance : Fluent (SFact s) := ⟨fun a => a.f.fluent s⟩
 instance : Lore (SFact s) :=
   ⟨s.lore.map fun (body, (h, b)) => ⟨body.map fun (f, p) => (⟨f⟩, p), (⟨h⟩, b)⟩⟩

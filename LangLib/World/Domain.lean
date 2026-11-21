@@ -1,4 +1,5 @@
 import LangLib.World.Time
+import LangLib.World.Kernel
 
 /-!
 # Domains: composable story-world semantics
@@ -208,6 +209,18 @@ def insertBy {α : Type} (le : α → α → Bool) (x : α) : List α → List �
 def sortBy {α : Type} (le : α → α → Bool) : List α → List α
   | [] => []
   | x :: xs => insertBy le x (sortBy le xs)
+
+@[csimp] theorem K.insertBy_eq : @K.insertBy = @LangLib.World.insertBy := by
+  funext α le x l; induction l with
+  | nil => rfl
+  | cons y ys ih =>
+    show (if le x y then x :: y :: ys else y :: K.insertBy le x ys) = LangLib.World.insertBy le x (y :: ys)
+    rw [ih]; rfl
+
+@[csimp] theorem K.sortBy_eq : @K.sortBy = @LangLib.World.sortBy := by
+  funext α le l; induction l with
+  | nil => rfl
+  | cons x xs ih => show K.insertBy le x (K.sortBy le xs) = LangLib.World.sortBy le (x :: xs); rw [ih, K.insertBy_eq]; rfl
 
 /-- Event indices in order of effect: by end point, then start, then index. -/
 def Timeline.byEffect (t : Timeline) : List Nat :=

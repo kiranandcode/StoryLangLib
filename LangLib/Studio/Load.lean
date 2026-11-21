@@ -1,4 +1,5 @@
 import LangLib.Studio.Complete
+import LangLib.Studio.Emit
 
 /-!
 # Story directories
@@ -271,6 +272,67 @@ private def lean (s : String) : String :=
   -- `reprStr` output is Lean syntax; drop the namespaces we open
   ((s.replace "LangLib.Studio." "").replace "LangLib.World." "")
 
+/-- `repr` output with every structure instance `{ a := x, b := y }` written as an
+anonymous constructor `⟨x, y⟩` (derived `Repr` prints every field, in order). The
+elaborator takes a checkpoint in this form about four times as fast
+(`abstractions/ROUND-2.md`): no field names to resolve. Only for literals whose
+expected type is known (a `def` with its type) and whose structures extend nothing. -/
+def anonStructs (s : String) : String := Id.run do
+  let cs := s.toList.toArray
+  let n := cs.size
+  let isId (c : Char) : Bool := c.isAlphanum || c == '_'
+  -- the index just past `ident := ` starting at `j`, if there is one
+  let field (j : Nat) : Option Nat := Id.run do
+    let mut k := j
+    while k < n && isId cs[k]! do k := k + 1
+    if k > j && k + 4 ≤ n && cs[k]! == ' ' && cs[k+1]! == ':' && cs[k+2]! == '=' && cs[k+3]! == ' '
+    then some (k + 4) else none
+  let mut out : Array Char := Array.mkEmpty n
+  let mut stack : List Bool := []
+  let mut i := 0
+  while i < n do
+    let c := cs[i]!
+    if c == '"' then
+      out := out.push c
+      i := i + 1
+      while i < n && cs[i]! != '"' do
+        if cs[i]! == '\\' && i + 1 < n then
+          out := (out.push cs[i]!).push cs[i+1]!
+          i := i + 2
+        else
+          out := out.push cs[i]!
+          i := i + 1
+      if i < n then out := out.push cs[i]!
+      i := i + 1
+    else if c == '{' then
+      match (if i + 1 < n && cs[i+1]! == ' ' then field (i + 2) else none) with
+      | some j => stack := true :: stack; out := out.push '⟨'; i := j
+      | none => stack := false :: stack; out := out.push c; i := i + 1
+    else if c == '}' && !stack.isEmpty then
+      if stack.head! then
+        if out.back? == some ' ' then out := out.pop
+        out := out.push '⟩'
+      else out := out.push c
+      stack := stack.tail
+      i := i + 1
+    else if c == ',' && stack.head? == some true && i + 1 < n && cs[i+1]! == ' ' then
+      match field (i + 2) with
+      | some j => out := (out.push ',').push ' '; i := j
+      | none => out := out.push c; i := i + 1
+    else
+      out := out.push c
+      i := i + 1
+  return String.mk out.toList
+
+/-- A checkpoint: its JSON for `checkpoint%` (`Emit.lean`), which the elaborator turns
+into the term directly; the literal term if the JSON could not sit in a raw string. -/
+private def checkpointLit {s : Spec} (w : W s) : String :=
+  let j := checkpointJson w
+  if (j.splitOn "\"#").length > 1 then anonStructs (lean (rs w)) else s!"checkpoint% r#\"{j}\"#"
+
+/-- A literal for a `def` of known type: `repr`, opened namespaces dropped, structures anonymous. -/
+private def reprLit {α : Type} [Repr α] (a : α) : String := anonStructs (lean (rs a))
+
 /-- The story as a Lean file with checkpoints (`Snap.lean`): the state after each
 paragraph is a literal, each paragraph's verdicts are proved from the checkpoint
 before it, and the lemmas there chain them into statements from the story's start.
@@ -301,7 +363,7 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     "the story; the `#guard` lines fail if the story files no longer match.\n-/\n\n" ++
     s!"namespace {ns}\nopen LangLib.World LangLib.Studio\n\n" ++
     "-- the kernel walks long lists of beliefs recursively\nset_option maxRecDepth 100000\n\n"
-  out := out ++ s!"def spec : Spec := {lean (rs s)}\n\n"
+  out := out ++ s!"def spec : Spec := {reprLit (s)}\n\n"
   out := out ++ "#guard specMatches (include_str \"story.json\") spec\n\n"
   for p in l.paras do
     let evs := p.items.map (·.ev)
@@ -339,10 +401,10 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     prefix_ := if k == 0 then s!"chunk{nm}" else s!"({prefix_} ++ chunk{nm})"
     out := out ++ s!"def chunk{nm} : List (E spec) := {lean (rs chunk)}\n"
     if chunk.isEmpty then
-      out := out ++ s!"def c{nm} : W spec := {cPrev}\n"
+      out := out ++ s!"noncomputable def c{nm} : W spec := {cPrev}\n"
       out := out ++ s!"theorem p{nm}_step : run {cPrev} chunk{nm} = c{nm} := rfl\n"
     else
-      out := out ++ s!"def c{nm} : W spec := {lean (rs w')}\n"
+      out := out ++ s!"noncomputable def c{nm} : W spec := {checkpointLit w'}\n"
       bundle := bundle.push (s!"p{nm}_step", s!"run {cPrev} chunk{nm} = c{nm}", "")
     (bundle, alone) := check s!"p{nm}_here" s!"{pred} {cPrev} chunk{nm}" ""
       (if pred == "Valid" then validB w chunk else plausibleB w chunk) bundle alone
@@ -363,9 +425,9 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     if s.hasSetting then
       if let some d := p.doc then
         let u := usesOf s d
-        out := out ++ s!"def p{nm}uses : Uses := {lean (rs u)}\n"
+        out := out ++ s!"def p{nm}uses : Uses := {reprLit (u)}\n"
         out := out ++ s!"#guard usesMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}uses\n"
-        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {reprLit (p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
         (bundle, alone) := check s!"p{nm}_setting" s!"spec.settingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}uses p{nm}staging = true" ""
@@ -377,9 +439,9 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
             miss.isEmpty bundle alone
           seen := seen'
       if p.doc.isNone && p.plan.isSome then
-        out := out ++ s!"def p{nm}setting : List Spot := {lean (rs p.planSetting)}\n"
+        out := out ++ s!"def p{nm}setting : List Spot := {reprLit (p.planSetting)}\n"
         out := out ++ s!"#guard planSettingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}setting\n"
-        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {reprLit (p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}staging\n"
         (bundle, alone) := check s!"p{nm}_setting" s!"spec.planSettingOk (sceneOf {cPrev} chunk{nm} 0) p{nm}setting p{nm}staging = true" ""
@@ -393,9 +455,9 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     if let (some d, some j) := (p.doc, p.reading) then
       if let .ok js := judgesOf s j then
         let f := treeFacts s d
-        out := out ++ s!"def p{nm}tree : TreeFacts := {lean (rs f)}\n"
+        out := out ++ s!"def p{nm}tree : TreeFacts := {reprLit (f)}\n"
         out := out ++ s!"#guard treeMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}tree\n"
-        out := out ++ s!"def p{nm}judges : List Judge := {lean (rs js)}\n"
+        out := out ++ s!"def p{nm}judges : List Judge := {reprLit (js)}\n"
         out := out ++ s!"#guard judgesMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}judges\n"
         let ats := p.items.map (·.at_.getD 0)
         (bundle, alone) := check s!"p{nm}_complete" s!"completeOk (\{ prior := [], items := p{nm}.zip {rs ats}, base := {cPrev} } : ParaCtx spec) p{nm}tree p{nm}judges = true" ""
@@ -429,7 +491,7 @@ def storyLeanSnap (l : Loaded) (ns : String) (timed : Timed (E l.spec)) (owner :
     let ids := B.vocab.map (·.id)
     let coarse : List Nat := l.beatStory.filterMap ids.idxOf?
     let fine := l.paras.flatMap fun p => p.plan.getD (p.items.map (·.ev))
-    out := out ++ s!"def beats : Beats := {lean (rs B)}\n\n"
+    out := out ++ s!"def beats : Beats := {reprLit (B)}\n\n"
     out := out ++ s!"def beatStory : List (BeatEv beats) := {rs coarse}.map (⟨·⟩)\n\n"
     out := out ++ s!"def plans : List Ev := {lean (rs fine)}\n\n"
     let bv := decide (Valid B.start (coarse.map (⟨·⟩ : Nat → BeatEv B)))
@@ -453,7 +515,7 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     "`decide +kernel`. Regenerate after editing the story; the `#guard` lines fail if\n" ++
     "the story files no longer match the definitions below.\n-/\n\n" ++
     s!"namespace {ns}\nopen LangLib.World LangLib.Studio\n\n"
-  out := out ++ s!"def spec : Spec := {lean (rs s)}\n\n"
+  out := out ++ s!"def spec : Spec := {reprLit (s)}\n\n"
   out := out ++ "#guard specMatches (include_str \"story.json\") spec\n\n"
   let paraEvs := l.paras.map fun p => p.items.map (·.ev)
   for (p, evs) in l.paras.zip paraEvs do
@@ -502,9 +564,9 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
       if let some d := p.doc then
         let u := usesOf s d
         let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
-        out := out ++ s!"def p{nm}uses : Uses := {lean (rs u)}\n"
+        out := out ++ s!"def p{nm}uses : Uses := {reprLit (u)}\n"
         out := out ++ s!"#guard usesMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}uses\n"
-        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {reprLit (p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}staging\n"
         -- claimed true whatever the verdict: a paragraph that breaks the setting fails its proof
@@ -522,9 +584,9 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
             out := out ++ s!"theorem p{nm}_perceived : {wst} := by decide +kernel\n"
       if p.doc.isNone && p.plan.isSome then
         let prev := if k == 0 then 0 else (timed.upTo owner (k - 1)).length
-        out := out ++ s!"def p{nm}setting : List Spot := {lean (rs p.planSetting)}\n"
+        out := out ++ s!"def p{nm}setting : List Spot := {reprLit (p.planSetting)}\n"
         out := out ++ s!"#guard planSettingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}setting\n"
-        out := out ++ s!"def p{nm}staging : List Fixed := {lean (rs p.staging)}\n"
+        out := out ++ s!"def p{nm}staging : List Fixed := {reprLit (p.staging)}\n"
         if !p.staging.isEmpty then
           out := out ++ s!"#guard stagingMatch spec (include_str \"paragraphs/{nm}.plan.json\") p{nm}staging\n"
         let stmt := s!"spec.planSettingOk (sceneOf spec.start {up} {prev}) p{nm}setting p{nm}staging = true"
@@ -535,9 +597,9 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     if let (some d, some j) := (p.doc, p.reading) then
       if let .ok js := judgesOf s j then
         let f := treeFacts s d
-        out := out ++ s!"def p{nm}tree : TreeFacts := {lean (rs f)}\n"
+        out := out ++ s!"def p{nm}tree : TreeFacts := {reprLit (f)}\n"
         out := out ++ s!"#guard treeMatch spec (include_str \"paragraphs/{nm}.json\") p{nm}tree\n"
-        out := out ++ s!"def p{nm}judges : List Judge := {lean (rs js)}\n"
+        out := out ++ s!"def p{nm}judges : List Judge := {reprLit (js)}\n"
         out := out ++ s!"#guard judgesMatch spec (include_str \"paragraphs/{nm}.events.json\") p{nm}judges\n"
         let ats := p.items.map (·.at_.getD 0)
         let prior := if k == 0 then "[]" else s!"story.upTo owner {k - 1}"
@@ -565,7 +627,7 @@ def storyLean (dir : System.FilePath) (ns : String) : IO String := do
     let ids := B.vocab.map (·.id)
     let coarse : List Nat := l.beatStory.filterMap ids.idxOf?
     let fine := l.paras.flatMap fun p => p.plan.getD (p.items.map (·.ev))
-    out := out ++ s!"def beats : Beats := {lean (rs B)}\n\n"
+    out := out ++ s!"def beats : Beats := {reprLit (B)}\n\n"
     out := out ++ s!"def beatStory : List (BeatEv beats) := {rs coarse}.map (⟨·⟩)\n\n"
     out := out ++ s!"def plans : List Ev := {lean (rs fine)}\n\n"
     let bv := decide (Valid B.start (coarse.map (⟨·⟩ : Nat → BeatEv B)))

@@ -47,8 +47,22 @@ instance {W Φ₁ Φ₂ : Type} [Truth W Φ₁] [Truth W Φ₂] : Truth W (Φ₁
 someone is in one place, an object in one place or one hand). -/
 class Supersedes (Φ : Type) where
   supersedes : Φ → Φ → Bool
+  /-- A number for each fact (equal facts get equal numbers; distinct ones may share
+  one). With `cls`, it lets the kernel decide most consistency checks of a view by
+  bit tests instead of scans (`Mind.admitK`); a coarse key is only slower. -/
+  code : Φ → Nat := fun _ => 0
+  /-- Facts that can supersede one another share a class, and it is not 0. -/
+  cls : Φ → Nat := fun _ => 1
+  cls_sup : ∀ x y, supersedes x y = true → cls x = cls y ∧ cls x ≠ 0 := by
+    intro _ _ _; exact ⟨rfl, by decide⟩
+  /-- `code` is injective: then a set bit means the fact is there, and the kernel
+  needs no scan to confirm it. -/
+  codeInj : Bool := false
+  code_inj : codeInj = true → ∀ x y, code x = code y → x = y := by
+    intro h; exact absurd h (by decide)
 
-instance (priority := low) {Φ : Type} : Supersedes Φ := ⟨fun _ _ => false⟩
+instance (priority := low) {Φ : Type} : Supersedes Φ :=
+  { supersedes := fun _ _ => false, cls := fun _ => 0, cls_sup := fun _ _ h => nomatch h }
 
 instance {Φ₁ Φ₂ : Type} [Supersedes Φ₁] [Supersedes Φ₂] : Supersedes (Φ₁ ⊕ Φ₂) where
   supersedes
