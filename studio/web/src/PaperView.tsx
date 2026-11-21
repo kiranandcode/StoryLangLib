@@ -3,6 +3,7 @@ import type { Paper, PaperArg, PaperArgNode } from './types'
 import { ArgTreeView, NodeBox, reinstated, treeOf, type TEdge, type TNode } from './ArgTree'
 import { StyleView } from './Style'
 import { ContextMenu, targetsAt, type Menu, type MenuItem } from './Inspector'
+import { RuleInspect, RulesPanel } from './RulesMain'
 
 /** A paper read as an argument (World/Argument, `langlib argument`): the
  *  text on the left, on the right its claims grouped by how the reader ends
@@ -156,7 +157,7 @@ export function PaperInspector({ paper, id }: { paper: Paper; id: string | null 
   </div>
 }
 
-type PTab = 'argument' | 'moves' | 'style' | 'inspect'
+type PTab = 'argument' | 'rules' | 'moves' | 'style' | 'inspect'
 
 /** The two panels for a paper, under the Studio's top bar. */
 export function PaperMain({ name, size, face }: { name: string; size: string; face: string }) {
@@ -165,8 +166,9 @@ export function PaperMain({ name, size, face }: { name: string; size: string; fa
   const [current, setCurrent] = useState(0)
   const [menu, setMenu] = useState<Menu | null>(null)
   const [inspecting, setInspecting] = useState<string | null>(null)
+  const [version, setVersion] = useState(0)
   const prose = useRef<HTMLDivElement>(null)
-  const load = () => fetch(`/api/paper/${name}`).then(r => r.json()).then(setPaper).catch(() => {})
+  const load = () => fetch(`/api/paper/${name}`).then(r => r.json()).then(p => { setPaper(p); setVersion(v => v + 1) }).catch(() => {})
   useEffect(() => { setPaper(null); load() }, [name])
   useEffect(() => {
     if (new URLSearchParams(location.search).has('static')) return
@@ -199,7 +201,9 @@ export function PaperMain({ name, size, face }: { name: string; size: string; fa
     for (const t of targets) {
       const [kind, ...rest] = t.split(':')
       const key = rest.join(':')
-      if (kind === 'arg') {
+      if (kind === 'irule') {
+        items.push({ label: `Inspect rule ${key}`, run: () => { setInspecting(t); setTab('inspect') } })
+      } else if (kind === 'arg') {
         const n = paper.argument.nodes.find(x => x.id === key)
         if (n) items.push({ label: `Inspect ${KIND[n.kind] ?? n.kind} “${pretty(n.t)}”`, run: () => { setInspecting(key); setTab('inspect') } })
       } else if (kind === 'para') {
@@ -221,13 +225,16 @@ export function PaperMain({ name, size, face }: { name: string; size: string; fa
             onClick={() => setCurrent(i)}><span className="gutter"><span className="num">{p.name}</span></span>{p.text}</p>)}
         </article>
       </div>
-      <aside className="right">
-        <nav className="tabs">{(['argument', 'moves', 'style', ...(inspecting ? ['inspect'] : [])] as PTab[]).map(t =>
+      <aside className={`right ${tab === 'rules' ? 'rv-wide' : ''}`}>
+        <nav className="tabs">{(['argument', 'rules', 'moves', 'style', ...(inspecting ? ['inspect'] : [])] as PTab[]).map(t =>
           <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}</nav>
         {tab === 'argument' && <div className="logic"><PaperArgView paper={paper} current={current} /></div>}
+        {tab === 'rules' && <RulesPanel doc={`paper:${name}`} textRoot={() => prose.current} version={version} />}
         {tab === 'moves' && <PaperMoves paper={paper} current={current} onSelect={select} />}
         {tab === 'style' && <div className="logic"><StyleView reports={[['academic', paper.academic]]} /></div>}
-        {tab === 'inspect' && <div className="logic"><PaperInspector paper={paper} id={inspecting} /></div>}
+        {tab === 'inspect' && <div className="logic">{inspecting?.startsWith('irule:')
+          ? <RuleInspect doc={`paper:${name}`} id={inspecting.slice(6)} textRoot={() => prose.current} onPick={id => setInspecting(`irule:${id}`)} />
+          : <PaperInspector paper={paper} id={inspecting} />}</div>}
       </aside>
       {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
     </div>

@@ -1,0 +1,30 @@
+/* The Rules view inside the deslop UI: its tokens (tools/house/deslop_ui/index.html,
+   light and dark by prefers-color-scheme) mapped onto the view's. */
+.rv-embed .rv-root, .rv-embed .rv-text, .rv-embed .rv-detail, .rv-embed .rv-menu, .rv-embed.rv-menu, .rv-menu {
+  --rv-bg: var(--panel); --rv-panel: var(--bg); --rv-ink: var(--ink); --rv-ink-2: var(--muted);
+  --rv-ink-3: color-mix(in srgb, var(--muted) 75%, var(--bg)); --rv-rule: var(--line); --rv-rule-soft: var(--line);
+  --rv-ok: var(--ok); --rv-bad: var(--bad); --rv-warn: var(--warn); --rv-accent: var(--accent);
+  --rv-opp: #7a5aa6; --rv-hover: var(--chip); --rv-serif: var(--serif); --rv-sans: var(--sans);
+}
+@media (prefers-color-scheme: dark) {
+  .rv-embed .rv-root, .rv-embed .rv-text, .rv-embed .rv-detail, .rv-menu { --rv-opp: #b9a0e0; }
+}
+.rv-app {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: 0;
+  height: calc(100vh - 128px); min-height: 420px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+}
+.rv-col { min-width: 0; min-height: 0; }
+.rv-col-text { overflow-y: auto; overflow-x: hidden; border-right: 1px solid var(--line); }
+.rv-col-rules { display: flex; flex-direction: column; }
+.rv-col-text .rv-text { font-size: 16px; }
+.rv-wait { color: var(--muted); padding: 16px; }
+.rv-sides { display: flex; gap: 4px; margin: 0 0 8px; font-family: var(--sans); }
+.rv-sides button { font-size: 12px; padding: 2px 9px; }
+.rv-sides button.on { font-weight: 600; border-color: var(--accent); }
+.rv-embed-detail { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.rv-embed-detail .rv-dhead { background: var(--panel); }
+@media (max-width: 1000px) {
+  .rv-app { grid-template-columns: 1fr; height: auto; }
+  .rv-col-text { max-height: 45vh; border-right: none; border-bottom: 1px solid var(--line); }
+  .rv-col-rules { height: 80vh; }
+}

@@ -15,6 +15,7 @@ import { PaperMain } from './PaperView'
 import { MORE_KINDS, MoreInspector, describeMore } from './InspectMore'
 import type { PowerExport, Readings } from './types'
 import { POWER_KINDS, PowerInspector, PowerView } from './Power'
+import { RuleInspect, RulesMain, RulesPanel } from './RulesMain'
 
 function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   const [v, setV] = useState<T>(() => {
@@ -24,11 +25,12 @@ function usePref<T extends string>(key: string, init: T): [T, (v: T) => void] {
   return [v, set]
 }
 
-type Tab = 'paragraphs' | 'judgements' | 'argument' | 'power' | 'minds' | 'world' | 'style' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
+type Tab = 'paragraphs' | 'judgements' | 'argument' | 'rules' | 'power' | 'minds' | 'world' | 'style' | 'story' | 'proofs' | 'runs' | 'requests' | 'inspect'
 
 export function App() {
   const [stories, setStories] = useState<{ name: string; title: string }[]>([])
   const [papers, setPapers] = useState<string[]>([])
+  const [ruleDocs, setRuleDocs] = useState<{ id: string; title: string; group: string }[]>([])
   const [readings, setReadings] = useState<Readings | null>(null)
   const [power, setPower] = useState<PowerExport | null>(null)
   const [story, setStory] = usePref<string>('studio.story', '')
@@ -74,17 +76,19 @@ export function App() {
   useEffect(() => {
     fetch('/api/stories').then(r => r.json()).then((s: { name: string; title: string }[]) => {
       setStories(s)
-      if (s.length && !story.startsWith('paper:') && !s.some(x => x.name === story)) setStory(s[0].name)
+      if (s.length && !story.startsWith('paper:') && !story.startsWith('rules:') && !new URLSearchParams(location.search).get('story') && !s.some(x => x.name === story)) setStory(s[0].name)
     }).catch(() => {})
   }, [])
   const paper = story.startsWith('paper:') ? story.slice(6) : ''
+  const rdoc = story.startsWith('rules:') ? story.slice(6) : ''   // a document read only as an argument (deslop, Lean)
   const loadReadings = useCallback((name: string) => {
-    if (!name || name.startsWith('paper:')) return
+    if (!name || name.startsWith('paper:') || name.startsWith('rules:')) return
     fetch(`/api/story/${name}/readings`).then(r => r.json()).then((r: Readings) => { if (r.name === latest.current) setReadings(r) }).catch(() => {})
     fetch(`/api/story/${name}/power`).then(r => r.json()).then((r: PowerExport & { name?: string }) => { if (latest.current === name) setPower(r) }).catch(() => {})
   }, [])
-  useEffect(() => { setReadings(null); setPower(null); if (!story.startsWith('paper:')) { load(story); loadReadings(story) } }, [story, load, loadReadings])
+  useEffect(() => { setReadings(null); setPower(null); if (!story.startsWith('paper:') && !story.startsWith('rules:')) { load(story); loadReadings(story) } }, [story, load, loadReadings])
   useEffect(() => { fetch('/api/papers').then(r => r.json()).then(setPapers).catch(() => {}) }, [])
+  useEffect(() => { fetch('/api/rules/docs').then(r => r.json()).then((d: { id: string; title: string; group: string }[]) => setRuleDocs(d.filter(x => x.group === 'deslop' || x.group === 'lean'))).catch(() => {}) }, [])
 
   const loadRequests = useCallback(() => {
     fetch('/api/requests').then(r => r.json()).then(setRequests).catch(() => {})
@@ -161,7 +165,7 @@ export function App() {
   }, [report])
 
   const onContextMenu = (e: React.MouseEvent) => {
-    if (paper || mode === 'chill' || !report || report.error) return  // chill is for reading: the native menu; papers have their own
+    if (paper || rdoc || mode === 'chill' || !report || report.error) return  // chill is for reading: the native menu; papers have their own
     e.preventDefault()
     const targets = targetsAt(e.target as HTMLElement)
     const sel = window.getSelection()
@@ -172,7 +176,9 @@ export function App() {
       const [kind, key, idx] = t.split(':')
       const what = describeTarget(report, t)
       if (items.length) items.push({ label: '', run: () => {}, sep: true })
-      if (POWER_KINDS.has(kind) && power && kind !== 'pcheck' && kind !== 'pknow') {
+      if (kind === 'irule') {
+        items.push({ label: `Inspect rule ${key}`, run: () => inspect(t) })
+      } else if (POWER_KINDS.has(kind) && power && kind !== 'pcheck' && kind !== 'pknow') {
         items.push({ label: `Inspect ${kind === 'pmove' ? `move ${Number(key) + 1}` : kind === 'pcf' ? 'this key turn' : kind === 'pactive' ? 'this effect' : (power.actors.find(a => a.id === key.split('|')[0])?.name ?? key)}`, run: () => inspect(t) })
       } else if (MORE_KINDS.has(kind)) {
         items.push({ label: `Inspect ${describeMore(report, t)}`, run: () => inspect(t) })
@@ -227,19 +233,20 @@ export function App() {
     <div className={`shell ${mode !== 'chill' ? 'editing' : ''}`} onContextMenu={onContextMenu}>
       <header className="topbar">
         <span className="title">StoryLangLib Studio</span>
-        {stories.length + papers.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
+        {stories.length + papers.length + ruleDocs.length > 1 && <select value={story} onChange={e => setStory(e.target.value)}>
           <optgroup label="stories">{stories.map(s => <option key={s.name} value={s.name}>{s.title}</option>)}</optgroup>
-          {papers.length > 0 && <optgroup label="papers">{papers.map(p => <option key={p} value={`paper:${p}`}>{p} (paper)</option>)}</optgroup>}</select>}
+          {papers.length > 0 && <optgroup label="papers">{papers.map(p => <option key={p} value={`paper:${p}`}>{p} (paper)</option>)}</optgroup>}
+          {ruleDocs.length > 0 && <optgroup label="arguments (rules only)">{ruleDocs.map(d => <option key={d.id} value={`rules:${d.id}`}>{d.title}</option>)}</optgroup>}</select>}
         <span className="seg" role="group" aria-label="mode">
           <button className={mode === 'chill' ? 'on' : ''} onClick={() => setMode('chill')} title="just the prose (o)">Chill</button>
           <button className={mode === 'overview' ? 'on' : ''} onClick={() => setMode('overview')} title="annotations and logic (o)">Overview</button>
           <button className={mode === 'edit' ? 'on' : ''} onClick={() => setMode('edit')} title="right-click anything to inspect, adjust or ask the agent (e)">Edit</button>
         </span>
-        {overview && !paper && <button className={`btn ${pos === 'on' ? 'on' : ''}`} onClick={() => setPos(pos === 'on' ? 'off' : 'on')} title="tint parts of speech">POS</button>}
+        {overview && !paper && !rdoc && <button className={`btn ${pos === 'on' ? 'on' : ''}`} onClick={() => setPos(pos === 'on' ? 'off' : 'on')} title="tint parts of speech">POS</button>}
         <span className="spacer" />
-        {report && !report.error && overview && !paper && <span className={`badge ${report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}`}>
+        {report && !report.error && overview && !paper && !rdoc && <span className={`badge ${report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}`}>
           story {report.verdict.valid ? 'valid' : report.verdict.plausible ? 'plausible' : 'failing'}</span>}
-        {report && overview && proofs && !paper && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
+        {report && overview && proofs && !paper && !rdoc && <span className={`badge lean ${proofs.status === 'ok' ? 'ok' : proofs.status === 'failed' || proofs.status === 'error' ? 'bad' : ''}`}
           onClick={() => setTab('proofs')} style={{ cursor: 'pointer' }}>
           {proofs.status === 'running' ? 'Lean: checking…' : proofs.status === 'none' ? 'Lean: –' : `Lean ${okThm}/${nThm}`}</span>}
         {pending > 0 && <button className="btn req-btn on" onClick={() => setTab('requests')}
@@ -250,7 +257,7 @@ export function App() {
         <button className="btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="dark or light (d)">{theme === 'dark' ? '☾' : '☀'}</button>
         <span className="live" title={live ? 'following the story files' : 'disconnected'}><span key={flash} className={`dot ${live ? 'on flash' : ''}`} />live</span>
       </header>
-      {paper ? <PaperMain name={paper} size={size} face={face} /> : <div className="main">
+      {rdoc ? <RulesMain doc={rdoc} size={size} face={face} /> : paper ? <PaperMain name={paper} size={size} face={face} /> : <div className="main">
         <div className="prose-pane" ref={proseRef}>
           {!report && <div className="prose"><p className="para empty">Loading…</p></div>}
           {report?.error && <div className="prose"><p className="para empty">The checker could not read this story: {report.error}</p></div>}
@@ -274,14 +281,15 @@ export function App() {
           </>}
         </div>
         {overview && report && !report.error && (
-          <aside className="right">
+          <aside className={`right ${tab === 'rules' ? 'rv-wide' : ''}`}>
             <nav className="tabs">
-              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument'] : []), ...(power && !power.error ? ['power'] : []), 'minds', 'world', 'style', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
+              {(['paragraphs', ...(report.completeness ? ['judgements'] : []), ...(report.argument ? ['argument', 'rules'] : []), ...(power && !power.error ? ['power'] : []), 'minds', 'world', 'style', 'story', 'proofs', 'runs', 'requests', ...(mode === 'edit' || inspecting ? ['inspect'] : [])] as Tab[]).map(t =>
                 <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t}</button>)}
             </nav>
             {tab === 'paragraphs' && <LogicPanel report={report} current={current} onSelect={select} scrollRef={logicRef} />}
             {tab === 'judgements' && <div className="logic"><JudgementsView report={report} onSelect={select} /></div>}
             {tab === 'argument' && <div className="logic"><ArgumentView report={report} onSelect={select} /></div>}
+            {tab === 'rules' && <RulesPanel doc={`story:${story}`} textRoot={() => proseRef.current} version={flash} />}
             {tab === 'power' && <div className="logic"><PowerView report={report} power={power} current={current} onSelect={select} /></div>}
             {tab === 'minds' && <div className="logic"><MindsView report={report} current={current} /></div>}
             {tab === 'world' && <div className="logic"><WorldView report={report} readings={readings} current={current} /></div>}
@@ -289,7 +297,9 @@ export function App() {
             {tab === 'story' && <div className="logic"><StoryView report={report} current={current} /></div>}
             {tab === 'proofs' && <div className="logic"><ProofView report={report} onProve={() => fetch(`/api/story/${story}/prove`, { method: 'POST' })} /></div>}
             {tab === 'runs' && <div className="logic"><RunsView report={report} /></div>}
-            {tab === 'inspect' && <div className="logic">{inspecting && power && POWER_KINDS.has(inspecting.split(':')[0])
+            {tab === 'inspect' && <div className="logic">{inspecting?.startsWith('irule:')
+              ? <RuleInspect doc={`story:${story}`} id={inspecting.slice(6)} textRoot={() => proseRef.current} onPick={id => setInspecting(`irule:${id}`)} />
+              : inspecting && power && POWER_KINDS.has(inspecting.split(':')[0])
               ? <PowerInspector power={power} target={inspecting} report={report} />
               : inspecting && MORE_KINDS.has(inspecting.split(':')[0])
               ? <MoreInspector report={report} readings={readings} target={inspecting} current={current} onAsk={() => ask(inspecting)} />

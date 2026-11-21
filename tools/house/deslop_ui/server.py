@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "tools/house"))
 sys.path.insert(0, str(ROOT / "studio"))
 import certify  # noqa: E402
 import request_log  # noqa: E402
+import rules_docs  # noqa: E402  studio/rules_docs.py: the Rules view's documents
 
 ROOTS = [ROOT / "docs/deslop", ROOT / "stories/private-deslop"]
 
@@ -381,6 +382,14 @@ def queue(doc_id: str, action: str, para: str, note: str) -> dict:
                               story=doc_id, para=para, target=action)
 
 
+def rules_doc(doc_id: str, side: str) -> dict:
+    """The document's inferences as rules, for the Rules tab (the Studio's
+    Rules.tsx, built into rules-view/ by `npm run build:rules` in studio/web)."""
+    if side not in ("original", "rewrite"):
+        raise KeyError(side)
+    return rules_docs.get(f"deslop:{rel(doc_dir(doc_id) / side)}")
+
+
 def worker_seen() -> float | None:
     """When an agent last claimed a deslop request (a rough 'is anyone listening')."""
     t = None
@@ -419,6 +428,18 @@ class H(BaseHTTPRequestHandler):
                 return self.send(200, {"version": version(doc_dir(q["id"]))})
             if u.path == "/api/worker":
                 return self.send(200, {"last": worker_seen()})
+            if u.path == "/api/rules":
+                return self.send(200, rules_doc(q["id"], q.get("side", "original")))
+            if u.path == "/api/rules/md":
+                d = rules_doc(q["id"], q.get("side", "original"))
+                if d.get("error"):
+                    return self.send(500, {"error": d["error"]})
+                return self.send(200, rules_docs.markdown(d).encode(), "text/markdown; charset=utf-8")
+            if u.path in ("/rules-view/rules-view.js", "/rules-view/style.css"):
+                f = HERE / u.path.lstrip("/")
+                if not f.exists():
+                    return self.send(404, {"error": "run `npm run build:rules` in studio/web"})
+                return self.send(200, f.read_bytes(), "text/javascript" if f.suffix == ".js" else "text/css")
         except KeyError as e:
             return self.send(404, {"error": f"no document {e}"})
         self.send(404, {"error": "not found"})

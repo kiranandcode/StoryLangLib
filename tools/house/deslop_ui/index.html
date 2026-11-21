@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Deslop</title>
+<link rel="stylesheet" href="/rules-view/style.css">
+<!-- the Studio's Rules view (studio/web/src/Rules.tsx), built by `npm run build:rules` in studio/web -->
+<script src="/rules-view/rules-view.js"></script>
 <style>
 :root {
   --bg: #f7f5f0; --panel: #ffffff; --ink: #1f2328; --muted: #6a6f76; --line: #e3dfd6;
@@ -73,6 +76,8 @@ dialog textarea { width: 100%; height: 340px; font: 13px var(--mono); }
 .note-in { width: 260px; }
 /* reader view */
 main.reading { grid-template-columns: 1fr; }
+main.wide { grid-template-columns: 1fr; }
+main.wide aside { display: none; }
 main.reading aside { position: fixed; top: 0; right: 0; height: 100vh; max-height: none; width: min(440px, 92vw);
   z-index: 20; padding: 12px; background: var(--bg); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.18);
   display: none; }
@@ -305,10 +310,11 @@ function scorePill(label, rep) {
 function render() {
   const d = state.doc;
   $("#scores").innerHTML = scorePill("before", d.original?.report) + scorePill("after", d.rewrite?.report);
-  const tabs = [["read", "Read"], ["argument", "Argument"], ["rules", "Style rules"], ["requests", `Requests (${d.requests.length})`], ["source", "Source"]];
+  const tabs = [["read", "Read"], ["argument", "Argument"], ["infer", "Rules"], ["rules", "Style rules"], ["requests", `Requests (${d.requests.length})`], ["source", "Source"]];
   if (state.tab === "analysis") state.tab = "argument";
   if (state.tab === "compare") state.tab = "read";
   document.querySelector("main").classList.toggle("reading", state.tab === "read" || state.tab === "argument");
+  document.querySelector("main").classList.toggle("wide", state.tab === "infer");
   document.body.classList.toggle("nomarks", !state.marks);
   document.body.classList.toggle("nohl", !state.hl);
   $("#tabs").innerHTML = tabs.map(([k, l]) => `<button class="${state.tab === k ? "on" : ""}" data-tab="${k}">${l}</button>`).join("");
@@ -316,10 +322,25 @@ function render() {
   if (state.tab === "read") v.innerHTML = readView();
   else if (state.tab === "compare") v.innerHTML = compareView();
   else if (state.tab === "argument") v.innerHTML = argumentView();
+  else if (state.tab === "infer") rulesView(v);
   else if (state.tab === "rules") v.innerHTML = `<section class="card"><h2>Style rules, before and after</h2>${ruleTable()}</section>`;
   else if (state.tab === "requests") v.innerHTML = requestsView();
   else v.innerHTML = `<section class="card"><h2>Source</h2><pre style="white-space:pre-wrap">${esc(d.source)}</pre></section>`;
   renderInspector();
+}
+// The Rules tab: each inference as a natural-deduction rule, beside the text.
+// The view is the Studio's own component (window.RulesEmbed, rules-view/); one
+// element keeps its React root across renders, so folding and selection survive polling.
+const rvEl = document.createElement("div");
+function rulesView(v) {
+  if (!window.RulesEmbed) { v.innerHTML = `<section class="card"><h2>Rules</h2><p class="muted">The Rules view is not built: run <span class="kbd">npm run build:rules</span> in studio/web.</p></section>`; return; }
+  const d = state.doc;
+  const sides = [{ id: "original", label: "before" }, ...(d.rewrite ? [{ id: "rewrite", label: "after" }] : [])];
+  const side = state.rulesSide && sides.some(s => s.id === state.rulesSide) ? state.rulesSide : (state.side === "rewrite" ? "rewrite" : "original");
+  const q = `id=${encodeURIComponent(d.id)}&side=${side}&v=${state.version}`;
+  if (v.firstChild !== rvEl) v.replaceChildren(rvEl);
+  window.RulesEmbed.mount(rvEl, { url: `/api/rules?${q}`, mdUrl: `/api/rules/md?${q}`, sides, side,
+    onSide: s => { state.rulesSide = s; render(); } });
 }
 function legend() {
   return `<div class="legend">${Object.entries(CLASS).map(([k, [c, t]]) =>

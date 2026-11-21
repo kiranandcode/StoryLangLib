@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 from fastapi import Body, FastAPI, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from watchfiles import awatch
 
@@ -25,6 +25,8 @@ import extras
 import freshness
 import procs
 import request_log
+import rules_docs
+import rules_story
 import spec_edit
 import proofs as lean
 from procs import LANGLIB, ROOT
@@ -255,6 +257,47 @@ async def get_paper(name: str):
         return await extras.get("paper", name, spawn)
     except Exception as e:  # noqa: BLE001
         return {"name": name, "error": str(e)}
+
+
+async def rules_doc(doc: str) -> dict:
+    if doc.startswith("story:"):
+        name = doc[6:]
+        if name not in story_dirs():
+            raise KeyError(doc)
+        if name not in reports:
+            reports[name] = await run_report(name)
+        spec = json.loads((STORIES / name / "story.json").read_text())
+        return rules_story.story_doc(name, reports[name], spec, await extras.get("power", name, spawn))
+    return await rules_docs.aget(doc)
+
+
+@app.get("/api/rules/docs")
+async def list_rules_docs():
+    """What the Rules view can open: papers, essays, deslop sides, stories, the Death Note arc."""
+    return rules_docs.docs(story_dirs())
+
+
+@app.get("/api/rules")
+async def get_rules(doc: str):
+    """A document's inferences as rules (`langlib rules`, studio/rules_docs.py, studio/rules_story.py)."""
+    try:
+        return await rules_doc(doc)
+    except KeyError:
+        raise HTTPException(404, f"no document {doc}")
+    except Exception as e:  # noqa: BLE001  a broken reading must not break the panel
+        return {"id": doc, "error": str(e), "paragraphs": []}
+
+
+@app.get("/api/rules/md")
+async def get_rules_md(doc: str):
+    """The same, as markdown (tools/house/rules_md.py)."""
+    try:
+        d = await rules_doc(doc)
+    except KeyError:
+        raise HTTPException(404, f"no document {doc}")
+    if d.get("error"):
+        raise HTTPException(500, d["error"])
+    return PlainTextResponse(rules_docs.markdown(d), media_type="text/markdown; charset=utf-8")
 
 
 @app.post("/api/story/{name}/prove")
