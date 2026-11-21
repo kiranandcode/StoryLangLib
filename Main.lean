@@ -1,5 +1,6 @@
 import LangLib
 import LangLib.Studio.PaperArg
+import LangLib.Studio.RulesView
 import LangLib.World.Examples.FightPower
 open LangLib LangLib.Scene Lean
 
@@ -18,6 +19,7 @@ def usage : String := "usage:
   langlib end <dir>                         the end state of every reading, as the next chapter's opening (JSON)
   langlib chain-lean <prev> <next> <ns>     the link between two chapters as Lean theorems (Chain.lean)
   langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling
+  langlib rules <dir>                       the argument's inferences as rules (World/Rules): schemes, attacks, labels
   langlib power <dir>                       a rule-based module's moves, checks and states (studio/power-schema.md)"
 
 def readDoc (p : String) : IO Doc := do
@@ -104,6 +106,9 @@ def main : List String → IO UInt32
     pure 0
   | ["argument", dir, lore] => do
     IO.println (← LangLib.Studio.PaperArg.argumentMain dir lore).compress
+    pure 0
+  | ["rules", dir] => do
+    IO.println (← LangLib.Studio.RulesView.rulesMain dir).compress
     pure 0
   | ["power", dir] => do
     let name := ((System.FilePath.mk dir).fileName.getD dir)

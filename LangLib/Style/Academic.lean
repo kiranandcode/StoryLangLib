@@ -223,7 +223,7 @@ partial def hasSubj : Tree → Bool
       | _ => false
 
 private def isColon (w : Word) : Bool := w.form == ":"
-private def isDash (w : Word) : Bool := w.form == "—" || w.form == "--"
+private def isDash (w : Word) : Bool := w.form == "—" || w.form == "--" || w.form == "---"
 
 /-- Roles of what elaborates the left: an appositive, an argument, a list. -/
 def definingRoles : List Role :=
