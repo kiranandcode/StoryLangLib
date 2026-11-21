@@ -233,7 +233,8 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Domain  | Composable story semantics: `Domain`, `Valid`, three-valued `ok3` and `Plausible` under listed assumptions, stories told out of order |
 | LangLib/World/Persona | Traits, ranked values, and in-character checks via defeasible logic         |
 | LangLib/World/Space   | Places, objects, possession, what each event lets witnesses see             |
-| LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), lore, factive `realise` |
+| LangLib/World/Mind    | Evidence bases (seen, sensed, inferred, told, rumour, ...), trust- and persona-dependent upgrades (hard, radical, conservative, note), views as the greedy consistent prefix (consistent by theorem), computed by bit masks and the lore's least fixpoint and proved equal to the definition, lore, factive `realise` |
+| LangLib/World/Kernel  | List functions by their recursors, `@[csimp]`-equal to core's: what `decide +kernel` reduces fastest (`abstractions/ROUND-2.md`) |
 | LangLib/World/Social  | Trust, attraction, affection, tension; consent as a hard precondition       |
 | LangLib/World/Consent | Consent refined: finer acts (edge acts named or assumed), how each yes was given, scenes offered and taken with limits, check-ins, withdrawal and safewords that bind, wishes that are not consent, firsts from history |
 | LangLib/World/Conviction | A belief held against the evidence: signs registered and explained away, conceded only once enough are in |
@@ -243,6 +244,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 | LangLib/World/Goals   | Goals, plans, `Purpose` of each action; `motives` explains every action or flags it unmotivated; `planWorks` |
 | LangLib/World/Derive  | `deriving StoryEvent` / `deriving StoryFact`: one `Inject` per constructor and composite instances by dispatch (no overlapping instances, small instance terms) |
 | LangLib/World/Lexicon | Verb lexicons per module (incl. evidential and dialogue verbs); adverbials ("meanwhile", "an hour earlier") to time constraints |
+| LangLib/Studio/Emit   | `checkpoint%`: a proof checkpoint's state from JSON straight to its term, and a boolean equality for states |
 | eval                  | Corpus, model runner, analysis, Jev reference check                         |
 | viz                   | Scripts for the figures in `viz/out`                                        |
 | docs                  | Literature reviews (linguistic encoding, story logic) and results           |
