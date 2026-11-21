@@ -23,6 +23,49 @@ adds that question. Each `infer` move can carry a `rule`:
 Positions the text argues against go in `argument.json` as `opponents`, as
 rules with the same fields. The root of the tree is `argument.json`'s `root`.
 
+## Typed slots
+
+Each scheme says which slots its premises may fill and which it requires
+(`Scheme.spec`): practical reasoning takes a goal, a problem, a means, why it
+is feasible and who should act, and requires the goal and the means;
+requirement matches capability requires a need and a provision; abduction
+requires an observation and a rival explanation; analogy a source case, a
+target case and the respect in which they are alike. A premise's `role` in the
+rule JSON names its slot.
+
+- **Shaped** (a fault of the *reading*): every premise fills a slot its scheme
+  allows, no rule has more than six premises (group them into sub-rules), and
+  every scheme has been read. A first reading of a pitch made its conclusion
+  rest on twelve parallel reasons with no goal; it was readable rule by rule
+  and had no argument. Shaped rejects that reading.
+- **Enthymemes** (a finding about the *text*): required slots no premise
+  fills. An abduction that never names a rival explanation, a practical
+  argument with no stated goal, an analogy that never says how the cases are
+  alike. The text may be right to leave them implicit; the view shows each as
+  an "unstated" row so the reader can decide.
+
+## Reading a text into rules: the protocol
+
+1. **Top down.** Write the root rule first, from the thesis: for a pitch or
+   proposal, practical reasoning (goal, problem, means, feasible, who). Then
+   expand each premise into the rules from the text that support it. Reading
+   bottom up (a rule per paragraph, then a conclusion over all of them) is how
+   the flat reading above happened.
+2. **Type every premise.** Give each premise its slot. If no slot fits, the
+   scheme is wrong.
+3. **Check.** `langlib rules` must say `ok` and `shaped`; `rules_lean.py`
+   proves it.
+4. **Review by reading the rules.** A fresh agent that did not write the
+   reading gets the text and the plain-words view, rule by rule, with each
+   scheme's critical questions, and answers for each rule: does each premise
+   play its role, does the conclusion follow by this scheme, is the gloss
+   faithful to the quote. This is the default review, for every rule.
+5. **One blind check, at the top.** Another fresh agent gets only the text and
+   writes the argument's top level in five lines (goal, problem, means,
+   feasible, who, or whatever the text's own shape is). Compare it with the
+   root rule. A reviewer shown a structure checks what is there; only a blind
+   reading notices structure that is missing. Disagreements go to Kiran.
+
 ## What is decided
 
 Everything below is a Lean function over the rules, decidable, so a
@@ -35,6 +78,8 @@ document's results can be restated as theorems and proved by
 | grounded labelling | `labels` | Dung's grounded extension (Caminada's labelling) over the text's own attacks; an attack on a rule reaches every rule built on its conclusion |
 | under the sceptic | `scepticLabels` | the same, with one unanswered attacker per pressed critical question |
 | the authors' word alone | `bareRules`, `bareLeaves` | rules whose leaves are only the authors' word, hedges and promises; premises nothing supports |
+| shape | `Shaped`, `faults` | every premise fills a slot its scheme allows; at most six premises; every scheme read |
+| unstated premises | `enthymemeRules` | required slots no premise fills |
 | thin support | `thinRules` | a generalisation from at most two examples or citations, a defeasible rule resting on a promise, or one whose premises all rest on the authors' word |
 
 The two labellings answer different questions. Under the text's own attacks,
@@ -56,9 +101,9 @@ each rule carries its label. Hovering a quote highlights it in the text;
 clicking a rule shows its critical questions. `tools/house/rules_md.py <dir>`
 exports the same tree as markdown.
 
-## Reading a text into rules
+## Reading conventions
 
-The reading is a model's judgement, like an annotation. Rules for doing it:
+The reading is a model's judgement, like an annotation. Beyond the protocol:
 
 - A rule's conclusion quote and premise quotes must be verbatim. The
   builder should check every quote against its paragraph.
