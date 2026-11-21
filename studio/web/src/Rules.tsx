@@ -3,10 +3,10 @@ import './rules.css'
 
 /** An argument's inferences as informal natural-deduction rules (`langlib
  *  rules`, LangLib/Studio/RulesView.lean; stories through studio/rules_story.py).
- *  Each rule: its premises side by side above a line (a premise another rule
- *  concludes is that rule, stacked above it, proof-tree style), its conclusion
- *  below, the scheme and kind at the right end of the line (solid strict,
- *  dashed defeasible, dotted unread), its grounded label. Attacks are a margin
+ *  Each rule is a card: a header (id, scheme, strict or defeasible, grounded
+ *  label), its premises one per row above a line (solid strict, dashed
+ *  defeasible, dotted unread), its conclusion below. The rules a premise rests
+ *  on are listed under the card, indented, folded to one line until opened. Attacks are a margin
  *  list on each rule whose links scroll to and flash the other end. Hovering a
  *  quote highlights it in the source text. One component for the Studio and
  *  the deslop UI (src/rules-embed.tsx). docs/ui-rules.md has the evidence. */
@@ -169,7 +169,7 @@ interface Ctx {
   hover: (para: string, quote: string) => void; unhover: () => void
 }
 const C = createContext<Ctx>(null as unknown as Ctx)
-const OPEN_DEPTH = 1
+const OPEN_DEPTH = 0
 
 export function LabelBadge({ l, title }: { l: Lab; title?: string }) {
   return <span className={`rv-lab lab-${l}`} title={title}>{LAB[l]}</span>
@@ -182,16 +182,23 @@ function Quote({ text, gloss, para }: { text: string; gloss?: string; para: stri
     title={para ? `¶ ${para}: hover to find it in the text` : undefined}>“{text}”</span>
 }
 
-function Premise({ p, folded }: { p: RPremise; folded?: string }) {
-  const { toggle } = useContext(C)
-  return <div className={`rv-prem ${p.fail ? 'fails' : ''}`}>
-    <Quote text={p.quote} gloss={p.gloss || p.t} para={p.para} />
-    {' '}{folded
-      ? <button className="rv-unfold" onClick={e => { e.stopPropagation(); toggle(folded, 99) }} title={`show the rule ${folded} that concludes this`}>▸ from {folded}</button>
-      : <span className={`rv-tag ${WEAK.has(p.tag) ? 'weak' : ''}`} title={p.tagLabel ? `${TAG[p.tag] ?? p.tag}: ${p.tagLabel}` : undefined}>
-        {p.tagLabel && p.tag !== 'check' ? p.tagLabel : TAG[p.tag] ?? p.tag}{p.tag === 'check' && p.tagLabel ? ` · ${p.tagLabel}` : ''}</span>}
-    {p.fail && <div className="rv-fail">✕ {p.fail}</div>}
-  </div>
+function Tag({ p }: { p: RPremise }) {
+  return <span className={`rv-tag ${WEAK.has(p.tag) ? 'weak' : ''}`} title={p.tagLabel ? `${TAG[p.tag] ?? p.tag}: ${p.tagLabel}` : undefined}>
+    {p.tagLabel && p.tag !== 'check' ? p.tagLabel : TAG[p.tag] ?? p.tag}{p.tag === 'check' && p.tagLabel ? ` · ${p.tagLabel}` : ''}</span>
+}
+
+/** One premise per row: what it rests on at the left (a tag, or the rule that concludes it), the quote after. */
+function Premise({ p, sub }: { p: RPremise; sub: string | null }) {
+  const { toggle, isOpen, ix } = useContext(C)
+  const sr = sub ? ix.by.get(sub) : null
+  return <li className={`rv-prem ${p.fail ? 'fails' : ''}`}>
+    <span className="rv-pk">{sub
+      ? <button className={`rv-subref lab-${sr?.label ?? 'undec'}`} onClick={e => { e.stopPropagation(); toggle(sub, 1) }}
+        title={isOpen(sub, 1) ? `fold ${sub}` : `show the rule ${sub} that concludes this, below`}>{isOpen(sub, 1) ? '▾' : '▸'} {sub}</button>
+      : <Tag p={p} />}</span>
+    <span className="rv-pq"><Quote text={p.quote} gloss={p.gloss || p.t} para={p.para} />
+      {p.fail && <span className="rv-fail"> ✕ {p.fail}</span>}</span>
+  </li>
 }
 
 function Margin({ r }: { r: RRule }) {
@@ -208,42 +215,60 @@ function Margin({ r }: { r: RRule }) {
     {inn.map((a, k) => <li key={`i${k}`} className={`in ${a.ok ? '' : 'fails'}`}>⟵ {HOWS[a.how]?.[1] ?? a.how} {link(a.src)}{a.on ? <> on “{a.on}”</> : null}
       {a.quote && <> <Quote text={a.quote} para={ix.by.get(a.src)?.para ?? ''} /></>}{!a.ok && <span className="dim"> (does not reach: a strict rule's conclusion stands)</span>}</li>)}
     {via.map((a, k) => <li key={`v${k}`} className="in via">⟵ through {link(a.tgt)}: {HOWS[a.how]?.[1] ?? a.how} {link(a.src)}</li>)}
-    {pressed.map(q => <li key={`q${q.i}`} className="in pressed">⚑ the sceptic presses CQ{q.i + 1} ({q.attack}): {q.q}</li>)}
+    {pressed.map(q => <li key={`q${q.i}`} className="in pressed">⚑ CQ{q.i + 1} pressed ({q.attack}): {q.q}</li>)}
     {out.map((a, k) => <li key={`o${k}`} className={`out ${a.ok ? '' : 'fails'}`}>{HOWS[a.how]?.[0] ?? a.how} {link(a.tgt)} ⟶</li>)}
     {reinstated && <li className="dim">reinstated: every attacker is OUT</li>}
   </ul>
 }
 
-function RuleBox({ id, depth, path }: { id: string; depth: number; path: string[] }) {
+/** A rule as a card: a header (id, scheme, kind, label), its premises one per
+ *  row above the line, the conclusion below. */
+function RuleCard({ r, depth }: { r: RRule; depth: number }) {
   const cx = useContext(C)
-  const r = cx.ix.by.get(id)
-  if (!r) return <div className="rv-prem dim">{id} (missing)</div>
   const lab = cx.mode === 'label' ? r.label : r.sceptic
   const other = cx.mode === 'label' ? r.sceptic : r.label
-  return <div className={`rv-rule kind-${r.kind} side-${r.side} lab-${lab} ${cx.selected === id ? 'sel' : ''} ${depth ? 'nested' : ''}`}
-    data-rule={id} data-target={`irule:${id}`} onClick={e => { e.stopPropagation(); cx.select(id) }}>
-    {r.premises.length > 0 && <div className="rv-prems">
-      {r.premises.map((p, k) => {
-        const sub = p.sub && cx.ix.by.has(p.sub) && p.sub !== id ? p.sub : null
-        if (sub && !path.includes(sub) && cx.isOpen(sub, depth + 1))
-          return <div key={k} className="rv-prem sub"><RuleBox id={sub} depth={depth + 1} path={[...path, id]} /></div>
-        return <Premise key={k} p={p} folded={sub ?? undefined} />
-      })}
-    </div>}
-    <div className="rv-bar">
-      {depth > 0 && <button className="rv-fold" onClick={e => { e.stopPropagation(); cx.toggle(id, depth) }} title="fold this rule into its conclusion">▾ {id}</button>}
-      <span className={`rv-line ${r.kind}`} />
-      <span className="rv-scheme">{r.scheme} · {KIND[r.kind] ?? r.kind}</span>
-      <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
-      {other !== lab && <span className="rv-was">({LAB[other]} {cx.mode === 'label' ? 'sceptic' : 'text'})</span>}
-    </div>
-    <div className="rv-concl">
-      <Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} />
-      <span className="rv-id">{r.id}{r.para ? ` · ¶${r.para}` : ''}</span>
+  return <div className={`rv-rule kind-${r.kind} side-${r.side} lab-${lab} ${cx.selected === r.id ? 'sel' : ''}`}
+    data-rule={r.id} data-target={`irule:${r.id}`} onClick={e => { e.stopPropagation(); cx.select(r.id) }}>
+    <div className="rv-rhead">
+      {depth > 0 && <button className="rv-fold" onClick={e => { e.stopPropagation(); cx.toggle(r.id, depth) }} title="fold">▾</button>}
+      <b className="rv-rid">{r.id}</b>
       {r.side === 'opponent' && <span className="rv-opp">argued against</span>}
       {r.who && <span className="rv-who">{r.who}</span>}
+      <span className="rv-grow" />
+      {r.para && <span className="rv-id">¶{r.para}</span>}
+      <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
+      {other !== lab && <span className="rv-was">{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
     </div>
+    {r.premises.length > 0 && <ul className="rv-prems">
+      {r.premises.map((p, k) => <Premise key={k} p={p} sub={p.sub && cx.ix.by.has(p.sub) && p.sub !== r.id ? p.sub : null} />)}
+    </ul>}
+    <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme">{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
+    <div className="rv-concl"><Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} /></div>
     <Margin r={r} />
+  </div>
+}
+
+/** A rule and, indented under it, the rules its premises rest on: open ones
+ *  as cards, folded ones as one-line rows. */
+function RuleNode({ id, depth, path }: { id: string; depth: number; path: string[] }) {
+  const cx = useContext(C)
+  const r = cx.ix.by.get(id)
+  if (!r) return <div className="rv-row dim">{id} (missing)</div>
+  if (!cx.isOpen(id, depth)) {
+    const lab = cx.mode === 'label' ? r.label : r.sceptic
+    return <div className={`rv-row lab-${lab} side-${r.side} ${cx.selected === id ? 'sel' : ''}`} data-rule={id}
+      onClick={e => { e.stopPropagation(); cx.toggle(id, depth) }} title="unfold this rule">
+      <span className="rv-caret">▸</span><b className="rv-rid">{id}</b>
+      <span className="rv-rowq">{r.quote ? `“${r.quote}”` : r.gloss || r.concl}</span>
+      <span className="rv-rowmeta"><i className={`rv-sw ${r.kind}`} /><LabelBadge l={lab} /></span>
+    </div>
+  }
+  const subs = [...new Set(r.premises.map(p => p.sub).filter((s): s is string => !!s && cx.ix.by.has(s) && s !== id && !path.includes(s)))]
+  return <div className="rv-node">
+    <RuleCard r={r} depth={depth} />
+    {subs.length > 0 && <div className="rv-kids">
+      {subs.map(s => <RuleNode key={s} id={s} depth={depth + 1} path={[...path, id]} />)}
+    </div>}
   </div>
 }
 
@@ -296,7 +321,7 @@ function Section({ title, ids, note }: { title: string; ids: string[]; note?: st
   if (!ids.length) return null
   return <section className="rv-sec">
     <h4 onClick={() => setShut(!shut)} className="rv-sech">{shut ? '▸' : '▾'} {title} · {ids.length}</h4>
-    {!shut && <>{note && <div className="rv-secnote">{note}</div>}{ids.map(id => <div className="rv-top" key={id}><RuleBox id={id} depth={0} path={[]} /></div>)}</>}
+    {!shut && <>{note && <div className="rv-secnote">{note}</div>}{ids.map(id => <div className="rv-top" key={id}><RuleNode id={id} depth={0} path={[]} /></div>)}</>}
   </section>
 }
 
