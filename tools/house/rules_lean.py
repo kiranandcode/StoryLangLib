@@ -76,7 +76,7 @@ def lean(rules, ns):
         ans = [str(q["i"]) for q in r["cqs"] if q["status"] == "answered"]
         pr = [str(q["i"]) for q in r["cqs"] if q["status"] == "pressed"]
         body.append(f"  {{ id := {c(r['id'])}, concl := {c(r['concl'])}, premises := {prem},\n"
-                    f"    kind := .{r['kind']}, scheme := .{SCHEME.get(r['scheme'], 'unread')}, side := .{r['side']},\n"
+                    f"    kind := .{'strict' if r['kind'] == 'strict' else 'defeasible'}, scheme := .{SCHEME.get(r['scheme'], 'unread')}, side := .{r['side']},\n"
                     f"    answered := {lst(ans)}, pressed := {lst(pr)}, slots := {slots} }}")
     out += [",\n".join(body), "]", ""]
     out.append("def as : List (RAttack Tm) := " + lst(

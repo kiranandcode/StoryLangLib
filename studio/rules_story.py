@@ -27,6 +27,16 @@ Sources, each already computed elsewhere:
 Each rule may carry fields the paper rules do not: `gloss` (words for the
 conclusion when no quote is verbatim), `who`, `group`, `note`; a premise may
 carry `gloss`, `tagLabel` and `fail` (a precondition that does not hold).
+
+Every rule has a typed scheme (World/Rules `Scheme.spec`) and every premise a
+`role` (a slot id, RulesView.lean `slotS`): lore and power-system checks are
+rule applications (condition), what a character saw perception (perceived),
+what someone said witness testimony (said), a connective cause to effect
+(cause), a character's own inference and the arc's detective deductions
+abduction (observed; rival where the source eliminates alternatives, else the
+rival is an enthymeme), a fair-play reveal deduction (premise). Rules over
+`MAX_FAN_IN` premises are regrouped (`fan_in`). The server and the CLI then
+check the document with `langlib rules-json` (rules_docs.check / acheck).
 """
 from __future__ import annotations
 
@@ -127,9 +137,57 @@ def segment(text: str, pos: int) -> str:
     return s
 
 
+# ------------------------------------------------------------------ fan-in
+
+MAX_FAN_IN = 6   # World/Rules.lean `maxFanIn`
+PARALLEL = {"perception", "witness testimony", "abduction (best explanation)", "sign"}
+
+
+def fan_in(rules: list[dict]) -> list[dict]:
+    """Rules with more than MAX_FAN_IN premises, regrouped (World/Rules `faults`:
+    fanIn). Independent support (what several saw or said) splits into parallel
+    rules for the same conclusion; a conjunction (a rule's conditions) nests:
+    each run of premises becomes a sub-rule concluding that they hold, and the
+    rule rests on the sub-rules."""
+    out = []
+    for r in rules:
+        ps = r["premises"]
+        if len(ps) <= MAX_FAN_IN:
+            out.append(r)
+            continue
+        chunks = [ps[i:i + MAX_FAN_IN] for i in range(0, len(ps), MAX_FAN_IN)]
+        if r["scheme"] in PARALLEL:
+            for k, ch in enumerate(chunks):
+                out.append({**r, "id": r["id"] + ("" if k == 0 else "abcdefghij"[k]), "premises": ch})
+            continue
+        top = []
+        for k, ch in enumerate(chunks):
+            sid = f"{r['id']}.{k + 1}"
+            words = "; ".join(p.get("gloss") or p["t"] for p in ch)
+            sub = {**r, "id": sid, "concl": f"{r['concl']}#{k + 1}", "quote": "", "gloss": words, "premises": ch,
+                   "note": f"A group of {r['id']}'s premises (a rule takes at most {MAX_FAN_IN})."}
+            out.append(sub)
+            top.append({"t": sub["concl"], "tag": ch[0]["tag"], "tagLabel": None, "quote": "", "gloss": words,
+                        "para": r.get("para", ""), "sub": sid, "role": ch[0].get("role", "condition"),
+                        **({"fail": "; ".join(p["fail"] for p in ch if p.get("fail"))} if any(p.get("fail") for p in ch) else {})})
+        out.append({**r, "premises": top})
+    return out
+
+
 # ------------------------------------------------------------------ a story's argument graph
 
 def _story_rules(report: dict, spec: dict) -> tuple[list[dict], list[dict]]:
+    """Each support of the argument graph as a rule under a typed scheme
+    (World/Rules `Scheme.spec`), every premise in a slot:
+
+    - lore (story.json `lore`): rule application, a condition per premise;
+    - a connective in the prose ('so', 'because') without lore: cause to effect;
+    - what a character saw: perception (perceived);
+    - what someone said: witness testimony (said);
+    - a character's own inference (Minds `src: inferred`): abduction, from what
+      they came to hold earlier in the same paragraph (observed). The reading
+      records no alternatives, so the rival is left unstated: an enthymeme.
+    """
     g = report.get("argument") or {"nodes": [], "edges": []}
     nodes = {n["id"]: n for n in g["nodes"]}
     names = {c["id"]: c["name"] for c in report.get("characters", [])}
@@ -149,6 +207,12 @@ def _story_rules(report: dict, spec: dict) -> tuple[list[dict], list[dict]]:
                 return segment(p["text"], offs[pn][k][0]), pn
         return "", n.get("para", "")
 
+    def tok(n: dict) -> tuple[str, int]:
+        for at in n.get("ats") or []:
+            _, pn, k = at.split(":")
+            return pn, int(k)
+        return n.get("para", ""), 10 ** 6
+
     rules: list[dict] = []
     concl_of: dict[str, str] = {}      # node id → the rule concluding it
     counters: dict[str, int] = {}
@@ -157,11 +221,11 @@ def _story_rules(report: dict, spec: dict) -> tuple[list[dict], list[dict]]:
         counters[prefix] = counters.get(prefix, 0) + 1
         return f"{prefix}{counters[prefix]}"
 
-    def premise(nid: str, tag: str, label: str = "") -> dict:
+    def premise(nid: str, tag: str, role: str, label: str = "") -> dict:
         n = nodes.get(nid, {"gloss": nid, "para": ""})
         q, pn = quote(n)
         return {"t": nid, "tag": tag, "tagLabel": label or None, "quote": q, "gloss": n.get("gloss", nid),
-                "para": pn, "sub": None}
+                "para": pn, "sub": None, "role": role}
 
     def rule(prefix: str, tgt: str, kind: str, scheme: str, prems: list[dict], note: str = "") -> dict:
         n = nodes[tgt]
@@ -186,39 +250,70 @@ def _story_rules(report: dict, spec: dict) -> tuple[list[dict], list[dict]]:
         conn = [e for e in es if e["why"].startswith("‘")]
         if lore:
             words = ", ".join(sorted({e["why"].split(" ")[0] for e in conn}))
-            rule("L", tgt, "strict", "lore rule" + (f" ({words} in the text)" if words else ""),
-                 [premise(e["src"], "fact") for e in lore])
+            rule("L", tgt, "strict", "rule application",
+                 [premise(e["src"], "fact", "condition") for e in lore],
+                 note="By the story's lore." + (f" The text says it with {words}." if words else ""))
         elif conn:
-            rule("C", tgt, "defeasible", "connective inference (" + conn[0]["why"].split(" ")[0] + ")",
-                 [premise(e["src"], "fact" if e["src"].startswith("F:") else "belief") for e in conn])
+            rule("C", tgt, "defeasible", "cause to effect",
+                 [premise(e["src"], "fact" if e["src"].startswith("F:") else "belief", "cause") for e in conn],
+                 note=f"Read from the connective {conn[0]['why'].split(' ')[0]} in the text.")
         seen = [e for e in es if e["why"] == "seen"]
         if seen:
-            rule("V", tgt, "defeasible", "perception", [premise(e["src"], "seen") for e in seen])
+            rule("V", tgt, "defeasible", "perception", [premise(e["src"], "seen", "perceived") for e in seen])
         told = [e for e in es if e["why"] == "told"]
         if told:
             rule("T", tgt, "defeasible", "witness testimony",
-                 [premise(e["src"], "told", f"said by {names.get(nodes.get(e['src'], {}).get('who', ''), '?')}") for e in told])
+                 [premise(e["src"], "told", "said", f"said by {names.get(nodes.get(e['src'], {}).get('who', ''), '?')}") for e in told])
+
+    # what each character came to hold, by paragraph and from what (seen, told)
+    gained: dict[tuple[str, str], list[tuple[str, str]]] = {}
+    for p in report.get("paragraphs", []):
+        for b in p.get("delta", {}).get("beliefs", []):
+            src = next((x.get("src", "") for x in b.get("explain", []) if x.get("lit") == b["lit"]), "")
+            if b.get("change") == "gained":
+                gained.setdefault((b["who"], p["name"]), []).append((b["lit"], src))
+
+    def grounds(who: str, tgt: str, pn: str) -> list[dict]:
+        """What `who` came to hold from seeing or being told earlier in paragraph `pn`."""
+        _, at = tok(nodes[tgt])
+        out = []
+        for lit, src in gained.get((who, pn), []):
+            nid = f"B:{who}:{lit}"
+            if nid == tgt or nid not in nodes or not (src == "seen" or src.startswith("told")):
+                continue
+            if tok(nodes[nid]) [1] < at:
+                out.append(premise(nid, "belief", "observed", "held then"))
+        return out
 
     # the character's own inferences (Minds: src inferred), by lore when the lore concludes them
     lore_rules = spec.get("lore", [])
     for p in report.get("paragraphs", []):
         for b in p.get("delta", {}).get("beliefs", []):
-            if b.get("change") != "gained" or not any(x.get("src") == "inferred" for x in b.get("explain", [])):
+            if b.get("change") != "gained" or not any(x.get("src") == "inferred" and x.get("lit") == b["lit"] for x in b.get("explain", [])):
                 continue
             tgt = f"B:{b['who']}:{b['lit']}"
             if tgt not in nodes or tgt in concl_of:
                 continue
+            who = names.get(b["who"], b["who"])
             lr = next((x for x in lore_rules if x.get("then") == b["lit"]), None)
             if lr:
                 prems = []
                 for lit in lr.get("if", []):
                     nid = f"B:{b['who']}:{lit}" if f"B:{b['who']}:{lit}" in nodes else f"F:{lit}"
-                    prems.append(premise(nid, "belief" if nid.startswith("B:") else "fact"))
-                rule("L", tgt, "strict", "lore rule", prems, note=f"{names.get(b['who'], b['who'])} draws it from the story's lore.")
+                    prems.append(premise(nid, "belief" if nid.startswith("B:") else "fact", "condition"))
+                rule("L", tgt, "strict", "rule application", prems, note=f"{who} draws it from the story's lore.")
+                continue
+            prems = grounds(b["who"], tgt, p["name"])
+            if prems:
+                note = (f"The reading records that {who} infers it, not from what: its grounds here are what {who} "
+                        "came to hold earlier in the paragraph. No alternative is recorded, so the rival "
+                        "explanation is unstated.")
             else:
-                r = rule("I", tgt, "defeasible", "the character's own inference", [],
-                         note="The reading records the inference but not what it was drawn from.")
-                r["thin"] = ["no recorded grounds"]
+                prems = [{"t": f"G:{tgt}", "tag": "authors", "tagLabel": "no grounds recorded", "quote": "",
+                          "gloss": f"what {who} has to go on in ¶{p['name']}", "para": p["name"], "sub": None, "role": "observed"}]
+                note = (f"The reading records that {who} infers it but nothing it is drawn from. "
+                        "No alternative is recorded, so the rival explanation is unstated.")
+            rule("I", tgt, "defeasible", "abduction (best explanation)", prems, note=note)
     for r in rules:
         for p in r["premises"]:
             p["sub"] = concl_of.get(p["t"]) if p["t"] != r["concl"] else None
@@ -231,44 +326,86 @@ def _story_rules(report: dict, spec: dict) -> tuple[list[dict], list[dict]]:
             if end not in concl_of:
                 n = nodes[end]
                 if n["kind"] == "fact":
-                    rule("W", end, "strict", "the story's fact", [], note="The story asserts it.")
+                    rule("W", end, "strict", "deduction", [], note="The story asserts it.")
                 else:
-                    r = rule("A", end, "defeasible", "belief with no recorded grounds", [])
-                    r["thin"] = ["no recorded grounds"]
+                    r = rule("A", end, "defeasible", "abduction (best explanation)",
+                             [{"t": f"G:{end}", "tag": "authors", "tagLabel": "no grounds recorded", "quote": "",
+                               "gloss": f"what {names.get(n.get('who', ''), 'they')} has to go on", "para": n.get("para", ""),
+                               "sub": None, "role": "observed"}],
+                             note="A belief the reading gives no grounds for.")
         attacks.append({"src": concl_of[e["src"]], "tgt": concl_of[e["tgt"]], "how": "rebut", "on": None,
                         "quote": e["why"], "ok": True})
-    return rules, attacks
+    return fan_in(rules), attacks
 
 
 # ------------------------------------------------------------------ a power system's moves
 
-def _power_rules(power: dict, min_checks: int = 3) -> list[dict]:
+def _power_rules(power: dict, min_checks: int = 3) -> tuple[list[dict], list[dict]]:
     """Moves with at least `min_checks` preconditions (the rest are bookkeeping:
-    one check, e.g. the book is open) and every counterfactual."""
+    one check, e.g. the book is open) and every counterfactual, each a rule
+    application with its checks as conditions. A move with more than
+    MAX_FAN_IN checks rests on one sub-rule per kind of check (status,
+    possession, ...). A check that fails is undermined by the module's reason
+    it fails, so the move or counterfactual is OUT."""
     sysname = {"nen": "Nen", "magic": "Magic", "deathnote": "the Death Note"}.get(power.get("system", ""), power.get("system", "power"))
-    rules = []
+    rules: list[dict] = []
+    attacks: list[dict] = []
+    # a move's checks, grouped by what they are about (each group a sub-rule when there are too many)
+    CLUSTER = {"status": "user", "possession": "user", "support": "user", "body": "means", "resource": "means"}
+    WORDS = {"user": "the user can work the ability (alive, not in Zetsu, has it, has what it needs)",
+             "means": "the hands and the aura it needs are free", "target": "the target is in reach and the ability's limits allow it"}
 
-    def prem(c: dict, para: str) -> dict:
-        return {"t": c["id"], "tag": "check", "tagLabel": c.get("kind", "rule"), "quote": "", "gloss": c["label"],
-                "para": para, "sub": None, **({} if c["pass"] else {"fail": c["why"]})}
+    def prem(c: dict, para: str, owner: str) -> dict:
+        p = {"t": f"{owner}:{c['id']}", "tag": "check" if c["pass"] else "hedge",
+             "tagLabel": c.get("kind", "rule") if c["pass"] else f"{c.get('kind', 'rule')}, supposed",
+             "quote": "", "gloss": c["label"], "para": para, "sub": None, "role": "condition"}
+        return p if c["pass"] else {**p, "fail": c["why"]}
+
+    def build(rid: str, concl: str, gloss: str, para: str, checks: list[dict], **kw) -> None:
+        ps = [prem(c, para, rid) for c in checks]
+        top = ps
+        if len(ps) > MAX_FAN_IN:
+            by: dict[str, list[dict]] = {}
+            for c, p in zip(checks, ps):
+                by.setdefault(CLUSTER.get(c.get("kind", "rule"), "target"), []).append(p)
+            top = []
+            for k, (cl, group) in enumerate(by.items()):
+                if len(group) == 1:
+                    top.append(group[0])
+                    continue
+                sid = f"{rid}.{k + 1}"
+                rules.append({"id": sid, "concl": f"{concl}#{cl}", "quote": "", "gloss": WORDS[cl],
+                              "para": para, "kind": "strict", "scheme": "rule application", "side": kw["side"],
+                              "premises": group, "label": "in", "group": kw["group"],
+                              "note": f"Checks of {rid}, grouped (a rule takes at most {MAX_FAN_IN} premises)."})
+                fails = [p["fail"] for p in group if p.get("fail")]
+                top.append({"t": f"{concl}#{cl}", "tag": "check", "tagLabel": cl, "quote": "",
+                            "gloss": WORDS[cl], "para": para, "sub": sid, "role": "condition",
+                            **({"fail": "; ".join(fails)} if fails else {})})
+        rules.append({"id": rid, "concl": concl, "quote": "", "gloss": gloss, "para": para, "kind": "strict",
+                      "scheme": "rule application", "premises": top, **kw})
+        for c, p in zip(checks, ps):
+            if c["pass"]:
+                continue
+            fid = f"{rid}-not-{c['id']}"
+            rules.append({"id": fid, "concl": f"!{p['t']}", "quote": "", "gloss": f"not: {c['label']}", "para": para,
+                          "kind": "strict", "scheme": "rule application", "side": "text", "label": "in", "group": kw["group"],
+                          "premises": [{"t": f"why:{p['t']}", "tag": "check", "tagLabel": "the module", "quote": "",
+                                        "gloss": c["why"], "para": para, "sub": None, "role": "condition"}],
+                          "note": f"The {sysname} module's check {c['id']} fails."})
+            owner = next(r["id"] for r in rules if any(q is p for q in r["premises"]))
+            attacks.append({"src": fid, "tgt": owner, "how": "undermine", "on": p["t"], "quote": c["why"]})
+
     for m in power.get("moves", []):
         if len(m.get("checks", [])) < min_checks:
             continue
-        rules.append({"id": f"N{m['i'] + 1}", "concl": f"move:{m['i']}", "quote": "", "gloss": m["text"],
-                      "para": m.get("para", ""), "kind": "strict", "scheme": f"{sysname}: {m['kind']}", "side": "text",
-                      "premises": [prem(c, m.get("para", "")) for c in m["checks"]],
-                      "label": "in" if m["ok"] else "out", "group": "power",
-                      "note": "" if m["ok"] else m.get("why", ""),
-                      "thin": [] if m["ok"] else [f"refused: {m.get('why', '')}"]})
+        build(f"N{m['i'] + 1}", f"move:{m['i']}", m["text"], m.get("para", ""), m["checks"], side="text",
+              label="in" if m["ok"] else "out", group="power", note=(f"{sysname}: {m['kind']}." + ("" if m["ok"] else f" Refused: {m.get('why', '')}")))
     for k, cf in enumerate(power.get("counterfactuals", [])):
-        fails = [c for c in cf.get("checks", []) if not c["pass"]]
-        rules.append({"id": f"X{k + 1}", "concl": f"cf:{cf['id']}", "quote": "", "gloss": cf["label"],
-                      "para": cf.get("para", ""), "kind": "strict", "scheme": f"{sysname}: counterfactual",
-                      "side": "opponent", "premises": [prem(c, cf.get("para", "")) for c in cf.get("checks", [])],
-                      "label": "out", "group": "counterfactual",
-                      "note": f"{cf.get('change', '')}. Proved: {cf.get('theorem', '')}".strip(". "),
-                      "thin": [f"fails: {c['why']}" for c in fails] or [cf.get("why", "")]})
-    return rules
+        build(f"X{k + 1}", f"cf:{cf['id']}", cf["label"], cf.get("para", ""), cf.get("checks", []), side="opponent",
+              label="out", group="counterfactual",
+              note=f"{sysname}: counterfactual. {cf.get('change', '')}. Proved: {cf.get('theorem', '')}".strip(". "))
+    return fan_in(rules), attacks
 
 
 def story_doc(name: str, report: dict, spec: dict, power: dict | None) -> dict:
@@ -279,7 +416,9 @@ def story_doc(name: str, report: dict, spec: dict, power: dict | None) -> dict:
     groups = [{"id": f"belief:{c['id']}", "title": f"{c['name']}'s beliefs"} for c in report.get("characters", [])]
     groups.append({"id": "world", "title": "The story's facts and lore"})
     if power and not power.get("error"):
-        rules += _power_rules(power)
+        prs, pas = _power_rules(power)
+        rules += prs
+        attacks += pas
         groups += [{"id": "power", "title": f"{power.get('title', 'The power system')}: moves and their preconditions"},
                    {"id": "counterfactual", "title": "Counterfactuals: runs the module proves fail"}]
     return {"id": f"story:{name}", "title": report.get("title", name), "kind": "story",
@@ -327,6 +466,12 @@ CH = {"light": "Light", "l": "L", "ryuk": "Ryuk", "raye": "Raye Penber", "naomi"
       "agents": "the FBI agents", "ryuga": "the idol Hideki Ryuga", "reader": "the reader"}
 NM = {"maki": "Shoko Maki", "ryugaN": "Hideki Ryuga", "lAlias": "L", "ryuzaki": "Ryuzaki"}
 FALSE_CK = {"noOtherSuspect", "pagesOrdinary", "rayeWillLive", "lightHelpsL"}
+# body literals that eliminate the alternatives (an abduction's rival slot)
+RIVAL = {"noOtherSuspect"}
+
+
+def _lit_words_neg(words: str) -> str:
+    return words[5:] if words.startswith("not: ") else f"not: {words}"
 
 
 def _groups(s: str) -> list[str]:
@@ -447,42 +592,54 @@ def deathnote(path: Path = DN_SOURCE) -> dict:
                 s = f"{w[0].upper() + w[1:]} {verb} {words}."
                 n += 1
                 rid = f"D{n}"
+                abd = ev != "reveal"
                 prems = []
                 for b in (d["body"] if d else []):
                     h = have.get(b[0])
+                    role = ("rival" if b[0].lstrip("!.").split(" ")[0] in RIVAL else "observed") if abd else "premise"
                     if h is None:
-                        prems.append({"t": b[0], "tag": "authors", "tagLabel": "never established", "quote": "",
-                                      "gloss": b[2], "para": "", "sub": None, "fail": "nothing in the arc establishes it"})
+                        prems.append({"t": f"{who}:{b[0]}", "tag": "authors", "tagLabel": "never established", "quote": "",
+                                      "gloss": b[2], "para": "", "sub": None, "role": role,
+                                      "fail": "nothing in the arc establishes it"})
                     else:
                         tag = {"seen": "seen", "self": "fact", "told": "told", "concluded": "belief"}.get(h[0], "fact")
-                        prems.append({"t": b[0], "tag": tag, "tagLabel": {"self": "known", "concluded": "concluded"}.get(h[0]),
-                                      "quote": h[2], "para": h[3], "sub": h[1] or None})
+                        prems.append({"t": f"{who}:{b[0]}", "tag": tag, "tagLabel": {"self": "known", "concluded": "concluded"}.get(h[0]),
+                                      "quote": h[2], "para": h[3], "sub": h[1] or None, "role": role})
                 missing = [p for p in prems if p.get("fail")]
+                rival = any(p["role"] == "rival" for p in prems)
                 rules.append({"id": rid, "concl": f"{who}:{key}", "quote": s, "para": pn,
-                              "kind": "defeasible" if ev == "suspect" else "strict",
-                              "scheme": f"{'suspicion' if ev == 'suspect' else 'fair-play reveal' if ev == 'reveal' else 'detective deduction'}"
-                                        f" ({d['name'] if d else 'no rule'})",
+                              "kind": "strict" if ev == "reveal" else "defeasible",
+                              "scheme": "abduction (best explanation)" if abd else "deduction",
                               "side": "text", "premises": prems, "who": w,
                               "label": "undec" if missing or ev == "suspect" else "in" if true else "out",
                               "group": "reader" if who == "reader" else f"who:{who}",
                               "thin": [f"premise never established: {p['gloss']}" for p in missing],
-                              "note": {"conclude": "Mystery.conclude: allowed only if derivable from what they hold now.",
-                                       "reveal": "Mystery.reveal: fair only if the reader can derive it from what the page has shown.",
-                                       "suspect": "Mystery.suspect: a credence below certainty; needs a lead (one premise held)."}[ev]})
+                              "note": f"Deduction rule “{d['name'] if d else 'none'}”. " + {
+                                  "conclude": "Mystery.conclude: allowed only if derivable from what they hold now; "
+                                              "read as an inference to the best explanation of the clues"
+                                              + (", the alternatives eliminated." if rival else ", with no alternative eliminated: the rival is unstated."),
+                                  "reveal": "Mystery.reveal: fair only if the reader can derive it from what the page has shown.",
+                                  "suspect": "Mystery.suspect: a credence below certainty; needs a lead (one premise held)"
+                                             + ("." if rival else "; no alternative is eliminated, so the rival is unstated.")}[ev]})
                 if ev != "suspect":
                     held.setdefault(who, {})[key] = ("concluded", rid, s, pn)
                     concl_of[(who, key)] = rid
-                if not true and ev != "suspect":
-                    attacks.append({"src": "", "tgt": rid, "how": "rebut", "quote": "the world says otherwise"})
+                if not true:
+                    n_w = sum(1 for r in rules if r["id"].startswith("W")) + 1
+                    rules.append({"id": f"W{n_w}", "concl": f"world:!{key}", "quote": "", "para": pn,
+                                  "gloss": f"In the world: {_lit_words_neg(words)}", "kind": "strict", "scheme": "deduction",
+                                  "side": "text", "premises": [], "label": "in", "group": "world",
+                                  "note": "What the arc's world state says (DeathNoteArc.lean)."})
+                    attacks.append({"src": f"W{n_w}", "tgt": rid, "how": "rebut", "quote": "the world says otherwise"})
             else:
                 continue
             sents.append(s)
         if sents:
             paras.append({"name": pn, "text": " ".join(sents)})
-    attacks = [a for a in attacks if a["src"]]
     who_order = ["l", "naomi", "light", "reader"]
     groups = [{"id": f"who:{w}", "title": f"{CH[w]}'s deductions"} for w in who_order[:3]]
     groups.append({"id": "reader", "title": "The reader's derivations (fair play)"})
+    groups.append({"id": "world", "title": "The world, where a deduction is wrong"})
     doc = package(rules, attacks, groups=groups)
     return {"id": "lean:deathnote", "title": "Death Note: Light against L (the arc's deductions)", "kind": "lean",
             "note": "Read from LangLib/World/Examples/DeathNoteArc.lean: the arc has no prose yet, so each paragraph "
@@ -506,10 +663,11 @@ def from_dl(theory: dict) -> dict:
     for r in rs:
         rules.append({"id": r["label"], "concl": r["head"], "quote": "", "gloss": r["head"], "para": "",
                       "kind": "strict" if r["kind"] == "strict" else "defeasible",
-                      "scheme": {"strict": "strict rule", "defeasible": "defeasible rule", "defeater": "defeater"}[r["kind"]],
-                      "side": "text", "label": "in",
+                      "scheme": "rule application", "side": "text", "label": "in",
+                      "note": {"strict": "A strict rule of the theory.", "defeasible": "A defeasible rule of the theory.",
+                               "defeater": "A defeater: it only blocks the rules for the opposite head."}[r["kind"]],
                       "premises": [{"t": b, "tag": "fact" if b in facts else "authors", "quote": "", "gloss": b,
-                                    "para": "", "sub": concl.get(b)} for b in r.get("body", [])]})
+                                    "para": "", "sub": concl.get(b), "role": "condition"} for b in r.get("body", [])]})
     attacks = []
     for a in rs:
         for b in rs:
@@ -523,4 +681,4 @@ def from_dl(theory: dict) -> dict:
     for r in rules:
         r["label"] = lab[r["id"]]
     propagate(rules)
-    return package(rules, attacks)
+    return package(fan_in(rules), attacks)

@@ -267,7 +267,7 @@ async def rules_doc(doc: str) -> dict:
         if name not in reports:
             reports[name] = await run_report(name)
         spec = json.loads((STORIES / name / "story.json").read_text())
-        return rules_story.story_doc(name, reports[name], spec, await extras.get("power", name, spawn))
+        return await rules_docs.acheck(rules_story.story_doc(name, reports[name], spec, await extras.get("power", name, spawn)))
     return await rules_docs.aget(doc)
 
 

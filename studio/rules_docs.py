@@ -10,17 +10,22 @@ A document id names where the reading lives:
 
 The rules come from `langlib rules <dir>` (LangLib/Studio/RulesView.lean) when
 the directory has an argument.json. An `infer` move without a `rule` field is
-still an inference: it is added here as a rule of kind `unclassified`, its
+still an inference: it is added here as a rule of kind `unclassified` and
+scheme `unread` (World/Rules `faults` reports it as unread), its
 premises tagged the way RulesView.lean tags them (from the move that put each
 forward), its quotes the sentence the move points at (`s`, counted from 1)
-when there is one. Both the Studio (procs.arun) and the deslop UI (procs.run)
-build documents here, so the two views read the same data.
+when there is one. Every document, stories included (server.py), then goes
+through `langlib rules-json` (`check`, `acheck`), so its labels, faults,
+enthymemes and shape are World/Rules' own. Both the Studio (procs.arun) and
+the deslop UI (procs.run) build documents here, so the two views read the
+same data.
 """
 from __future__ import annotations
 
 import json
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 import extras
@@ -184,7 +189,7 @@ def unclassified(d: Path, paras: list[dict], have: list[dict]) -> list[dict]:
                     q = quote_at(ppn, ps) if ppn else ""
                     prems.append({"t": p, "tag": tag, "quote": q, "gloss": gloss(p), "para": ppn if q else "", "sub": None})
                 out.append({"id": f"I{n}", "concl": t, "quote": quote_at(pn, m.get("s")), "gloss": gloss(t), "para": pn,
-                            "kind": "unclassified", "scheme": "inference (scheme not read yet)", "side": "text",
+                            "kind": "unclassified", "scheme": "unread", "side": "text",
                             "premises": prems, "cqs": [], "label": "in", "sceptic": "in", "thin": [], "bare": False,
                             "note": "This infer move has no `rule` field yet: its kind, scheme and critical questions are unread."})
             if t and t not in first:
@@ -234,31 +239,91 @@ def _argv(d: Path) -> list[str] | None:
     return procs.langlib_argv("rules", str(d)) if (d / "argument.json").exists() else None
 
 
+# ------------------------------------------------------------------ checking with Lean
+
+def _check_file(doc: dict) -> Path:
+    f = tempfile.NamedTemporaryFile("w", suffix=".rules.json", prefix="langlib-", delete=False)
+    with f:
+        json.dump(doc["rules"], f)
+    return Path(f.name)
+
+
+def _merge(doc: dict, res: procs.Result) -> dict:
+    """`langlib rules-json`'s verdict on the document's rules: labels, thin and
+    bare support, faults, enthymemes, `shaped` and `ok` as World/Rules computes
+    them. A rule's own thin-support notes (a story's "no recorded grounds")
+    are kept beside Lean's, and so are the errors of the reading before it."""
+    old = doc["rules"]
+    try:
+        new = json.loads(res.stdout)
+    except json.JSONDecodeError:
+        why = (res.stderr or res.stdout or ("timed out" if res.timed_out else "no output"))[-500:]
+        old["errors"] = old.get("errors", []) + [f"langlib rules-json failed: {why}"]
+        old["ok"] = False
+        return doc
+    for ro, rn in zip(old["rules"], new["rules"]):
+        rn["thin"] = rn.get("thin", []) + [t for t in ro.get("thin", []) if t not in rn.get("thin", [])]
+    new["errors"] = old.get("errors", []) + new.get("errors", [])
+    new["ok"] = bool(new.get("ok")) and bool(old.get("ok", True))
+    doc["rules"] = new
+    return doc
+
+
+def check(doc: dict) -> dict:
+    """The document's rules checked by Lean (`langlib rules-json`, procs.run)."""
+    if doc.get("error") or not isinstance(doc.get("rules"), dict):
+        return doc
+    f = _check_file(doc)
+    try:
+        return _merge(doc, procs.run(procs.langlib_argv("rules-json", str(f)), timeout=120))
+    finally:
+        f.unlink(missing_ok=True)
+
+
+async def acheck(doc: dict) -> dict:
+    """The same, for the Studio's server (procs.arun)."""
+    if doc.get("error") or not isinstance(doc.get("rules"), dict):
+        return doc
+    f = _check_file(doc)
+    try:
+        return _merge(doc, await procs.arun(procs.langlib_argv("rules-json", str(f)), timeout=120))
+    finally:
+        f.unlink(missing_ok=True)
+
+
+def _dn_key() -> float:
+    return rules_story.DN_SOURCE.stat().st_mtime if rules_story.DN_SOURCE.exists() else 0.0
+
+
 async def aget(doc: str) -> dict:
     """A paper, essay, deslop side or Lean document (the Studio: procs.arun)."""
     if doc == "lean:deathnote":
-        return rules_story.deathnote()
+        if doc not in _cache or _cache[doc][0] != _dn_key():
+            _cache[doc] = (_dn_key(), await acheck(rules_story.deathnote()))
+        return _cache[doc][1]
     d = doc_dir(doc)
     stamp = _stamp(d)
     if doc in _cache and _cache[doc][0] == stamp:
         return _cache[doc][1]
     argv = _argv(d)
-    r = assemble(doc, d, await procs.arun(argv, timeout=120) if argv else None)
+    r = await acheck(assemble(doc, d, await procs.arun(argv, timeout=120) if argv else None))
     if not r.get("error"):
         _cache[doc] = (stamp, r)
     return r
 
 
 def get(doc: str) -> dict:
-    """The same, synchronously (the deslop UI's threaded server: procs.run)."""
+    """The same, synchronously (the deslop UI's threaded server and the CLI: procs.run)."""
     if doc == "lean:deathnote":
-        return rules_story.deathnote()
+        if doc not in _cache or _cache[doc][0] != _dn_key():
+            _cache[doc] = (_dn_key(), check(rules_story.deathnote()))
+        return _cache[doc][1]
     d = doc_dir(doc)
     stamp = _stamp(d)
     if doc in _cache and _cache[doc][0] == stamp:
         return _cache[doc][1]
     argv = _argv(d)
-    r = assemble(doc, d, procs.run(argv, timeout=120) if argv else None)
+    r = check(assemble(doc, d, procs.run(argv, timeout=120) if argv else None))
     if not r.get("error"):
         _cache[doc] = (stamp, r)
     return r

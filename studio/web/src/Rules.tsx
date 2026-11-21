@@ -13,7 +13,7 @@ import './rules.css'
 
 export interface RPremise {
   t: string; tag: string; tagLabel?: string | null; quote: string; gloss?: string; para: string; sub: string | null; fail?: string
-  /** the part the premise plays in its scheme ("needs", "provides", "goal", ...) */
+  /** the slot the premise fills in its scheme (World/Rules `Slot`: "needs", "provides", "goal", ...) */
   role?: string
 }
 export interface RCq { i: number; q: string; attack: string; status: 'answered' | 'open' | 'pressed'; note: string }
@@ -23,11 +23,19 @@ export interface RRule {
   kind: 'strict' | 'defeasible' | 'unclassified'; scheme: string; side: 'text' | 'opponent'
   premises: RPremise[]; cqs: RCq[]; label: Lab; sceptic: Lab; thin: string[]; bare: boolean
   who?: string; group?: string; note?: string
+  /** what is wrong with the rule's shape (World/Rules `faults`) */
+  faults?: RFault[]
+  /** required slots no premise fills: what the text leaves unstated (World/Rules `enthymemes`) */
+  enthymemes?: string[]
 }
+export interface RFault { kind: 'unslotted' | 'illegal' | 'fanIn' | 'empty' | 'unread'; t?: string; slot?: string; n?: number; why: string }
 export interface RAttack { src: string; tgt: string; how: 'rebut' | 'undercut' | 'undermine'; on: string | null; quote: string; ok: boolean; reaches: string[] }
 export interface RulesData {
   root: string; rules: RRule[]; attacks: RAttack[]; bare: string[]; bareLeaves: string[]
   thin: { id: string; why: string[] }[]; ok: boolean; errors: string[]; groups?: { id: string; title: string }[]
+  /** every premise fills a slot its scheme allows, no rule has too many premises (World/Rules `Shaped`) */
+  shaped?: boolean
+  enthymemes?: { id: string; slots: string[] }[]
 }
 export interface RulesDoc {
   id: string; title: string; kind?: string; note?: string; error?: string
@@ -55,18 +63,36 @@ export const SCHEME_WHAT: Record<string, string> = {
   'analogy': 'it worked in a similar case, so it will work here',
   'requirement matches capability': 'the task needs certain things, this provides them, so this suits the task',
   'counterexample': 'one case where a general claim fails',
+  'perception': 'someone saw it, so it is so',
+  'witness testimony': 'someone in a position to know said so',
+  'sign': 'this is a sign of that',
+  'rule application': "the world's rule applies: its conditions hold",
+  'unread': 'no scheme has been read for this inference yet',
 }
+/** A slot's display name (World/Rules `Slot.name`); other slots show as their id. */
+export const ROLE_NAME: Record<string, string> = {
+  limit: 'but', pastWork: 'past work', source: 'source case', target: 'target case', similarity: 'alike because',
+  general: 'general claim', selfAssessment: 'self-assessment',
+}
+export const roleName = (r: string) => ROLE_NAME[r] ?? r
 /** Hover help for the view's vocabulary. */
 const ROLE_WHAT: Record<string, string> = {
+  premise: 'a premise the conclusion follows from', definition: 'what the term means',
+  general: 'the general claim', instance: 'a particular instance of the general claim',
+  condition: 'a condition the rule needs to hold', limit: 'a limit on what is provided or claimed',
   goal: 'what the argument wants to achieve', problem: 'what stands in the way of the goal', means: 'the action proposed to reach the goal',
-  feasible: 'why the action can be carried out', who: 'why this actor should be the one to do it', so: 'the conclusion drawn',
-  needs: 'what the task requires', provides: 'what the proposal supplies', but: 'a limit on what is provided',
-  case: 'a single instance offered as evidence', 'case (future)': 'an instance that has not happened yet',
-  observed: 'something seen that needs explaining', principle: 'a general maxim brought in as support',
-  cause: 'what is said to bring the effect about', general: 'the general claim', instance: 'a particular instance of the general claim',
-  definition: 'what the term means', 'past work': 'something done before, offered as a track record', 'self-assessment': 'the authors rating themselves',
-  'it worked here': 'the source case of an analogy', 'and here': 'the target case of an analogy', 'similar because': 'the respect in which the cases are alike',
-  'claim it breaks': 'the general claim the counterexample defeats', result: 'what came out of the case',
+  feasible: 'why the action can be carried out', who: 'why this actor should be the one to do it',
+  needs: 'what the task requires', provides: 'what the proposal supplies',
+  case: 'a single instance offered as evidence', result: 'what came out of the case',
+  observed: 'something seen that needs explaining', explanation: 'the explanation offered for what was observed',
+  rival: 'an alternative explanation, and why it is ruled out', principle: 'a general maxim brought in as support',
+  cause: 'what is said to bring the effect about', effect: 'the effect said to follow',
+  source: 'the case where it worked (the analogy\'s source)', target: 'the case it is carried over to (the analogy\'s target)',
+  similarity: 'the respect in which the two cases are alike',
+  pastWork: 'something done before, offered as a track record', selfAssessment: 'the authors rating themselves',
+  expert: 'who the expert is, and in what field', perceived: 'what was seen (or heard, felt)',
+  said: 'what the witness said', witness: 'who said it, and why they would know', access: 'how they were placed to see or know it',
+  sign: 'the sign read', so: 'the conclusion drawn',
 }
 const LAB_WHAT: Record<Lab, string> = {
   in: 'IN: accepted. Every argument attacking it is itself defeated (or nothing attacks it).',
@@ -84,6 +110,7 @@ const KIND_WHAT: Record<string, string> = {
   unclassified: 'unread: no scheme has been read for this inference yet',
 }
 export const roleWhat = (r: string) => ROLE_WHAT[r] ?? ''
+const unstatedWhat = (slot: string) => `the scheme needs a ${roleName(slot)}; the text never gives one`
 
 const lc = (s: string) => s && !/^.[A-Z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s
 const unstop = (s: string) => s.replace(/[.\s]+$/, '')
@@ -261,11 +288,26 @@ function Premise({ p, sub }: { p: RPremise; sub: string | null }) {
     : <Tag p={p} />
   const text = p.quote || (sr?.quote ?? '')
   return <li className={`rv-prem ${p.fail ? 'fails' : ''}`}>
-    <span className="rv-pk">{p.role ? <span className="rv-role" title={roleWhat(p.role)}>{p.role}</span> : ref}</span>
+    <span className="rv-pk">{p.role ? <span className="rv-role" title={roleWhat(p.role)}>{roleName(p.role)}</span> : ref}</span>
     <span className="rv-pq"><Quote text={text} gloss={p.gloss || sr?.gloss || p.t} para={p.quote ? p.para : sr?.para ?? ''} />
       {p.role && <> {ref}</>}
       {p.fail && <span className="rv-fail"> ✕ {p.fail}</span>}</span>
   </li>
+}
+
+/** A required slot no premise fills (an enthymeme): its role, and "unstated". */
+function Unstated({ slot }: { slot: string }) {
+  return <li className="rv-prem rv-enth" title={unstatedWhat(slot)}>
+    <span className="rv-pk"><span className="rv-role" title={`${roleWhat(slot)}\n${unstatedWhat(slot)}`}>{roleName(slot)}</span></span>
+    <span className="rv-pq"><i className="rv-unst" title={unstatedWhat(slot)}>unstated</i></span>
+  </li>
+}
+
+/** What is wrong with the rule's shape (World/Rules `faults`), each with its why. */
+function Faults({ r }: { r: RRule }) {
+  if (!r.faults?.length) return null
+  return <div className="rv-faults">{r.faults.map((f, k) =>
+    <span key={k} className="rv-fault" title={`a fault in the reading's shape (World/Rules faults: ${f.kind})`}>✕ {f.why}</span>)}</div>
 }
 
 function Margin({ r }: { r: RRule }) {
@@ -294,7 +336,8 @@ function Steps({ r }: { r: RRule }) {
   if (!r.gloss || !r.premises.length || !r.premises.every(p => p.role)) return null
   const gl = (p: RPremise) => p.gloss || (p.sub ? ix.by.get(p.sub)?.gloss : '') || p.t
   return <div className="rv-reads rv-steps">
-    {r.premises.map((p, k) => <div key={k}><span className="rv-role" title={roleWhat(p.role!)}>{p.role}</span>{gl(p)}</div>)}
+    {r.premises.map((p, k) => <div key={k}><span className="rv-role" title={roleWhat(p.role!)}>{roleName(p.role!)}</span>{gl(p)}</div>)}
+    {(r.enthymemes ?? []).map(s => <div key={`u${s}`} className="rv-enth" title={unstatedWhat(s)}><span className="rv-role">{roleName(s)}</span><i className="rv-unst">unstated</i></div>)}
     <div className="so"><span className="rv-role" title={ROLE_WHAT.so}>so</span>{r.gloss}</div>
     <div className="dim">{r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]}</div>
   </div>
@@ -318,14 +361,16 @@ function RuleCard({ r, depth }: { r: RRule; depth: number }) {
       <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
       {other !== lab && <span className="rv-was" title={cx.mode === 'label' ? "if a sceptical reader pressed the critical questions the text leaves open" : "under only the attacks the text itself makes"}>{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
     </div>
+    <Faults r={r} />
     {!r.quote && <div className="rv-unstated">an unstated step: the reading's grouping, not a sentence in the text</div>}
     {cx.layout === 'plain' && <Steps r={r} />}
     {readsAs(r) && <div className="rv-reads">{readsAs(r)} <span className="dim">({r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]})</span></div>}
-    {cx.layout !== 'plain' && r.premises.length > 0 && <ul className="rv-prems">
+    {cx.layout !== 'plain' && (r.premises.length > 0 || (r.enthymemes ?? []).length > 0) && <ul className="rv-prems">
       {r.premises.map((p, k) => <Premise key={k} p={p} sub={p.sub && cx.ix.by.has(p.sub) && p.sub !== r.id ? p.sub : null} />)}
+      {(r.enthymemes ?? []).map(s => <Unstated key={`u${s}`} slot={s} />)}
     </ul>}
     {cx.layout !== 'plain' && <>
-      <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme" title={`${r.scheme}: ${SCHEME_WHAT[r.scheme] ?? ''}\n${KIND_WHAT[r.kind] ?? ''}`}>{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
+      <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme" title={`${r.scheme}: ${SCHEME_WHAT[r.scheme] ?? ''}\n${KIND_WHAT[r.kind] ?? ''}`}>{r.scheme === (KIND[r.kind] ?? r.kind) ? r.scheme : `${r.scheme} · ${KIND[r.kind] ?? r.kind}`}</span></div>
       <div className="rv-concl"><Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} /></div></>}
     <Margin r={r} />
   </div>
@@ -343,7 +388,9 @@ function RuleNode({ id, depth, path }: { id: string; depth: number; path: string
       onClick={e => { e.stopPropagation(); cx.toggle(id, depth) }} title="unfold this rule">
       <span className="rv-caret">▸</span><b className="rv-rid">{id}</b>
       <span className="rv-rowq">{cx.layout === 'plain' && r.gloss ? r.gloss : r.quote ? `“${r.quote}”` : r.gloss || r.concl}</span>
-      <span className="rv-rowmeta"><i className={`rv-sw ${r.kind}`} /><LabelBadge l={lab} /></span>
+      <span className="rv-rowmeta">{(r.faults ?? []).length > 0 && <span className="rv-fault" title={(r.faults ?? []).map(f => f.why).join('\n')}>✕</span>}
+        {(r.enthymemes ?? []).length > 0 && <span className="rv-unst" title={(r.enthymemes ?? []).map(unstatedWhat).join('\n')}>{(r.enthymemes ?? []).length} unstated</span>}
+        <i className={`rv-sw ${r.kind}`} /><LabelBadge l={lab} /></span>
     </div>
   }
   const subs = [...new Set(r.premises.map(p => p.sub).filter((s): s is string => !!s && cx.ix.by.has(s) && s !== id && !path.includes(s)))]
@@ -378,8 +425,12 @@ export function RuleDetail({ doc, id, onJump, onClose, root }: {
     <h4>Premises</h4>
     <ul className="rv-dlist">{r.premises.map((p, k) => <li key={k} className={p.fail ? 'fails' : ''}>
       {q(p.quote, p.para, p.gloss || p.t)} <span className={`rv-tag ${WEAK.has(p.tag) ? 'weak' : ''}`}>{p.tagLabel ?? TAG[p.tag] ?? p.tag}</span>
+      {p.role && <> <span className="rv-role" title={roleWhat(p.role)}>{roleName(p.role)}</span></>}
       {p.sub && ix.by.has(p.sub) && <> · from {link(p.sub)}</>}{p.fail && <div className="rv-fail">✕ {p.fail}</div>}</li>)}
-      {!r.premises.length && <li className="dim">none: {r.kind === 'strict' ? 'it is asserted' : 'no grounds are recorded'}</li>}</ul>
+      {(r.enthymemes ?? []).map(s => <li key={`u${s}`} className="rv-enth"><span className="rv-role">{roleName(s)}</span> <i className="rv-unst">unstated</i> <span className="dim">({unstatedWhat(s)})</span></li>)}
+      {!r.premises.length && !(r.enthymemes ?? []).length && <li className="dim">none: {r.kind === 'strict' ? 'it is asserted' : 'no grounds are recorded'}</li>}</ul>
+    {(r.faults ?? []).length > 0 && <><h4>Faults in the reading's shape</h4><ul className="rv-dlist">
+      {(r.faults ?? []).map((f, k) => <li key={k} className="fails">{f.why}</li>)}</ul></>}
     {r.cqs.length > 0 && <><h4>Critical questions</h4>
       <ul className="rv-dlist rv-cqs">{r.cqs.map(c => <li key={c.i} className={`cq-${c.status}`}>
         <span className={`rv-cq ${c.status}`}>{c.status === 'answered' ? '✓ answered' : c.status === 'pressed' ? '⚑ pressed' : '○ open'}</span>
@@ -503,6 +554,12 @@ export function RulesView({ doc, textRoot, mdUrl, detail = 'below', selected: se
       <div className="rv-head">
         <div className="rv-stats">{d.rules.length} rules · {d.rules.filter(r => r.kind === 'strict').length} strict · {d.attacks.length} attacks ·
           {' '}<LabelBadge l="in" /> {count('in')} <LabelBadge l="out" /> {count('out')} <LabelBadge l="undec" /> {count('undec')}
+          {d.shaped !== undefined && <> · <span className={d.shaped ? 'rv-shaped' : 'rv-bad'} title={d.shaped
+            ? "shaped: every premise fills a slot its scheme allows, and no rule has more than 6 premises (World/Rules Shaped, checked by Lean)"
+            : `not shaped: ${d.rules.filter(r => (r.faults ?? []).length).length} rules have faults (an unread scheme, a premise in no slot or a wrong one, too many premises)`}>
+            shaped {d.shaped ? '✓' : '✗'}</span></>}
+          {d.enthymemes !== undefined && <> · <span className={d.enthymemes.length ? 'rv-unst' : ''} title="premises the scheme of one of the text's rules needs and the text never states (World/Rules enthymemeRules; a position the text argues against shows its own on its card)">
+            {d.enthymemes.reduce((n, e) => n + e.slots.length, 0)} unstated</span></>}
           {!d.ok && <span className="rv-bad"> · the reading has errors</span>}</div>
         <div className="rv-ctl">
           <span className="rv-seg" role="group" aria-label="labelling">
