@@ -54,6 +54,10 @@ inductive Scheme
   | deductive | definitional
   | exampleToGen | practical | abduction | trackRecord | expertOpinion
   | causeToEffect | analogy | requirement | counterexample
+  /-- story schemes: seeing, being told, reading a sign, applying a world rule -/
+  | perception | testimony | sign | ruleApp
+  /-- no scheme read yet -/
+  | unread
   deriving DecidableEq, Repr
 
 inductive AttackKind | rebut | undercut | undermine
@@ -75,6 +79,8 @@ def Scheme.name : Scheme → String
   | .expertOpinion => "expert opinion" | .causeToEffect => "cause to effect"
   | .analogy => "analogy" | .requirement => "requirement matches capability"
   | .counterexample => "counterexample"
+  | .perception => "perception" | .testimony => "witness testimony" | .sign => "sign"
+  | .ruleApp => "rule application" | .unread => "unread"
 
 /-- A scheme's critical questions, each with the attack it raises when
 pressed (Walton, Reed and Macagno 2008, ch. 9, abridged). -/
@@ -124,6 +130,65 @@ def Scheme.cqs : Scheme → List (String × AttackKind)
     [("Is the counterexample real?", .undermine),
      ("Does it fall within the generalisation's scope?", .undercut),
      ("Can the generalisation be repaired to exclude it?", .rebut)]
+  | .perception =>
+    [("Was the perceiver in a position to see it?", .undermine),
+     ("Could the perception be mistaken (conditions, deception)?", .undercut)]
+  | .testimony =>
+    [("Was the witness in a position to know?", .undermine),
+     ("Is the witness honest (no motive to deceive)?", .undercut),
+     ("Is the testimony consistent with other evidence?", .rebut)]
+  | .sign =>
+    [("Is the sign reliable for this conclusion?", .undercut),
+     ("Is there another cause of the sign?", .rebut)]
+  | .ruleApp | .unread => []
+
+/-- The part a premise plays in its scheme (Walton's premise names, abridged).
+A rule's premises are typed by these: a scheme allows some slots and requires
+some (`Scheme.spec`). -/
+inductive Slot
+  | premise | definition | general | instance | condition | limit
+  | goal | problem | means | feasible | who
+  | needs | provides
+  | case | result
+  | observed | explanation | rival | principle
+  | cause | effect
+  | source | target | similarity
+  | pastWork | selfAssessment
+  | expert | perceived | said | witness | access | sign
+  deriving DecidableEq, Repr
+
+def Slot.name : Slot → String
+  | .premise => "premise" | .definition => "definition" | .general => "general claim" | .instance => "instance"
+  | .condition => "condition" | .limit => "but" | .goal => "goal" | .problem => "problem" | .means => "means"
+  | .feasible => "feasible" | .who => "who" | .needs => "needs" | .provides => "provides" | .case => "case"
+  | .result => "result" | .observed => "observed" | .explanation => "explanation" | .rival => "rival"
+  | .principle => "principle" | .cause => "cause" | .effect => "effect" | .source => "source case"
+  | .target => "target case" | .similarity => "alike because" | .pastWork => "past work"
+  | .selfAssessment => "self-assessment" | .expert => "expert" | .perceived => "perceived" | .said => "said"
+  | .witness => "witness" | .access => "access" | .sign => "sign"
+
+/-- What each scheme allows and what it requires. A required slot nobody fills
+is an *enthymeme*: a premise the argument needs and the text leaves unstated. -/
+def Scheme.spec : Scheme → List Slot × List Slot
+  | .deductive => ([.premise, .general, .instance, .condition, .definition], [])
+  | .definitional => ([.definition, .premise], [.definition])
+  | .exampleToGen => ([.case, .result, .cause, .principle, .general], [.case])
+  | .practical => ([.goal, .problem, .means, .feasible, .who, .limit, .needs], [.goal, .means])
+  | .abduction => ([.observed, .explanation, .rival, .principle, .general], [.observed, .rival])
+  | .trackRecord => ([.pastWork, .selfAssessment, .similarity], [.pastWork])
+  | .expertOpinion => ([.expert, .said, .access], [.expert, .said])
+  | .causeToEffect => ([.cause, .effect, .condition, .limit, .general], [.cause])
+  | .analogy => ([.source, .target, .similarity], [.source, .target, .similarity])
+  | .requirement => ([.needs, .provides, .limit, .general], [.needs, .provides])
+  | .counterexample => ([.case, .general], [.case, .general])
+  | .perception => ([.perceived, .access, .condition], [.perceived])
+  | .testimony => ([.said, .witness, .access], [.said])
+  | .sign => ([.sign, .general], [.sign])
+  | .ruleApp => ([.condition], [.condition])
+  | .unread => ([], [])
+
+/-- At most this many premises to a rule; past it, group them into sub-rules. -/
+def maxFanIn : Nat := 6
 
 /-- An inference, named `id`. A premise that some rule concludes is a
 sub-argument; any other premise is a leaf and its tag says what it rests on. -/
@@ -138,6 +203,8 @@ structure Rule (T : Type) where
   answered : List Nat := []
   /-- open critical questions a sceptical reader presses: attack points -/
   pressed : List Nat := []
+  /-- the slot each premise fills -/
+  slots : List (T × Slot) := []
   deriving DecidableEq, Repr
 
 /-- `src` attacks `tgt` (rule ids); an underminer names the premise `on`. -/
@@ -269,6 +336,36 @@ def thinRules (rs : List (Rule T)) : List (T × List Thin) :=
 def openCqs (r : Rule T) : List Nat :=
   (List.range r.scheme.cqs.length).filter (!r.answered.contains ·)
 
+/-- What can be wrong with a rule's shape: a premise with no slot, a slot its
+scheme does not allow, too many premises, no premises, or no scheme read. -/
+inductive Fault (T : Type) | unslotted (p : T) | illegal (p : T) (s : Slot) | fanIn (n : Nat) | empty | unread
+  deriving DecidableEq, Repr
+
+def slotOf (r : Rule T) (p : T) : Option Slot := (r.slots.find? (·.1 == p)).map (·.2)
+
+def faults (r : Rule T) : List (Fault T) :=
+  (if r.scheme == .unread then [.unread] else
+    r.premises.filterMap fun (p, _) => match slotOf r p with
+      | none => some (.unslotted p)
+      | some s => if r.scheme.spec.1.contains s then none else some (.illegal p s)) ++
+  (if r.premises.length > maxFanIn then [.fanIn r.premises.length] else []) ++
+  (if r.premises.isEmpty && r.kind == .defeasible then [.empty] else [])
+
+/-- Required slots no premise fills: what the text leaves unstated. -/
+def enthymemes (r : Rule T) : List Slot :=
+  r.scheme.spec.2.filter fun s => !(r.premises.any fun (p, _) => slotOf r p == some s)
+
+/-- Every rule is well shaped: each premise fills a slot its scheme allows, and
+no rule has more than `maxFanIn` premises. (Enthymemes are findings about the
+text, not faults of the reading.) -/
+def Shaped (rs : List (Rule T)) : Prop := rs.all (fun r => (faults r).isEmpty) = true
+
+instance (rs : List (Rule T)) : Decidable (Shaped rs) := by unfold Shaped; infer_instance
+
+/-- The text's rules with unstated required premises. -/
+def enthymemeRules (rs : List (Rule T)) : List (T × List Slot) :=
+  ((rs.filter (·.side == .text)).map fun r => (r.id, enthymemes r)).filter (!·.2.isEmpty)
+
 /-- Every attack is well formed and every pressed question is open. -/
 def RulesOk (rs : List (Rule T)) (as : List (RAttack T)) : Prop :=
   as.all (attackOk rs) = true ∧ rs.all (fun r => r.pressed.all (openCqs r).contains) = true
@@ -286,9 +383,9 @@ def rs : List (Rule Tm) :=
   [ { id := .r0, concl := .trusted, premises := [(.proofOk, .fact)], kind := .defeasible,
       scheme := .causeToEffect, side := .opponent },
     { id := .r1, concl := .modelWrong, premises := [(.spectre, .«example»)], kind := .defeasible,
-      scheme := .counterexample, answered := [0, 1] },
+      scheme := .counterexample, answered := [0, 1], slots := [(.spectre, .case)] },
     { id := .r2, concl := .scienceNeeded, premises := [(.modelWrong, .authors)], kind := .defeasible,
-      scheme := .exampleToGen, pressed := [2] } ]
+      scheme := .exampleToGen, pressed := [2], slots := [(.modelWrong, .case)] } ]
 
 def as : List (RAttack Tm) := [{ src := .r1, tgt := .r0, how := .undercut }]
 
@@ -302,6 +399,9 @@ theorem thinR2 : thinRules rs = [(.r2, [.fewExamples 1])] := by decide +kernel
 def strictR0 : Rule Tm :=
   { id := .r0, concl := .trusted, premises := [(.proofOk, .fact)], kind := RKind.strict, scheme := .deductive }
 def r1' : Rule Tm := { id := .r1, concl := .modelWrong, premises := [], kind := .defeasible, scheme := .counterexample }
+/-- r0 gives its premise no slot; r1's counterexample names no general claim (unstated). -/
+theorem shape : rs.map faults = [[.unslotted .proofOk], [], []] ∧
+    enthymemeRules rs = [(.r1, [.general])] := by decide +kernel
 /-- r2 rests on r1, so the toy has no bare leaf. -/
 theorem bareR2 : bareLeaves rs = [] := by decide +kernel
 /-- A strict rule cannot be rebutted. -/

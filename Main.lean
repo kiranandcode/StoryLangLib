@@ -20,6 +20,7 @@ def usage : String := "usage:
   langlib chain-lean <prev> <next> <ns>     the link between two chapters as Lean theorems (Chain.lean)
   langlib argument <dir> <lore-json>        a paper's argument graph (World/Argument) with its grounded labelling
   langlib rules <dir>                       the argument's inferences as rules (World/Rules): schemes, attacks, labels
+  langlib rules-json <file>                 check a rules document built elsewhere (a story adapter) with World/Rules
   langlib power <dir>                       a rule-based module's moves, checks and states (studio/power-schema.md)"
 
 def readDoc (p : String) : IO Doc := do
@@ -109,6 +110,9 @@ def main : List String → IO UInt32
     pure 0
   | ["rules", dir] => do
     IO.println (← LangLib.Studio.RulesView.rulesMain dir).compress
+    pure 0
+  | ["rules-json", file] => do
+    IO.println (← LangLib.Studio.RulesView.rulesJsonMain file).compress
     pure 0
   | ["power", dir] => do
     let name := ((System.FilePath.mk dir).fileName.getD dir)
