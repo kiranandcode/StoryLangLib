@@ -163,12 +163,13 @@ def rulesMain (dir : String) : IO Json := do
       | .ok (.obj _) => field (obj info.quotes t) "para" | _ => ""
     let qtext (t : String) := match info.quotes.getObjVal? t with
       | .ok (.obj _) => field (obj info.quotes t) "q" | _ => quoteOf t
+    let gl (t : String) := field (obj kinds t) "gloss"
     Json.mkObj [
-      ("id", r.id), ("concl", r.concl), ("quote", info.quote), ("para", info.para),
+      ("id", r.id), ("concl", r.concl), ("gloss", gl r.concl), ("quote", info.quote), ("para", info.para),
       ("kind", match r.kind with | .strict => "strict" | .defeasible => "defeasible"),
       ("scheme", r.scheme.name), ("side", match r.side with | .text => "text" | .opponent => "opponent"),
       ("premises", Json.arr (r.premises.map fun (p, t) => Json.mkObj [
-        ("t", p), ("tag", tagS t), ("quote", qtext p), ("para", paraOf p),
+        ("t", p), ("tag", tagS t), ("quote", qtext p), ("gloss", gl p), ("para", paraOf p),
         ("sub", match concluder rs p with | some s => Json.str s.id | none => Json.null)]).toArray),
       ("cqs", Json.arr ((List.range r.scheme.cqs.length).map fun i =>
         let (q, how) := r.scheme.cqs.getD i ("", .undercut)

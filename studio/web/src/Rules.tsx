@@ -40,6 +40,32 @@ export const TAG: Record<string, string> = {
 const WEAK = new Set(['authors', 'hedge', 'promise'])
 const HOWS: Record<string, [string, string]> = { rebut: ['rebuts', 'rebutted by'], undercut: ['undercuts', 'undercut by'], undermine: ['undermines', 'undermined by'] }
 const LAB: Record<Lab, string> = { in: 'IN', out: 'OUT', undec: 'UNDEC' }
+/** What each scheme claims, in plain words (shown with every rule). */
+export const SCHEME_WHAT: Record<string, string> = {
+  'definition': 'it follows from what the term means',
+  'deduction': 'it follows necessarily from the premises',
+  'example to generalisation': 'the cases given are taken to hold in general',
+  'practical reasoning': 'a goal and a way to reach it, so do it',
+  'abduction (best explanation)': 'this is taken as the best explanation of what was seen',
+  'track record → capability': 'they did related work before, so they can do this',
+  'expert opinion': 'an expert says so',
+  'cause to effect': 'this cause is taken to bring about that effect',
+  'analogy': 'it worked in a similar case, so it will work here',
+  'requirement matches capability': 'the task needs these things, and this provides them',
+  'counterexample': 'one case where a general claim fails',
+}
+const lc = (s: string) => s && !/^.[A-Z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s
+const unstop = (s: string) => s.replace(/[.\s]+$/, '')
+
+/** The rule in one plain sentence, from the reading's glosses: "Because P and Q, C (scheme: what it claims)." */
+function readsAs(r: RRule): string | null {
+  if (!r.gloss) return null
+  const ps = r.premises.map(p => p.gloss).filter((g): g is string => !!g).map(g => lc(unstop(g)))
+  const c = unstop(r.gloss)
+  if (ps.length > 3) return `${c}, from the ${ps.length} reasons below.`
+  return ps.length ? `Because ${ps.length > 1 ? ps.slice(0, -1).join('; ') + '; and ' + ps[ps.length - 1] : ps[0]}: ${lc(c)}.` : `${c}.`
+}
+
 const KIND: Record<string, string> = { strict: 'strict', defeasible: 'defeasible', unclassified: 'unread' }
 
 // ------------------------------------------------------------------ data
@@ -162,8 +188,14 @@ export function clearHighlight() {
 
 // ------------------------------------------------------------------ the tree
 
+export type Layout = 'cards' | 'proof' | 'plain'
+const LAYOUTS: [Layout, string, string][] = [
+  ['cards', 'cards', 'the conclusion first; each rule a card, the rules it rests on indented under it'],
+  ['proof', 'proof tree', 'natural-deduction order: the rules a premise rests on stacked above, the conclusion at the bottom'],
+  ['plain', 'plain words', 'each rule as one sentence from the reading, without the quotes'],
+]
 interface Ctx {
-  ix: Index; mode: 'label' | 'sceptic'; selected: string | null
+  ix: Index; mode: 'label' | 'sceptic'; layout: Layout; selected: string | null
   isOpen: (id: string, depth: number) => boolean; toggle: (id: string, depth: number) => void
   select: (id: string) => void; jump: (id: string) => void
   hover: (para: string, quote: string) => void; unhover: () => void
@@ -239,11 +271,13 @@ function RuleCard({ r, depth }: { r: RRule; depth: number }) {
       <LabelBadge l={lab} title={other !== lab ? `${LAB[other]} ${cx.mode === 'label' ? "with the sceptic's questions" : "under the text's own attacks"}` : undefined} />
       {other !== lab && <span className="rv-was">{LAB[other]} {cx.mode === 'label' ? 'under the sceptic' : 'by the text'}</span>}
     </div>
-    {r.premises.length > 0 && <ul className="rv-prems">
+    {readsAs(r) && <div className="rv-reads">{readsAs(r)} <span className="dim">({r.scheme}: {SCHEME_WHAT[r.scheme] ?? KIND[r.kind]})</span></div>}
+    {cx.layout !== 'plain' && r.premises.length > 0 && <ul className="rv-prems">
       {r.premises.map((p, k) => <Premise key={k} p={p} sub={p.sub && cx.ix.by.has(p.sub) && p.sub !== r.id ? p.sub : null} />)}
     </ul>}
-    <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme">{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
-    <div className="rv-concl"><Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} /></div>
+    {cx.layout !== 'plain' && <>
+      <div className="rv-bar"><span className={`rv-line ${r.kind}`} /><span className="rv-scheme" title={SCHEME_WHAT[r.scheme]}>{r.scheme} · {KIND[r.kind] ?? r.kind}</span></div>
+      <div className="rv-concl"><Quote text={r.quote} gloss={r.gloss || r.concl} para={r.para} /></div></>}
     <Margin r={r} />
   </div>
 }
@@ -259,17 +293,15 @@ function RuleNode({ id, depth, path }: { id: string; depth: number; path: string
     return <div className={`rv-row lab-${lab} side-${r.side} ${cx.selected === id ? 'sel' : ''}`} data-rule={id}
       onClick={e => { e.stopPropagation(); cx.toggle(id, depth) }} title="unfold this rule">
       <span className="rv-caret">▸</span><b className="rv-rid">{id}</b>
-      <span className="rv-rowq">{r.quote ? `“${r.quote}”` : r.gloss || r.concl}</span>
+      <span className="rv-rowq">{cx.layout === 'plain' && r.gloss ? r.gloss : r.quote ? `“${r.quote}”` : r.gloss || r.concl}</span>
       <span className="rv-rowmeta"><i className={`rv-sw ${r.kind}`} /><LabelBadge l={lab} /></span>
     </div>
   }
   const subs = [...new Set(r.premises.map(p => p.sub).filter((s): s is string => !!s && cx.ix.by.has(s) && s !== id && !path.includes(s)))]
-  return <div className="rv-node">
-    <RuleCard r={r} depth={depth} />
-    {subs.length > 0 && <div className="rv-kids">
-      {subs.map(s => <RuleNode key={s} id={s} depth={depth + 1} path={[...path, id]} />)}
-    </div>}
+  const kids = subs.length > 0 && <div className="rv-kids">
+    {subs.map(s => <RuleNode key={s} id={s} depth={depth + 1} path={[...path, id]} />)}
   </div>
+  return <div className="rv-node">{cx.layout === 'proof' ? <>{kids}<RuleCard r={r} depth={depth} /></> : <><RuleCard r={r} depth={depth} />{kids}</>}</div>
 }
 
 // ------------------------------------------------------------------ detail
@@ -316,6 +348,33 @@ export function RuleDetail({ doc, id, onJump, onClose, root }: {
 
 // ------------------------------------------------------------------ the view
 
+const PANE_KEY = 'rules.paneWidth'
+function setPane(w: number | null) {
+  if (w == null) document.documentElement.style.removeProperty('--rv-pane-w')
+  else document.documentElement.style.setProperty('--rv-pane-w', `${Math.round(w)}px`)
+}
+try { const w = Number(localStorage.getItem(PANE_KEY)); if (w) setPane(w) } catch { /* private mode */ }
+
+/** A handle on the view's left edge: drag to resize the pane the host gives it
+ *  (hosts size it by --rv-pane-w); double-click to reset. */
+function Resizer() {
+  const ref = useRef<HTMLDivElement>(null)
+  const down = (e: React.PointerEvent) => {
+    e.preventDefault()
+    const right = ref.current?.parentElement?.getBoundingClientRect().right ?? innerWidth
+    const move = (ev: PointerEvent) => setPane(Math.min(innerWidth - 260, Math.max(320, right - ev.clientX)))
+    const up = () => {
+      removeEventListener('pointermove', move); removeEventListener('pointerup', up)
+      document.body.classList.remove('rv-dragging')
+      try { localStorage.setItem(PANE_KEY, getComputedStyle(document.documentElement).getPropertyValue('--rv-pane-w').replace('px', '')) } catch { /* private mode */ }
+    }
+    document.body.classList.add('rv-dragging')
+    addEventListener('pointermove', move); addEventListener('pointerup', up)
+  }
+  const reset = () => { setPane(null); try { localStorage.removeItem(PANE_KEY) } catch { /* private mode */ } }
+  return <div ref={ref} className="rv-resize" onPointerDown={down} onDoubleClick={reset} title="drag to resize · double-click to reset" />
+}
+
 function Section({ title, ids, note }: { title: string; ids: string[]; note?: string }) {
   const [shut, setShut] = useState(false)
   if (!ids.length) return null
@@ -337,6 +396,8 @@ export function RulesView({ doc, textRoot, mdUrl, detail = 'below', selected: se
 }) {
   const ix = useMemo(() => doc.rules ? index(doc.rules) : null, [doc])
   const [mode, setMode] = useState<'label' | 'sceptic'>(() => { try { return (localStorage.getItem('rules.mode') as 'label' | 'sceptic') || 'label' } catch { return 'label' } })
+  const [layout, setLayout] = useState<Layout>(() => { try { return (localStorage.getItem('rules.layout') as Layout) || 'cards' } catch { return 'cards' } })
+  const setL = (l: Layout) => { setLayout(l); try { localStorage.setItem('rules.layout', l) } catch { /* private mode */ } }
   const [open, setOpen] = useState<Map<string, boolean>>(new Map())
   const [selLocal, setSelLocal] = useState<string | null>(null)
   const selected = selProp !== undefined ? selProp : selLocal
@@ -386,9 +447,10 @@ export function RulesView({ doc, textRoot, mdUrl, detail = 'below', selected: se
   const count = (l: Lab) => d.rules.filter(r => lab(r) === l).length
   const tops = ix.tops.filter(r => r.id !== ix.root?.id)
   const groups = d.groups?.length ? d.groups : null
-  const cx: Ctx = { ix, mode, selected, isOpen, toggle, select, jump, hover, unhover: clearHighlight }
+  const cx: Ctx = { ix, mode, layout, selected, isOpen, toggle, select, jump, hover, unhover: clearHighlight }
   return <C.Provider value={cx}>
     <div className="rv-root">
+      <Resizer />
       <div className="rv-head">
         <div className="rv-stats">{d.rules.length} rules · {d.rules.filter(r => r.kind === 'strict').length} strict · {d.attacks.length} attacks ·
           {' '}<LabelBadge l="in" /> {count('in')} <LabelBadge l="out" /> {count('out')} <LabelBadge l="undec" /> {count('undec')}
@@ -397,6 +459,9 @@ export function RulesView({ doc, textRoot, mdUrl, detail = 'below', selected: se
           <span className="rv-seg" role="group" aria-label="labelling">
             <button className={mode === 'label' ? 'on' : ''} onClick={() => setM('label')} title="grounded labelling under the attacks the text itself makes">text's own attacks</button>
             <button className={mode === 'sceptic' ? 'on' : ''} onClick={() => setM('sceptic')} title="every critical question the sceptic presses is an attacker too">with the sceptic's questions</button>
+          </span>
+          <span className="rv-seg" role="group" aria-label="layout">
+            {LAYOUTS.map(([l, name, tip]) => <button key={l} className={layout === l ? 'on' : ''} onClick={() => setL(l)} title={tip}>{name}</button>)}
           </span>
           <button className="rv-btn" onClick={() => setOpen(new Map(d.rules.map(r => [r.id, true])))}>unfold all</button>
           <button className="rv-btn" onClick={() => setOpen(new Map(d.rules.map(r => [r.id, false])))}>fold all</button>
@@ -411,7 +476,7 @@ export function RulesView({ doc, textRoot, mdUrl, detail = 'below', selected: se
         {doc.note && <div className="rv-secnote">{doc.note}</div>}
         {d.errors.length > 0 && <ul className="rv-err">{d.errors.map((e, k) => <li key={k}>{e}</li>)}</ul>}
       </div>
-      <div className="rv-tree" ref={treeRef} onClick={() => select(null)}>
+      <div className={`rv-tree rv-${layout}`} ref={treeRef} onClick={() => select(null)}>
         {ix.root && <Section title="The main argument, down to its conclusion" ids={[ix.root.id]} />}
         {groups ? <>
           {groups.map(g => <Section key={g.id} title={g.title} ids={tops.filter(r => r.group === g.id).map(r => r.id)} />)}
