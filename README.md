@@ -265,3 +265,7 @@ with TypeSafe's Jev, are in `docs/eval-results.md`.
 Work in progress. Open next: lexicon coverage beyond the example verbs,
 character rules for more actions, and a loop that sends checker failures back
 to the writing model.
+
+## License
+
+MIT; see [LICENSE](LICENSE).

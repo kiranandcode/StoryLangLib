@@ -1,8 +1,8 @@
 # Academic style as decidable rules
 
-This note formalises Kiran's principles for writing papers
-(`~/Documents/code/prompts/writing-style.md`) and the LLM-isms that show in a
-sentence's structure (`llmisms.md`) as rules over checked langlib trees. It
+This note formalises Kiran's principles for writing papers and the LLM-isms
+that show in a sentence's structure as rules over checked langlib trees (the
+rules are stated in `LangLib/Style/Academic.lean` and `House.lean`). It
 then measures two papers against them: Kiran's own PLDI 2023 paper, *Mostly
 Automated Proof Repair for Verified Libraries* (Sisyphus), and Jung, Jourdan,
 Krebbers and Dreyer's POPL 2018 paper, *RustBelt: Securing the Foundations of

@@ -8,8 +8,8 @@ ChatGPT at the bottom), a Wikipedia paragraph about the Algerian town of
 Douera, and the bios of Sports Illustrated's AI-generated product reviewers.
 Four milder ones are quoted in Wikipedia's guide
 [Signs of AI writing](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1385890265). The
-`verified-deslopify` skill (`~/.claude/skills/verified-deslopify`) runs the
-same loop on any text.
+same loop runs on any text; [WORKFLOW.md](WORKFLOW.md) describes it step by
+step.
 
 | example | source | words before / after | rules holding before | after |
 |:--|:--|--:|--:|--:|
@@ -32,7 +32,7 @@ rule that failed with the sentences it flagged).
 `python3 tools/house/deslop_ui/server.py`) serves a reader for these
 documents at http://localhost:8790 (before, after, side by side or as a diff,
 with the analysis behind every flag), and queues rewrites for an interactive
-agent running `/verified-deslopify worker`.
+agent serving them as described in [WORKFLOW.md](WORKFLOW.md#worker-mode).
 
 ## What the check is
 

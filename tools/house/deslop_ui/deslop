@@ -28,7 +28,7 @@ case "${1:-}" in
     pkill -f "deslop_ui/server.py --port $PORT" 2>/dev/null || true
     rm -f "$STATE/server.pid"; echo "deslop: stopped" ;;
   worker)
-    cd "$ROOT" && exec claude "/verified-deslopify worker" ;;
+    cd "$ROOT" && exec claude "Serve deslop requests as docs/deslop/WORKFLOW.md (Worker mode) describes." ;;
   -h|--help)
     sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//' ;;
   open)

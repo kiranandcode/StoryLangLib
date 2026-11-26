@@ -5,8 +5,8 @@ import LangLib.Style.Core
 /-!
 # Academic style: information flow over checked trees
 
-Kiran's principles for papers (`~/Documents/code/prompts/writing-style.md`) and
-the structurally visible LLM-isms (`llmisms.md`) as decidable rules. As in
+Kiran's principles for papers and the structurally visible LLM-isms as
+decidable rules (the rules themselves are stated here). As in
 `Core.lean`, `asentOf` reads each sentence tree once into a flat record
 (`ASent`, run by the CLI) and every feature is structural recursion over
 `List ASent`, so `langlib academic <dir> --lean <name>` prints records (and the

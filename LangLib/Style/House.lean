@@ -3,9 +3,9 @@ import LangLib.Style.Academic
 /-!
 # House style: Kiran's writing rules as decidable predicates
 
-The rules of `/writelikeme` (`~/Documents/code/prompts/writing-style.md`,
-`llmisms.md`) and its clarity check (`references/clarity-faults.md`, after
-Williams and Bizup: every sentence is a story of characters doing actions),
+The author's house style (`writelikeme`: a list of LLM-isms and writing rules)
+and a clarity check (after Williams and Bizup: every sentence is a story of
+characters doing actions), stated in full in this file,
 stated over checked trees, the story's declared lexicon and the paper's
 lore. Nothing is read off raw strings: word classes live in `lexicon.json`
 (`cls`), and what needs an argument (antithesis, unsupported claims, coined

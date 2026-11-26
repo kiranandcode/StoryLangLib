@@ -10,7 +10,7 @@ The server never calls a model. Certifying is deterministic and runs here.
 Annotating and rewriting are queued as `deslop` requests in the Studio's
 request log (studio/request_log.py); an interactive agent claims them with the
 studio MCP (`await_request {"kind": "deslop"}`) and replies, following
-~/.claude/skills/verified-deslopify. LANGLIB_BIN overrides the langlib binary.
+docs/deslop/WORKFLOW.md. LANGLIB_BIN overrides the langlib binary.
 """
 from __future__ import annotations
 

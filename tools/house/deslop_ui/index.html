@@ -291,7 +291,7 @@ async function poll() {
       const el = $("#worker");
       el.className = "pill " + (busy ? "warn" : open ? "bad" : "ok");
       el.textContent = busy ? `worker on ${busy} request${busy > 1 ? "s" : ""}` : open ? `${open} waiting for a worker` : (w.last ? "queue empty" : "no worker has run yet");
-      el.title = "Requests are claimed by an interactive Claude session running /verified-deslopify worker (studio MCP await_request kind=deslop).";
+      el.title = "Requests are claimed by an interactive Claude session serving deslop requests per docs/deslop/WORKFLOW.md (studio MCP await_request kind=deslop).";
     } catch (e) { /* server restarting */ }
   }
   setTimeout(poll, 2000);
@@ -760,7 +760,7 @@ function argumentView() {
 function requestsView() {
   const rs = [...state.doc.requests].reverse();
   return `<section class="card"><div class="row" style="justify-content:space-between"><h2>Requests</h2>${docActions()}</div>
-  <p class="small muted">Buttons queue requests in the Studio's request log. An interactive Claude session works them: in a terminal in the langlib repo, start <span class="kbd">claude</span> and say <span class="kbd">/verified-deslopify worker</span>. It claims each request with the studio MCP, writes and annotates the paragraph, and its reply is accepted only when certify.py no longer flags that paragraph. Certify buttons run here, at once, without a model.</p>
+  <p class="small muted">Buttons queue requests in the Studio's request log. An interactive Claude session works them: in a terminal in the langlib repo, run <span class="kbd">deslop worker</span> (or start an agent and point it at <span class="kbd">docs/deslop/WORKFLOW.md</span>). It claims each request with the studio MCP, writes and annotates the paragraph, and its reply is accepted only when certify.py no longer flags that paragraph. Certify buttons run here, at once, without a model.</p>
   ${rs.length ? rs.map(r => `<div class="req"><div class="row"><span class="pill ${r.status === "done" ? "ok" : r.status === "declined" ? "bad" : "warn"}">${r.status}</span>
     <b>${esc(r.target)}</b> ${r.para ? "¶" + esc(r.para) : "whole document"} <span class="muted small">${new Date(r.at * 1000).toLocaleString()}</span></div>
     <div>${esc(r.text)}</div>${r.reply ? `<pre>${esc(r.reply)}</pre>` : ""}
